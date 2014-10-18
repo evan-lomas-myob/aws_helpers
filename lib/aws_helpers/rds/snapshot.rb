@@ -18,7 +18,7 @@ module AwsHelpers
       def create
         iam = Aws::IAM::Client.new
         region = iam.config.region
-        account = iam.get_user[:user][:arn][/::(.*):/, 1]
+        account = iam.list_users[:users].first[:arn][/::(.*):/, 1]
 
         tags = @rds_client.list_tags_for_resource(resource_name:"arn:aws:rds:#{region}:#{account}:db:#{@db_instance_id}")
         name_tag = tags[:tag_list].detect{|tag| tag[:key] == 'Name'}

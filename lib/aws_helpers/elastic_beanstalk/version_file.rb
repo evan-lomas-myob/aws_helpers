@@ -33,7 +33,7 @@ module AwsHelpers
       def query_bucket_name
         iam = Aws::IAM::Client.new
         region = iam.config.region
-        account = iam.get_user[:user][:arn][/::(.*):/, 1]
+        account = iam.list_users[:users].first[:arn][/::(.*):/, 1]
         "elasticbeanstalk-#{region}-#{account}"
       end
 
