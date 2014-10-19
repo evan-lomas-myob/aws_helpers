@@ -32,8 +32,12 @@ module AwsHelpers
       ElasticBeanstalk::Version.new.upload(application, version, version_contents, zip_folder)
     end
 
-    def snapshot_rds(db_instance_id)
-      RDS::Instance.new(db_instance_id).snapshot
+    def rds_snapshot(db_instance_id)
+      RDS::Snapshot.new(db_instance_id).create
+    end
+
+    def rds_snapshots_delete(db_instance_id, options = nil)
+      RDS::Snapshot.new(db_instance_id).delete(options)
     end
 
   end

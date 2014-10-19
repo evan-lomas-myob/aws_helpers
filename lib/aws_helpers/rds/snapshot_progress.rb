@@ -11,8 +11,9 @@ module AwsHelpers
 
           status = snapshot_details[:status]
           db_snapshot_identifier = snapshot_details[:db_snapshot_identifier]
+          percent_progress = snapshot_details[:percent_progress]
 
-          puts "Snapshot #{db_snapshot_identifier} #{status}"
+          puts "Snapshot #{db_snapshot_identifier} #{status}, progress #{percent_progress}%"
           case status
             when SnapShotStatus::AVAILABLE
               break
