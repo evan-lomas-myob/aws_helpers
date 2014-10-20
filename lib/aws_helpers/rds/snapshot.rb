@@ -11,10 +11,11 @@ module AwsHelpers
 
     class Snapshot
 
-      def initialize(db_instance_id)
+      def initialize(db_instance_id, use_name = false)
         @rds_client = Aws::RDS::Client.new
         @db_instance_id = db_instance_id
         @snapshot_id = nil
+        @use_name = use_name
       end
 
       def create
@@ -23,6 +24,7 @@ module AwsHelpers
         now = DateTime.now.strftime('%Y-%m-%d-%H-%M')
         name = tag_name
         snapshot_name = "#{name ? name : @db_instance_id}-#{now}"
+        puts snapshot_name
         snapshot = @rds_client.create_db_snapshot(
           db_instance_identifier: @db_instance_id,
           db_snapshot_identifier: snapshot_name
@@ -74,6 +76,8 @@ module AwsHelpers
       end
 
       def tag_name
+        return unless @use_name
+
         iam = Aws::IAM::Client.new
         region = iam.config.region
         account = iam.list_users[:users].first[:arn][/::(.*):/, 1]
