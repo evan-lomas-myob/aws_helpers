@@ -8,11 +8,11 @@ module AwsHelpers
 
   class << self
 
-    def stack_provision(stack_name, template, options)
+    def stack_provision(stack_name, template, options = {})
       CloudFormation::Stack.new(stack_name, template, options).provision
     end
 
-    def stack_s3_provision(stack_name, template, bucket_name, options)
+    def stack_s3_provision(stack_name, template, bucket_name, options = {})
       CloudFormation::Stack.new(stack_name, template, options.merge(bucket_name: bucket_name)).provision
     end
 

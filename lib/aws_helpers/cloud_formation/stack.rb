@@ -1,5 +1,5 @@
-require_relative 'stack_state'
-require_relative 'stack_progress'
+require_relative 'stack_status'
+require_relative 'error_events'
 require 'aws-sdk-core'
 
 module AwsHelpers
@@ -43,6 +43,10 @@ module AwsHelpers
 
       def describe_stack
         AwsHelpers::CloudFormation::Stack.describe_stack(@stack_name, @client)
+      end
+
+      def describe_stack_events(next_token = nil)
+        @client.describe_stack_events(stack_name: @stack_name, next_token: next_token)
       end
 
       private
@@ -95,14 +99,21 @@ module AwsHelpers
           sleep 5
         end
 
-        StackProgress.report(self)
+        check_status
+      end
+
+      def check_status
+        status = StackStatus.new(self)
+        status.poll
+        ErrorEvents.new(self).report
+        status.check_failure
       end
 
       def update
         puts "Updating #{@stack_name}"
         begin
           @client.update_stack(create_request)
-          StackProgress.report(self)
+          check_status
         rescue Aws::CloudFormation::Errors::ValidationError => validation_error
           if validation_error.message == 'No updates are to be performed.'
             puts "No updates to perform for #{@stack_name}."
