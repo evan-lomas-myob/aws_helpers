@@ -42,11 +42,23 @@ module AwsHelpers
       end
 
       def filter_failed(events)
-        events.select { |event| [CREATE_FAILED, DELETE_FAILED, ROLLBACK_FAILED, UPDATE_ROLLBACK_FAILED].include?(event[:resource_status]) }
+        events.select { |event|
+          [
+            CREATE_FAILED,
+            DELETE_FAILED,
+            UPDATE_FAILED,
+            ROLLBACK_FAILED,
+            UPDATE_ROLLBACK_FAILED
+          ].include?(event[:resource_status])
+        }
       end
 
       def initiation_event?(event)
-        [CREATE_IN_PROGRESS, UPDATE_IN_PROGRESS].include?(event[:resource_status]) && event[:resource_type] == 'AWS::CloudFormation::Stack'
+        [
+          CREATE_IN_PROGRESS,
+          UPDATE_IN_PROGRESS
+        ].include?(event[:resource_status]) &&
+          event[:resource_type] == 'AWS::CloudFormation::Stack'
       end
 
     end
