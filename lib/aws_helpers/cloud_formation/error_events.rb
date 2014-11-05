@@ -46,7 +46,7 @@ module AwsHelpers
       end
 
       def initiation_event?(event)
-        event[:resource_status] == CREATE_IN_PROGRESS && event[:resource_type] == 'AWS::CloudFormation::Stack'
+        [CREATE_IN_PROGRESS, UPDATE_IN_PROGRESS].include?(event[:resource_status]) && event[:resource_type] == 'AWS::CloudFormation::Stack'
       end
 
     end
