@@ -12,8 +12,8 @@ module AwsHelpers
       CloudFormation::Stack.new(stack_name, template, options).provision
     end
 
-    def stack_s3_provision(stack_name, template, bucket_name, options = {})
-      CloudFormation::Stack.new(stack_name, template, options.merge(bucket_name: bucket_name)).provision
+    def stack_s3_provision(stack_name, template, bucket_name, options = {}, bucket_encrypt = false)
+      CloudFormation::Stack.new(stack_name, template, options.merge(bucket_name: bucket_name, bucket_encrypt: bucket_encrypt)).provision
     end
 
     def stack_outputs(stack_name)

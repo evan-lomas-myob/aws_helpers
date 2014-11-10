@@ -12,6 +12,7 @@ module AwsHelpers
         @stack_name = stack_name
         @template = template
         @bucket_name = options[:bucket_name]
+        @bucket_encrypt= options[:bucket_encrypt]
         @parameters = options[:parameters]
         @capabilities = options[:capabilities]
       end
@@ -55,10 +56,15 @@ module AwsHelpers
         if s3_template?
           puts "Uploading #{@stack_name} to S3 bucket #{@bucket_name} "
           s3 = Aws::S3::Client.new
-          s3.put_object(
+          request = {
             bucket: @bucket_name,
             key: @stack_name,
-            body: @template
+            body: @template,
+          }
+          request.merge!(server_side_encryption: "AES256") if @bucket_encrypt
+
+          s3.put_object(
+            request
           )
         end
       end
