@@ -1,22 +1,22 @@
 require 'aws-sdk-core'
+require_relative '../common/time'
 
 module AwsHelpers
   module EC2
     class Image
 
-      def initialize(name)
+      def initialize(name, time)
         @name = name
-        @date = DateTime.now.strftime('%Y-%m-%d-%H-%M')
+        @time = time
         @ec2 = Aws::EC2::Client.new
 
       end
 
       def create(instance_id)
-        image_name = "#{@name} #{@date}"
+        image_name = "#{@name} #{@time.strftime('%Y-%m-%d-%H-%M')}"
         puts "Creating Image #{image_name}"
         begin
           image_id = create_image(image_name, instance_id)
-          raise 'An Error has happened'
           tag_image(image_id)
           poll_image_available(image_id)
           image_id
@@ -29,6 +29,20 @@ module AwsHelpers
           delete_by_id(image_id) if image_id
           raise
         end
+      end
+
+      def delete(options)
+        delete_time = Time.subtract_period(@time, options)
+        puts "Deleting images created before #{delete_time}"
+        images_response = @ec2.describe_images(filters: [{ name: 'tag:Name', values: [@name] }])
+        images_response[:images].each { |image|
+          image_id = image[:image_id]
+          date_tag = image[:tags].detect { |tag| tag[:key] == 'Date' }
+          create_time = Time.parse(date_tag[:value])
+          if create_time < delete_time
+            delete_by_id(image_id)
+          end
+        }
       end
 
       private
@@ -50,7 +64,7 @@ module AwsHelpers
       end
 
       def tag_image(image_id)
-        @ec2.create_tags(resources: [image_id], tags: [{ key: 'Name', value: @name }, { key: 'Date', value: @date }])
+        @ec2.create_tags(resources: [image_id], tags: [{ key: 'Name', value: @name }, { key: 'Date', value: @time.to_s }])
       end
 
       def poll_image_available(image_id)

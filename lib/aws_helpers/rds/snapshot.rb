@@ -1,4 +1,5 @@
 require_relative 'instance'
+require_relative '../common/time'
 
 module AwsHelpers
   module RDS
@@ -34,7 +35,7 @@ module AwsHelpers
       end
 
       def delete(options = nil)
-        delete_time = calculate_delete_time(options)
+        delete_time = Time.subtract_period(Time.now, options)
 
         response = @rds_client.describe_db_snapshots(db_instance_identifier: @db_instance_id, snapshot_type:'manual')
         response[:db_snapshots].each { |snapshot|
@@ -52,28 +53,6 @@ module AwsHelpers
       end
 
       private
-
-      def calculate_delete_time(options)
-        delete_time = Time.now
-        return delete_time unless options
-
-        hours = options[:hours]
-        days = options[:days]
-        months = options[:months]
-
-        delete_time = delete_time - hours_to_seconds(hours) if hours
-        delete_time = delete_time - days_to_seconds(days) if days
-        delete_time = (delete_time.to_datetime << months).to_time if months
-        delete_time
-      end
-
-      def days_to_seconds(days)
-        hours_to_seconds(24) * days
-      end
-
-      def hours_to_seconds(hours)
-        60 * 60 * hours
-      end
 
       def tag_name
         return unless @use_name
