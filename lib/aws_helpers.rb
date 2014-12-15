@@ -1,7 +1,8 @@
 require 'aws_helpers/version'
-require_relative '../lib/aws_helpers/cloud_formation/stack'
-require_relative '../lib/aws_helpers/elastic_beanstalk/version'
-require_relative '../lib/aws_helpers/rds/instance'
+require_relative 'aws_helpers/cloud_formation/stack'
+require_relative 'aws_helpers/elastic_beanstalk/version'
+require_relative 'aws_helpers/rds/instance'
+require_relative 'aws_helpers/ec2/image'
 
 module AwsHelpers
   extend self
@@ -38,6 +39,10 @@ module AwsHelpers
 
     def rds_snapshots_delete(db_instance_id, options = nil)
       RDS::Snapshot.new(db_instance_id).delete(options)
+    end
+
+    def ec2_image(name, instance_id)
+      EC2::Image.new(name).create(instance_id)
     end
 
   end
