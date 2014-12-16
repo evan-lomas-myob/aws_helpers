@@ -12,12 +12,12 @@ module AwsHelpers
 
       end
 
-      def create(instance_id)
+      def create(instance_id, additional_tags = nil)
         image_name = "#{@name} #{@time.strftime('%Y-%m-%d-%H-%M')}"
         puts "Creating Image #{image_name}"
         begin
           image_id = create_image(image_name, instance_id)
-          tag_image(image_id)
+          tag_image(image_id, additional_tags)
           poll_image_available(image_id)
           image_id
         rescue
@@ -63,8 +63,16 @@ module AwsHelpers
         image_response[:image_id]
       end
 
-      def tag_image(image_id)
-        @ec2.create_tags(resources: [image_id], tags: [{ key: 'Name', value: @name }, { key: 'Date', value: @time.to_s }])
+      def tag_image(image_id, additional_tags = nil)
+        tags = [
+          { key: 'Name', value: @name },
+          { key: 'Date', value: @time.to_s }
+        ]
+        tags << additional_tags if additional_tags
+
+        @ec2.create_tags(
+          resources: [image_id],
+          tags: tags)
       end
 
       def poll_image_available(image_id)
