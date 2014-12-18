@@ -29,7 +29,7 @@ module AwsHelpers
           puts "Stack - #{name} status #{status}"
 
           case status
-            when CREATE_COMPLETE, UPDATE_COMPLETE, UPDATE_ROLLBACK_COMPLETE, ROLLBACK_FAILED, ROLLBACK_COMPLETE
+            when CREATE_COMPLETE, UPDATE_COMPLETE, UPDATE_ROLLBACK_COMPLETE, ROLLBACK_COMPLETE, ROLLBACK_FAILED, UPDATE_ROLLBACK_FAILED
               break
             else
               sleep 30
@@ -43,7 +43,7 @@ module AwsHelpers
         status = aws_stack[:stack_status]
         name = aws_stack[:stack_name]
 
-        if [UPDATE_ROLLBACK_COMPLETE, ROLLBACK_FAILED, ROLLBACK_COMPLETE].include?(status)
+        if [UPDATE_ROLLBACK_COMPLETE, ROLLBACK_COMPLETE, ROLLBACK_FAILED, UPDATE_ROLLBACK_FAILED].include?(status)
           raise "Failed to provision #{name}"
         end
 
