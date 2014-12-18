@@ -5,19 +5,17 @@ module AwsHelpers
   module EC2
     class Image
 
-      def initialize(name, time)
-        @name = name
-        @time = time
+      def initialize
+        @now = Time.now
         @ec2 = Aws::EC2::Client.new
-
       end
 
-      def create(instance_id, additional_tags = nil)
-        image_name = "#{@name} #{@time.strftime('%Y-%m-%d-%H-%M')}"
+      def create(instance_id, name, additional_tags = nil)
+        image_name = "#{name} #{@now.strftime('%Y-%m-%d-%H-%M')}"
         puts "Creating Image #{image_name}"
         begin
           image_id = create_image(image_name, instance_id)
-          tag_image(image_id, additional_tags)
+          tag_image(image_id, name, additional_tags)
           poll_image_available(image_id)
           image_id
         rescue
@@ -31,11 +29,11 @@ module AwsHelpers
         end
       end
 
-      def delete(options)
-        delete_time = Time.subtract_period(@time, options)
+      def delete(name, options)
+        delete_time = Time.subtract_period(@now, options)
         puts "Deleting images created before #{delete_time}"
-        images_response = @ec2.describe_images(filters: [{ name: 'tag:Name', values: [@name] }])
-        images_response[:images].each { |image|
+        images = find_by_tag([{ name: 'Name', value: name }])
+        images.each { |image|
           image_id = image[:image_id]
           date_tag = image[:tags].detect { |tag| tag[:key] == 'Date' }
           create_time = Time.parse(date_tag[:value])
@@ -43,6 +41,13 @@ module AwsHelpers
             delete_by_id(image_id)
           end
         }
+      end
+
+      def find_by_tag(tags)
+        filters = tags.map { |tag|
+          { name: "tag:#{tag[:name]}", values: [tag[:value]] }
+        }
+        @ec2.describe_images(filters: filters)[:images]
       end
 
       private
@@ -63,10 +68,10 @@ module AwsHelpers
         image_response[:image_id]
       end
 
-      def tag_image(image_id, additional_tags = nil)
+      def tag_image(image_id, name, additional_tags = nil)
         tags = [
-          { key: 'Name', value: @name },
-          { key: 'Date', value: @time.to_s }
+          { key: 'Name', value: name },
+          { key: 'Date', value: @now.to_s }
         ]
         tags << additional_tags if additional_tags
 

@@ -33,7 +33,7 @@ module AwsHelpers
       ElasticBeanstalk::Version.new.upload(application, version, version_contents, zip_folder)
     end
 
-    def rds_snapshot(db_instance_id, use_name = false)
+    def rds_snapshot_create(db_instance_id, use_name = false)
       RDS::Snapshot.new(db_instance_id, use_name).create
     end
 
@@ -41,12 +41,16 @@ module AwsHelpers
       RDS::Snapshot.new(db_instance_id).delete(options)
     end
 
-    def ec2_image(name, date, instance_id, additional_tags =nil)
-      EC2::Image.new(name, date).create(instance_id, additional_tags)
+    def ec2_image_create(name, instance_id, additional_tags =nil)
+      EC2::Image.new.create(instance_id, name, additional_tags)
     end
 
-    def ec2_images_delete(name, date, options = nil)
-      EC2::Image.new(name, date).delete(options)
+    def ec2_images_delete(name, options = nil)
+      EC2::Image.new.delete(name, options)
+    end
+
+    def ec2_images_find_by_tags(tags)
+      EC2::Image.new.find_by_tag(tags)
     end
 
   end
