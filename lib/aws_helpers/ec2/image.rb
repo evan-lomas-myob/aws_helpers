@@ -10,7 +10,7 @@ module AwsHelpers
         @ec2 = Aws::EC2::Client.new
       end
 
-      def create(instance_id, name, additional_tags = nil)
+      def create(instance_id, name, additional_tags = [])
         image_name = "#{name} #{@now.strftime('%Y-%m-%d-%H-%M')}"
         puts "Creating Image #{image_name}"
         begin
@@ -68,12 +68,12 @@ module AwsHelpers
         image_response[:image_id]
       end
 
-      def tag_image(image_id, name, additional_tags = nil)
+      def tag_image(image_id, name, additional_tags = [])
         tags = [
           { key: 'Name', value: name },
           { key: 'Date', value: @now.to_s }
         ]
-        tags << additional_tags if additional_tags
+        (tags = tags + additional_tags) if additional_tags
 
         @ec2.create_tags(
           resources: [image_id],

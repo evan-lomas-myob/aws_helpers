@@ -41,7 +41,7 @@ module AwsHelpers
       RDS::Snapshot.new(db_instance_id).delete(options)
     end
 
-    def ec2_image_create(name, instance_id, additional_tags =nil)
+    def ec2_image_create(name, instance_id, additional_tags = [])
       EC2::Image.new.create(instance_id, name, additional_tags)
     end
 
