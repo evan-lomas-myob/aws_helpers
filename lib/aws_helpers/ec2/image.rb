@@ -55,8 +55,9 @@ module AwsHelpers
       def delete_by_id(image_id)
         puts "Deleting Image #{image_id}"
         images_response = @ec2.describe_images(image_ids: [image_id])
-        @ec2.deregister_image(image_id: image_id)
         snapshot_ids = image_snapshot_ids(images_response)
+        @ec2.deregister_image(image_id: image_id)
+        poll_image_deleted(image_id)
         snapshot_ids.each { |snapshot_id|
           puts "Deleting Snapshot #{snapshot_id}"
           @ec2.delete_snapshot(snapshot_id: snapshot_id)
@@ -91,6 +92,15 @@ module AwsHelpers
           }
         }
         puts "Image #{image_id} Available"
+      end
+
+      def poll_image_deleted(image_id)
+        images_response = @ec2.describe_images(image_ids: [image_id])
+        loop do
+          break if images_response[:images].length == 0
+          puts "Image Deleting Current State is  #{images_response[:images].first[:state]}"
+          sleep 15
+        end
       end
 
       def image_snapshot_ids(images_response)
