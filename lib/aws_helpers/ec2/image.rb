@@ -95,10 +95,10 @@ module AwsHelpers
       end
 
       def poll_image_deleted(image_id)
-        images_response = @ec2.describe_images(image_ids: [image_id])
         loop do
+          images_response = @ec2.describe_images(image_ids: [image_id])
           break if images_response[:images].length == 0
-          puts "Image Deleting Current State is  #{images_response[:images].first[:state]}"
+          puts "Image Deleting Current State is #{images_response[:images].first[:state]}"
           sleep 15
         end
       end
