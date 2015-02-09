@@ -49,6 +49,10 @@ module AwsHelpers
       EC2::Image.new.delete(name, options)
     end
 
+    def ec2_images_delete_by_time(name, time)
+      EC2::Image.new.delete_by_time(name, time)
+    end
+
     def ec2_images_find_by_tags(tags)
       EC2::Image.new.find_by_tag(tags)
     end

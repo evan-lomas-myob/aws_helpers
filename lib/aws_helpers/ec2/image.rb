@@ -31,13 +31,17 @@ module AwsHelpers
 
       def delete(name, options)
         delete_time = Time.subtract_period(@now, options)
-        puts "Deleting images created before #{delete_time}"
+        delete_by_time(name, delete_time)
+      end
+
+      def delete_by_time(name, time)
+        puts "Deleting images created before #{time}"
         images = find_by_tag([{ name: 'Name', value: name }])
         images.each { |image|
           image_id = image[:image_id]
           date_tag = image[:tags].detect { |tag| tag[:key] == 'Date' }
           create_time = Time.parse(date_tag[:value])
-          if create_time < delete_time
+          if create_time < time
             delete_by_id(image_id)
           end
         }
