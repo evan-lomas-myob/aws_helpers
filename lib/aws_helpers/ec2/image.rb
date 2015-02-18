@@ -1,4 +1,5 @@
 require 'aws-sdk-core'
+require 'retryable'
 require_relative '../common/time'
 
 module AwsHelpers
@@ -80,9 +81,12 @@ module AwsHelpers
         ]
         (tags = tags + additional_tags) if additional_tags
 
-        @ec2.create_tags(
-          resources: [image_id],
-          tags: tags)
+        Retryable.retryable(tries: 3, sleep: 10, :on => Aws::EC2::Errors::InvalidAMIIDNotFound) do
+          @ec2.create_tags(
+            resources: [image_id],
+            tags: tags)
+        end
+
       end
 
       def poll_image_available(image_id)
