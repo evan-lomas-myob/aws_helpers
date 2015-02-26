@@ -1,15 +1,15 @@
-require_relative 'stack_status'
+require 'aws-sdk-core'
 
 module AwsHelpers
   module CloudFormation
+    class StackErrorEvents
 
-    class ErrorEvents
-
-      def initialize(stack)
-        @stack = stack
+      def initialize(stack_name, client = Aws::CloudFormation::Client.new)
+        @stack_name = stack_name
+        @client = client
       end
 
-      def report
+      def execute
         events = retrieve_events
         events = filter_post_initiation(events)
         events = filter_failed(events)
@@ -24,7 +24,7 @@ module AwsHelpers
         events = []
         next_token = nil
         loop do
-          response = @stack.describe_stack_events(next_token)
+          response = @client.describe_stack_events(stack_name: @stack_name, next_token: next_token)
           next_token = response[:next_token]
           events.concat(response[:stack_events])
           break if response[:stack_events].detect { |event| initiation_event?(event) } || next_token.nil?
@@ -36,7 +36,7 @@ module AwsHelpers
         result = []
         events.each { |event|
           result << event
-          break if initiation_event?(event)
+          break if initiation_event?(event) || complete_event?(event)
         }
         result
       end
@@ -56,7 +56,15 @@ module AwsHelpers
       def initiation_event?(event)
         [
           CREATE_IN_PROGRESS,
-          UPDATE_IN_PROGRESS
+          UPDATE_IN_PROGRESS,
+          DELETE_IN_PROGRESS,
+        ].include?(event[:resource_status]) &&
+          event[:resource_type] == 'AWS::CloudFormation::Stack'
+      end
+
+      def complete_event?(event)
+        [
+          DELETE_COMPLETE,
         ].include?(event[:resource_status]) &&
           event[:resource_type] == 'AWS::CloudFormation::Stack'
       end

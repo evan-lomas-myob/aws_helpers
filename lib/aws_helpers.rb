@@ -1,5 +1,8 @@
 require 'aws_helpers/version'
-require_relative 'aws_helpers/cloud_formation/stack'
+require_relative 'aws_helpers/cloud_formation/stack_provision'
+require_relative 'aws_helpers/cloud_formation/stack_delete'
+require_relative 'aws_helpers/cloud_formation/stack_exists'
+require_relative 'aws_helpers/cloud_formation/stack_outputs'
 require_relative 'aws_helpers/elastic_beanstalk/version'
 require_relative 'aws_helpers/rds/instance'
 require_relative 'aws_helpers/ec2/image'
@@ -10,19 +13,23 @@ module AwsHelpers
   class << self
 
     def stack_provision(stack_name, template, options = {})
-      CloudFormation::Stack.new(stack_name, template, options).provision
+      CloudFormation::StackProvision.new(stack_name, template, options).execute
     end
 
     def stack_s3_provision(stack_name, template, bucket_name, options = {}, bucket_encrypt = false)
-      CloudFormation::Stack.new(stack_name, template, options.merge(bucket_name: bucket_name, bucket_encrypt: bucket_encrypt)).provision
+      CloudFormation::StackProvision.new(stack_name, template, options.merge(bucket_name: bucket_name, bucket_encrypt: bucket_encrypt)).execute
+    end
+
+    def stack_delete(stack_name)
+      CloudFormation::StackDelete.new(stack_name).execute
     end
 
     def stack_outputs(stack_name)
-      CloudFormation::Stack.outputs(stack_name)
+      CloudFormation::StackOutputs.new(stack_name).execute
     end
 
     def stack_exists?(stack_name)
-      CloudFormation::Stack.exists?(stack_name)
+      CloudFormation:: StackExists.new(stack_name).execute
     end
 
     def beanstalk_deploy(application, environment, version)
