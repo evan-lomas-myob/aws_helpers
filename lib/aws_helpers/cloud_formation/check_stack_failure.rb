@@ -18,7 +18,7 @@ module AwsHelpers
         status = aws_stack[:stack_status]
         name = aws_stack[:stack_name]
 
-        if [UPDATE_ROLLBACK_COMPLETE, ROLLBACK_COMPLETE, ROLLBACK_FAILED, UPDATE_ROLLBACK_FAILED].include?(status)
+        if [UPDATE_ROLLBACK_COMPLETE, ROLLBACK_COMPLETE, ROLLBACK_FAILED, UPDATE_ROLLBACK_FAILED, DELETE_FAILED].include?(status)
           raise "Stack #{name} Failed"
         end
 
