@@ -4,6 +4,7 @@ require_relative 'aws_helpers/cloud_formation/stack_modify_parameters'
 require_relative 'aws_helpers/cloud_formation/stack_delete'
 require_relative 'aws_helpers/cloud_formation/stack_exists'
 require_relative 'aws_helpers/cloud_formation/stack_outputs'
+require_relative 'aws_helpers/elastic_load_balancing/poll_healthy_instances'
 require_relative 'aws_helpers/elastic_beanstalk/version'
 require_relative 'aws_helpers/rds/instance'
 require_relative 'aws_helpers/ec2/image'
@@ -34,7 +35,11 @@ module AwsHelpers
     end
 
     def stack_exists?(stack_name)
-      CloudFormation:: StackExists.new(stack_name).execute
+      CloudFormation::StackExists.new(stack_name).execute
+    end
+
+    def elb_poll_healthy_instances(load_balancer_name, required_instances, timeout)
+      ElasticLoadBalancing::PollHealthyInstances.new(load_balancer_name, required_instances, timeout).execute
     end
 
     def beanstalk_deploy(application, environment, version)
