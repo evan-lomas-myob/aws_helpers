@@ -1,5 +1,6 @@
 require 'aws_helpers/version'
 require_relative 'aws_helpers/cloud_formation/stack_provision'
+require_relative 'aws_helpers/cloud_formation/stack_modify_parameters'
 require_relative 'aws_helpers/cloud_formation/stack_delete'
 require_relative 'aws_helpers/cloud_formation/stack_exists'
 require_relative 'aws_helpers/cloud_formation/stack_outputs'
@@ -18,6 +19,10 @@ module AwsHelpers
 
     def stack_s3_provision(stack_name, template, bucket_name, options = {}, bucket_encrypt = false)
       CloudFormation::StackProvision.new(stack_name, template, options.merge(bucket_name: bucket_name, bucket_encrypt: bucket_encrypt)).execute
+    end
+
+    def stack_modify_parameters(stack_name, parameters)
+      CloudFormation::StackModifyParameters.new(stack_name, parameters).execute
     end
 
     def stack_delete(stack_name)
