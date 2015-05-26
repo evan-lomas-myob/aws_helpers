@@ -8,6 +8,8 @@ require_relative 'aws_helpers/elastic_load_balancing/poll_healthy_instances'
 require_relative 'aws_helpers/elastic_beanstalk/version'
 require_relative 'aws_helpers/rds/instance'
 require_relative 'aws_helpers/ec2/image'
+require_relative 'aws_helpers/auto_scaling_group/retrieve_desired_capacity'
+require_relative 'aws_helpers/auto_scaling_group/update_desired_capacity'
 
 module AwsHelpers
   extend self
@@ -40,6 +42,14 @@ module AwsHelpers
 
     def elb_poll_healthy_instances(load_balancer_name, required_instances, timeout)
       ElasticLoadBalancing::PollHealthyInstances.new(load_balancer_name, required_instances, timeout).execute
+    end
+
+    def auto_scaling_group_retrieve_desired_capacity(auto_scaling_group_name)
+      AutoScalingGroup::RetrieveDesiredCapacity.new(auto_scaling_group_name).execute
+    end
+
+    def auto_scaling_group_update_desired_capacity(auto_scaling_group_name, desired_capacity, timeout)
+      AutoScalingGroup::UpdateDesiredCapacity.new(auto_scaling_group_name, desired_capacity, timeout).execute
     end
 
     def beanstalk_deploy(application, environment, version)
