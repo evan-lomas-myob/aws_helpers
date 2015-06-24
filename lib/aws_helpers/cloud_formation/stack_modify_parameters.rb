@@ -1,26 +1,24 @@
-require 'aws-sdk-core'
 require_relative 'stack_update'
-
 
 module AwsHelpers
   module CloudFormation
     class StackModifyParameters
 
-      def initialize(stack_name, updated_parameters, client = Aws::CloudFormation::Client.new)
-        @client = client
+      def initialize(cloud_formation_client, stack_name, updated_parameters)
+        @cloud_formation_client = cloud_formation_client
         @stack_name = stack_name
         @updated_parameters = updated_parameters
       end
 
       def execute
         puts "Modifying Parameters #{@stack_name}"
-        StackUpdate.new(request, @client).execute
+        StackUpdate.new(@cloud_formation_client, request).execute
       end
 
       private
 
       def request
-        existing_stack = @client.describe_stacks(stack_name: @stack_name)[:stacks].first
+        existing_stack = @cloud_formation_client.describe_stacks(stack_name: @stack_name)[:stacks].first
 
         capabilities = existing_stack[:capabilities]
         parameters = existing_stack[:parameters].map { |existing_parameter|

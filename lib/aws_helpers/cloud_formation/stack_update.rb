@@ -5,18 +5,18 @@ module AwsHelpers
   module CloudFormation
     class StackUpdate
 
-      def initialize(update_request, client = Aws::CloudFormation::Client.new)
+      def initialize(cloud_formation_client, update_request)
+        @cloud_formation_client = cloud_formation_client
         @update_request = update_request
         @stack_name = update_request[:stack_name]
-        @client = client
       end
 
       def execute
 
         puts "Updating #{@stack_name}"
         begin
-          @client.update_stack(@update_request)
-          StackProgress.new(@stack_name, @client).execute
+          @cloud_formation_client.update_stack(@update_request)
+          StackProgress.new(@cloud_formation_client, @stack_name).execute
         rescue Aws::CloudFormation::Errors::ValidationError => validation_error
           if validation_error.message == 'No updates are to be performed.'
             puts "No updates to perform for #{@stack_name}."

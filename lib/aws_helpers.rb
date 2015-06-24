@@ -1,4 +1,5 @@
 require 'aws_helpers/version'
+require 'aws-sdk-core'
 require_relative 'aws_helpers/cloud_formation/stack_provision'
 require_relative 'aws_helpers/cloud_formation/stack_modify_parameters'
 require_relative 'aws_helpers/cloud_formation/stack_delete'
@@ -16,72 +17,100 @@ module AwsHelpers
 
   class << self
 
+    COMMON_OPTIONS = { retry_limit: 4 }
+
     def stack_provision(stack_name, template, options = {})
-      CloudFormation::StackProvision.new(stack_name, template, options).execute
+      cloud_formation_client = Aws::CloudFormation::Client.new(COMMON_OPTIONS)
+      s3_client = Aws::S3::Client.new(COMMON_OPTIONS)
+      CloudFormation::StackProvision.new(cloud_formation_client, s3_client, stack_name, template, options).execute
     end
 
     def stack_s3_provision(stack_name, template, bucket_name, options = {}, bucket_encrypt = false)
-      CloudFormation::StackProvision.new(stack_name, template, options.merge(bucket_name: bucket_name, bucket_encrypt: bucket_encrypt)).execute
+      cloud_formation_client = Aws::CloudFormation::Client.new(COMMON_OPTIONS)
+      s3_client = Aws::S3::Client.new(COMMON_OPTIONS)
+      CloudFormation::StackProvision.new(cloud_formation_client, s3_client, stack_name, template, options.merge(bucket_name: bucket_name, bucket_encrypt: bucket_encrypt)).execute
     end
 
     def stack_modify_parameters(stack_name, parameters)
-      CloudFormation::StackModifyParameters.new(stack_name, parameters).execute
+      cloud_formation_client = Aws::CloudFormation::Client.new(COMMON_OPTIONS)
+      CloudFormation::StackModifyParameters.new(cloud_formation_client, stack_name, parameters).execute
     end
 
     def stack_delete(stack_name)
-      CloudFormation::StackDelete.new(stack_name).execute
+      cloud_formation_client = Aws::CloudFormation::Client.new(COMMON_OPTIONS)
+      CloudFormation::StackDelete.new(cloud_formation_client, stack_name).execute
     end
 
     def stack_outputs(stack_name)
-      CloudFormation::StackOutputs.new(stack_name).execute
+      cloud_formation_client = Aws::CloudFormation::Client.new(COMMON_OPTIONS)
+      CloudFormation::StackOutputs.new(cloud_formation_client, stack_name).execute
     end
 
     def stack_exists?(stack_name)
-      CloudFormation::StackExists.new(stack_name).execute
+      cloud_formation_client = Aws::CloudFormation::Client.new(COMMON_OPTIONS)
+      CloudFormation::StackExists.new(cloud_formation_client, stack_name).execute
     end
 
     def elb_poll_healthy_instances(load_balancer_name, required_instances, timeout)
-      ElasticLoadBalancing::PollHealthyInstances.new(load_balancer_name, required_instances, timeout).execute
+      elastic_load_balancing_client = Aws::ElasticLoadBalancing::Client.new(COMMON_OPTIONS)
+      ElasticLoadBalancing::PollHealthyInstances.new(elastic_load_balancing_client, load_balancer_name, required_instances, timeout).execute
     end
 
     def auto_scaling_group_retrieve_desired_capacity(auto_scaling_group_name)
-      AutoScalingGroup::RetrieveDesiredCapacity.new(auto_scaling_group_name).execute
+      auto_scaling_client = Aws::AutoScaling::Client.new(COMMON_OPTIONS)
+      AutoScalingGroup::RetrieveDesiredCapacity.new(auto_scaling_client, auto_scaling_group_name).execute
     end
 
     def auto_scaling_group_update_desired_capacity(auto_scaling_group_name, desired_capacity, timeout)
-      AutoScalingGroup::UpdateDesiredCapacity.new(auto_scaling_group_name, desired_capacity, timeout).execute
+      autoscaling_client = Aws::AutoScaling::Client.new(COMMON_OPTIONS)
+      elastic_load_balancing_client = Aws::ElasticLoadBalancing::Client.new(COMMON_OPTIONS)
+      AutoScalingGroup::UpdateDesiredCapacity.new(autoscaling_client, elastic_load_balancing_client, auto_scaling_group_name, desired_capacity, timeout).execute
     end
 
     def beanstalk_deploy(application, environment, version)
-      ElasticBeanstalk::Version.new.deploy(application, environment, version)
+      elastic_beanstalk_client = Aws::ElasticBeanstalk::Client.new(COMMON_OPTIONS)
+      s3_client = Aws::S3::Client.new(COMMON_OPTIONS)
+      iam_client = Aws::IAM::Client.new(COMMON_OPTIONS)
+      ElasticBeanstalk::Version.new(elastic_beanstalk_client, s3_client, iam_client).deploy(application, environment, version)
     end
 
     def beanstalk_upload(application, version, version_contents, zip_folder)
-      ElasticBeanstalk::Version.new.upload(application, version, version_contents, zip_folder)
+      elastic_beanstalk_client = Aws::ElasticBeanstalk::Client.new(COMMON_OPTIONS)
+      s3_client = Aws::S3::Client.new(COMMON_OPTIONS)
+      iam_client = Aws::IAM::Client.new(COMMON_OPTIONS)
+      ElasticBeanstalk::Version.new(elastic_beanstalk_client, s3_client, iam_client).upload(application, version, version_contents, zip_folder)
     end
 
     def rds_snapshot_create(db_instance_id, use_name = false)
-      RDS::Snapshot.new(db_instance_id, use_name).create
+      rds_client = Aws::RDS::Client.new(COMMON_OPTIONS)
+      iam_client = Aws::IAM::Client.new(COMMON_OPTIONS)
+      RDS::Snapshot.new(rds_client, iam_client, db_instance_id, use_name).create
     end
 
     def rds_snapshots_delete(db_instance_id, options = nil)
-      RDS::Snapshot.new(db_instance_id).delete(options)
+      rds_client = Aws::RDS::Client.new(COMMON_OPTIONS)
+      iam_client = Aws::IAM::Client.new(COMMON_OPTIONS)
+      RDS::Snapshot.new(rds_client, iam_client, db_instance_id).delete(options)
     end
 
     def ec2_image_create(name, instance_id, additional_tags = [])
-      EC2::Image.new.create(instance_id, name, additional_tags)
+      ec2_client = Aws::EC2::Client.new(COMMON_OPTIONS)
+      EC2::Image.new(ec2_client).create(instance_id, name, additional_tags)
     end
 
     def ec2_images_delete(name, options = nil)
-      EC2::Image.new.delete(name, options)
+      ec2_client = Aws::EC2::Client.new(COMMON_OPTIONS)
+      EC2::Image.new(ec2_client).delete(name, options)
     end
 
     def ec2_images_delete_by_time(name, time)
-      EC2::Image.new.delete_by_time(name, time)
+      ec2_client = Aws::EC2::Client.new(COMMON_OPTIONS)
+      EC2::Image.new(ec2_client).delete_by_time(name, time)
     end
 
     def ec2_images_find_by_tags(tags)
-      EC2::Image.new.find_by_tag(tags)
+      ec2_client = Aws::EC2::Client.new(COMMON_OPTIONS)
+      EC2::Image.new(ec2_client).find_by_tag(tags)
     end
 
   end

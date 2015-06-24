@@ -12,15 +12,16 @@ module AwsHelpers
 
     class Snapshot
 
-      def initialize(db_instance_id, use_name = false)
-        @rds_client = Aws::RDS::Client.new
+      def initialize(rds_client, iam_client, db_instance_id, use_name = false)
+        @rds_client = rds_client
+        @iam_client = iam_client
         @db_instance_id = db_instance_id
         @snapshot_id = nil
         @use_name = use_name
       end
 
       def create
-        Instance.new(@db_instance_id).poll_available
+        Instance.new(@rds_client, @db_instance_id).poll_available
 
         now = DateTime.now.strftime('%Y-%m-%d-%H-%M')
         name = tag_name
@@ -56,10 +57,8 @@ module AwsHelpers
 
       def tag_name
         return unless @use_name
-
-        iam = Aws::IAM::Client.new
-        region = iam.config.region
-        account = iam.list_users[:users].first[:arn][/::(.*):/, 1]
+        region = @iam_client.config.region
+        account = @iam_client.list_users[:users].first[:arn][/::(.*):/, 1]
         tags = @rds_client.list_tags_for_resource(resource_name: "arn:aws:rds:#{region}:#{account}:db:#{@db_instance_id}")
         name_tag = tags[:tag_list].detect { |tag| tag[:key] == 'Name' }
         name_tag[:value] if name_tag

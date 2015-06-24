@@ -5,10 +5,9 @@ module AwsHelpers
   module CloudFormation
     class StackExists
 
-      def initialize(stack_name, client = Aws::CloudFormation::Client.new)
+      def initialize(cloud_formation_client, stack_name)
         @stack_name = stack_name
-        @client = client
-        @describe_stack = DescribeStack.new(stack_name, client)
+        @describe_stack = DescribeStack.new(cloud_formation_client, stack_name)
       end
 
       def execute

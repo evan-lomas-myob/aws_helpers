@@ -1,12 +1,10 @@
-require 'aws-sdk-core'
-
 module AwsHelpers
   module CloudFormation
     class StackErrorEvents
 
-      def initialize(stack_name, client = Aws::CloudFormation::Client.new)
+      def initialize(cloud_formation_client, stack_name)
+        @cloud_formation_client = cloud_formation_client
         @stack_name = stack_name
-        @client = client
       end
 
       def execute
@@ -24,7 +22,7 @@ module AwsHelpers
         events = []
         next_token = nil
         loop do
-          response = @client.describe_stack_events(stack_name: @stack_name, next_token: next_token)
+          response = @cloud_formation_client.describe_stack_events(stack_name: @stack_name, next_token: next_token)
           next_token = response[:next_token]
           events.concat(response[:stack_events])
           break if response[:stack_events].detect { |event| initiation_event?(event) } || next_token.nil?

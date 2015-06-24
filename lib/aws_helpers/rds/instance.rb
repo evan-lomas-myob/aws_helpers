@@ -1,5 +1,3 @@
-require 'aws-sdk-core'
-
 require_relative 'snapshot'
 require_relative 'snapshot_progress'
 
@@ -15,8 +13,8 @@ module AwsHelpers
 
     class Instance
 
-      def initialize(db_instance_id)
-        @rds_client = Aws::RDS::Client.new
+      def initialize(rds_client, db_instance_id)
+        @rds_client = rds_client
         @db_instance_id = db_instance_id
       end
 

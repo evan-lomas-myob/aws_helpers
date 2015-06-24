@@ -1,4 +1,3 @@
-require 'aws-sdk-core'
 require_relative 'stack_exists'
 require_relative 'stack_progress'
 require_relative 'describe_stack'
@@ -7,11 +6,11 @@ module AwsHelpers
   module CloudFormation
     class StackDelete
 
-      def initialize(stack_name, client = Aws::CloudFormation::Client.new)
+      def initialize(cloud_formation_client, stack_name)
+        @cloud_formation_client = cloud_formation_client
         @stack_name = stack_name
-        @client = client
-        @stack_exists = StackExists.new(stack_name, client)
-        @describe_stack = DescribeStack.new(stack_name, client)
+        @stack_exists = StackExists.new(cloud_formation_client, stack_name)
+        @describe_stack = DescribeStack.new(cloud_formation_client, stack_name)
       end
 
       def execute
@@ -20,8 +19,8 @@ module AwsHelpers
 
         stack = @describe_stack.execute
         stack_id = stack[:stack_id]
-        @client.delete_stack(stack_name: @stack_name)
-        StackProgress.new(stack_id, @client).execute
+        @cloud_formation_client.delete_stack(stack_name: @stack_name)
+        StackProgress.new(@cloud_formation_client, stack_id).execute
       end
 
     end

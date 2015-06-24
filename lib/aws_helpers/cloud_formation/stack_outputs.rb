@@ -1,14 +1,11 @@
-require 'aws-sdk-core'
 require_relative 'describe_stack'
 
 module AwsHelpers
   module CloudFormation
     class StackOutputs
 
-      def initialize(stack_name, client = Aws::CloudFormation::Client.new)
-        @stack_name = stack_name
-        @client = client
-        @describe_stack = DescribeStack.new(stack_name, client)
+      def initialize(cloud_formation_client, stack_name)
+        @describe_stack = DescribeStack.new(cloud_formation_client, stack_name)
       end
 
       def execute

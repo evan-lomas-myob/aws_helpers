@@ -5,14 +5,14 @@ module AwsHelpers
 
     class ApplicationVersion
 
-      def initialize(beanstalk)
-        @beanstalk = beanstalk
-        @events = Events.new(beanstalk)
+      def initialize(elastic_beanstalk_client)
+        @elastic_beanstalk_client = elastic_beanstalk_client
+        @events = Events.new(elastic_beanstalk_client)
       end
 
       def create(application, version_file)
         puts "Creating version #{version_file.version} for #{application}"
-        @beanstalk.create_application_version(
+        @elastic_beanstalk_client.create_application_version(
           application_name: application,
           version_label: version_file.version,
           source_bundle: {
@@ -22,7 +22,7 @@ module AwsHelpers
 
       def deploy(application, environment, version)
         puts "Deploying version #{version} to #{application}, #{environment}"
-        response = @beanstalk.update_environment(
+        response = @elastic_beanstalk_client.update_environment(
           environment_name: environment,
           version_label: version)
         @events.pool(response[:date_updated], application, environment)

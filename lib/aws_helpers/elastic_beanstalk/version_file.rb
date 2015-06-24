@@ -2,7 +2,9 @@ module AwsHelpers
   module ElasticBeanstalk
     class VersionFile
 
-      def initialize(application, version, contents)
+      def initialize(s3_client, iam_client, application, version, contents)
+        @s3_client = s3_client
+        @iam_client = iam_client
         @application = application
         @version = version
         @contents = contents
@@ -10,8 +12,7 @@ module AwsHelpers
 
       def upload_to_s3
         puts "Uploading #{file_name} to S3 bucket #{bucket} "
-        s3 = Aws::S3::Client.new
-        s3.put_object(
+        @s3_client.put_object(
           bucket: bucket,
           key: file_name,
           body: @contents
@@ -31,9 +32,8 @@ module AwsHelpers
       end
 
       def query_bucket_name
-        iam = Aws::IAM::Client.new
-        region = iam.config.region
-        account = iam.list_users[:users].first[:arn][/::(.*):/, 1]
+        region = @iam_client.config.region
+        account = @iam_client.list_users[:users].first[:arn][/::(.*):/, 1]
         "elasticbeanstalk-#{region}-#{account}"
       end
 

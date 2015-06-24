@@ -6,9 +6,9 @@ module AwsHelpers
   module EC2
     class Image
 
-      def initialize
+      def initialize(ec2_client)
         @now = Time.now
-        @ec2 = Aws::EC2::Client.new
+        @ec2_client = ec2_client
       end
 
       def create(instance_id, name, additional_tags = [])
@@ -52,25 +52,25 @@ module AwsHelpers
         filters = tags.map { |tag|
           { name: "tag:#{tag[:name]}", values: [tag[:value]] }
         }
-        @ec2.describe_images(filters: filters)[:images]
+        @ec2_client.describe_images(filters: filters)[:images]
       end
 
       private
 
       def delete_by_id(image_id)
         puts "Deleting Image #{image_id}"
-        images_response = @ec2.describe_images(image_ids: [image_id])
+        images_response = @ec2_client.describe_images(image_ids: [image_id])
         snapshot_ids = image_snapshot_ids(images_response)
-        @ec2.deregister_image(image_id: image_id)
+        @ec2_client.deregister_image(image_id: image_id)
         poll_image_deleted(image_id)
         snapshot_ids.each { |snapshot_id|
           puts "Deleting Snapshot #{snapshot_id}"
-          @ec2.delete_snapshot(snapshot_id: snapshot_id)
+          @ec2_client.delete_snapshot(snapshot_id: snapshot_id)
         }
       end
 
       def create_image(image_name, instance_id)
-        image_response = @ec2.create_image(instance_id: instance_id, name: image_name, description: image_name)
+        image_response = @ec2_client.create_image(instance_id: instance_id, name: image_name, description: image_name)
         image_response[:image_id]
       end
 
@@ -82,7 +82,7 @@ module AwsHelpers
         (tags = tags + additional_tags) if additional_tags
 
         Retryable.retryable(tries: 3, sleep: 10, :on => Aws::EC2::Errors::InvalidAMIIDNotFound) do
-          @ec2.create_tags(
+          @ec2_client.create_tags(
             resources: [image_id],
             tags: tags)
         end
@@ -90,7 +90,7 @@ module AwsHelpers
       end
 
       def poll_image_available(image_id)
-        @ec2.wait_until(:image_available, image_ids: [image_id]) { |waiter|
+        @ec2_client.wait_until(:image_available, image_ids: [image_id]) { |waiter|
           waiter.interval = 60 # number of seconds to sleep between attempts
           waiter.max_attempts = 60 # maximum number of polling attempts
           waiter.before_wait { |attempts, prev_response|
@@ -104,7 +104,7 @@ module AwsHelpers
 
       def poll_image_deleted(image_id)
         loop do
-          images_response = @ec2.describe_images(image_ids: [image_id])
+          images_response = @ec2_client.describe_images(image_ids: [image_id])
           break if images_response[:images].length == 0
           puts "Image Deleting Current State is #{images_response[:images].first[:state]}"
           sleep 15
@@ -124,7 +124,7 @@ module AwsHelpers
 
       def describe_snapshot_progress(snapshot_ids)
         unless snapshot_ids.empty?
-          snapshots_response = @ec2.describe_snapshots(snapshot_ids: snapshot_ids)
+          snapshots_response = @ec2_client.describe_snapshots(snapshot_ids: snapshot_ids)
           snapshots_response[:snapshots].each { |snapshot|
             puts "Snapshot #{snapshot[:snapshot_id]} Progress #{snapshot[:progress]}"
           }

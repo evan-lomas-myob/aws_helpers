@@ -2,8 +2,8 @@ module AwsHelpers
   module ElasticBeanstalk
     class Events
 
-      def initialize(beanstalk)
-        @beanstalk = beanstalk
+      def initialize(elastic_beanstalk_client)
+        @elastic_beanstalk_client = elastic_beanstalk_client
       end
 
       def pool(start_time, application, environment)
@@ -22,7 +22,7 @@ module AwsHelpers
       private
 
       def describe_version_events(start_time, application, environment)
-        @beanstalk.describe_events(
+        @elastic_beanstalk_client.describe_events(
           application_name: application,
           environment_name: environment,
           start_time: start_time

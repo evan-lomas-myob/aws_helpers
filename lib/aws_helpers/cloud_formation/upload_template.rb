@@ -1,15 +1,13 @@
-require 'aws-sdk-core'
-
 module AwsHelpers
   module CloudFormation
     class UploadTemplate
 
-      def initialize(stack_name, template, bucket_name, bucket_encrypt, s3_client = Aws::S3::Client.new)
+      def initialize(s3_client, stack_name, template, bucket_name, bucket_encrypt)
+        @s3_client = s3_client
         @stack_name = stack_name
         @template = template
         @bucket_name = bucket_name
         @bucket_encrypt = bucket_encrypt
-        @s3_client = s3_client
       end
 
       def execute
