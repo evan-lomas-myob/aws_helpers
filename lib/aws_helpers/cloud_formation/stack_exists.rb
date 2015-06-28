@@ -14,7 +14,7 @@ module AwsHelpers
         begin
           !@describe_stack.execute.nil?
         rescue Aws::CloudFormation::Errors::ValidationError => validation_error
-          if validation_error.message == "Stack:#{@stack_name} does not exist"
+          if validation_error.message == "Stack with id #{@stack_name} does not exist"
             false
           else
             raise validation_error
