@@ -49,6 +49,11 @@ module AwsHelpers
         }
       end
 
+      def latest
+        response = @rds_client.describe_db_snapshots(db_instance_identifier: @db_instance_id, snapshot_type:'manual')
+        response[:db_snapshots].sort_by! { |snapshot| snapshot[:snapshot_create_time] }.last
+      end
+
       def describe
         @rds_client.describe_db_snapshots(db_snapshot_identifier: @snapshot_id)[:db_snapshots].first if @snapshot_id
       end

@@ -93,6 +93,12 @@ module AwsHelpers
       RDS::Snapshot.new(rds_client, iam_client, db_instance_id).delete(options)
     end
 
+    def rds_snapshot_latest(db_instance_id)
+      rds_client = Aws::RDS::Client.new(COMMON_OPTIONS)
+      iam_client = Aws::IAM::Client.new(COMMON_OPTIONS)
+      RDS::Snapshot.new(rds_client, iam_client, db_instance_id).latest
+    end
+
     def ec2_image_create(name, instance_id, additional_tags = [])
       ec2_client = Aws::EC2::Client.new(COMMON_OPTIONS)
       EC2::Image.new(ec2_client).create(instance_id, name, additional_tags)
