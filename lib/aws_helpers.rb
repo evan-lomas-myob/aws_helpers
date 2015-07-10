@@ -17,7 +17,7 @@ module AwsHelpers
 
   class << self
 
-    COMMON_OPTIONS = { retry_limit: 4 }
+    COMMON_OPTIONS = { retry_limit: 5 }
 
     def stack_provision(stack_name, template, options = {})
       CloudFormation::StackProvision.new(cf_client, s3_client, stack_name, template, options).execute
