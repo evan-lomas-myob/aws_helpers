@@ -5,6 +5,7 @@ require_relative 'aws_helpers/cloud_formation/stack_modify_parameters'
 require_relative 'aws_helpers/cloud_formation/stack_delete'
 require_relative 'aws_helpers/cloud_formation/stack_exists'
 require_relative 'aws_helpers/cloud_formation/stack_outputs'
+require_relative 'aws_helpers/cloud_formation/stack_parameters'
 require_relative 'aws_helpers/elastic_load_balancing/poll_healthy_instances'
 require_relative 'aws_helpers/elastic_beanstalk/version'
 require_relative 'aws_helpers/rds/instance'
@@ -40,7 +41,7 @@ module AwsHelpers
     end
 
     def stack_parameters(stack_name)
-      CloudFormation::DescribeStack.new(cf_client, stack_name).execute.parameters
+      CloudFormation::StackParameters.new(cf_client, stack_name).execute
     end
 
     def stack_exists?(stack_name)
