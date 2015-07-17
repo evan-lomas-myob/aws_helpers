@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    aws_helpers (2.0.0)
+    aws_helpers (2.0.1)
       aws-sdk-core (~> 2.1)
       retryable (~> 2.0)
 
