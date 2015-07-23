@@ -4,7 +4,6 @@ language: ruby
 
 rvm:
   - ruby-head
-  - jruby-head
   - 2.2.1
   - 2.2.2
 
