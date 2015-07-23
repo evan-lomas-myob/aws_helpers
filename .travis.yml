@@ -13,6 +13,5 @@ script: bundle exec rake
 
 bundler_args: --without docs release repl
 
-addons:
-  code_climate:
-    repo_token: 71154c3bee2213ca32587020dcd3ed2e8b577843247f982a4f3ac34dca4f9ec7
+after_success:
+  - coveralls
