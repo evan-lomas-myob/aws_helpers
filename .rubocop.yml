@@ -1,0 +1,16 @@
+AllCops:
+  Include:
+    - Gemfile
+    - Rakefile
+
+LineLength:
+  Enabled: false
+
+Documentation:
+  Enabled: false
+
+FileName:
+  Enabled: false
+
+Next:
+  Enabled: false
