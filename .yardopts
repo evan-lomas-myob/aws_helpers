@@ -3,4 +3,4 @@
 --no-private
 --protected
 lib/aws_helpers/*.rb -
-CODE_OF_CONDUCT.md LICENSE.txt
+README.md CODE_OF_CONDUCT.md LICENSE.txt
