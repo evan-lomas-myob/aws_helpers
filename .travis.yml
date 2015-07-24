@@ -18,4 +18,5 @@ after_success:
 
 addons:
   code_climate:
-    repo_token: temptoken123
+    repo_token:
+      secure: "KR+dimePRW2kUzCu4sO1Iv18+ajSjzxAyb2z86dt4beHAdJMFxmP8m9a+TBBbbrkG4qIDyrBUo1bp72eX3HOOorZveMJn5l1A34frKG1BPDitzXxK4q7kVbvG9FZKduj01hHVY6WBUPAxemsNEFy9f5wRibZy6lH1ZNMur0M38g="
