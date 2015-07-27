@@ -1,5 +1,6 @@
 require 'aws-sdk-core'
 require_relative '../common/client'
+require_relative 'version.rb'
 
 module AwsHelpers
 
@@ -12,11 +13,11 @@ module AwsHelpers
       end
 
       def deploy(application, environment, version)
-        # ElasticBeanstalk::Version.new(aws_elastic_beanstalk_client, aws_s3_client, aws_iam_client).deploy(application, environment, version)
+        ElasticBeanstalk::Version.new(aws_elastic_beanstalk_client, aws_s3_client, aws_iam_client).deploy(application, environment, version)
       end
 
       def upload(application, version, version_contents, zip_folder)
-        # ElasticBeanstalk::Version.new(aws_elastic_beanstalk_client, aws_s3_client, aws_iam_client).upload(application, version, version_contents, zip_folder)
+        ElasticBeanstalk::Version.new(aws_elastic_beanstalk_client, aws_s3_client, aws_iam_client).upload(application, version, version_contents, zip_folder)
       end
 
       private
