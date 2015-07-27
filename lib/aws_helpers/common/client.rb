@@ -4,6 +4,8 @@ module AwsHelpers
 
     class Client
 
+      attr_reader :config
+
       def initialize(config = nil)
          @config = config
       end
@@ -11,10 +13,6 @@ module AwsHelpers
       def configure
         yield config if block_given?
       end
-
-      protected
-
-      attr_reader :config
 
     end
 

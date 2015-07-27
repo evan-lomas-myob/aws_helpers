@@ -4,40 +4,95 @@ require 'aws_helpers/elastic_load_balancing/poll_healthy_instances'
 
 describe AwsHelpers::ElasticLoadBalancing::Client do
 
-  let(:options) { {stub_responses: true, endpoint: 'http://endpoint'} }
-
   describe '.new' do
 
-    it "should call AwsHelpers::Common::Client's initialize method" do
-      expect(AwsHelpers::Common::Client).to receive(:new).with(options)
-      AwsHelpers::ElasticLoadBalancing::Client.new(options)
+    context 'without options' do
+
+      it "should call AwsHelpers::Common::Client's initialize method" do
+        expect(AwsHelpers::Common::Client).to receive(:new)
+        AwsHelpers::ElasticLoadBalancing::Client.new
+      end
+
     end
 
+    context 'with options' do
+
+      let(:options) { {endpoint: 'http://endpoint'} }
+
+      it "should call AwsHelpers::Common::Client's initialize method with the correct options" do
+        expect(AwsHelpers::Common::Client).to receive(:new).with(options)
+        AwsHelpers::ElasticLoadBalancing::Client.new(options)
+      end
+
+    end
   end
 
   describe '#poll_healthy_instances' do
 
     let(:elastic_load_balancing_client) { double(Aws::ElasticLoadBalancing::Client) }
-    let(:load_balancer_name) { 'my_load_balancer' }
-    let(:required_instances) { 1 }
-    let(:timeout) { 1 }
+    let(:pool_healthy_instances) { double(AwsHelpers::ElasticLoadBalancing::PollHealthyInstances) }
 
-    after(:each) do
-      AwsHelpers::ElasticLoadBalancing::Client.new(options).poll_healthy_instances(load_balancer_name, required_instances, timeout)
+    before(:each) do
+      allow(AwsHelpers::ElasticLoadBalancing::PollHealthyInstances).to receive(:new).with(anything, anything, anything, anything).and_return(pool_healthy_instances)
+      allow(pool_healthy_instances).to receive(:execute)
     end
 
-    it 'should pass options to the Aws::ElasticLoadBalancer::Client' do
-      expect(Aws::ElasticLoadBalancing::Client).to receive(:new).with(hash_including(options)).and_return(elastic_load_balancing_client)
+    context 'with default configuration' do
+
+      before(:each) do
+        allow(Aws::ElasticLoadBalancing::Client).to receive(:new).and_return(elastic_load_balancing_client)
+      end
+
+      context 'without options' do
+
+        after(:each) do
+          AwsHelpers::ElasticLoadBalancing::Client.new.poll_healthy_instances('name', 1, 1)
+        end
+
+        it 'should create Aws::ElasticLoadBalancer::Client' do
+          expect(Aws::ElasticLoadBalancing::Client).to receive(:new).and_return(elastic_load_balancing_client)
+        end
+
+        it 'should create an instance of PollHealthInstances' do
+          expect(AwsHelpers::ElasticLoadBalancing::PollHealthyInstances).to receive(:new).with(elastic_load_balancing_client, 'name', 1, 1)
+        end
+
+        it 'should call execute on PollHealthInstances' do
+          expect(pool_healthy_instances).to receive(:execute)
+        end
+
+      end
+
+      context 'with options' do
+
+        let(:options) { {endpoint: 'http://endpoint'} }
+
+        after(:each) do
+          AwsHelpers::ElasticLoadBalancing::Client.new(options).poll_healthy_instances('name', 1, 1)
+        end
+
+        it 'should create Aws::ElasticLoadBalancer::Client passing the correct options' do
+          expect(Aws::ElasticLoadBalancing::Client).to receive(:new).with(hash_including(options)).and_return(elastic_load_balancing_client)
+        end
+
+      end
+
     end
 
-    it 'should create PollHealthInstances with an Aws::ElasticLoadBalancing::Client' do
-      allow(elastic_load_balancing_client).to receive(:execute)
-      expect(AwsHelpers::ElasticLoadBalancing::PollHealthyInstances).to receive(:new).with(be_an_instance_of(Aws::ElasticLoadBalancing::Client), anything, anything, anything).and_return(elastic_load_balancing_client)
-    end
+    context 'with custom configuration' do
 
-    it 'should be able to call PollHealthInstances execute method with 4 parameters' do
-      allow(AwsHelpers::ElasticLoadBalancing::PollHealthyInstances).to receive(:new).with(anything, load_balancer_name, required_instances, timeout).and_return(elastic_load_balancing_client)
-      expect(elastic_load_balancing_client).to receive(:execute)
+      after(:each) do
+        elb_client = AwsHelpers::ElasticLoadBalancing::Client.new
+        elb_client.configure { |config|
+          config.aws_elastic_load_balancing_client = elastic_load_balancing_client
+        }
+        elb_client.poll_healthy_instances('name', 1, 1)
+      end
+
+      it 'should create an instance of PollHealthInstances with the custom elastic_load_balancing_client' do
+        expect(AwsHelpers::ElasticLoadBalancing::PollHealthyInstances).to receive(:new).with(elastic_load_balancing_client, anything, anything, anything)
+      end
+
     end
 
   end
