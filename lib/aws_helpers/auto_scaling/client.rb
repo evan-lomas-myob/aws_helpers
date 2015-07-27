@@ -1,5 +1,7 @@
 require 'aws-sdk-core'
 require_relative '../common/client.rb'
+require_relative 'retrieve_desired_capacity.rb'
+require_relative 'update_desired_capacity.rb'
 
 module AwsHelpers
 
@@ -12,11 +14,11 @@ module AwsHelpers
       end
 
       def retrieve_desired_capacity(auto_scaling_group_name)
-        # AutoScalingGroup::RetrieveDesiredCapacity.new(aws_auto_scaling_client, auto_scaling_group_name).execute
+        AwsHelpers::AutoScaling::RetrieveDesiredCapacity.new(aws_auto_scaling_client, auto_scaling_group_name).execute
       end
 
       def update_desired_capacity(auto_scaling_group_name, desired_capacity, timeout)
-        # AutoScalingGroup::UpdateDesiredCapacity.new(aws_auto_scaling_client, aws_elastic_load_balancing_client, auto_scaling_group_name, desired_capacity, timeout).execute
+        AwsHelpers::AutoScaling::UpdateDesiredCapacity.new(aws_auto_scaling_client, aws_elastic_load_balancing_client, auto_scaling_group_name, desired_capacity, timeout).execute
       end
 
       private

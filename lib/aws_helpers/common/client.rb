@@ -28,6 +28,7 @@ module AwsHelpers
       #
       def initialize(options)
         @options = { retry_limit: 5 }.merge(options)
+        #Add logger here
       end
 
     end
