@@ -22,15 +22,22 @@ describe AwsHelpers::ElasticLoadBalancing::Client do
     let(:required_instances) { 1 }
     let(:timeout) { 1 }
 
+    after(:each) do
+      AwsHelpers::ElasticLoadBalancing::Client.new(options).poll_healthy_instances(load_balancer_name, required_instances, timeout)
+    end
+
     it 'should pass options to the Aws::ElasticLoadBalancer::Client' do
       expect(Aws::ElasticLoadBalancing::Client).to receive(:new).with(hash_including(options)).and_return(elastic_load_balancing_client)
-      AwsHelpers::ElasticLoadBalancing::Client.new(options).poll_healthy_instances(load_balancer_name, required_instances, timeout)
+    end
+
+    it 'should create PollHealthInstances with an Aws::ElasticLoadBalancing::Client' do
+      allow(elastic_load_balancing_client).to receive(:execute)
+      expect(AwsHelpers::ElasticLoadBalancing::PollHealthyInstances).to receive(:new).with(be_an_instance_of(Aws::ElasticLoadBalancing::Client), anything, anything, anything).and_return(elastic_load_balancing_client)
     end
 
     it 'should be able to call PollHealthInstances execute method with 4 parameters' do
       allow(AwsHelpers::ElasticLoadBalancing::PollHealthyInstances).to receive(:new).with(anything, load_balancer_name, required_instances, timeout).and_return(elastic_load_balancing_client)
       expect(elastic_load_balancing_client).to receive(:execute)
-      AwsHelpers::ElasticLoadBalancing::Client.new(options).poll_healthy_instances(load_balancer_name, required_instances, timeout)
     end
 
   end
