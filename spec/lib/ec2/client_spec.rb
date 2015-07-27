@@ -53,7 +53,7 @@ describe AwsHelpers::EC2::Client do
     it 'should call EC2::Client images_delete_by_time method and receive an Aws::EC2::Client' do
       allow(ec2_client_image).to receive(:delete_by_time)
       expect(AwsHelpers::EC2::Image).to receive(:new).with(be_an_instance_of(Aws::EC2::Client)).and_return(ec2_client_image)
-      AwsHelpers::EC2::Client.new(options).images_delete_by_time(name, anything )
+      AwsHelpers::EC2::Client.new(options).images_delete_by_time(name, anything)
     end
   end
 

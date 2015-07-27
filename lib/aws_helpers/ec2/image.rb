@@ -1,5 +1,4 @@
 module AwsHelpers
-
   module EC2
 
     class Image
@@ -20,10 +19,10 @@ module AwsHelpers
 
       end
 
-      def fine_by_tag(tags)
+      def find_by_tag(tags)
 
       end
+
     end
   end
-
 end
