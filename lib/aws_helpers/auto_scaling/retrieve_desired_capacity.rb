@@ -4,7 +4,7 @@ module AwsHelpers
 
     class RetrieveDesiredCapacity
 
-      def initialize(something1, something2)
+      def initialize(aws_auto_scaling_client, aws_auto_scaling_group_name)
 
       end
 
