@@ -1,6 +1,5 @@
 require 'rspec'
 require 'aws_helpers/auto_scaling/client'
-require 'aws_helpers/elastic_load_balancing/client'
 require 'aws_helpers/auto_scaling/retrieve_desired_capacity'
 require 'aws_helpers/auto_scaling/update_desired_capacity'
 

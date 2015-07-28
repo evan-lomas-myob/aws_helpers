@@ -1,3 +1,5 @@
+require_relative 'config'
+
 module AwsHelpers
 
   module Common

@@ -1,6 +1,5 @@
 require 'rspec'
 require 'aws_helpers/cloud_formation/client'
-require 'aws_helpers/cloud_formation/config'
 
 describe AwsHelpers::CloudFormation::Client do
 
