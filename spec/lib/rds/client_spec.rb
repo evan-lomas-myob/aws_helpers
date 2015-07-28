@@ -28,6 +28,12 @@ describe AwsHelpers::RDS::Client do
   end
 
   describe 'New RDS Client Snapshot' do
+
+    let(:aws_rds_client) { double }
+    let(:aws_iam_client) { double }
+    let(:db_instance_id) { 12345 }
+    let(:use_name) { false }
+    
     it 'should return a instance of Snapshot' do
       expect(AwsHelpers::RDS::Snapshot.new(aws_rds_client, aws_iam_client, db_instance_id, use_name)).to match(AwsHelpers::RDS::Snapshot)
     end
