@@ -1,21 +1,17 @@
 sudo: false
-
 language: ruby
-
 rvm:
-  - ruby-head
-  - 2.2.1
-  - 2.2.2
-
+- ruby-head
+- 2.2.1
+- 2.2.2
 before_install: gem install bundler -v 1.10.5
-
 script: bundle exec rake
-
-bundler_args: --without docs release repl
-
+bundler_args: "--without docs release repl"
 after_success: coveralls push
-
 addons:
   code_climate:
     repo_token:
-      secure: "KR+dimePRW2kUzCu4sO1Iv18+ajSjzxAyb2z86dt4beHAdJMFxmP8m9a+TBBbbrkG4qIDyrBUo1bp72eX3HOOorZveMJn5l1A34frKG1BPDitzXxK4q7kVbvG9FZKduj01hHVY6WBUPAxemsNEFy9f5wRibZy6lH1ZNMur0M38g="
+      secure: KR+dimePRW2kUzCu4sO1Iv18+ajSjzxAyb2z86dt4beHAdJMFxmP8m9a+TBBbbrkG4qIDyrBUo1bp72eX3HOOorZveMJn5l1A34frKG1BPDitzXxK4q7kVbvG9FZKduj01hHVY6WBUPAxemsNEFy9f5wRibZy6lH1ZNMur0M38g=
+env:
+  global:
+    secure: c+rp8AYFqcHxNFDZuq2BI5Ita65i/O97qgGYK/lNFj9d9bVRoWBRwlE4l1MBOTf4PpkeLWKcCc7sdzXP/k7QSpYi03hqGnERP0JMXEydumBblTuNbzvcuMNpvkVIvRy/UrebuMLh66tG6k42Mdg7vSxRypOAuCte/1Jjb0EvHHg=
