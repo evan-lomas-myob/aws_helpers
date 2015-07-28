@@ -19,7 +19,7 @@ module AwsHelpers
       end
 
       def update_desired_capacity(auto_scaling_group_name, desired_capacity, timeout)
-        AwsHelpers::AutoScaling::UpdateDesiredCapacity.new(config.aws_auto_scaling_client, aws_elastic_load_balancing_client, auto_scaling_group_name, desired_capacity, timeout).execute
+        AwsHelpers::AutoScaling::UpdateDesiredCapacity.new(config.aws_auto_scaling_client, config.aws_elastic_load_balancing_client, auto_scaling_group_name, desired_capacity, timeout).execute
       end
 
     end
