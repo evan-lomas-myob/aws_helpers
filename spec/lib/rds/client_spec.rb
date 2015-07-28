@@ -27,43 +27,53 @@ describe AwsHelpers::RDS::Client do
 
   end
 
-  describe 'RDS Client Snapshot Methods' do
-
-    let(:aws_rds_client) { Aws::RDS::Client }
-    let(:aws_iam_client) { Aws::IAM::Client }
-    let(:db_instance_id) { 12345 }
-    let(:use_name) { false }
-
-    let(:rds_client) { double(AwsHelpers::RDS::Snapshot.new(aws_rds_client, aws_iam_client, db_instance_id, use_name)) }
-
+  describe 'New RDS Client Snapshot' do
     it 'should return a instance of Snapshot' do
       expect(AwsHelpers::RDS::Snapshot.new(aws_rds_client, aws_iam_client, db_instance_id, use_name)).to match(AwsHelpers::RDS::Snapshot)
     end
+  end
 
-    it 'should create a snapshot using a db instance id' do
-      allow(rds_client).to receive(:create)
-      expect(AwsHelpers::RDS::Snapshot).to receive(:new).with(aws_rds_client, aws_iam_client, db_instance_id, use_name).and_return(rds_client)
-      AwsHelpers::RDS::Client.new(options).snapshot_create(db_instance_id, use_name)
+  describe 'RDS Client Snapshot Methods' do
+
+    let(:db_instance_id) { 12345 }
+    let(:use_name) { false }
+
+    let(:config) { double(aws_rds_client: double, aws_iam_client: double) }
+    let(:rds_client) { double(AwsHelpers::RDS::Snapshot.new(config.aws_rds_client, config.aws_iam_client, db_instance_id, use_name)) }
+
+    before(:each) do
+      allow(AwsHelpers::RDS::Config).to receive(:new).with(options).and_return(config)
     end
 
-    it 'should delete a snapshot using a db instance id' do
-      allow(rds_client).to receive(:delete)
-      expect(AwsHelpers::RDS::Snapshot).to receive(:new).with(aws_rds_client, aws_iam_client, db_instance_id).and_return(rds_client)
-      AwsHelpers::RDS::Client.new(options).snapshots_delete(db_instance_id)
+    context '#create' do
+      it 'should create a snapshot using a db instance id' do
+        allow(AwsHelpers::RDS::Snapshot).to receive(:new).with(config.aws_rds_client, config.aws_iam_client, db_instance_id, use_name).and_return(rds_client)
+        expect(rds_client).to receive(:create)
+        AwsHelpers::RDS::Client.new(options).snapshot_create(db_instance_id, use_name)
+      end
     end
 
-    it 'should delete a snapshot using a db instance id and a set of options' do
-      allow(rds_client).to receive(:delete)
-      expect(AwsHelpers::RDS::Snapshot).to receive(:new).with(aws_rds_client, aws_iam_client, db_instance_id).and_return(rds_client)
-      AwsHelpers::RDS::Client.new(options).snapshots_delete(db_instance_id, options)
+    context '#delete' do
+      it 'should delete a snapshot using a db instance id' do
+        allow(AwsHelpers::RDS::Snapshot).to receive(:new).with(config.aws_rds_client, config.aws_iam_client, db_instance_id).and_return(rds_client)
+        allow(rds_client).to receive(:delete)
+        AwsHelpers::RDS::Client.new(options).snapshots_delete(db_instance_id)
+      end
+
+      it 'should delete a snapshot using a db instance id and a set of options' do
+        allow(AwsHelpers::RDS::Snapshot).to receive(:new).with(config.aws_rds_client, config.aws_iam_client, db_instance_id).and_return(rds_client)
+        allow(rds_client).to receive(:delete)
+        AwsHelpers::RDS::Client.new(options).snapshots_delete(db_instance_id, options)
+      end
     end
 
-    it 'should return the latest snapshot matching the db instance id' do
-      allow(rds_client).to receive(:latest)
-      expect(AwsHelpers::RDS::Snapshot).to receive(:new).with(aws_rds_client, aws_iam_client, db_instance_id).and_return(rds_client)
-      AwsHelpers::RDS::Client.new(options).snapshot_latest(db_instance_id)
+    context '#latest' do
+      it 'should return the latest snapshot matching the db instance id' do
+        allow(AwsHelpers::RDS::Snapshot).to receive(:new).with(config.aws_rds_client, config.aws_iam_client, db_instance_id).and_return(rds_client)
+        allow(rds_client).to receive(:latest)
+        AwsHelpers::RDS::Client.new(options).snapshot_latest(db_instance_id)
+      end
     end
-
   end
 
 end
