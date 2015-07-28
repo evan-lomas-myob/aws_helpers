@@ -9,7 +9,7 @@ describe AwsHelpers::ElasticLoadBalancing::Client do
     context 'without options' do
 
       it "should call AwsHelpers::Common::Client's initialize method" do
-        expect(AwsHelpers::Common::Client).to receive(:new)
+        expect(AwsHelpers::ElasticLoadBalancing::Client).to receive(:new).and_return(AwsHelpers::ElasticLoadBalancing::Config)
         AwsHelpers::ElasticLoadBalancing::Client.new
       end
 

@@ -9,7 +9,7 @@ describe AwsHelpers::EC2::Client do
   describe '.new' do
 
     it "should call AwsHelpers::Common::Client's initialize method" do
-      expect(AwsHelpers::Common::Client).to receive(:new).with(options)
+      expect(AwsHelpers::EC2::Client).to receive(:new).with(options).and_return(AwsHelpers::EC2::Config)
       AwsHelpers::EC2::Client.new(options)
     end
 

@@ -1,5 +1,6 @@
 require 'rspec'
 require 'aws_helpers/cloud_formation/client'
+require 'aws_helpers/cloud_formation/config'
 
 describe AwsHelpers::CloudFormation::Client do
 
@@ -8,7 +9,7 @@ describe AwsHelpers::CloudFormation::Client do
   describe '.new' do
 
     it "should call AwsHelpers::CloudFormation::Client's initialize method" do
-      expect(AwsHelpers::CloudFormation::Client).to receive(:new).with(options)
+      expect(AwsHelpers::CloudFormation::Client).to receive(:new).with(options).and_return(AwsHelpers::CloudFormation::Config)
       AwsHelpers::CloudFormation::Client.new(options)
     end
 

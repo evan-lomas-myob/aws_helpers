@@ -12,7 +12,7 @@ describe AwsHelpers::AutoScaling::Client do
   describe '.new' do
 
     it "should call AwsHelpers::Common::Client's initialize method" do
-      expect(AwsHelpers::AutoScaling::Client).to receive(:new).with(options)
+      expect(AwsHelpers::AutoScaling::Client).to receive(:new).with(options).and_return(AwsHelpers::AutoScaling::Config)
       AwsHelpers::AutoScaling::Client.new(options)
     end
 

@@ -9,7 +9,7 @@ describe AwsHelpers::RDS::Client do
   describe '.new' do
 
     it "should call AwsHelpers::RDS::Client's initialize method" do
-      expect(AwsHelpers::RDS::Client).to receive(:new).with(options)
+      expect(AwsHelpers::RDS::Client).to receive(:new).with(options).and_return(AwsHelpers::RDS::Config)
       AwsHelpers::RDS::Client.new(options)
     end
 
