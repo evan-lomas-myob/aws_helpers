@@ -5,5 +5,5 @@
 --exclude lib/version.rb
 -
 README.md
-#CODE_OF_CONDUCT.md
-#LICENSE.txt
+CODE_OF_CONDUCT.md
+LICENSE.txt
