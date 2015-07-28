@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/MYOB-Technology/aws_helpers.png?branch=rewrite)](https://travis-ci.org/MYOB-Technology/aws_helpers)
 [![Code Climate](https://codeclimate.com/github/MYOB-Technology/aws_helpers/badges/gpa.svg)](https://codeclimate.com/github/MYOB-Technology/aws_helpers)
+[![Coverage Status](https://coveralls.io/repos/MYOB-Technology/aws_helpers/badge.svg?branch=rewrite&service=github)](https://coveralls.io/github/MYOB-Technology/aws_helpers?branch=rewrite)
 
 Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/aws_helpers`. To experiment with that code, run `bin/console` for an interactive prompt.
 
