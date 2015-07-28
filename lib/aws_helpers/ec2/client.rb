@@ -1,7 +1,7 @@
 require 'aws-sdk-core'
 require_relative '../common/client'
 require_relative 'config'
-require_relative 'image.rb'
+require_relative 'image'
 
 module AwsHelpers
 

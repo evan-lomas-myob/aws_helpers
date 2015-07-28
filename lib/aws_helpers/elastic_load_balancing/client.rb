@@ -1,7 +1,7 @@
 require 'aws-sdk-core'
 require_relative '../common/client'
 require_relative 'config'
-require_relative 'poll_healthy_instances.rb'
+require_relative 'poll_healthy_instances'
 
 module AwsHelpers
 

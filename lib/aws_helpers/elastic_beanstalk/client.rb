@@ -1,7 +1,7 @@
 require 'aws-sdk-core'
 require_relative '../common/client'
 require_relative 'config'
-require_relative 'version.rb'
+require_relative 'version'
 
 module AwsHelpers
 
