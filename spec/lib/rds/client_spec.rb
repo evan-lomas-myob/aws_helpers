@@ -62,13 +62,13 @@ describe AwsHelpers::RDS::Client do
     context '#delete' do
       it 'should delete a snapshot using a db instance id' do
         allow(AwsHelpers::RDS::Snapshot).to receive(:new).with(config.aws_rds_client, config.aws_iam_client, db_instance_id).and_return(rds_client)
-        allow(rds_client).to receive(:delete)
+        expect(rds_client).to receive(:delete)
         AwsHelpers::RDS::Client.new(options).snapshots_delete(db_instance_id)
       end
 
       it 'should delete a snapshot using a db instance id and a set of options' do
         allow(AwsHelpers::RDS::Snapshot).to receive(:new).with(config.aws_rds_client, config.aws_iam_client, db_instance_id).and_return(rds_client)
-        allow(rds_client).to receive(:delete)
+        expect(rds_client).to receive(:delete)
         AwsHelpers::RDS::Client.new(options).snapshots_delete(db_instance_id, options)
       end
     end
@@ -76,7 +76,7 @@ describe AwsHelpers::RDS::Client do
     context '#latest' do
       it 'should return the latest snapshot matching the db instance id' do
         allow(AwsHelpers::RDS::Snapshot).to receive(:new).with(config.aws_rds_client, config.aws_iam_client, db_instance_id).and_return(rds_client)
-        allow(rds_client).to receive(:latest)
+        expect(rds_client).to receive(:latest)
         AwsHelpers::RDS::Client.new(options).snapshot_latest(db_instance_id)
       end
     end

@@ -1,6 +1,11 @@
 require 'aws-sdk-core'
 require_relative '../common/client'
 require_relative 'config'
+require_relative 'stack_provision'
+require_relative 'stack_modify_parameters'
+require_relative 'stack_delete'
+require_relative 'stack_information'
+require_relative 'stack_exists'
 
 module AwsHelpers
 
@@ -9,7 +14,7 @@ module AwsHelpers
     class Client < AwsHelpers::Common::Client
 
       def initialize(options = {})
-        super(AwsHelpers::CloudFormation::Config(options))
+        super(AwsHelpers::CloudFormation::Config.new(options))
       end
 
       def stack_provision(stack_name, template, options = {})

@@ -1,6 +1,6 @@
 module AwsHelpers
 
-  module AutoScaling
+  module CloudFormation
 
     class StackProvision
 
