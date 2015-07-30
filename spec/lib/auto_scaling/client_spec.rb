@@ -1,18 +1,27 @@
 require 'rspec'
 require 'aws_helpers/auto_scaling/client'
-require 'aws_helpers/auto_scaling/retrieve_desired_capacity'
-require 'aws_helpers/auto_scaling/update_desired_capacity'
 
 describe AwsHelpers::AutoScaling::Client do
 
-  let(:group_name) { 'my_group_name' }
   let(:options) { {stub_responses: true, endpoint: 'http://endpoint'} }
 
-  describe '.new' do
+  context '.new' do
 
     it "should call AwsHelpers::Common::Client's initialize method" do
       expect(AwsHelpers::AutoScaling::Client).to receive(:new).with(options).and_return(AwsHelpers::AutoScaling::Config)
       AwsHelpers::AutoScaling::Client.new(options)
+    end
+
+  end
+
+  context 'AutoScaling Config methods' do
+
+    it 'should create an instance of Aws::AutoScaling::Client' do
+      expect(AwsHelpers::AutoScaling::Config.new(options).aws_auto_scaling_client).to match(Aws::AutoScaling::Client)
+    end
+
+    it 'should create an instance of Aws::ElasticLoadBalancing::Client' do
+      expect(AwsHelpers::AutoScaling::Config.new(options).aws_elastic_load_balancing_client).to match(Aws::ElasticLoadBalancing::Client)
     end
 
   end

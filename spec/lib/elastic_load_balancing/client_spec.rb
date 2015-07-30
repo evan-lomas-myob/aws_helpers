@@ -4,20 +4,20 @@ require 'aws_helpers/elastic_load_balancing/poll_healthy_instances'
 
 describe AwsHelpers::ElasticLoadBalancing::Client do
 
-  describe '.new' do
+  let(:options) { {stub_responses: true, endpoint: 'http://endpoint'} }
+
+  context '.new' do
 
     context 'without options' do
 
       it "should call AwsHelpers::Common::Client's initialize method" do
         expect(AwsHelpers::ElasticLoadBalancing::Client).to receive(:new).and_return(AwsHelpers::ElasticLoadBalancing::Config)
-        AwsHelpers::ElasticLoadBalancing::Client.new
+        AwsHelpers::ElasticLoadBalancing::Client.new(options)
       end
 
     end
 
     context 'with options' do
-
-      let(:options) { {endpoint: 'http://endpoint'} }
 
       it "should call AwsHelpers::Common::Client's initialize method with the correct options" do
         expect(AwsHelpers::Common::Client).to receive(:new).with(options)
@@ -25,6 +25,11 @@ describe AwsHelpers::ElasticLoadBalancing::Client do
       end
 
     end
+
+  end
+
+  it 'should create an instance of Aws::ElasticLoadBalancing::Client' do
+    expect(AwsHelpers::ElasticLoadBalancing::Config.new(options).aws_elastic_load_balancing_client).to match(Aws::ElasticLoadBalancing::Client)
   end
 
 end

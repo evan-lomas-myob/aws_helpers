@@ -9,13 +9,25 @@ describe AwsHelpers::ElasticBeanstalk::Client do
   let(:environment) { 'my_env' }
   let(:version) { 'my_version' }
 
-  describe '.new' do
+  context '.new' do
 
     it "should call AwsHelpers::Common::Client's initialize method" do
       expect(AwsHelpers::Common::Client).to receive(:new).with(options).and_return(AwsHelpers::ElasticBeanstalk::Config)
       AwsHelpers::ElasticBeanstalk::Client.new(options)
     end
 
+  end
+
+  it 'should create an instance of Aws::ElasticBeanstalk::Client' do
+    expect(AwsHelpers::ElasticBeanstalk::Config.new(options).aws_elastic_beanstalk_client).to match(Aws::ElasticBeanstalk::Client)
+  end
+
+  it 'should create an instance of Aws::S3::Client' do
+    expect(AwsHelpers::ElasticBeanstalk::Config.new(options).aws_s3_client).to match(Aws::S3::Client)
+  end
+
+  it 'should create an instance of Aws::IAM::Client' do
+    expect(AwsHelpers::ElasticBeanstalk::Config.new(options).aws_iam_client).to match(Aws::IAM::Client)
   end
 
 end

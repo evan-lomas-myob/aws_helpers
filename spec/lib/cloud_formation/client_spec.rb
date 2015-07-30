@@ -5,7 +5,7 @@ describe AwsHelpers::CloudFormation::Client do
 
   let(:options) { {stub_responses: true, endpoint: 'http://endpoint'} }
 
-  describe '.new' do
+  context '.new' do
 
     it "should call AwsHelpers::CloudFormation::Client's initialize method" do
       expect(AwsHelpers::CloudFormation::Client).to receive(:new).with(options).and_return(AwsHelpers::CloudFormation::Config)
@@ -14,7 +14,7 @@ describe AwsHelpers::CloudFormation::Client do
 
   end
 
-  describe 'CloudFormation Config methods' do
+  context 'CloudFormation Config methods' do
 
     it 'should create an instance of Aws::CloudFormation::Client' do
       expect(AwsHelpers::CloudFormation::Config.new(options).aws_cloud_formation_client).to match(Aws::CloudFormation::Client)
