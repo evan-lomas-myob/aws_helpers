@@ -1,9 +1,14 @@
 module AwsHelpers
 
   module CloudFormation
+
     class StackModifyParameters
 
-      def initialize(aws_cloud_formation_client, stack_name, parameters)
+      def initialize(config, stack_name, parameters)
+
+        @config = config #aws_cloud_formation_client
+        @stack_name = stack_name
+        @parameters = parameters
 
       end
 
@@ -12,5 +17,7 @@ module AwsHelpers
       end
 
     end
+
   end
+
 end

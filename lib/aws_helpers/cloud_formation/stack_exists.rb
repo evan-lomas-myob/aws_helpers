@@ -3,7 +3,10 @@ module AwsHelpers
   module CloudFormation
     class StackExists
 
-      def initialize(aws_cloud_formation_client, stack_name)
+      def initialize(config, stack_name)
+
+        @config = config #aws_cloud_formation_client
+        @stack_name = stack_name
 
       end
 
