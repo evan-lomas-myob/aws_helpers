@@ -1,6 +1,5 @@
 require 'rspec'
 require 'aws_helpers/elastic_load_balancing/client'
-require 'aws_helpers/elastic_load_balancing/poll_healthy_instances'
 
 describe AwsHelpers::ElasticLoadBalancing::Client do
 

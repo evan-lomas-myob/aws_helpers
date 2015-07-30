@@ -18,10 +18,12 @@ describe AwsHelpers::AutoScaling::Client do
 
     it 'should create an instance of Aws::AutoScaling::Client' do
       expect(AwsHelpers::AutoScaling::Config.new(options).aws_auto_scaling_client).to match(Aws::AutoScaling::Client)
+      AwsHelpers::AutoScaling::Client.new(options)
     end
 
     it 'should create an instance of Aws::ElasticLoadBalancing::Client' do
       expect(AwsHelpers::AutoScaling::Config.new(options).aws_elastic_load_balancing_client).to match(Aws::ElasticLoadBalancing::Client)
+      AwsHelpers::AutoScaling::Client.new(options)
     end
 
   end

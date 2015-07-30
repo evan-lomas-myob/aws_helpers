@@ -1,6 +1,5 @@
 require 'rspec'
 require 'aws_helpers/ec2/client'
-require 'aws_helpers/ec2/image_create'
 
 describe AwsHelpers::EC2::Client do
 
@@ -17,6 +16,7 @@ describe AwsHelpers::EC2::Client do
 
   it 'should create an instance of Aws::EC2::Client' do
     expect(AwsHelpers::EC2::Config.new(options).aws_ec2_client).to match(Aws::EC2::Client)
+    AwsHelpers::EC2::Client.new(options)
   end
 
 end

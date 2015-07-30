@@ -18,10 +18,12 @@ describe AwsHelpers::CloudFormation::Client do
 
     it 'should create an instance of Aws::CloudFormation::Client' do
       expect(AwsHelpers::CloudFormation::Config.new(options).aws_cloud_formation_client).to match(Aws::CloudFormation::Client)
+      AwsHelpers::CloudFormation::Client.new(options)
     end
 
     it 'should create an instance of Aws::S3::Client' do
       expect(AwsHelpers::CloudFormation::Config.new(options).aws_s3_client).to match(Aws::S3::Client)
+      AwsHelpers::CloudFormation::Client.new(options)
     end
 
   end
