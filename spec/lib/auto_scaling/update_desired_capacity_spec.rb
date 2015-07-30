@@ -4,37 +4,22 @@ require 'aws_helpers/auto_scaling/retrieve_desired_capacity'
 
 describe AwsHelpers::AutoScaling::RetrieveDesiredCapacity do
 
-  let(:group_name) { 'my_group_name' }
-  let(:options) { {stub_responses: true, endpoint: 'http://endpoint'} }
-
-  let(:update_desired_capacity) { double(AwsHelpers::AutoScaling::UpdateDesiredCapacity) }
-  let(:auto_scaling_client) { double(Aws::AutoScaling::Client) }
-  let(:elastic_loadbalancing_client) { double(Aws::ElasticLoadBalancing::Client) }
-
+  let(:auto_scaling_group_name) { 'my_group_name' }
   let(:desired_capacity) { 1 }
   let(:timeout) { 1 }
 
-  after(:each) do
-    AwsHelpers::AutoScaling::Client.new(options).update_desired_capacity(group_name, desired_capacity, timeout)
-  end
+  let(:options) { {stub_responses: true, endpoint: 'http://endpoint'} }
 
-  it 'should pass options to the Aws::AutoScaling::Client' do
-    expect(Aws::AutoScaling::Client).to receive(:new).with(hash_including(options)).and_return(auto_scaling_client)
-  end
+  let(:config) { double(aws_auto_scaling_client: double, aws_elastic_load_balancing_client: double) }
 
-  it 'should pass options to the Aws::ElasticLoadBalancing::Client' do
-    expect(Aws::ElasticLoadBalancing::Client).to receive(:new).with(hash_including(options)).and_return(elastic_loadbalancing_client)
-  end
+  let(:the_updated_capacity) { double(AwsHelpers::AutoScaling::UpdateDesiredCapacity) }
 
-  it 'should create AutoScalingGroup::UpdateDesiredCapacity passing the correct auto_scaling_group_name, desired capacity and timeout' do
-    allow(update_desired_capacity).to receive(:execute)
-    expect(AwsHelpers::AutoScaling::UpdateDesiredCapacity).to receive(:new).with(be_an_instance_of(Aws::AutoScaling::Client), be_an_instance_of(Aws::ElasticLoadBalancing::Client), group_name, desired_capacity, timeout).and_return(update_desired_capacity)
+  it 'should create AutoScalingGroup::UpdateDesiredCapacity' do
 
-  end
-
-  it 'should call AutoScalingGroup::UpdateDesiredCapacity execute method' do
-    allow(AwsHelpers::AutoScaling::UpdateDesiredCapacity).to receive(:new).with(be_an_instance_of(Aws::AutoScaling::Client), be_an_instance_of(Aws::ElasticLoadBalancing::Client), group_name, desired_capacity, timeout).and_return(update_desired_capacity)
-    expect(update_desired_capacity).to receive(:execute)
+    allow(AwsHelpers::AutoScaling::Config).to receive(:new).with(options).and_return(config)
+    allow(AwsHelpers::AutoScaling::UpdateDesiredCapacity).to receive(:new).with(config, auto_scaling_group_name, desired_capacity, timeout).and_return(the_updated_capacity)
+    expect(the_updated_capacity).to receive(:execute)
+    AwsHelpers::AutoScaling::Client.new(options).update_desired_capacity(auto_scaling_group_name, desired_capacity, timeout)
   end
 
 end
