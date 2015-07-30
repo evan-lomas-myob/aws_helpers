@@ -18,35 +18,4 @@ describe AwsHelpers::ElasticBeanstalk::Client do
 
   end
 
-  describe '#deploy' do
-
-    it 'should pass options to the Aws::ElasticBeanstalk::Client' do
-      elasticbeanstalk_client = double(Aws::ElasticBeanstalk::Client)
-      expect(Aws::ElasticBeanstalk::Client).to receive(:new).with(hash_including(options)).and_return(elasticbeanstalk_client)
-      AwsHelpers::ElasticBeanstalk::Client.new(options).deploy(application, environment, version)
-    end
-
-    it 'should call ElasticBeanstalk::Version deploy method and receive an Aws::ElasticBeanstalk::Client, Aws::S3::Client and Aws::IAM::Client' do
-      allow(elastic_beanstalk_version).to receive(:deploy)
-      expect(AwsHelpers::ElasticBeanstalk::Version).to receive(:new).with(be_an_instance_of(Aws::ElasticBeanstalk::Client), be_an_instance_of(Aws::S3::Client), be_an_instance_of(Aws::IAM::Client)).and_return(elastic_beanstalk_version)
-      AwsHelpers::ElasticBeanstalk::Client.new(options).deploy(application, environment, version)
-    end
-
-  end
-
-  describe '#upload' do
-
-    it 'should call ElasticBeanstalk::Version upload method and receive an Aws::ElasticBeanstalk::Client, Aws::S3::Client and Aws::IAM::Client' do
-
-      version_contents = 'version_content'
-      zip_folder = 'zip_folder'
-
-      allow(elastic_beanstalk_version).to receive(:upload)
-      expect(AwsHelpers::ElasticBeanstalk::Version).to receive(:new).with(be_an_instance_of(Aws::ElasticBeanstalk::Client), be_an_instance_of(Aws::S3::Client), be_an_instance_of(Aws::IAM::Client)).and_return(elastic_beanstalk_version)
-      AwsHelpers::ElasticBeanstalk::Client.new(options).upload(application, version, version_contents, zip_folder)
-    end
-
-
-  end
-
 end
