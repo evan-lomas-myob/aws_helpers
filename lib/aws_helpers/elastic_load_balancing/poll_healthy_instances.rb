@@ -4,7 +4,12 @@ module AwsHelpers
 
     class PollHealthyInstances
 
-      def initialize(aws_elastic_load_balancing_client, load_balancer_name, required_instances, timeout)
+      def initialize(config, load_balancer_name, required_instances, timeout)
+
+        @config = config
+        @load_balancer_name = load_balancer_name
+        @required_instances = required_instances
+        @timeout = timeout
 
       end
 

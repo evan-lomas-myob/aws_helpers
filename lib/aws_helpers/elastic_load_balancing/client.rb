@@ -14,7 +14,7 @@ module AwsHelpers
       end
 
       def poll_healthy_instances(load_balancer_name, required_instances, timeout)
-        ElasticLoadBalancing::PollHealthyInstances.new(config.aws_elastic_load_balancing_client, load_balancer_name, required_instances, timeout).execute
+        AwsHelpers::ElasticLoadBalancing::PollHealthyInstances.new(config, load_balancer_name, required_instances, timeout).execute
       end
 
     end
