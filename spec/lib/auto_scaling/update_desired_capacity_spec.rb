@@ -19,7 +19,7 @@ describe AwsHelpers::AutoScaling::RetrieveDesiredCapacity do
     allow(AwsHelpers::AutoScaling::Config).to receive(:new).with(options).and_return(config)
     allow(AwsHelpers::AutoScaling::UpdateDesiredCapacity).to receive(:new).with(config, auto_scaling_group_name, desired_capacity, timeout).and_return(the_updated_capacity)
     expect(the_updated_capacity).to receive(:execute)
-    AwsHelpers::AutoScaling::Client.new(options).update_desired_capacity(auto_scaling_group_name, desired_capacity, timeout)
+    AwsHelpers::AutoScaling::Client.new(options).update_desired_capacity(auto_scaling_group_name: auto_scaling_group_name, desired_capacity: desired_capacity, timeout: timeout)
   end
 
 end
