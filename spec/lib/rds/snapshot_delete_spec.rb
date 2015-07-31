@@ -16,7 +16,7 @@ describe 'AwsHelpers::RDS::SnapshotsDelete' do
     allow(AwsHelpers::RDS::Config).to receive(:new).with(options).and_return(config)
     allow(AwsHelpers::RDS::SnapshotsDelete).to receive(:new).with(config, db_instance_id, options).and_return(snapshots_delete)
     expect(snapshots_delete).to receive(:execute)
-    AwsHelpers::RDS::Client.new(options).snapshots_delete(db_instance_id, options)
+    AwsHelpers::RDS::Client.new(options).snapshots_delete(db_instance_id: db_instance_id, options: options)
 
   end
   

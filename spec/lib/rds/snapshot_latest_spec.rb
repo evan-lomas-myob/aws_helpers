@@ -16,7 +16,7 @@ describe 'AwsHelpers::RDS::SnapshotLatest' do
     allow(AwsHelpers::RDS::Config).to receive(:new).with(options).and_return(config)
     allow(AwsHelpers::RDS::SnapshotLatest).to receive(:new).with(config, db_instance_id).and_return(snapshot_latest)
     expect(snapshot_latest).to receive(:execute)
-    AwsHelpers::RDS::Client.new(options).snapshot_latest(db_instance_id)
+    AwsHelpers::RDS::Client.new(options).snapshot_latest(db_instance_id: db_instance_id)
 
   end
   
