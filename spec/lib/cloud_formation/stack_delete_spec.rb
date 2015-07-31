@@ -11,6 +11,10 @@ describe AwsHelpers::CloudFormation::StackDelete do
   let(:config) { double(aws_cloud_formation_client: double, aws_s3_client: double) }
   let(:stack_delete) { double(AwsHelpers::CloudFormation::StackDelete) }
 
+  it 'calls #stack_delete with arguments' do
+    expect(AwsHelpers::CloudFormation::StackDelete.new(config, stack_name)).to be
+  end
+
   it '#stack_delete' do
 
     allow(AwsHelpers::CloudFormation::Config).to receive(:new).with(options).and_return(config)

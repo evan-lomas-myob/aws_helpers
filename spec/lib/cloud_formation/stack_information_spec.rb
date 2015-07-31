@@ -10,6 +10,10 @@ describe AwsHelpers::CloudFormation::StackInformation do
   let(:config) { double(aws_cloud_formation_client: double, aws_s3_client: double) }
   let(:stack_information) { double(AwsHelpers::CloudFormation::StackInformation) }
 
+  it 'calls #stack_information with arguments' do
+    expect(AwsHelpers::CloudFormation::StackInformation.new(config, stack_name, 'output')).to be
+  end
+
   context 'return stack output' do
 
     it '#stack_information' do

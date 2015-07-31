@@ -12,6 +12,10 @@ describe AwsHelpers::CloudFormation::StackModifyParameters do
   let(:config) { double(aws_cloud_formation_client: double, aws_s3_client: double) }
   let(:stack_modify_parameters) { double(AwsHelpers::CloudFormation::StackModifyParameters) }
 
+  it 'calls #stack_modify_parameters with arguments' do
+    expect(AwsHelpers::CloudFormation::StackModifyParameters.new(config, stack_name, parameters)).to be
+  end
+
   it '#stack_modify_parameters' do
 
     allow(AwsHelpers::CloudFormation::Config).to receive(:new).with(options).and_return(config)

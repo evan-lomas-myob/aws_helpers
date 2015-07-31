@@ -27,7 +27,7 @@ module AwsHelpers
       # @param bucket_name [String] Optional S3 Bucket name - if not supplied, do not upload to S3 bucket
       # @param bucket_encrypt [Boolean] Optional server side encryption 'AES256'
 
-      def stack_create(stack_name:, template:, parameters: nil, capabilities: nil, bucket_name: nil, bucket_encrypt: false)
+      def stack_provision(stack_name:, template:, parameters: nil, capabilities: nil, bucket_name: nil, bucket_encrypt: false)
         AwsHelpers::CloudFormation::StackProvision.new(config, stack_name, template, parameters, capabilities, bucket_name, bucket_encrypt).execute
       end
 

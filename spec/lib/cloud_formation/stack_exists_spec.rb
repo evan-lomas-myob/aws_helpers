@@ -11,6 +11,10 @@ describe AwsHelpers::CloudFormation::StackExists do
   let(:config) { double(aws_cloud_formation_client: double, aws_s3_client: double) }
   let(:stack_exists) { double(AwsHelpers::CloudFormation::StackExists) }
 
+  it 'calls #stack_exists with arguments' do
+    expect(AwsHelpers::CloudFormation::StackExists.new(config, stack_name)).to be
+  end
+
   it '#stack_exists' do
 
     allow(AwsHelpers::CloudFormation::Config).to receive(:new).with(options).and_return(config)
