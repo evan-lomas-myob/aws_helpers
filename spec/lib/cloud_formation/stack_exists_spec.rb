@@ -16,7 +16,7 @@ describe AwsHelpers::CloudFormation::StackExists do
     allow(AwsHelpers::CloudFormation::Config).to receive(:new).with(options).and_return(config)
     allow(AwsHelpers::CloudFormation::StackExists).to receive(:new).with(config, stack_name).and_return(stack_exists)
     expect(stack_exists).to receive(:execute)
-    AwsHelpers::CloudFormation::Client.new(options).stack_exists?(stack_name)
+    AwsHelpers::CloudFormation::Client.new(options).stack_exists?(stack_name: stack_name)
 
   end
 

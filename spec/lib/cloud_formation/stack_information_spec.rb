@@ -19,7 +19,7 @@ describe AwsHelpers::CloudFormation::StackInformation do
       allow(AwsHelpers::CloudFormation::Config).to receive(:new).with(options).and_return(config)
       allow(AwsHelpers::CloudFormation::StackInformation).to receive(:new).with(config, stack_name, info_field).and_return(stack_information)
       expect(stack_information).to receive(:execute)
-      AwsHelpers::CloudFormation::Client.new(options).stack_information(stack_name, info_field)
+      AwsHelpers::CloudFormation::Client.new(options).stack_information(stack_name: stack_name, info_field: info_field)
 
     end
 
@@ -34,7 +34,7 @@ describe AwsHelpers::CloudFormation::StackInformation do
       allow(AwsHelpers::CloudFormation::Config).to receive(:new).with(options).and_return(config)
       allow(AwsHelpers::CloudFormation::StackInformation).to receive(:new).with(config, stack_name, info_field).and_return(stack_information)
       expect(stack_information).to receive(:execute)
-      AwsHelpers::CloudFormation::Client.new(options).stack_information(stack_name, info_field)
+      AwsHelpers::CloudFormation::Client.new(options).stack_information(stack_name: stack_name, info_field: info_field)
 
     end
 

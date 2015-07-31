@@ -18,7 +18,7 @@ describe AwsHelpers::CloudFormation::StackCreate do
     allow(AwsHelpers::CloudFormation::Config).to receive(:new).with(options).and_return(config)
     allow(AwsHelpers::CloudFormation::StackCreate).to receive(:new).with(config, stack_name, template, options).and_return(stack_create)
     expect(stack_create).to receive(:execute)
-    AwsHelpers::CloudFormation::Client.new(options).stack_create(stack_name, template, options)
+    AwsHelpers::CloudFormation::Client.new(options).stack_create(stack_name: stack_name, template: template, options: options)
 
   end
 

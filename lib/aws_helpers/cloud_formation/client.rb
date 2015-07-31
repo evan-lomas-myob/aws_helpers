@@ -13,32 +13,44 @@ module AwsHelpers
 
     class Client < AwsHelpers::Common::Client
 
+      # CloudFormation utilities for creating, deleting and modifying templates
+      # @param options [Hash] Optional Arguments to include when calling the AWS SDK
+
       def initialize(options = {})
         super(AwsHelpers::CloudFormation::Config.new(options))
       end
 
-      def stack_create(stack_name, template, options = {})
-      #def stack_create(options = {})
+      # @param stack_name [String] Name given to the Stack
+      # @param template [String] Name of the JSON template in the S3 bucket to use to create the stack
+      # @param options [Hash] Optional Arguments to include when calling the AWS SDK
+
+      def stack_create(stack_name:, template:, options: {})
         AwsHelpers::CloudFormation::StackCreate.new(config, stack_name, template, options).execute
       end
 
-      # stack_create 'stack_name', 'template' # current use
-      # stack_create stack_name: 'stack_name', template: 'template' # named arguments
-      #stack_create params(Stack.new('stack'), ..) # - helpers classes
+      # @param stack_name [String] Name given to the Stack
 
-      def stack_delete(stack_name)
+      def stack_delete(stack_name:)
         AwsHelpers::CloudFormation::StackDelete.new(config, stack_name).execute
       end
 
-      def stack_modify_parameters(stack_name, parameters)
+      # @param stack_name [String] Name given to the Stack
+      # @param parameters [Array] List of parameters to modify in stack
+
+      def stack_modify_parameters(stack_name:, parameters: [])
         AwsHelpers::CloudFormation::StackModifyParameters.new(config, stack_name, parameters).execute
       end
 
-      def stack_information(stack_name, info_field)
+      # @param stack_name [String] Name given to the Stack
+      # @param info_field [String] Identify field to return (either "output" or "parameters")
+
+      def stack_information(stack_name:, info_field: 'parameters')
         AwsHelpers::CloudFormation::StackInformation.new(config, stack_name, info_field).execute
       end
 
-      def stack_exists?(stack_name)
+      # @param stack_name [String] Name of the stack to check
+
+      def stack_exists?(stack_name:)
         AwsHelpers::CloudFormation::StackExists.new(config, stack_name).execute
       end
 

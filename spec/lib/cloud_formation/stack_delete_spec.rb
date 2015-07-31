@@ -16,7 +16,7 @@ describe AwsHelpers::CloudFormation::StackDelete do
     allow(AwsHelpers::CloudFormation::Config).to receive(:new).with(options).and_return(config)
     allow(AwsHelpers::CloudFormation::StackDelete).to receive(:new).with(config, stack_name).and_return(stack_delete)
     expect(stack_delete).to receive(:execute)
-    AwsHelpers::CloudFormation::Client.new(options).stack_delete(stack_name)
+    AwsHelpers::CloudFormation::Client.new(options).stack_delete(stack_name: stack_name)
 
   end
 
