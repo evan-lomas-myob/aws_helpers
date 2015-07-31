@@ -6,6 +6,10 @@ module AwsHelpers
 
     class Client
 
+      # Common Client config attribute access reader
+      # @param config [Hash] Optional config
+      # @return [Hash]
+
       attr_reader :config
 
       def initialize(config = nil)
