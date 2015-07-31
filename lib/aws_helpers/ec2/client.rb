@@ -10,7 +10,6 @@ module AwsHelpers
 
   module EC2
 
-
     class Client < AwsHelpers::Common::Client
 
       # Utilities for EC2 creation, deletion and search

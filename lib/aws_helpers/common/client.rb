@@ -16,6 +16,8 @@ module AwsHelpers
          @config = config
       end
 
+      # @return [Hash]
+
       def configure
         yield config if block_given?
       end
