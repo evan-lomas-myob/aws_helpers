@@ -17,7 +17,7 @@ describe 'AwsHelpers::ElasticBeanStalk::VersionUpload' do
     allow(AwsHelpers::ElasticBeanstalk::Config).to receive(:new).with(options).and_return(config)
     allow(AwsHelpers::ElasticBeanstalk::VersionUpload).to receive(:new).with(config, upload_parameters).and_return(version_upload)
     expect(version_upload).to receive(:execute)
-    AwsHelpers::ElasticBeanstalk::Client.new(options).upload(upload_parameters)
+    AwsHelpers::ElasticBeanstalk::Client.new(options).upload(upload_parameters: upload_parameters)
 
   end
 end

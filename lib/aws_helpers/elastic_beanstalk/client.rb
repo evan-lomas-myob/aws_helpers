@@ -10,57 +10,28 @@ module AwsHelpers
 
     class Client < AwsHelpers::Common::Client
 
+      # Utilities for ElasticBeanstalk deployment
+      # @param options [Hash] Optional Arguments to include when calling the AWS SDK
+
       def initialize(options = {})
         super(AwsHelpers::ElasticBeanstalk::Config.new(options))
       end
 
-      def deploy(application, environment, version)
-      # def deploy(application:, environment:, version:)
-      #   AwsHelpers::ElasticBeanstalk::VersionDeploy.new(config, application: application, environment: environment, version: version).execute
+      # @param application [String] Name given to the AWS ElasticBeanstalk application
+      # @param environment [String] Environment target of the app (dev, test - etc)
+      # @param version [String] Version of the deployed application
+
+      def deploy(application:, environment:, version:)
         AwsHelpers::ElasticBeanstalk::VersionDeploy.new(config, application, environment, version).execute
       end
 
-      def upload(upload_parameters)
+      # @param upload_parameters [String] Upload version parameters
+
+      def upload(upload_parameters:)
         AwsHelpers::ElasticBeanstalk::VersionUpload.new(config, upload_parameters).execute
       end
 
     end
-
-    #
-    # c = Client.new
-    # c.deploy application: 'app', environment: 'env', version: 'v'
-    #
-    #
-    # application = 'app'
-    #
-    # c.deploy application: application, environment: 'dev'
-    #
-
-    # class DeployParameters
-    #
-    #   def initialize(application, environment, version)
-    #     @application = application
-    #     @environment = environment
-    #     @version =version
-    #   end
-    #
-    #   attr_reader :application, :environment, :version
-    #
-    # end
-
-    # class UploadParameters
-    #
-    #   def initialize(application, version, version_contents, zip_folder)
-    #     @application = application
-    #     @version = version
-    #     @version_contents = version_contents
-    #     @zip_folder = zip_folder
-    #   end
-    #
-    #   attr_reader :application, :version, :version_contents, :zip_folder
-    #
-    # end
-
 
   end
 

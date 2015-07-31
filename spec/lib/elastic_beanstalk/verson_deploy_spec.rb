@@ -15,11 +15,10 @@ describe 'AwsHelpers::ElasticBeanStalk::VersionDeploy' do
 
   it '#deploy' do
 
-
     allow(AwsHelpers::ElasticBeanstalk::Config).to receive(:new).with(options).and_return(config)
     allow(AwsHelpers::ElasticBeanstalk::VersionDeploy).to receive(:new).with(config, application, environment, version).and_return(version_deploy)
     expect(version_deploy).to receive(:execute)
-    AwsHelpers::ElasticBeanstalk::Client.new(options).deploy(application, environment, version)
+    AwsHelpers::ElasticBeanstalk::Client.new(options).deploy(application: application, environment: environment, version: version)
 
   end
 end
