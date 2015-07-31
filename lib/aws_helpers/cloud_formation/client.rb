@@ -22,10 +22,13 @@ module AwsHelpers
 
       # @param stack_name [String] Name given to the Stack
       # @param template [String] Name of the JSON template in the S3 bucket to use to create the stack
-      # @param options [Hash] Optional Arguments to include when calling the AWS SDK
+      # @param parameters [String] Additional parameters to include in template
+      # @param capabilities [String] Additional capabilities to include in CloudFormation template
+      # @param bucket_name [String] S3 Bucket name
+      # @param bucket_encrypt [String] Include server side encryption 'AES256'
 
-      def stack_create(stack_name:, template:, options: {})
-        AwsHelpers::CloudFormation::StackCreate.new(config, stack_name, template, options).execute
+      def stack_create(stack_name:, template:, parameters:, capabilities:, bucket_name:, bucket_encrypt:)
+        AwsHelpers::CloudFormation::StackCreate.new(config, stack_name, template, parameters, capabilities, bucket_name, bucket_encrypt).execute
       end
 
       # @param stack_name [String] Name given to the Stack

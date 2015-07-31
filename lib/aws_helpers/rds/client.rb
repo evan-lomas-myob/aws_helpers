@@ -26,10 +26,12 @@ module AwsHelpers
       end
 
       # @param db_instance_id [String] Unique ID of the RDS instance
-      # @param options [Hash] Additional options to pass to the AWS SDK
+      # @param days [Integer] Minus number of days to delete snapshots from
+      # @param months [Integer] Minus number of months to delete snapshots from
+      # @param years [Integer] Minus number of years to delete snapshots from
 
-      def snapshots_delete(db_instance_id:, options: nil)
-        AwsHelpers::RDS::SnapshotsDelete.new(config, db_instance_id, options ).execute
+      def snapshots_delete(db_instance_id:, days: ,months: ,years:)
+        AwsHelpers::RDS::SnapshotsDelete.new(config, db_instance_id, days ,months ,years).execute
       end
 
       # @param db_instance_id [String] Unique ID of the RDS instance
