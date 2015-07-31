@@ -16,7 +16,7 @@ describe 'AwsHelpers::EC2::ImagesDeleteByTime' do
     allow(AwsHelpers::EC2::Config).to receive(:new).with(options).and_return(config)
     allow(AwsHelpers::EC2::ImagesDeleteByTime).to receive(:new).with(config, name, time).and_return(images_delete_by_time)
     expect(images_delete_by_time).to receive(:execute)
-    AwsHelpers::EC2::Client.new(options).images_delete_by_time(name, time)
+    AwsHelpers::EC2::Client.new(options).images_delete_by_time(name: name, time: time)
   end
 
 end

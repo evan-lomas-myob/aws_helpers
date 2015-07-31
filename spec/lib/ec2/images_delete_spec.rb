@@ -15,14 +15,14 @@ describe 'AwsHelpers::EC2::ImageDelete' do
     allow(AwsHelpers::EC2::Config).to receive(:new).with(options).and_return(config)
     allow(AwsHelpers::EC2::ImagesDelete).to receive(:new).with(config, name, options).and_return(images_delete)
     expect(images_delete).to receive(:execute)
-    AwsHelpers::EC2::Client.new(options).images_delete(name, options)
+    AwsHelpers::EC2::Client.new(options).images_delete(name: name, options: options)
   end
 
   it '#images_delete without options' do
     allow(AwsHelpers::EC2::Config).to receive(:new).with(options).and_return(config)
     allow(AwsHelpers::EC2::ImagesDelete).to receive(:new).with(config, name, nil).and_return(images_delete)
     expect(images_delete).to receive(:execute)
-    AwsHelpers::EC2::Client.new(options).images_delete(name)
+    AwsHelpers::EC2::Client.new(options).images_delete(name: name)
   end
 
 end

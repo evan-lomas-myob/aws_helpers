@@ -15,16 +15,16 @@ describe 'AwsHelpers::EC2::ImageCreate' do
 
   it '#image_create without additional tags' do
     allow(AwsHelpers::EC2::Config).to receive(:new).with(options).and_return(config)
-    allow(AwsHelpers::EC2::ImageCreate).to receive(:new).with(config, instance_id, name, []).and_return(image_create)
+    allow(AwsHelpers::EC2::ImageCreate).to receive(:new).with(config, name, instance_id, []).and_return(image_create)
     expect(image_create).to receive(:execute)
-    AwsHelpers::EC2::Client.new(options).image_create(instance_id, name)
+    AwsHelpers::EC2::Client.new(options).image_create(name: name, instance_id: instance_id)
   end
 
   it '#image_create with additional tags' do
     allow(AwsHelpers::EC2::Config).to receive(:new).with(options).and_return(config)
-    allow(AwsHelpers::EC2::ImageCreate).to receive(:new).with(config, instance_id, name, additional_tags).and_return(image_create)
+    allow(AwsHelpers::EC2::ImageCreate).to receive(:new).with(config, name, instance_id, additional_tags).and_return(image_create)
     expect(image_create).to receive(:execute)
-    AwsHelpers::EC2::Client.new(options).image_create(instance_id, name, additional_tags)
+    AwsHelpers::EC2::Client.new(options).image_create(name: name, instance_id: instance_id, additional_tags: additional_tags)
   end
 
 end

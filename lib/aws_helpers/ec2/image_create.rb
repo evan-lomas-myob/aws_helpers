@@ -4,13 +4,18 @@ module AwsHelpers
 
     class ImageCreate
 
-      # @param [aws_ec2_client] config
+      # Create AWS EC2 instance
 
-      def initialize(config, instance_id, name, additional_tags)
+      # @param config [AwsHelpers::EC2::Config] Class to access Aws::EC2::Client object
+      # @param name [String] Name given to the AWS EC2 instance
+      # @param instance_id [String] Unique ID of the AWS instance
+      # @param additional_tags [Array] Optional tags to include
+
+      def initialize(config, name, instance_id, additional_tags)
 
         @config = config
-        @instance_id = instance_id
         @name = name
+        @instance_id = instance_id
         @additional_tags = additional_tags
 
       end

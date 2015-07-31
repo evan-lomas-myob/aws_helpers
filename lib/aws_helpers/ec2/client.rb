@@ -10,25 +10,41 @@ module AwsHelpers
 
   module EC2
 
+
     class Client < AwsHelpers::Common::Client
+
+      # Utilities for EC2 creation, deletion and search
+      # @param options [Hash] Optional Arguments to include when calling the AWS SDK
 
       def initialize(options = {})
         super(AwsHelpers::EC2::Config.new(options))
       end
 
-      def image_create(name, instance_id, additional_tags = [])
+      # @param name [String] Name given to the AWS EC2 instance
+      # @param instance_id [String] Unique ID of the AWS instance
+      # @param additional_tags [Array] Optional tags to include
+
+      def image_create(name:, instance_id:, additional_tags: [])
         AwsHelpers::EC2::ImageCreate.new(config, name, instance_id, additional_tags).execute
       end
 
-      def images_delete(name, options = nil)
+      # @param name [String] Name given to the AWS EC2 instance
+      # @param options [Hash] Optional options to pass to the AWS SDK
+
+      def images_delete(name:, options: nil)
         AwsHelpers::EC2::ImagesDelete.new(config, name, options).execute
       end
 
-      def images_delete_by_time(name, time)
+      # @param name [String] Name given to the AWS EC2 instance
+      # @param time [String] Time stamp to remove matching EC2 instances
+
+      def images_delete_by_time(name:, time:)
         AwsHelpers::EC2::ImagesDeleteByTime.new(config, name, time).execute
       end
 
-      def images_find_by_tags(tags)
+      # @param tags [Array] List of tags to find matching EC2 instances for
+
+      def images_find_by_tags(tags: [])
         AwsHelpers::EC2::ImagesFindByTags.new(config, tags).execute
       end
 
@@ -37,27 +53,5 @@ module AwsHelpers
   end
 
 end
-=begin
-
-# Examples of defining AwsHelpers as Modules - not Clasess
-# Using Class implementations becomes rigid - it can only be used in this way once initialized
-
-class EC2Client
-  include AwsHelpers::EC2::Client
-
-
-end
-
-
-
-class TopLevelClient
-  include AwsHelpers::EC2::Client
-  include AwsHelpers::S3::Client
-
-
-
-end
-=end
-
 
 

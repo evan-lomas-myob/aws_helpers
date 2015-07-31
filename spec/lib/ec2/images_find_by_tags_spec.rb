@@ -15,7 +15,7 @@ describe 'AwsHelpers::EC2::ImagesFindByTags' do
     allow(AwsHelpers::EC2::Config).to receive(:new).with(options).and_return(config)
     allow(AwsHelpers::EC2::ImagesFindByTags).to receive(:new).with(config, tags).and_return(images_find_by_tags)
     expect(images_find_by_tags).to receive(:execute)
-    AwsHelpers::EC2::Client.new(options).images_find_by_tags(tags)
+    AwsHelpers::EC2::Client.new(options).images_find_by_tags(tags: tags)
   end
 
 end
