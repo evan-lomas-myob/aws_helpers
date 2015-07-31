@@ -1,7 +1,7 @@
 require 'aws-sdk-core'
 require_relative '../common/client'
 require_relative 'config'
-require_relative 'stack_create'
+require_relative 'stack_provision'
 require_relative 'stack_delete'
 require_relative 'stack_modify_parameters'
 require_relative 'stack_information'
@@ -22,13 +22,13 @@ module AwsHelpers
 
       # @param stack_name [String] Name given to the Stack
       # @param template [String] Name of the JSON template in the S3 bucket to use to create the stack
-      # @param parameters [String] Additional parameters to include in template
-      # @param capabilities [String] Additional capabilities to include in CloudFormation template
-      # @param bucket_name [String] S3 Bucket name
-      # @param bucket_encrypt [String] Include server side encryption 'AES256'
+      # @param parameters [String] Optional parameters to include in template
+      # @param capabilities [String] Optional capabilities to include in CloudFormation template
+      # @param bucket_name [String] Optional S3 Bucket name - if not supplied, do not upload to S3 bucket
+      # @param bucket_encrypt [Boolean] Optional server side encryption 'AES256'
 
-      def stack_create(stack_name:, template:, parameters:, capabilities:, bucket_name:, bucket_encrypt:)
-        AwsHelpers::CloudFormation::StackCreate.new(config, stack_name, template, parameters, capabilities, bucket_name, bucket_encrypt).execute
+      def stack_create(stack_name:, template:, parameters: nil, capabilities: nil, bucket_name: nil, bucket_encrypt: false)
+        AwsHelpers::CloudFormation::StackProvision.new(config, stack_name, template, parameters, capabilities, bucket_name, bucket_encrypt).execute
       end
 
       # @param stack_name [String] Name given to the Stack
