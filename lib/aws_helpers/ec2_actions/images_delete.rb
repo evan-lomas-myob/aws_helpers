@@ -1,6 +1,6 @@
 module AwsHelpers
 
-  module EC2
+  module EC2Actions
 
     class ImagesDelete
 
@@ -11,8 +11,7 @@ module AwsHelpers
       # @param days [Integer] Minus number of days to delete images from
       # @param months [Integer] Minus number of months to delete images from
       # @param years [Integer] Minus number of years to delete images from
-
-    def initialize(config, name, days, months, years)
+      def initialize(config, name, days, months, years)
 
         @config = config
         @name = name
@@ -25,6 +24,7 @@ module AwsHelpers
       def execute
 
       end
+
     end
 
   end

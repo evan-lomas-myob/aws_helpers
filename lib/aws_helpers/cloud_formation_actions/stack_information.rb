@@ -1,18 +1,20 @@
 module AwsHelpers
 
-  module CloudFormation
+  module CloudFormationActions
 
-    class StackModifyParameters
+    class StackInformation
 
       # @param config [AwsHelpers::CloudFormation::Config] config object with access methods to aws_cloud_formation_client
       # @param stack_name [String] Name given to the Stack
-      # @param parameters [Array] List of parameters to add or modify
+      # @param info_field [String] Valid values: "output" or "parameters"
 
-      def initialize(config, stack_name, parameters)
+      def initialize(config, stack_name, info_field)
 
         @config = config
         @stack_name = stack_name
-        @parameters = parameters
+        @info_field = info_field
+
+        # raise FieldNotKnown
 
       end
 

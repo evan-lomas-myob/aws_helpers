@@ -1,6 +1,6 @@
 module AwsHelpers
 
-  module CloudFormation
+  module CloudFormationActions
 
     class StackDelete
 

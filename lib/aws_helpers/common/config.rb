@@ -8,7 +8,6 @@ module AwsHelpers
 
       # @param options [Hash] Optional parameters to pass to AWS SDK
       # @return [Hash] The options to be passed to AWS SDK
-
       attr_reader :options
 
       def initialize(options)

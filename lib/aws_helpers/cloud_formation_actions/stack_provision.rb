@@ -1,6 +1,6 @@
 module AwsHelpers
 
-  module CloudFormation
+  module CloudFormationActions
 
     class StackProvision
 
@@ -11,9 +11,7 @@ module AwsHelpers
       # @param capabilities [String] Optional capabilities to include in CloudFormation template
       # @param bucket_name [String] Optional S3 Bucket name - if not supplied, do not upload to S3 bucket
       # @param bucket_encrypt [Boolean] Optional server side encryption 'AES256'
-
     def initialize(config, stack_name, template, parameters, capabilities, bucket_name, bucket_encrypt)
-
         @config = config
         @stack_name = stack_name
         @template = template
@@ -21,7 +19,6 @@ module AwsHelpers
         @capabilities = capabilities
         @bucket_name = bucket_name
         @bucket_encrypt = bucket_encrypt
-
       end
 
       def execute

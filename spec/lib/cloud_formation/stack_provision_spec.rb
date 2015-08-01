@@ -1,8 +1,8 @@
 require 'rspec'
-require 'aws_helpers/cloud_formation/client'
-require 'aws_helpers/cloud_formation/stack_provision'
+require 'aws_helpers/cloud_formation'
+require 'aws_helpers/cloud_formation_actions/stack_provision'
 
-describe AwsHelpers::CloudFormation::StackProvision do
+describe AwsHelpers::CloudFormationActions::StackProvision do
 
   let(:stack_name) { 'my_stack_name' }
   let(:template) { 'my_stack_template' }
@@ -21,16 +21,16 @@ describe AwsHelpers::CloudFormation::StackProvision do
   let(:options) { {stub_responses: true, endpoint: 'http://endpoint'} }
 
   let(:config) { double(aws_cloud_formation_client: double, aws_s3_client: double) }
-  let(:stack_provision) { double(AwsHelpers::CloudFormation::StackProvision) }
+  let(:stack_provision) { double(AwsHelpers::CloudFormationActions::StackProvision) }
 
   it 'calls #stack_provision with arguments' do
-    expect(AwsHelpers::CloudFormation::StackProvision.new(config, stack_name, template, default_parameters,default_capabilities,default_bucket_name,default_bucket_encrypt)).to be
+    expect(AwsHelpers::CloudFormationActions::StackProvision.new(config, stack_name, template, default_parameters,default_capabilities,default_bucket_name,default_bucket_encrypt)).to be
   end
 
   it '#stack_provision with no options' do
 
-    allow(AwsHelpers::CloudFormation::Config).to receive(:new).with(options).and_return(config)
-    allow(AwsHelpers::CloudFormation::StackProvision).to receive(:new).with(
+    allow(AwsHelpers::Config).to receive(:new).with(options).and_return(config)
+    allow(AwsHelpers::CloudFormationActions::StackProvision).to receive(:new).with(
                                                              config,
                                                              stack_name,
                                                              template,
@@ -39,7 +39,7 @@ describe AwsHelpers::CloudFormation::StackProvision do
                                                              default_bucket_name,
                                                              default_bucket_encrypt).and_return(stack_provision)
     expect(stack_provision).to receive(:execute)
-    AwsHelpers::CloudFormation::Client.new(options).stack_provision(
+    AwsHelpers::CloudFormation.new(options).stack_provision(
         stack_name: stack_name,
         template: template)
 
@@ -47,8 +47,8 @@ describe AwsHelpers::CloudFormation::StackProvision do
 
   it '#stack_provision with additional options' do
 
-    allow(AwsHelpers::CloudFormation::Config).to receive(:new).with(options).and_return(config)
-    allow(AwsHelpers::CloudFormation::StackProvision).to receive(:new).with(
+    allow(AwsHelpers::Config).to receive(:new).with(options).and_return(config)
+    allow(AwsHelpers::CloudFormationActions::StackProvision).to receive(:new).with(
                                                              config,
                                                              stack_name,
                                                              template,
@@ -57,7 +57,7 @@ describe AwsHelpers::CloudFormation::StackProvision do
                                                              bucket_name,
                                                              bucket_encrypt).and_return(stack_provision)
     expect(stack_provision).to receive(:execute)
-    AwsHelpers::CloudFormation::Client.new(options).stack_provision(
+    AwsHelpers::CloudFormation.new(options).stack_provision(
         stack_name: stack_name,
         template: template,
         parameters: parameters,
