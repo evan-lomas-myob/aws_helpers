@@ -1,17 +1,19 @@
 module AwsHelpers
+  module Actions
+    module ElasticBeanstalk
 
-  module ElasticBeanstalkActions
+      class VersionDeploy
 
-    class VersionDeploy
+        def initialize(config, application, environment, version)
+          @config = config
+          @application = application
+          @environment = environment
+          @version = version
+        end
 
-      def initialize(config, application, environment, version)
-        @config = config
-        @application = application
-        @environment = environment
-        @version = version
-      end
+        def execute
 
-      def execute
+        end
 
       end
 

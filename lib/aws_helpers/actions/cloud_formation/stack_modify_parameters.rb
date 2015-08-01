@@ -1,21 +1,21 @@
 module AwsHelpers
+  module Actions
+    module CloudFormation
 
-  module CloudFormationActions
+      class StackModifyParameters
 
-    class StackModifyParameters
+        def initialize(config, stack_name, parameters)
+          @config = config
+          @stack_name = stack_name
+          @parameters = parameters
+        end
 
-      def initialize(config, stack_name, parameters)
-        @config = config
-        @stack_name = stack_name
-        @parameters = parameters
-      end
+        def execute
 
-      def execute
+        end
 
       end
 
     end
-
   end
-
 end

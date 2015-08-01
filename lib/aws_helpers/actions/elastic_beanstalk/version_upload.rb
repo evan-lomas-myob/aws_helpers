@@ -1,18 +1,19 @@
 module AwsHelpers
+  module Actions
+    module ElasticBeanstalk
 
-  module ElasticBeanstalkActions
+      class VersionUpload
 
-    class VersionUpload
+        def initialize(config, upload_parameters)
+          @config = config
+          @upload_parameters = upload_parameters
+        end
 
-      def initialize(config, upload_parameters)
-        @config = config
-        @upload_parameters = upload_parameters
+        def execute
+
+        end
+
       end
-
-      def execute
-
-      end
-
     end
   end
 end

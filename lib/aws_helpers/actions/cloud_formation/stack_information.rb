@@ -1,21 +1,21 @@
 module AwsHelpers
+  module Actions
+    module CloudFormation
 
-  module CloudFormationActions
+      class StackInformation
 
-    class StackInformation
+        def initialize(config, stack_name, info_field)
+          @config = config
+          @stack_name = stack_name
+          @info_field = info_field
+        end
 
-      def initialize(config, stack_name, info_field)
-        @config = config
-        @stack_name = stack_name
-        @info_field = info_field
-      end
+        def execute
 
-      def execute
+        end
 
       end
 
     end
-
   end
-
 end

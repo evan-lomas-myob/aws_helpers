@@ -1,20 +1,20 @@
 module AwsHelpers
+  module Actions
+    module EC2
 
-  module EC2Actions
+      class ImagesFindByTags
 
-    class ImagesFindByTags
+        def initialize(config, tags)
+          @config = config
+          @tags = tags
+        end
 
-      def initialize(config, tags)
-        @config = config
-        @tags = tags
-      end
+        def execute
 
-      def execute
+        end
 
       end
 
     end
-
   end
-
 end

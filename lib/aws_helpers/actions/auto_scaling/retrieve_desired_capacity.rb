@@ -1,18 +1,25 @@
 module AwsHelpers
 
-  module AutoScalingActions
+  module Actions
 
-    class RetrieveDesiredCapacity
+    module AutoScaling
 
-      def initialize(config, auto_scaling_group_name)
-        @config = config
-        @auto_scaling_group_name = auto_scaling_group_name
-      end
+      class RetrieveDesiredCapacity
 
-      def execute
+        def initialize(config, auto_scaling_group_name)
+          @config = config
+          @auto_scaling_group_name = auto_scaling_group_name
+        end
+
+        def execute
+
+        end
 
       end
 
     end
+
   end
+
 end
+

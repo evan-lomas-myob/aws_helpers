@@ -1,22 +1,26 @@
 module AwsHelpers
 
-  module AutoScalingActions
+  module Actions
 
-    class UpdateDesiredCapacity
+    module AutoScaling
 
-      def initialize(config, auto_scaling_group_name, desired_capacity, timeout)
+      class UpdateDesiredCapacity
 
-        @config = config
-        @auto_scaling_group_name = auto_scaling_group_name
-        @desired_capacity = desired_capacity
-        @timeout = timeout
+        def initialize(config, auto_scaling_group_name, desired_capacity, timeout)
+          @config = config
+          @auto_scaling_group_name = auto_scaling_group_name
+          @desired_capacity = desired_capacity
+          @timeout = timeout
+        end
 
-      end
+        def execute
 
-      def execute
+        end
 
       end
 
     end
+
   end
+
 end

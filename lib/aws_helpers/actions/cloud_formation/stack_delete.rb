@@ -1,20 +1,20 @@
 module AwsHelpers
+  module Actions
+    module CloudFormation
 
-  module CloudFormationActions
+      class StackDelete
 
-    class StackDelete
+        def initialize(config, stack_name)
+          @config = config
+          @stack_name = stack_name
+        end
 
-      def initialize(config, stack_name)
-        @config = config
-        @stack_name = stack_name
-      end
+        def execute
 
-      def execute
+        end
 
       end
 
     end
-
   end
-
 end

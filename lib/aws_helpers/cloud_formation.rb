@@ -5,6 +5,8 @@ require_relative 'actions/cloud_formation/stack_modify_parameters'
 require_relative 'actions/cloud_formation/stack_information'
 require_relative 'actions/cloud_formation/stack_exists'
 
+include AwsHelpers::Actions
+
 module AwsHelpers
 
   class CloudFormation < AwsHelpers::Client
@@ -22,29 +24,29 @@ module AwsHelpers
     # @param bucket_name [String] Optional S3 Bucket name - if not supplied, do not upload to S3 bucket
     # @param bucket_encrypt [Boolean] Optional server side encryption 'AES256'
     def stack_provision(stack_name:, template:, parameters: nil, capabilities: nil, bucket_name: nil, bucket_encrypt: false)
-      CloudFormationActions::StackProvision.new(config, stack_name, template, parameters, capabilities, bucket_name, bucket_encrypt).execute
+      StackProvision.new(config, stack_name, template, parameters, capabilities, bucket_name, bucket_encrypt).execute
     end
 
     # @param stack_name [String] Name given to the Stack
     def stack_delete(stack_name:)
-      CloudFormationActions::StackDelete.new(config, stack_name).execute
+      StackDelete.new(config, stack_name).execute
     end
 
     # @param stack_name [String] Name given to the Stack
     # @param parameters [Array] List of parameters to modify in stack
     def stack_modify_parameters(stack_name:, parameters: [])
-      CloudFormationActions::StackModifyParameters.new(config, stack_name, parameters).execute
+      StackModifyParameters.new(config, stack_name, parameters).execute
     end
 
     # @param stack_name [String] Name given to the Stack
     # @param info_field [String] Identify field to return (either "output" or "parameters")
     def stack_information(stack_name:, info_field: 'parameters')
-      CloudFormationActions::StackInformation.new(config, stack_name, info_field).execute
+      StackInformation.new(config, stack_name, info_field).execute
     end
 
     # @param stack_name [String] Name of the stack to check
     def stack_exists?(stack_name:)
-      CloudFormationActions::StackExists.new(config, stack_name).execute
+      StackExists.new(config, stack_name).execute
     end
 
   end

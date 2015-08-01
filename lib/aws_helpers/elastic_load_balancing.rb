@@ -1,6 +1,8 @@
 require_relative 'client'
 require_relative 'actions/elastic_load_balancing/poll_healthy_instances'
 
+include AwsHelpers::Actions::ElasticLoadBalancing
+
 module AwsHelpers
 
   class ElasticLoadBalancing < AwsHelpers::Client
@@ -15,7 +17,7 @@ module AwsHelpers
     # @param required_instances [Integer] The number of required instances for load balancing
     # @param timeout [Integer] Timeout in seconds before the load balancer to drop an instance
     def poll_healthy_instances(load_balancer_name:, required_instances:, timeout:)
-      AwsHelpers::ElasticLoadBalancingActions::PollHealthyInstances.new(config, load_balancer_name, required_instances, timeout).execute
+      PollHealthyInstances.new(config, load_balancer_name, required_instances, timeout).execute
     end
 
   end

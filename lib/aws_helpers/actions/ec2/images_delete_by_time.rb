@@ -1,21 +1,21 @@
 module AwsHelpers
+  module Actions
+    module EC2
 
-  module EC2Actions
+      class ImagesDeleteByTime
 
-    class ImagesDeleteByTime
+        def initialize(config, name, time)
+          @config = config
+          @name = name
+          @time = time
+        end
 
-      def initialize(config, name, time)
-        @config = config
-        @name = name
-        @time = time
-      end
+        def execute
 
-      def execute
+        end
 
       end
 
     end
-
   end
-
 end

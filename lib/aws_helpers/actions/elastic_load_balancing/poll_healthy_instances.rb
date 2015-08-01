@@ -1,19 +1,21 @@
 module AwsHelpers
+  module Actions
+    module ElasticLoadBalancing
 
-  module ElasticLoadBalancingActions
+      class PollHealthyInstances
 
-    class PollHealthyInstances
+        def initialize(config, load_balancer_name, required_instances, timeout)
+          @config = config
+          @load_balancer_name = load_balancer_name
+          @required_instances = required_instances
+          @timeout = timeout
+        end
 
-      def initialize(config, load_balancer_name, required_instances, timeout)
-        @config = config
-        @load_balancer_name = load_balancer_name
-        @required_instances = required_instances
-        @timeout = timeout
+        def execute
+
+        end
       end
 
-      def execute
-
-      end
     end
   end
 end

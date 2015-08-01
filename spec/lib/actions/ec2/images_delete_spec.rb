@@ -1,7 +1,10 @@
 require 'aws_helpers/ec2'
 require 'aws_helpers/actions/ec2/images_delete'
 
-describe AwsHelpers::EC2Actions::ImagesDelete do
+include AwsHelpers
+include AwsHelpers::Actions::EC2
+
+describe ImagesDelete do
 
   let(:name) { 'ec2_name' }
   let(:default_days) { nil }
@@ -15,20 +18,20 @@ describe AwsHelpers::EC2Actions::ImagesDelete do
   let(:options) { {stub_responses: true, endpoint: 'http://endpoint'} }
 
   let(:config) { double(aws_ec2_client: double) }
-  let(:images_delete) { double(AwsHelpers::EC2Actions::ImagesDelete) }
+  let(:images_delete) { double(ImagesDelete) }
 
   it '#images_delete with image name' do
-    allow(AwsHelpers::Config).to receive(:new).with(options).and_return(config)
-    allow(AwsHelpers::EC2Actions::ImagesDelete).to receive(:new).with(config, name, default_days, default_months, default_years).and_return(images_delete)
+    allow(Config).to receive(:new).with(options).and_return(config)
+    allow(ImagesDelete).to receive(:new).with(config, name, default_days, default_months, default_years).and_return(images_delete)
     expect(images_delete).to receive(:execute)
-    AwsHelpers::EC2.new(options).images_delete(name: name)
+    EC2.new(options).images_delete(name: name)
   end
 
   it '#images_delete with days, months and years supplied' do
-    allow(AwsHelpers::Config).to receive(:new).with(options).and_return(config)
-    allow(AwsHelpers::EC2Actions::ImagesDelete).to receive(:new).with(config, name, days, months, years).and_return(images_delete)
+    allow(Config).to receive(:new).with(options).and_return(config)
+    allow(ImagesDelete).to receive(:new).with(config, name, days, months, years).and_return(images_delete)
     expect(images_delete).to receive(:execute)
-    AwsHelpers::EC2.new(options).images_delete(name: name, days: days, months: months, years: years)
+    EC2.new(options).images_delete(name: name, days: days, months: months, years: years)
   end
 
 end
