@@ -1,6 +1,5 @@
-require 'rspec'
 require 'aws_helpers/cloud_formation'
-require 'aws_helpers/cloud_formation_actions/stack_provision'
+require 'aws_helpers/actions/cloud_formation/stack_provision'
 
 describe AwsHelpers::CloudFormationActions::StackProvision do
 

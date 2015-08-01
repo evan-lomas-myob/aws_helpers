@@ -1,6 +1,5 @@
-require 'rspec'
 require 'aws_helpers/rds'
-require 'aws_helpers/rds_actions/snapshots_delete'
+require 'aws_helpers/actions/rds/snapshots_delete'
 
 describe AwsHelpers::RDSActions::SnapshotsDelete do
 

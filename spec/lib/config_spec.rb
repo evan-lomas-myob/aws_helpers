@@ -1,4 +1,3 @@
-require 'rspec'
 require 'aws_helpers/config'
 
 describe AwsHelpers::Config do

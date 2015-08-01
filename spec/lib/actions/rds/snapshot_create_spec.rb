@@ -1,6 +1,5 @@
-require 'rspec'
 require 'aws_helpers/rds'
-require 'aws_helpers/rds_actions/snapshot_create'
+require 'aws_helpers/actions/rds/snapshot_create'
 
 describe AwsHelpers::RDSActions::SnapshotCreate do
 

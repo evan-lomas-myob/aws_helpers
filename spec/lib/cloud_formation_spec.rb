@@ -1,4 +1,3 @@
-require 'rspec'
 require 'aws_helpers/cloud_formation'
 require 'aws_helpers/config'
 

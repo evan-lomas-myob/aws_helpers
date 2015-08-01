@@ -1,3 +1,5 @@
+require 'aws-sdk-core'
+
 module AwsHelpers
 
   class Config

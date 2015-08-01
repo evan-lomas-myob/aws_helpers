@@ -1,10 +1,8 @@
-require 'aws-sdk-core'
 require_relative 'client'
-require_relative 'config'
-require_relative 'ec2_actions/image_create'
-require_relative 'ec2_actions/images_delete'
-require_relative 'ec2_actions/images_delete_by_time'
-require_relative 'ec2_actions/images_find_by_tags'
+require_relative 'actions/ec2/image_create'
+require_relative 'actions/ec2/images_delete'
+require_relative 'actions/ec2/images_delete_by_time'
+require_relative 'actions/ec2/images_find_by_tags'
 
 module AwsHelpers
 

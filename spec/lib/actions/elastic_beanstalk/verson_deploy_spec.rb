@@ -1,6 +1,5 @@
-require 'rspec'
 require 'aws_helpers/elastic_beanstalk'
-require 'aws_helpers/elastic_beanstalk_actions/version_deploy'
+require 'aws_helpers/actions/elastic_beanstalk/version_deploy'
 
 describe AwsHelpers::ElasticBeanstalkActions::VersionDeploy do
 

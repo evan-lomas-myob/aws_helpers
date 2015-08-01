@@ -1,6 +1,5 @@
-require 'rspec'
 require 'aws_helpers/ec2'
-require 'aws_helpers/ec2_actions/images_delete'
+require 'aws_helpers/actions/ec2/images_delete'
 
 describe AwsHelpers::EC2Actions::ImagesDelete do
 

@@ -1,11 +1,9 @@
-require 'aws-sdk-core'
 require_relative 'client'
-require_relative 'config'
-require_relative 'cloud_formation_actions/stack_provision'
-require_relative 'cloud_formation_actions/stack_delete'
-require_relative 'cloud_formation_actions/stack_modify_parameters'
-require_relative 'cloud_formation_actions/stack_information'
-require_relative 'cloud_formation_actions/stack_exists'
+require_relative 'actions/cloud_formation/stack_provision'
+require_relative 'actions/cloud_formation/stack_delete'
+require_relative 'actions/cloud_formation/stack_modify_parameters'
+require_relative 'actions/cloud_formation/stack_information'
+require_relative 'actions/cloud_formation/stack_exists'
 
 module AwsHelpers
 

@@ -1,4 +1,3 @@
-require 'rspec'
 require 'aws_helpers/ec2'
 
 describe AwsHelpers::EC2 do

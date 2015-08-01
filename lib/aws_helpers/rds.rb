@@ -1,9 +1,7 @@
-require 'aws-sdk-core'
 require_relative 'client'
-require_relative 'config'
-require_relative 'rds_actions/snapshot_create'
-require_relative 'rds_actions/snapshots_delete'
-require_relative 'rds_actions/snapshot_latest'
+require_relative 'actions/rds/snapshot_create'
+require_relative 'actions/rds/snapshots_delete'
+require_relative 'actions/rds/snapshot_latest'
 
 module AwsHelpers
 

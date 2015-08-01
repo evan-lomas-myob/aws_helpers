@@ -1,6 +1,5 @@
-require 'rspec'
 require 'aws_helpers/auto_scaling'
-require 'aws_helpers/auto_scaling_actions/retrieve_desired_capacity'
+require 'aws_helpers/actions/auto_scaling/retrieve_desired_capacity'
 
 describe AwsHelpers::AutoScalingActions::RetrieveDesiredCapacity do
 

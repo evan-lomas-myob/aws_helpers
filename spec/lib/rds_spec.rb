@@ -1,4 +1,3 @@
-require 'rspec'
 require 'aws_helpers/rds'
 
 describe AwsHelpers::RDS do

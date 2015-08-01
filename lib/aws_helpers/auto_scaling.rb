@@ -1,7 +1,6 @@
-require 'aws-sdk-core'
 require_relative 'client'
-require_relative 'auto_scaling_actions/retrieve_desired_capacity'
-require_relative 'auto_scaling_actions/update_desired_capacity'
+require_relative 'actions/auto_scaling/retrieve_desired_capacity'
+require_relative 'actions/auto_scaling/update_desired_capacity'
 
 module AwsHelpers
 

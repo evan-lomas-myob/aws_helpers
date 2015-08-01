@@ -1,6 +1,5 @@
-require 'rspec'
 require 'aws_helpers/ec2'
-require 'aws_helpers/ec2_actions/image_create'
+require 'aws_helpers/actions/ec2/image_create'
 
 describe AwsHelpers::EC2Actions::ImageCreate do
 

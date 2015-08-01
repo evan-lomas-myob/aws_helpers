@@ -1,6 +1,5 @@
-require 'rspec'
 require 'aws_helpers/cloud_formation'
-require 'aws_helpers/cloud_formation_actions/stack_delete'
+require 'aws_helpers/actions/cloud_formation/stack_delete'
 
 describe AwsHelpers::CloudFormationActions::StackDelete do
 

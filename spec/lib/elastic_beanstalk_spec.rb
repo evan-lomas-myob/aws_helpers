@@ -1,4 +1,3 @@
-require 'rspec'
 require 'aws_helpers/elastic_beanstalk'
 
 describe AwsHelpers::ElasticBeanstalk do

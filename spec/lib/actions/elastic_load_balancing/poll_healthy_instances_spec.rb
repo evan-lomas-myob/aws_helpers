@@ -1,6 +1,5 @@
-require 'rspec'
 require 'aws_helpers/elastic_load_balancing'
-require 'aws_helpers/elastic_load_balancing_actions/poll_healthy_instances'
+require 'aws_helpers/actions/elastic_load_balancing/poll_healthy_instances'
 
 describe 'AwsHelpers::ElasticLoadBalancing::PollHealthyInstances' do
 

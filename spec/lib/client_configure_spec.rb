@@ -1,4 +1,3 @@
-require 'rspec'
 require 'aws_helpers/client'
 
 describe 'Calling the config configure method' do

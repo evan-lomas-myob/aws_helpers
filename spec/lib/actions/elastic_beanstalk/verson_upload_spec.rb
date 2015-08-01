@@ -1,6 +1,5 @@
-require 'rspec'
 require 'aws_helpers/elastic_beanstalk'
-require 'aws_helpers/elastic_beanstalk_actions/version_upload'
+require 'aws_helpers/actions/elastic_beanstalk/version_upload'
 
 describe AwsHelpers::ElasticBeanstalkActions::VersionUpload do
 

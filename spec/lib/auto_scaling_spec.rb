@@ -1,4 +1,3 @@
-require 'rspec'
 require 'aws_helpers/auto_scaling'
 
 describe AwsHelpers::AutoScaling do

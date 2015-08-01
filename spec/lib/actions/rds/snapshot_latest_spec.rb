@@ -1,6 +1,5 @@
-require 'rspec'
 require 'aws_helpers/rds'
-require 'aws_helpers/rds_actions/snapshot_latest'
+require 'aws_helpers/actions/rds/snapshot_latest'
 
 describe AwsHelpers::RDSActions::SnapshotLatest do
 

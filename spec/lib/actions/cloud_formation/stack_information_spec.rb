@@ -1,6 +1,5 @@
-require 'rspec'
 require 'aws_helpers/cloud_formation'
-require 'aws_helpers/cloud_formation_actions/stack_information'
+require 'aws_helpers/actions/cloud_formation/stack_information'
 
 describe AwsHelpers::CloudFormationActions::StackInformation do
 
