@@ -1,5 +1,5 @@
 require 'aws-sdk-core'
-require_relative 'common/client'
+require_relative 'client'
 require_relative 'config'
 require_relative 'cloud_formation_actions/stack_provision'
 require_relative 'cloud_formation_actions/stack_delete'
@@ -9,12 +9,12 @@ require_relative 'cloud_formation_actions/stack_exists'
 
 module AwsHelpers
 
-  class CloudFormation < AwsHelpers::Common::Client
+  class CloudFormation < AwsHelpers::Client
 
     # CloudFormation utilities for creating, deleting and modifying templates
     # @param options [Hash] Optional Arguments to include when calling the AWS SDK
     def initialize(options = {})
-      super(AwsHelpers::Config.new(options))
+      super(options)
     end
 
     # @param stack_name [String] Name given to the Stack

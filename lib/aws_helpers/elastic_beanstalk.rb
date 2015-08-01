@@ -1,17 +1,17 @@
 require 'aws-sdk-core'
-require_relative 'common/client'
+require_relative 'client'
 require_relative 'config'
 require_relative 'elastic_beanstalk_actions/version_deploy'
 require_relative 'elastic_beanstalk_actions/version_upload'
 
 module AwsHelpers
 
-  class ElasticBeanstalk < AwsHelpers::Common::Client
+  class ElasticBeanstalk < AwsHelpers::Client
 
     # Utilities for ElasticBeanstalk deployment
     # @param options [Hash] Optional Arguments to include when calling the AWS SDK
     def initialize(options = {})
-      super(AwsHelpers::Config.new(options))
+      super(options)
     end
 
     # @param application [String] Name given to the AWS ElasticBeanstalk application

@@ -1,5 +1,5 @@
 require 'aws-sdk-core'
-require_relative 'common/client'
+require_relative 'client'
 require_relative 'config'
 require_relative 'ec2_actions/image_create'
 require_relative 'ec2_actions/images_delete'
@@ -8,13 +8,13 @@ require_relative 'ec2_actions/images_find_by_tags'
 
 module AwsHelpers
 
-  class EC2 < AwsHelpers::Common::Client
+  class EC2 < AwsHelpers::Client
 
     # Utilities for EC2 creation, deletion and search
     # @param options [Hash] Optional Arguments to include when calling the AWS SDK
 
     def initialize(options = {})
-      super(AwsHelpers::Config.new(options))
+      super(options)
     end
 
     # @param name [String] Name given to the AWS EC2 instance

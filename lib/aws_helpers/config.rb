@@ -1,6 +1,8 @@
 module AwsHelpers
 
-  class Config < AwsHelpers::Common::Config
+  class Config
+
+    attr_reader :options
 
     attr_accessor :aws_auto_scaling_client
     attr_accessor :aws_cloud_formation_client
@@ -13,7 +15,7 @@ module AwsHelpers
 
     # @param options [Hash] Optional arguments to pass to the AWS Ruby SDK
     def initialize(options)
-      super(options)
+      @options = {retry_limit: 5}.merge(options)
     end
 
     # @return [Aws::AutoScaling::Client]

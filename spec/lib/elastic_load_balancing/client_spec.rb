@@ -19,7 +19,7 @@ describe AwsHelpers::ElasticLoadBalancing do
     context 'with options' do
 
       it "should call AwsHelpers::Common::Client's initialize method with the correct options" do
-        expect(AwsHelpers::Common::Client).to receive(:new).with(options)
+        expect(AwsHelpers::Client).to receive(:new).with(options)
         AwsHelpers::ElasticLoadBalancing.new(options)
       end
 

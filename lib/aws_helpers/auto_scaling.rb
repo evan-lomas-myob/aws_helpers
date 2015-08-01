@@ -1,15 +1,14 @@
 require 'aws-sdk-core'
-require_relative 'common/client'
-require_relative 'config'
+require_relative 'client'
 require_relative 'auto_scaling_actions/retrieve_desired_capacity'
 require_relative 'auto_scaling_actions/update_desired_capacity'
 
 module AwsHelpers
 
-  class AutoScaling < Common::Client
+  class AutoScaling < AwsHelpers::Client
 
       def initialize(options = {})
-        super(AwsHelpers::Config.new(options))
+        super(options)
       end
 
       # @param auto_scaling_group_name [String] The group name of the Auto scaling client

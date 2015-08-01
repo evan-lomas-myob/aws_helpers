@@ -12,7 +12,7 @@ describe AwsHelpers::ElasticBeanstalk do
   context '.new' do
 
     it "should call AwsHelpers::Common::Client's initialize method" do
-      expect(AwsHelpers::Common::Client).to receive(:new).with(options).and_return(AwsHelpers::Config)
+      expect(AwsHelpers::Client).to receive(:new).with(options).and_return(AwsHelpers::Config)
       AwsHelpers::ElasticBeanstalk.new(options)
     end
 

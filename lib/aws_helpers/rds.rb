@@ -1,5 +1,5 @@
 require 'aws-sdk-core'
-require_relative 'common/client'
+require_relative 'client'
 require_relative 'config'
 require_relative 'rds_actions/snapshot_create'
 require_relative 'rds_actions/snapshots_delete'
@@ -7,12 +7,12 @@ require_relative 'rds_actions/snapshot_latest'
 
 module AwsHelpers
 
-  class RDS < AwsHelpers::Common::Client
+  class RDS < AwsHelpers::Client
 
     # Utilities for creating, deleting and taking snapshots of RDS instances
     # @param options [Hash] Optional Arguments to include when calling the AWS SDK
     def initialize(options = {})
-      super(AwsHelpers::Config.new(options))
+      super(options)
     end
 
     # @param db_instance_id [String] Unique ID of the RDS instance
