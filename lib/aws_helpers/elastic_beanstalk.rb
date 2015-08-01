@@ -1,8 +1,8 @@
 require 'aws-sdk-core'
 require_relative 'common/client'
 require_relative 'config'
-require_relative 'elastic_beanstalk/version_deploy'
-require_relative 'elastic_beanstalk/version_upload'
+require_relative 'elastic_beanstalk_actions/version_deploy'
+require_relative 'elastic_beanstalk_actions/version_upload'
 
 module AwsHelpers
 

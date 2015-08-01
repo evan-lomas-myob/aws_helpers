@@ -2,7 +2,7 @@ require 'rspec'
 require 'aws_helpers/ec2'
 require 'aws_helpers/ec2_actions/image_create'
 
-describe 'AwsHelpers::EC2::ImageCreate' do
+describe AwsHelpers::EC2Actions::ImageCreate do
 
   let(:name) { 'ec2_name' }
   let(:instance_id) { 'ec2_id' }

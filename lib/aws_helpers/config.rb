@@ -8,6 +8,7 @@ module AwsHelpers
     attr_accessor :aws_elastic_beanstalk_client
     attr_accessor :aws_elastic_load_balancing_client
     attr_accessor :aws_iam_client
+    attr_accessor :aws_rds_client
     attr_accessor :aws_s3_client
 
     # @param options [Hash] Optional arguments to pass to the AWS Ruby SDK
@@ -39,8 +40,14 @@ module AwsHelpers
       @aws_elastic_load_balancing_client ||= Aws::ElasticLoadBalancing::Client.new(options)
     end
 
+    # @return [Aws::IAM::Client]
     def aws_iam_client
       @aws_iam_client ||= Aws::IAM::Client.new(options)
+    end
+
+    # @return [Aws::RDS::Client]
+    def aws_rds_client
+      @aws_rds_client ||= Aws::RDS::Client.new(options)
     end
 
     # @return [Aws::S3::Client]

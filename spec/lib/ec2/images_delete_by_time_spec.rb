@@ -2,7 +2,7 @@ require 'rspec'
 require 'aws_helpers/ec2'
 require 'aws_helpers/ec2_actions/images_delete_by_time'
 
-describe 'AwsHelpers::EC2::ImagesDeleteByTime' do
+describe AwsHelpers::EC2Actions::ImagesDeleteByTime do
 
   let(:name) { 'ec2_name' }
   let(:time) { Time.local(2000,"jan",1,20,15,1) }

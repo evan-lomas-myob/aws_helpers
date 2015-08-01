@@ -1,6 +1,6 @@
 module AwsHelpers
 
-  module RDS
+  module RDSActions
 
     class SnapshotsDelete
 

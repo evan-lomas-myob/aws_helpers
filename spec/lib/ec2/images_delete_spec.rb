@@ -2,7 +2,7 @@ require 'rspec'
 require 'aws_helpers/ec2'
 require 'aws_helpers/ec2_actions/images_delete'
 
-describe 'AwsHelpers::EC2::ImageDelete' do
+describe AwsHelpers::EC2Actions::ImagesDelete do
 
   let(:name) { 'ec2_name' }
   let(:default_days) { nil }

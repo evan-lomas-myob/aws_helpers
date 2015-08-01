@@ -1,8 +1,8 @@
 require 'rspec'
 require 'aws_helpers/elastic_beanstalk'
-require 'aws_helpers/elastic_beanstalk/version_upload'
+require 'aws_helpers/elastic_beanstalk_actions/version_upload'
 
-describe 'AwsHelpers::ElasticBeanStalk::VersionUpload' do
+describe AwsHelpers::ElasticBeanstalkActions::VersionUpload do
 
   let(:upload_parameters) { 'my_upload_params' }
   let(:options) { {stub_responses: true, endpoint: 'http://endpoint'} }
@@ -14,6 +14,5 @@ describe 'AwsHelpers::ElasticBeanStalk::VersionUpload' do
     allow(AwsHelpers::ElasticBeanstalkActions::VersionUpload).to receive(:new).with(config, upload_parameters).and_return(version_upload)
     expect(version_upload).to receive(:execute)
     AwsHelpers::ElasticBeanstalk.new(options).upload(upload_parameters: upload_parameters)
-
   end
 end
