@@ -3,28 +3,91 @@ require 'aws_helpers/auto_scaling'
 describe AwsHelpers::AutoScaling do
 
   let(:options) { {stub_responses: true, endpoint: 'http://endpoint'} }
+  let(:auto_scaling_group_name) { 'my_group_name' }
+  let(:config) { double(AwsHelpers::Config) }
+  let(:desired_capacity) { 1 }
 
-  context '.new' do
+  describe '.new' do
 
-    it "should call AwsHelpers::Common::Client's initialize method" do
-      expect(AwsHelpers::AutoScaling).to receive(:new).with(options).and_return(AwsHelpers::Config)
+    it 'should call AwsHelpers::Client initialize method' do
+      expect(AwsHelpers::Client).to receive(:new).with(options)
       AwsHelpers::AutoScaling.new(options)
     end
 
   end
 
-  context 'AutoScaling Config methods' do
+  describe '#retrieve_desired_capacity' do
 
-    it 'should create an instance of Aws::AutoScaling::Client' do
-      expect(AwsHelpers::Config.new(options).aws_auto_scaling_client).to match(Aws::AutoScaling::Client)
-      AwsHelpers::AutoScaling.new(options)
+    let(:retrieve_desired_capacity) { double(RetrieveDesiredCapacity) }
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(RetrieveDesiredCapacity).to receive(:new).with(anything, anything).and_return(retrieve_desired_capacity)
+      allow(retrieve_desired_capacity).to receive(:execute).and_return(desired_capacity)
     end
 
-    it 'should create an instance of Aws::ElasticLoadBalancing::Client' do
-      expect(AwsHelpers::Config.new(options).aws_elastic_load_balancing_client).to match(Aws::ElasticLoadBalancing::Client)
-      AwsHelpers::AutoScaling.new(options)
+    subject { AwsHelpers::AutoScaling.new(options).retrieve_desired_capacity(auto_scaling_group_name: auto_scaling_group_name) }
+
+    it 'should create RetrieveDesiredCapacity with correct parameters ' do
+      expect(RetrieveDesiredCapacity).to receive(:new).with(config, auto_scaling_group_name)
+      subject
+    end
+
+    it 'should call RetrieveDesiredCapacity execute method' do
+      expect(retrieve_desired_capacity).to receive(:execute)
+      subject
+    end
+
+    it 'should return the desired capacity' do
+      expect(subject).to be(desired_capacity)
     end
 
   end
+
+  describe '#update_desired_capacity' do
+
+    let(:update_desired_capacity) { double(UpdateDesiredCapacity) }
+    let(:timeout) { 2 }
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(UpdateDesiredCapacity).to receive(:new).with(anything, anything, anything, anything).and_return(update_desired_capacity)
+      allow(update_desired_capacity).to receive(:execute)
+    end
+
+    context 'timeout unset' do
+
+      subject { AwsHelpers::AutoScaling.new(options).update_desired_capacity(auto_scaling_group_name: auto_scaling_group_name, desired_capacity: desired_capacity) }
+
+      it 'should create UpdateDesiredCapacity with correct parameters ' do
+        expect(UpdateDesiredCapacity).to receive(:new).with(config, auto_scaling_group_name, desired_capacity, 3600)
+        subject
+      end
+
+      it 'should create UpdateDesiredCapacity execute method' do
+        expect(update_desired_capacity).to receive(:execute)
+        subject
+      end
+
+    end
+
+    context 'timeout set' do
+
+      subject { AwsHelpers::AutoScaling.new(options).update_desired_capacity(auto_scaling_group_name: auto_scaling_group_name, desired_capacity: desired_capacity, timeout: timeout) }
+
+      it 'should create UpdateDesiredCapacity with correct parameters ' do
+        expect(UpdateDesiredCapacity).to receive(:new).with(config, auto_scaling_group_name, desired_capacity, timeout)
+        subject
+      end
+
+      it 'should create UpdateDesiredCapacity execute method' do
+        expect(update_desired_capacity).to receive(:execute)
+        subject
+      end
+
+    end
+
+  end
+
 
 end
