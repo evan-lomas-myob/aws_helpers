@@ -3,7 +3,6 @@ require_relative 'actions/rds/snapshot_create'
 require_relative 'actions/rds/snapshots_delete'
 require_relative 'actions/rds/snapshot_latest'
 
-include AwsHelpers
 include AwsHelpers::Actions::RDS
 
 module AwsHelpers
