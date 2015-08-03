@@ -26,11 +26,11 @@ describe 'Calling the config configure method' do
 
       let(:config) { double(AwsHelpers::Config) }
 
-      it 'should yield' do
+      it 'should yield when a block is given' do
         expect { |config| client.configure(&config) }.to yield_control
       end
 
-      it 'should return a config' do
+      it 'should yield and return a config' do
         expect(client).to receive(:configure).and_return(config)
         client.configure { config }
       end
