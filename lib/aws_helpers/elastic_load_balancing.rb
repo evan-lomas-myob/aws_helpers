@@ -9,7 +9,8 @@ module AwsHelpers
 
     # Utilities for ElasticLoadBalancing maintenance
     # @param options [Hash] Optional Arguments to include when calling the AWS SDK
-    def initialize(options = {})
+    # @return [AwsHelpers::Config] A Config object with options initialized
+  def initialize(options = {})
       super(options)
     end
 

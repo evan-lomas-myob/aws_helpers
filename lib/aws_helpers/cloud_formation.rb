@@ -13,6 +13,7 @@ module AwsHelpers
 
     # CloudFormation utilities for creating, deleting and modifying templates
     # @param options [Hash] Optional Arguments to include when calling the AWS SDK
+    # @return [AwsHelpers::Config] A Config object with options initialized
     def initialize(options = {})
       super(options)
     end
@@ -40,11 +41,13 @@ module AwsHelpers
 
     # @param stack_name [String] Name given to the Stack
     # @param info_field [String] Identify field to return (either "output" or "parameters")
+    # @return [Array] The list of parameters/outputs defined for the Stack
     def stack_information(stack_name:, info_field: 'parameters')
       StackInformation.new(config, stack_name, info_field).execute
     end
 
     # @param stack_name [String] Name of the stack to check
+    # @return [Boolean] True if the stack exists
     def stack_exists?(stack_name:)
       StackExists.new(config, stack_name).execute
     end

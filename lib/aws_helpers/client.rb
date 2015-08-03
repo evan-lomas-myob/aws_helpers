@@ -10,6 +10,7 @@ module AwsHelpers
       @config = AwsHelpers::Config.new(options)
     end
 
+    # @yield [config] Yields to config if a block is passed
     def configure
       yield config if block_given?
     end

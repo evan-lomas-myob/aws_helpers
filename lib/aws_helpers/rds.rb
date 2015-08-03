@@ -12,6 +12,7 @@ module AwsHelpers
 
     # Utilities for creating, deleting and taking snapshots of RDS instances
     # @param options [Hash] Optional Arguments to include when calling the AWS SDK
+    # @return [AwsHelpers::Config] A Config object with options initialized
     def initialize(options = {})
       super(options)
     end
@@ -31,6 +32,7 @@ module AwsHelpers
     end
 
     # @param db_instance_id [String] Unique ID of the RDS instance
+    # @return [String] The latest snapshot name matching the DB instance ID
     def snapshot_latest(db_instance_id:)
       SnapshotLatest.new(config, db_instance_id).execute
     end

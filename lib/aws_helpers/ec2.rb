@@ -12,6 +12,7 @@ module AwsHelpers
 
     # Utilities for EC2 creation, deletion and search
     # @param options [Hash] Optional Arguments to include when calling the AWS SDK
+    # @return [AwsHelpers::Config] A Config object with options initialized
     def initialize(options = {})
       super(options)
     end
@@ -38,6 +39,7 @@ module AwsHelpers
     end
 
     # @param tags [Array] List of tags to find matching EC2 instances for
+    # @return [Array] list of images matching the tags list
     def images_find_by_tags(tags: [])
       ImagesFindByTags.new(config, tags).execute
     end
