@@ -5,7 +5,7 @@ require_relative 'actions/cloud_formation/stack_modify_parameters'
 require_relative 'actions/cloud_formation/stack_information'
 require_relative 'actions/cloud_formation/stack_exists'
 
-include AwsHelpers::Actions::CloudFormation
+include AwsHelpers::Actions
 
 module AwsHelpers
 
