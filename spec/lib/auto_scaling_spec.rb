@@ -7,7 +7,7 @@ describe AwsHelpers::AutoScaling do
   let(:config) { double(AwsHelpers::Config) }
   let(:desired_capacity) { 1 }
 
-  describe '.new' do
+  describe '#initialize' do
 
     it 'should call AwsHelpers::Client initialize method' do
       expect(AwsHelpers::Client).to receive(:new).with(options)
@@ -28,7 +28,7 @@ describe AwsHelpers::AutoScaling do
 
     subject { AwsHelpers::AutoScaling.new(options).retrieve_desired_capacity(auto_scaling_group_name: auto_scaling_group_name) }
 
-    it 'should create RetrieveDesiredCapacity with correct parameters ' do
+    it 'should create RetrieveDesiredCapacity with correct parameters' do
       expect(RetrieveDesiredCapacity).to receive(:new).with(config, auto_scaling_group_name)
       subject
     end
@@ -38,8 +38,8 @@ describe AwsHelpers::AutoScaling do
       subject
     end
 
-    it 'should return the desired capacity' do
-      expect(subject).to be(desired_capacity)
+    it 'should return the desired capacity value as an Integer' do
+      expect(retrieve_desired_capacity.execute).to eq(1)
     end
 
   end
@@ -55,16 +55,16 @@ describe AwsHelpers::AutoScaling do
       allow(update_desired_capacity).to receive(:execute)
     end
 
-    context 'timeout unset' do
+    context 'timeout is unset' do
 
       subject { AwsHelpers::AutoScaling.new(options).update_desired_capacity(auto_scaling_group_name: auto_scaling_group_name, desired_capacity: desired_capacity) }
 
-      it 'should create UpdateDesiredCapacity with correct parameters ' do
+      it 'should create UpdateDesiredCapacity with default timeout parameter' do
         expect(UpdateDesiredCapacity).to receive(:new).with(config, auto_scaling_group_name, desired_capacity, 3600)
         subject
       end
 
-      it 'should create UpdateDesiredCapacity execute method' do
+      it 'should create UpdateDesiredCapacity execute method when timeout is not set' do
         expect(update_desired_capacity).to receive(:execute)
         subject
       end
@@ -75,12 +75,12 @@ describe AwsHelpers::AutoScaling do
 
       subject { AwsHelpers::AutoScaling.new(options).update_desired_capacity(auto_scaling_group_name: auto_scaling_group_name, desired_capacity: desired_capacity, timeout: timeout) }
 
-      it 'should create UpdateDesiredCapacity with correct parameters ' do
-        expect(UpdateDesiredCapacity).to receive(:new).with(config, auto_scaling_group_name, desired_capacity, timeout)
+      it 'should create UpdateDesiredCapacity with timeout set to 2' do
+        expect(UpdateDesiredCapacity).to receive(:new).with(config, auto_scaling_group_name, desired_capacity, 2)
         subject
       end
 
-      it 'should create UpdateDesiredCapacity execute method' do
+      it 'should create UpdateDesiredCapacity execute method when timeout is set' do
         expect(update_desired_capacity).to receive(:execute)
         subject
       end
@@ -88,6 +88,5 @@ describe AwsHelpers::AutoScaling do
     end
 
   end
-
 
 end
