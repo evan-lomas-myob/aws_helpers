@@ -12,18 +12,18 @@ describe CheckHealthyInstances do
     let(:config) { instance_double(AwsHelpers::Config, aws_elastic_load_balancing_client: load_balancing_client) }
 
     let(:load_balancer_name) { 'name' }
-    let(:instances) { double(:load_balancer_descriptions, instances: %w( '1' ) ) }
+    let(:instances) { double(:load_balancer_descriptions, instances: %w( '1' )) }
+
+    before(:each) do
+      allow(load_balancing_client).to receive(:describe_load_balancers).with(load_balancer_names: ['name']).and_return(instances)
+    end
 
     it 'should not raise an error if equal to the number of instances' do
-      number_of_instances = 1
-      allow(load_balancing_client).to receive(:describe_load_balancers).with(load_balancer_names: [ 'name' ]).and_return(instances)
-      expect { CheckHealthyInstances.new(config, load_balancer_name, number_of_instances).execute }.to_not raise_error
+      expect { CheckHealthyInstances.new(config, load_balancer_name, 1).execute }.to_not raise_error
     end
 
     it 'should raise an error if not equal to the number of instances' do
-      number_of_instances = 2
-      allow(load_balancing_client).to receive(:describe_load_balancers).with(load_balancer_names: [ 'name' ]).and_return(instances)
-      expect { CheckHealthyInstances.new(config, load_balancer_name, number_of_instances).execute }.to raise_error('Not at capacity')
+      expect { CheckHealthyInstances.new(config, load_balancer_name, 2).execute }.to raise_error('Not at capacity')
     end
 
   end

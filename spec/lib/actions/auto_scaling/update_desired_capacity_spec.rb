@@ -33,20 +33,20 @@ describe UpdateDesiredCapacity do
       subject
     end
 
-    it 'should call the execute method to update desired capacity' do
+    it 'should set the desired capacity' do
       expect(auto_scaling_client).to receive(:set_desired_capacity).with(auto_scaling_group_name: auto_scaling_group_name, desired_capacity: desired_capacity)
     end
 
-    it 'should call the execute method to update desired capacity' do
+    it 'should retrieve the auto scaling groups description' do
       expect(auto_scaling_client).to receive(:describe_auto_scaling_groups).with(auto_scaling_group_name: auto_scaling_group_name).and_return(auto_scaling_groups)
     end
 
 
-    it 'should call check healthy instances to confirm the number of instances' do
+    it 'should call check healthy instances for the given load balancer name' do
       expect(CheckHealthyInstances).to receive(:new).with(config, 'load_balancer1', desired_capacity).and_return(check_healthy_instances)
     end
 
-    it 'should call check healthy instances to confirm the number of instances' do
+    it 'should call the execute method to check healthy instances' do
       expect(check_healthy_instances).to receive(:execute)
     end
 
