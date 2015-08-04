@@ -16,7 +16,7 @@ describe RetrieveDesiredCapacity do
     let(:auto_scaling_client) { instance_double(Aws::AutoScaling::Client) }
     let(:config) { instance_double(AwsHelpers::Config, aws_auto_scaling_client: auto_scaling_client) }
 
-    subject {RetrieveDesiredCapacity.new(config, auto_scaling_group_name).execute}
+    subject { RetrieveDesiredCapacity.new(config, auto_scaling_group_name).execute }
 
     before(:each) do
       allow(auto_scaling_client).to receive(:describe_auto_scaling_groups).with(anything).and_return(response)

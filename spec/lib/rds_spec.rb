@@ -14,7 +14,6 @@ describe AwsHelpers::RDS do
 
   end
 
-
   describe '#snapshot_create' do
 
     let(:snapshot_create) { double(SnapshotCreate) }
@@ -118,7 +117,7 @@ describe AwsHelpers::RDS do
     end
 
     it 'should call SnapshotCreate execute method' do
-      expect(snapshot_latest).to receive(:execute).and_return(snapshot_latest)
+      expect(snapshot_latest).to receive(:execute)
       AwsHelpers::RDS.new(options).snapshot_latest(db_instance_id: db_instance_id)
     end
 

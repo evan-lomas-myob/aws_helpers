@@ -111,7 +111,7 @@ describe AwsHelpers::CloudFormation do
 
     subject { AwsHelpers::CloudFormation.new(options).stack_delete(stack_name: stack_name) }
 
-    it 'should create StackDelete with correct parameters ' do
+    it 'should create StackDelete with stack name as argument' do
       expect(StackDelete).to receive(:new).with(config, stack_name)
       subject
     end
@@ -126,6 +126,9 @@ describe AwsHelpers::CloudFormation do
   describe '#stack_exists' do
 
     let(:stack_exists) { double(StackExists) }
+
+    let(:the_stack_exists) { true }
+    let(:the_stack_does_not_exist) { false }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
