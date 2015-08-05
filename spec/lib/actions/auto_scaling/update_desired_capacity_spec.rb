@@ -41,7 +41,6 @@ describe UpdateDesiredCapacity do
       expect(auto_scaling_client).to receive(:describe_auto_scaling_groups).with(auto_scaling_group_name: auto_scaling_group_name).and_return(auto_scaling_groups)
     end
 
-
     it 'should call check healthy instances for the given load balancer name' do
       expect(CheckHealthyInstances).to receive(:new).with(config, 'load_balancer1', desired_capacity).and_return(check_healthy_instances)
     end
