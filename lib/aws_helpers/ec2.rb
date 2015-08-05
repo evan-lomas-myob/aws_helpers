@@ -2,7 +2,7 @@ require_relative 'client'
 require_relative 'actions/ec2/image_create'
 require_relative 'actions/ec2/images_delete'
 require_relative 'actions/ec2/images_delete_by_time'
-require_relative 'actions/ec2/images_find_by_tag'
+require_relative 'actions/ec2/images_find_by_tags'
 
 include AwsHelpers::Actions::EC2
 
@@ -38,12 +38,10 @@ module AwsHelpers
       ImagesDeleteByTime.new(config, name, time).execute
     end
 
-    # @param [Hash] tag the filter
-    # @options tag [String] :name The name of the tag in the image
-    # @options tag [Array] :values An array of values to search for in image tags
+    # @param tags [Array] List of tags to find matching EC2 instances for
     # @return [Array] list of images matching the tags list
-    def images_find_by_tag(tag: {})
-      ImagesFindByTag.new(config, tag).execute
+    def images_find_by_tags(tags: [])
+      ImagesFindByTags.new(config, tags).execute
     end
 
   end

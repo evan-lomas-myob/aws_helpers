@@ -130,26 +130,26 @@ describe AwsHelpers::EC2 do
   end
 
 
-  describe '#images_find_by_tag' do
+  describe '#images_find_by_tags' do
 
-    let(:images_find_by_tag) { double(ImagesFindByTag) }
-    let(:tag) { double(:tag, name: 'name', values: [ 'a_value', 'another_value' ] ) }
+    let(:images_find_by_tags) { double(ImagesFindByTags) }
+    let(:tags) { %w('tag1', 'tag2') }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(ImagesFindByTag).to receive(:new).with(anything, anything).and_return(images_find_by_tag)
-      allow(images_find_by_tag).to receive(:execute)
+      allow(ImagesFindByTags).to receive(:new).with(anything, anything).and_return(images_find_by_tags)
+      allow(images_find_by_tags).to receive(:execute)
     end
 
-    subject { AwsHelpers::EC2.new(options).images_find_by_tag(tag: tag) }
+    subject { AwsHelpers::EC2.new(options).images_find_by_tags(tags: tags) }
 
-    it 'should create ImagesFindByTag' do
-      expect(ImagesFindByTag).to receive(:new).with(config, tag)
+    it 'should create ImagesFindByTags' do
+      expect(ImagesFindByTags).to receive(:new).with(config, tags)
       subject
     end
 
-    it 'should call ImagesFindByTag execute method' do
-      expect(images_find_by_tag).to receive(:execute)
+    it 'should call ImagesFindByTags execute method' do
+      expect(images_find_by_tags).to receive(:execute)
       subject
     end
 
