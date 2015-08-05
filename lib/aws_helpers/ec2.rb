@@ -33,7 +33,7 @@ module AwsHelpers
     end
 
     # @param name [String] Name given to the AWS EC2 instance
-    # @param time [String] Time stamp to remove matching EC2 instances
+    # @param time [String] Oldest time string in EC2 instance tags to remove after
     def images_delete_by_time(name:, time:)
       ImagesDeleteByTime.new(config, name, time).execute
     end

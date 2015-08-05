@@ -6,8 +6,9 @@ module AwsHelpers
 
     class SubtractTime
 
-      def initialize(time, days:, months:, years:)
+      def initialize(time, hours:, days:, months:, years:)
         @time = time
+        @hours = hours
         @days = days
         @months = months
         @years = years
@@ -15,10 +16,11 @@ module AwsHelpers
 
       def execute
 
-        return @time unless @days or @months or @years
+        return @time unless @hours or @days or @months or @years
 
         subtract_time = DateTime.parse(@time.to_s)
 
+        subtract_time = subtract_time - (@hours/24.0) if @hours
         subtract_time = subtract_time.prev_day (@days) if @days
         subtract_time = subtract_time.prev_month (@months) if @months
         subtract_time = subtract_time.prev_year (@years) if @years
