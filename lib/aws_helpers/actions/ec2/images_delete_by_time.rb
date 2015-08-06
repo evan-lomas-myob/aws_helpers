@@ -11,7 +11,7 @@ module AwsHelpers
         end
 
         def execute
-          response = ImagesFindByTags.new(@config, {name: 'Name', value: @tag_name_value}).execute
+          response = ImagesFindByTags.new(@config, [ {name: 'Name', value: @tag_name_value} ]).execute
           response.images.each do |image|
             next unless image.state == 'available'
             should_delete = Time.parse(image.creation_date) <= @creation_time

@@ -1,3 +1,5 @@
+require 'date'
+require 'time'
 require 'aws_helpers/ec2'
 
 describe AwsHelpers::EC2 do
@@ -20,8 +22,7 @@ describe AwsHelpers::EC2 do
     let(:image_create) { double(ImageCreate) }
 
     let(:instance_id) { 'ec2_id' }
-    let(:default_tags) { %w() }
-    let(:additional_tags) { %w('tag1', 'tag2') }
+    let(:tags) { %w('tag1', 'tag2') }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
@@ -30,22 +31,13 @@ describe AwsHelpers::EC2 do
     end
 
     it 'should create ImageCreate with default parameters' do
-      expect(ImageCreate).to receive(:new).with(config, image_name, instance_id, default_tags)
-      AwsHelpers::EC2.new(options).image_create(name: image_name, instance_id: instance_id, additional_tags: default_tags)
+      expect(ImageCreate).to receive(:new).with(config, image_name, instance_id, tags)
+      AwsHelpers::EC2.new(options).image_create(name: image_name, instance_id: instance_id, additional_tags: tags)
     end
 
     it 'should call ImageCreate execute method' do
       expect(image_create).to receive(:execute)
-      AwsHelpers::EC2.new(options).image_create(name: image_name, instance_id: instance_id, additional_tags: default_tags)
-    end
-
-    context 'call ImageCreate with additional_tags' do
-
-      it 'should create ImageCreate with additional tags' do
-        expect(ImageCreate).to receive(:new).with(config, image_name, instance_id, additional_tags)
-        AwsHelpers::EC2.new(options).image_create(name: image_name, instance_id: instance_id, additional_tags: additional_tags)
-      end
-
+      AwsHelpers::EC2.new(options).image_create(name: image_name, instance_id: instance_id, additional_tags: tags)
     end
 
   end
@@ -54,50 +46,27 @@ describe AwsHelpers::EC2 do
 
     let(:images_delete) { double(ImagesDelete) }
 
-    let(:default_days) { nil }
-    let(:default_months) { nil }
-    let(:default_years) { nil }
-
-    let(:days) { 1 }
-    let(:months) { 1 }
-    let(:years) { 1 }
+    let(:hours) { 1 }
+    let(:days) { 2 }
+    let(:months) { 3 }
+    let(:years) { 4 }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(ImagesDelete).to receive(:new).with(anything, anything, anything, anything, anything).and_return(images_delete)
+      allow(ImagesDelete).to receive(:new).with(anything, anything, anything, anything, anything, anything).and_return(images_delete)
       allow(images_delete).to receive(:execute)
     end
 
-    subject { AwsHelpers::EC2.new(options).images_delete(name: image_name) }
+    subject { AwsHelpers::EC2.new(options).images_delete(name: image_name, hours: hours, days: days, months: months, years: years) }
 
-    it 'should create ImagesDelete with default parameters' do
-      expect(ImagesDelete).to receive(:new).with(config, image_name, default_days, default_months, default_years)
+    it 'should create ImagesDelete with parameters' do
+      expect(ImagesDelete).to receive(:new).with(config, image_name, hours, days, months, years)
       subject
     end
 
     it 'should call ImagesDelete execute method' do
       expect(images_delete).to receive(:execute)
       subject
-    end
-
-    it 'should calls ImagesDelete with days supplied' do
-      expect(ImagesDelete).to receive(:new).with(config, image_name, days, nil, nil)
-      AwsHelpers::EC2.new(options).images_delete(name: image_name, days: days, months: default_months, years: default_years)
-    end
-
-    it 'should calls ImagesDelete with months supplied' do
-      expect(ImagesDelete).to receive(:new).with(config, image_name, nil, months, nil)
-      AwsHelpers::EC2.new(options).images_delete(name: image_name, days: default_days, months: months, years: default_years)
-    end
-
-    it 'should calls ImagesDelete with years supplied' do
-      expect(ImagesDelete).to receive(:new).with(config, image_name, nil, nil, years)
-      AwsHelpers::EC2.new(options).images_delete(name: image_name, days: default_days, months: default_months, years: years)
-    end
-
-    it 'should calls ImagesDelete with days, months and years supplied' do
-      expect(ImagesDelete).to receive(:new).with(config, image_name, days, months, years)
-      AwsHelpers::EC2.new(options).images_delete(name: image_name, days: days, months: months, years: years)
     end
 
   end
@@ -107,7 +76,7 @@ describe AwsHelpers::EC2 do
 
     let(:images_delete_by_time) { double(ImagesDeleteByTime) }
 
-    let(:time) { Time.local(2000, 'jan', 1, 20, 15, 1) }
+    let(:time) { Time.parse('01-Jan-2015') }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)

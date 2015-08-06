@@ -33,7 +33,7 @@ describe ImagesDeleteByTime do
                    ]) }
 
       it 'should call ImagesFindByTags.new with correct parameters' do
-        expect(ImagesFindByTags).to receive(:new).with(config, {name: 'Name', value: tag_name_value}).and_return(find_by_tags)
+        expect(ImagesFindByTags).to receive(:new).with(config, [{name: 'Name', value: tag_name_value}]).and_return(find_by_tags)
       end
 
       it 'should call ImagesFindByTags execute method' do

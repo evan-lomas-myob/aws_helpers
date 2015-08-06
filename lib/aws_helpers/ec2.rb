@@ -25,11 +25,12 @@ module AwsHelpers
     end
 
     # @param name [String] Name given to the AWS EC2 instance
+    # @param hours [Integer] Minus number of hours to delete images from
     # @param days [Integer] Minus number of days to delete images from
     # @param months [Integer] Minus number of months to delete images from
     # @param years [Integer] Minus number of years to delete images from
-    def images_delete(name:, days: nil, months: nil, years: nil)
-      ImagesDelete.new(config, name, days, months, years).execute
+    def images_delete(name:, hours: nil, days: nil, months: nil, years: nil)
+      ImagesDelete.new(config, name, hours, days, months, years).execute
     end
 
     # @param name [String] Name given to the AWS EC2 instance
