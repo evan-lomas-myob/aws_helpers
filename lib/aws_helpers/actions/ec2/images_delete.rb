@@ -5,15 +5,9 @@ module AwsHelpers
       class ImagesDelete
 
         def initialize(config, name, days, months, years)
-          @config = config
-          @name = name
-          @days = days
-          @months = months
-          @years = years
         end
 
         def execute
-
         end
 
       end

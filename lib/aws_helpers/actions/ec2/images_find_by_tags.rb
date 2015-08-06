@@ -10,15 +10,9 @@ module AwsHelpers
         end
 
         def execute
-
           client = @config.aws_ec2_client
-
-          filters = @tags.each do |tag|
-            {name: tag[:name], values: [tag[:value]]}
-          end
-
+          filters = @tags.map { |tag| {name: tag[:name], values: tag[:values]} }
           client.describe_images(filters)
-
         end
 
       end
