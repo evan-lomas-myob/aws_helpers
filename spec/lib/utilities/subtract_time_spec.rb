@@ -30,35 +30,35 @@ describe '#initialize' do
   end
 
   it 'should simply return the time if not options given' do
-    expect(SubtractTime.new(time, hours: nil, days: nil, months: nil, years: nil).execute).to be(time)
+    expect(SubtractTime.new(time).execute).to be(time)
   end
 
   it 'should subtract one hour from time' do
-    expect(SubtractTime.new(time, hours: one_hour, days: nil, months: nil, years: nil).execute).to eq(an_hour_ago)
+    expect(SubtractTime.new(time, hours: one_hour).execute).to eq(an_hour_ago)
   end
 
   it 'should subtract one day from time' do
-    expect(SubtractTime.new(time, hours: nil, days: one_day, months: nil, years: nil).execute).to eq(yesterday)
+    expect(SubtractTime.new(time, days: one_day).execute).to eq(yesterday)
   end
 
   it 'should subtract one month from time' do
-    expect(SubtractTime.new(time, hours: nil, days: nil, months: one_month, years: nil).execute).to eq(last_month)
+    expect(SubtractTime.new(time, months: one_month).execute).to eq(last_month)
   end
 
   it 'should subtract one year from time' do
-    expect(SubtractTime.new(time, hours: nil, days: nil, months: nil, years: one_year).execute).to eq(last_year)
+    expect(SubtractTime.new(time, years: one_year).execute).to eq(last_year)
   end
 
   it 'should subtract one day and one year from time' do
-    expect(SubtractTime.new(time, hours: nil, days: one_day, months: nil, years: one_year).execute).to eq(a_year_and_one_day)
+    expect(SubtractTime.new(time, days: one_day, years: one_year).execute).to eq(a_year_and_one_day)
   end
 
   it 'should subtract one day and one month from time' do
-    expect(SubtractTime.new(time, hours: nil, days: one_day, months: one_month, years: nil).execute).to eq(a_month_and_one_day)
+    expect(SubtractTime.new(time, days: one_day, months: one_month).execute).to eq(a_month_and_one_day)
   end
 
   it 'should subtract one year from time' do
-    expect(SubtractTime.new(time, hours: nil, days: nil, months: one_month, years: one_year).execute).to eq(a_year_and_one_month)
+    expect(SubtractTime.new(time, months: one_month, years: one_year).execute).to eq(a_year_and_one_month)
 
   end
 
