@@ -5,20 +5,20 @@ include AwsHelpers::Utilities
 
 describe '#initialize' do
 
-  let(:time) { Time.new(2015, 01, 01, 0, 0, 0 ) }
+  let(:time) { Time.parse('01-Jan-2015 00:00:00' ) }
 
   let(:one_hour) { 1 }
   let(:one_day) { 1 }
   let(:one_month) { 1 }
   let(:one_year) { 1 }
 
-  let(:an_hour_ago) { Time.new(2014, 12, 31, 23, 0, 0) }
-  let(:yesterday) { Time.new(2014, 12, 31) }
-  let(:last_month) { Time.new(2014, 12, 01) }
-  let(:last_year) { Time.new(2014, 01, 01) }
-  let(:a_year_and_one_day) { Time.new(2013, 12, 31) }
-  let(:a_month_and_one_day) { Time.new(2014, 11, 30) }
-  let(:a_year_and_one_month) { Time.new(2013, 12, 01) }
+  let(:an_hour_ago) { Time.parse('31-Dec-2014 23:00:00') }
+  let(:yesterday) { Time.parse('31-Dec-2014 00:00:00') }
+  let(:last_month) { Time.parse('01-Dec-2014 00:00:00') }
+  let(:last_year) { Time.parse('01-Jan-2014 00:00:00') }
+  let(:a_year_and_one_day) { Time.parse('31-Dec-2013 00:00:00') }
+  let(:a_month_and_one_day) { Time.parse('30-Nov-2014 00:00:00') }
+  let(:a_year_and_one_month) { Time.parse('01-Dec-2013 00:00:00') }
 
   before(:each) do
     allow(SubtractTime).to receive(:execute)
