@@ -14,7 +14,14 @@ describe UpdateDesiredCapacity do
     let(:config) { instance_double(AwsHelpers::Config, aws_auto_scaling_client: auto_scaling_client) }
 
     let(:auto_scaling_group_name) { 'name' }
-    let(:auto_scaling_groups) { double(:auto_scaling_groups, load_balancer_names: ['load_balancer1']) }
+    let(:auto_scaling_groups) {
+      double(
+        :auto_scaling_groups_response,
+        auto_scaling_groups: [
+          double(
+            :auto_scaling_groups,
+            load_balancer_names: ['load_balancer1'])])
+    }
     let(:check_healthy_instances) { instance_double(CheckHealthyInstances) }
 
     let(:desired_capacity) { 2 }
@@ -38,7 +45,7 @@ describe UpdateDesiredCapacity do
     end
 
     it 'should retrieve the auto scaling groups description' do
-      expect(auto_scaling_client).to receive(:describe_auto_scaling_groups).with(auto_scaling_group_name: auto_scaling_group_name).and_return(auto_scaling_groups)
+      expect(auto_scaling_client).to receive(:describe_auto_scaling_groups).with(auto_scaling_group_names: [auto_scaling_group_name]).and_return(auto_scaling_groups)
     end
 
     it 'should call check healthy instances for the given load balancer name' do

@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'aws_helpers'
 
 describe AwsHelpers do
