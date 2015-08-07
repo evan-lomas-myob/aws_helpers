@@ -46,7 +46,6 @@ describe 'PollHealthyImages' do
       PollHealthyImages.new(stdout, config, instance_id, 1, 60).execute
     end
 
-
   end
 
 end

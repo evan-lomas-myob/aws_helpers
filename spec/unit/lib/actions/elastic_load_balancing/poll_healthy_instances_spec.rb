@@ -22,7 +22,6 @@ describe 'PollHealthyInstances' do
 
   describe '#execute' do
 
-
     before(:each) do
       allow(aws_elastic_load_balancing_client).to receive(:wait_until).and_yield(waiter)
       allow(waiter).to receive(:max_attempts=)
@@ -45,7 +44,5 @@ describe 'PollHealthyInstances' do
       PollHealthyInstances.new(stdout, config, load_balancer_name, 1, 60).execute
     end
 
-
   end
-
 end

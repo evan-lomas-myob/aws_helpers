@@ -33,5 +33,4 @@ describe RetrieveDesiredCapacity do
 
   end
 
-
 end
