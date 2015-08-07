@@ -32,28 +32,27 @@ describe ImageCreate do
 
     let(:now) { Time.parse('01-Jan-2015 00:00:00') }
 
-    it 'should call the client create_image method with the correct arguments and return the image id' do
-      expect(aws_ec2_client).to receive(:create_image).with(instance_id: instance_id, name: instance_name).and_return(image_ami_id)
-      allow(aws_ec2_client).to receive(:create_tags).with(resources: [image_ami_id], tags: [{key: 'Name', value: instance_name}, {key: 'Date', value: now.to_s}])
-      allow(PollHealthyImages).to receive(:new).with(stdout, config, instance_id, 1, 60).and_return(poll_healthy_images)
-      allow(poll_healthy_images).to receive(:execute)
-      ImageCreate.new(config, instance_id, instance_name, additional_tags = [], now, stdout).execute
-    end
-
-    it 'should use the image id to add a default tag + additional tags to the new image' do
-      allow(aws_ec2_client).to receive(:create_image).with(instance_id: instance_id, name: instance_name).and_return(image_ami_id)
-      expect(aws_ec2_client).to receive(:create_tags).with(resources: [image_ami_id], tags: [{key: 'Name', value: instance_name}, {key: 'Date', value: now.to_s}] + additional_tags)
-      allow(PollHealthyImages).to receive(:new).with(stdout, config, instance_id, 1, 60).and_return(poll_healthy_images)
-      allow(poll_healthy_images).to receive(:execute)
-      ImageCreate.new(config, instance_id, instance_name, additional_tags, now, stdout).execute
-    end
-
-    it 'should call PollHealthyImages until they are available' do
+    before(:each) do
       allow(aws_ec2_client).to receive(:create_image).with(instance_id: instance_id, name: instance_name).and_return(image_ami_id)
       allow(aws_ec2_client).to receive(:create_tags).with(resources: [image_ami_id], tags: [{key: 'Name', value: instance_name}, {key: 'Date', value: now.to_s}] + additional_tags)
       allow(PollHealthyImages).to receive(:new).with(stdout, config, instance_id, 1, 60).and_return(poll_healthy_images)
       allow(poll_healthy_images).to receive(:execute)
+    end
+
+    after(:each) do
       ImageCreate.new(config, instance_id, instance_name, additional_tags, now, stdout).execute
+    end
+
+    it 'should call the client create_image method with the correct arguments and return the image id' do
+      expect(aws_ec2_client).to receive(:create_image).with(instance_id: instance_id, name: instance_name).and_return(image_ami_id)
+    end
+
+    it 'should use the image id to add a default tag + additional tags to the new image' do
+      expect(aws_ec2_client).to receive(:create_tags).with(resources: [image_ami_id], tags: [{key: 'Name', value: instance_name}, {key: 'Date', value: now.to_s}] + additional_tags)
+    end
+
+    it 'should call PollHealthyImages until they are available' do
+      expect(poll_healthy_images).to receive(:execute)
     end
 
   end
