@@ -1,3 +1,7 @@
+require 'aws_helpers/utilities/wait_helper'
+
+include AwsHelpers::Utilities
+
 module AwsHelpers
   module Actions
     module EC2
@@ -23,14 +27,11 @@ module AwsHelpers
         def execute
           #TODO: Is expected_number actually needed?
           client = @config.aws_ec2_client
-          client.wait_until(:instance_status_ok, instance_id: [@instance_id]) { |waiter|
-            waiter.max_attempts = @timeout / waiter.delay
-            waiter.before_wait do |_attempts, response|
-              response.instance_statuses.each do |instance_status|
-                instance_state = instance_status.instance_state.name
-                @stdout.puts "Image State is #{instance_state}"
-              end
-            end
+          WaitHelper.wait(client, @timeout, :instance_status_ok, instance_id: [@instance_id]) { |_attempts, response|
+            response.instance_statuses.each { |instance_status|
+              instance_state = instance_status.instance_state.name
+              @stdout.puts "Image State is #{instance_state}"
+            }
           }
         end
       end
