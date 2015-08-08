@@ -12,16 +12,15 @@ module AwsHelpers
         end
 
         def execute
-          snapshot_name = AwsHelpers::Actions::RDS::SnapshotConstructName.new(@config, @db_instance_id).execute if @use_name
-
+          response = AwsHelpers::Actions::RDS::SnapshotConstructName.new(@config, @db_instance_id).execute if @use_name
+          snapshot_name = "#{response ? response : @db_instance_id}-#{@now}"
           client = @config.aws_rds_client
-          snapshot = client.create_db_snapshot(
+          client.create_db_snapshot(
               db_instance_identifier: @db_instance_id,
-              db_snapshot_identifier: snapshot_name ? snapshot_name : "#{@db_instance_id}-#{@now}"
+              db_snapshot_identifier: snapshot_name
           )
-          # puts snapshot
+          AwsHelpers::Actions::RDS::PollDBSnapshot.new($stdout, @config, snapshot_name).execute
         end
-
 
       end
 
