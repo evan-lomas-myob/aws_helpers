@@ -3,7 +3,7 @@ require 'aws_helpers/elastic_load_balancing'
 describe AwsHelpers::ElasticLoadBalancing do
 
   let(:options) { {stub_responses: true, endpoint: 'http://endpoint'} }
-  let(:config) { double(AwsHelpers::Config) }
+  let(:config) { instance_double(AwsHelpers::Config) }
 
   describe '#initialize' do
 
@@ -24,14 +24,14 @@ describe AwsHelpers::ElasticLoadBalancing do
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(PollHealthyInstances).to receive(:new).with(anything, anything, anything, anything).and_return(poll_healthy_instances)
+      allow(PollHealthyInstances).to receive(:new).and_return(poll_healthy_instances)
       allow(poll_healthy_instances).to receive(:execute)
     end
 
     subject { AwsHelpers::ElasticLoadBalancing.new(options).poll_healthy_instances(load_balancer_name: load_balancer_name, required_instances: required_instances, timeout: timeout) }
 
     it 'should create PollHealthyInstances' do
-      expect(PollHealthyInstances).to receive(:new).with(config, load_balancer_name, required_instances, timeout)
+      expect(PollHealthyInstances).to receive(:new).with(anything, config, load_balancer_name, required_instances, timeout)
       subject
     end
 

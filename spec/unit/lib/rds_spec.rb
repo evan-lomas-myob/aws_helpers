@@ -3,7 +3,8 @@ require 'aws_helpers/rds'
 describe AwsHelpers::RDS do
 
   let(:options) { {stub_responses: true, endpoint: 'http://endpoint'} }
-  let(:config) { double(AwsHelpers::Config) }
+  let(:config) { instance_double(AwsHelpers::Config) }
+  let(:stdout) { instance_double(IO) }
 
   describe '#initialize' do
 
@@ -54,22 +55,25 @@ describe AwsHelpers::RDS do
     let(:snapshots_delete) { double(SnapshotsDelete) }
 
     let(:db_instance_id) { 'my_instance_id' }
+
+    let(:default_hours) { nil }
     let(:default_days) { nil }
     let(:default_months) { nil }
     let(:default_years) { nil }
 
+    let(:hours) { 1 }
     let(:days) { 1 }
     let(:months) { 1 }
     let(:years) { 1 }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(SnapshotsDelete).to receive(:new).with(anything, anything, anything, anything, anything).and_return(snapshots_delete)
+      allow(SnapshotsDelete).to receive(:new).and_return(snapshots_delete)
       allow(snapshots_delete).to receive(:execute)
     end
 
     it 'should create SnapshotsDelete with default parameters' do
-      expect(SnapshotsDelete).to receive(:new).with(config, db_instance_id, default_days, default_months, default_years)
+      expect(SnapshotsDelete).to receive(:new).with(config, db_instance_id, default_hours, default_days, default_months, default_years)
       AwsHelpers::RDS.new(options).snapshots_delete(db_instance_id: db_instance_id)
     end
 
@@ -78,24 +82,29 @@ describe AwsHelpers::RDS do
       AwsHelpers::RDS.new(options).snapshots_delete(db_instance_id: db_instance_id)
     end
 
+    it 'should calls ImagesDelete with hours supplied' do
+      expect(SnapshotsDelete).to receive(:new).with(config, db_instance_id, hours, nil, nil, nil)
+      AwsHelpers::RDS.new(options).snapshots_delete(db_instance_id: db_instance_id, hours: hours, days: default_days, months: default_months, years: default_years)
+    end
+
     it 'should calls ImagesDelete with days supplied' do
-      expect(SnapshotsDelete).to receive(:new).with(config, db_instance_id, days, nil, nil)
-      AwsHelpers::RDS.new(options).snapshots_delete(db_instance_id: db_instance_id, days: days, months: default_months, years: default_years)
+      expect(SnapshotsDelete).to receive(:new).with(config, db_instance_id, nil, days, nil, nil)
+      AwsHelpers::RDS.new(options).snapshots_delete(db_instance_id: db_instance_id, hours: default_hours, days: days, months: default_months, years: default_years)
     end
 
     it 'should calls ImagesDelete with months supplied' do
-      expect(SnapshotsDelete).to receive(:new).with(config, db_instance_id, nil, months, nil)
-      AwsHelpers::RDS.new(options).snapshots_delete(db_instance_id: db_instance_id, days: default_days, months: months, years: default_years)
+      expect(SnapshotsDelete).to receive(:new).with(config, db_instance_id, nil, nil, months, nil)
+      AwsHelpers::RDS.new(options).snapshots_delete(db_instance_id: db_instance_id, hours: default_hours, days: default_days, months: months, years: default_years)
     end
 
     it 'should calls SnapshotsDelete with years supplied' do
-      expect(SnapshotsDelete).to receive(:new).with(config, db_instance_id, nil, nil, years)
-      AwsHelpers::RDS.new(options).snapshots_delete(db_instance_id: db_instance_id, days: default_days, months: default_months, years: years)
+      expect(SnapshotsDelete).to receive(:new).with(config, db_instance_id, nil, nil, nil, years)
+      AwsHelpers::RDS.new(options).snapshots_delete(db_instance_id: db_instance_id, hours: default_hours, days: default_days, months: default_months, years: years)
     end
 
     it 'should calls SnapshotsDelete with days, months and years supplied' do
-      expect(SnapshotsDelete).to receive(:new).with(config, db_instance_id, days, months, years)
-      AwsHelpers::RDS.new(options).snapshots_delete(db_instance_id: db_instance_id, days: days, months: months, years: years)
+      expect(SnapshotsDelete).to receive(:new).with(config, db_instance_id, hours, days, months, years)
+      AwsHelpers::RDS.new(options).snapshots_delete(db_instance_id: db_instance_id, hours: hours, days: days, months: months, years: years)
     end
 
   end

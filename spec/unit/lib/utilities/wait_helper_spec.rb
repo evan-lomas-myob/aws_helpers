@@ -1,4 +1,3 @@
-require 'rspec'
 require 'aws_helpers/config'
 require 'aws_helpers/utilities/wait_helper'
 require 'aws_helpers/actions/ec2/image_create'

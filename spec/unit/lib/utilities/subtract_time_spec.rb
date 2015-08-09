@@ -1,4 +1,3 @@
-require 'rspec'
 require 'aws_helpers/utilities/subtract_time'
 
 include AwsHelpers::Utilities
@@ -6,6 +5,8 @@ include AwsHelpers::Utilities
 describe '#initialize' do
 
   let(:time) { Time.parse('01-Jan-2015 00:00:00' ) }
+
+
 
   let(:one_hour) { 1 }
   let(:one_day) { 1 }
@@ -19,15 +20,6 @@ describe '#initialize' do
   let(:a_year_and_one_day) { Time.parse('31-Dec-2013 00:00:00') }
   let(:a_month_and_one_day) { Time.parse('30-Nov-2014 00:00:00') }
   let(:a_year_and_one_month) { Time.parse('01-Dec-2013 00:00:00') }
-
-  before(:each) do
-    allow(SubtractTime).to receive(:execute)
-  end
-
-  it 'should call AwsHelpers::Utilities::SubtractTime initialize method' do
-    expect(SubtractTime).to receive(:new).with(time)
-    SubtractTime.new(time)
-  end
 
   it 'should simply return the time if not options given' do
     expect(SubtractTime.new(time).execute).to be(time)

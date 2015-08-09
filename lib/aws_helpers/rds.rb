@@ -27,8 +27,8 @@ module AwsHelpers
     # @param days [Integer] Minus number of days to delete snapshots from
     # @param months [Integer] Minus number of months to delete snapshots from
     # @param years [Integer] Minus number of years to delete snapshots from
-    def snapshots_delete(db_instance_id:, days: nil, months: nil, years: nil)
-      SnapshotsDelete.new(config, db_instance_id, days, months, years).execute
+    def snapshots_delete(db_instance_id:, hours: nil, days: nil, months: nil, years: nil)
+      SnapshotsDelete.new(config, db_instance_id, hours, days, months, years).execute
     end
 
     # @param db_instance_id [String] Unique ID of the RDS instance
