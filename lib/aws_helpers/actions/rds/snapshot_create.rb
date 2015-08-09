@@ -14,7 +14,7 @@ module AwsHelpers
 
         def execute
           response = AwsHelpers::Actions::RDS::SnapshotConstructName.new(@config, @db_instance_id).execute if @use_name
-          snapshot_name = "#{response ? response : @db_instance_id}-#{@now}"
+          snapshot_name = "#{response || @db_instance_id}-#{@now}"
           client = @config.aws_rds_client
           client.create_db_snapshot(
               db_instance_identifier: @db_instance_id,
