@@ -5,6 +5,7 @@ require 'aws_helpers/actions/elastic_load_balancing/check_healthy_instances'
 include AwsHelpers
 include AwsHelpers::Actions::AutoScaling
 include AwsHelpers::Actions::ElasticLoadBalancing
+include Aws::AutoScaling::Types
 
 describe UpdateDesiredCapacity do
 
@@ -14,14 +15,9 @@ describe UpdateDesiredCapacity do
     let(:config) { instance_double(AwsHelpers::Config, aws_auto_scaling_client: auto_scaling_client) }
 
     let(:auto_scaling_group_name) { 'name' }
-    let(:auto_scaling_groups) {
-      double(
-        :auto_scaling_groups_response,
-        auto_scaling_groups: [
-          double(
-            :auto_scaling_groups,
-            load_balancer_names: ['load_balancer1'])])
-    }
+    let(:auto_scaling_group) { instance_double(AutoScalingGroup, load_balancer_names: ['load_balancer1']) }
+    let(:response) { instance_double(AutoScalingGroupsType, auto_scaling_groups: [auto_scaling_group]) }
+
     let(:check_healthy_instances) { instance_double(CheckHealthyInstances) }
 
     let(:desired_capacity) { 2 }
@@ -30,9 +26,9 @@ describe UpdateDesiredCapacity do
     subject { UpdateDesiredCapacity.new(config, auto_scaling_group_name, desired_capacity, timeout).execute }
 
     before(:each) do
-      allow(auto_scaling_client).to receive(:set_desired_capacity).with(anything)
-      allow(auto_scaling_client).to receive(:describe_auto_scaling_groups).with(anything).and_return(auto_scaling_groups)
-      allow(CheckHealthyInstances).to receive(:new).with(anything, anything, anything).and_return(check_healthy_instances)
+      allow(auto_scaling_client).to receive(:set_desired_capacity)
+      allow(auto_scaling_client).to receive(:describe_auto_scaling_groups).and_return(response)
+      allow(CheckHealthyInstances).to receive(:new).and_return(check_healthy_instances)
       allow(check_healthy_instances).to receive(:execute)
     end
 
@@ -45,7 +41,7 @@ describe UpdateDesiredCapacity do
     end
 
     it 'should retrieve the auto scaling groups description' do
-      expect(auto_scaling_client).to receive(:describe_auto_scaling_groups).with(auto_scaling_group_names: [auto_scaling_group_name]).and_return(auto_scaling_groups)
+      expect(auto_scaling_client).to receive(:describe_auto_scaling_groups).with(auto_scaling_group_names: [auto_scaling_group_name]).and_return(response)
     end
 
     it 'should call check healthy instances for the given load balancer name' do
