@@ -12,7 +12,7 @@ module AwsHelpers
         def execute
           client = @config.aws_auto_scaling_client
           response = client.describe_auto_scaling_groups(auto_scaling_group_names: [@auto_scaling_group_name])
-          response.find { |auto_scaling_group|
+          response.auto_scaling_groups.find { |auto_scaling_group|
             auto_scaling_group.auto_scaling_group_name == @auto_scaling_group_name
           }.desired_capacity
         end
