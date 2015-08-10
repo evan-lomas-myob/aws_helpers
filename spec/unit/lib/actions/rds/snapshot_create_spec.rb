@@ -42,37 +42,37 @@ describe SnapshotCreate do
     allow(iam_client).to receive(:config).and_return(rds_configuration)
     allow(iam_client).to receive(:list_users).and_return(user_list)
     allow(rds_client).to receive(:list_tags_for_resource).with(resource_name).and_return(tag_list)
+    allow(stdout).to receive(:puts).with(anything)
   end
 
   context 'use_name is true' do
 
     after(:each) do
-      SnapshotCreate.new(stdout, config, db_instance_identifier, use_name, now).execute
+      SnapshotCreate.new(stdout, config, db_instance_identifier, use_name, now, 0).execute
     end
 
     it 'should call SnapshotConstructName to name snapshot' do
       allow(rds_client).to receive(:describe_db_snapshots).with(db_snapshot_identifier: db_snapshot_name_when_true).and_return(db_snapshots_available)
       expect(SnapshotConstructName.new(config, db_instance_identifier).execute).to eq(db_instance_name)
       allow(rds_client).to receive(:create_db_snapshot).with(db_instance_identifier: db_instance_identifier, db_snapshot_identifier: db_snapshot_name_when_true)
-      allow(stdout).to receive(:puts).with("Snapshot #{db_snapshot_name_when_true} creation completed")
     end
 
     it 'should call create_db_snapshot to create the snapshot with use_name true' do
       allow(rds_client).to receive(:describe_db_snapshots).with(db_snapshot_identifier: db_snapshot_name_when_true).and_return(db_snapshots_available)
       expect(rds_client).to receive(:create_db_snapshot).with(db_instance_identifier: db_instance_identifier, db_snapshot_identifier: db_snapshot_name_when_true)
-      allow(stdout).to receive(:puts).with("Snapshot #{db_snapshot_name_when_true} creation completed")
     end
 
   end
 
   context 'use_name is false' do
 
+    let(:use_name) { false }
+
     it 'should call create_db_snapshot to create the snapshot with use_name false' do
-      use_name = false
       allow(rds_client).to receive(:describe_db_snapshots).with(db_snapshot_identifier: db_snapshot_name_when_false).and_return(db_snapshots_available)
+      allow(stdout).to receive(:puts).with(anything)
       expect(rds_client).to receive(:create_db_snapshot).with(db_instance_identifier: db_instance_identifier, db_snapshot_identifier: db_snapshot_name_when_false)
-      allow(stdout).to receive(:puts).with("Snapshot #{db_snapshot_name_when_false} creation completed")
-      SnapshotCreate.new(stdout, config, db_instance_identifier, use_name, now).execute
+      SnapshotCreate.new(stdout, config, db_instance_identifier, use_name, now, 0).execute
     end
 
   end
