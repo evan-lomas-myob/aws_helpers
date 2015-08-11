@@ -15,8 +15,8 @@ describe UpdateDesiredCapacity do
     let(:config) { instance_double(AwsHelpers::Config, aws_auto_scaling_client: auto_scaling_client) }
 
     let(:auto_scaling_group_name) { 'name' }
-    let(:auto_scaling_group) { instance_double(AutoScalingGroup, load_balancer_names: ['load_balancer1']) }
-    let(:response) { instance_double(AutoScalingGroupsType, auto_scaling_groups: [auto_scaling_group]) }
+    let(:auto_scaling_group) { AutoScalingGroup.new(load_balancer_names: ['load_balancer1']) }
+    let(:response) { AutoScalingGroupsType.new( auto_scaling_groups: [auto_scaling_group]) }
 
     let(:check_healthy_instances) { instance_double(CheckHealthyInstances) }
 

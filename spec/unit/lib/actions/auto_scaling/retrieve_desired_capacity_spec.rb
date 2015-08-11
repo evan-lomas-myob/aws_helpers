@@ -10,14 +10,14 @@ include Aws::AutoScaling::Types
 describe RetrieveDesiredCapacity do
 
   describe '#execute' do
-    let(:desired_capacity) { 3 }
-    let(:auto_scaling_group_name) { 'name' }
-
-    let(:auto_scaling_group) { instance_double(AutoScalingGroup, auto_scaling_group_name: auto_scaling_group_name, desired_capacity: desired_capacity) }
-    let(:response) { instance_double(AutoScalingGroupsType, auto_scaling_groups: [auto_scaling_group]) }
-
     let(:auto_scaling_client) { instance_double(Aws::AutoScaling::Client) }
     let(:config) { instance_double(AwsHelpers::Config, aws_auto_scaling_client: auto_scaling_client) }
+
+    let(:auto_scaling_group_name) { 'name' }
+    let(:auto_scaling_group) { AutoScalingGroup.new(auto_scaling_group_name: auto_scaling_group_name, desired_capacity: desired_capacity) }
+    let(:response) { AutoScalingGroupsType.new(auto_scaling_groups: [auto_scaling_group]) }
+
+    let(:desired_capacity) { 3 }
 
     subject { RetrieveDesiredCapacity.new(config, auto_scaling_group_name).execute }
 
