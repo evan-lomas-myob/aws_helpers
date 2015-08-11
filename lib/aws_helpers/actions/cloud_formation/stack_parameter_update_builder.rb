@@ -12,16 +12,17 @@ module AwsHelpers
 
         def execute
 
-          capabilities = @existing_stack[:capabilities]
-          parameters = @existing_stack[:parameters].map { |existing_parameter|
+          capabilities = @existing_stack.capabilities
+          parameters = @existing_stack.parameters.map { |existing_parameter|
 
             update_parameter = @updated_parameters.detect { |updated_parameter|
-              updated_parameter[:parameter_key] == existing_parameter[:parameter_key] }
+              updated_parameter[:parameter_key] == existing_parameter.parameter_key }
 
             parameter_hash = existing_parameter.to_hash
 
-            if update_parameter[:parameter_value] != existing_parameter[:parameter_value]
+            if update_parameter[:parameter_value] != existing_parameter.parameter_value
               parameter_hash[:parameter_value] = update_parameter[:parameter_value]
+              parameter_hash.delete(:use_previous_value)
             else
               parameter_hash[:use_previous_value] = true
               parameter_hash.delete(:parameter_value)

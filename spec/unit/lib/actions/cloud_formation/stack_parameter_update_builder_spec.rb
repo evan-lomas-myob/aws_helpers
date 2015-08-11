@@ -17,8 +17,8 @@ describe StackParameterUpdateBuilder do
   ] }
 
   let(:existing_parameters) { [
-      {parameter_key: 'existing_param_key_1', parameter_value: 'existing_param_value'},
-      {parameter_key: 'existing_param_key_2', parameter_value: 'existing_param_value'}
+      Parameter.new(parameter_key: 'existing_param_key_1', parameter_value: 'existing_param_value', use_previous_value: true),
+      Parameter.new(parameter_key: 'existing_param_key_2', parameter_value: 'existing_param_value', use_previous_value: true)
   ] }
 
   let(:updated_parameters) { [
@@ -26,10 +26,15 @@ describe StackParameterUpdateBuilder do
       {parameter_key: 'existing_param_key_2', parameter_value: 'new_param_value_2'}
   ] }
 
-  let(:stack_existing) { {stack_name: stack_name, parameters: existing_parameters, capabilities: ['CAPABILITY_IAM']} }
-  let(:stack_updated) { {stack_name: stack_name, use_previous_template: true, parameters: updated_parameters, capabilities: ['CAPABILITY_IAM']} }
+  let(:stack_existing) {
+      Stack.new(stack_name: stack_name, parameters: existing_parameters, capabilities: ['CAPABILITY_IAM'])
+   }
 
-  it 'should call the stack parameter builder and return the updated stack hash' do
+  let(:stack_updated) {
+    {stack_name: stack_name, use_previous_template: true, parameters: updated_parameters, capabilities: ['CAPABILITY_IAM']}
+  }
+
+  it 'should call describe stack to get the current stack parameters' do
     expect(StackParameterUpdateBuilder.new(stack_name, stack_existing, parameters_to_update).execute).to eq(stack_updated)
   end
 
