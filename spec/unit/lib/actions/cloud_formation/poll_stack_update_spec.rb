@@ -22,7 +22,6 @@ describe PollStackUpdate do
     end
 
     it 'should call describe wait_until with correct parameters on the Aws::CloudFormation::Client' do
-
       expect(cloudformation_client).to receive(:wait_until).with(:stack_update_complete, stack_name: stack_name)
       PollStackUpdate.new(stdout, config, stack_name, 60).execute
     end
