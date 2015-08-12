@@ -49,7 +49,7 @@ describe AwsHelpers::AutoScaling do
     client.create_stack(
         {
             stack_name: stack_name,
-            template_body: IO.read(File.join(File.dirname(__FILE__), 'fixtures', 'auto_scaling.template')),
+            template_body: IO.read(File.join(File.dirname(__FILE__), 'fixtures', 'auto_scaling.template.json')),
         }
     )
     client.wait_until(:stack_create_complete, stack_name: stack_name)
