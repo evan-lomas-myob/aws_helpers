@@ -1,5 +1,7 @@
 require 'aws-sdk-core'
 
+require 'aws_helpers/utilities/generic_waiter'
+
 module AwsHelpers
   module Actions
     module AutoScaling
@@ -19,8 +21,7 @@ module AwsHelpers
 
         def execute
           client = @config.aws_auto_scaling_client
-          attempts = 0
-          while true
+          AwsHelpers::Utilities::GenericWaiter.new.wait_unit(@delay, @max_attempts) { |waiter|
             response = client.describe_auto_scaling_groups(auto_scaling_group_names: [@auto_scaling_group_name])
             auto_scaling_group = find_autoscaling_group(response)
             desired_capacity = auto_scaling_group.desired_capacity
@@ -29,12 +30,8 @@ module AwsHelpers
             lifecycle_state_output = create_lifecycle_state_output(lifecycle_state_count)
             in_service_count = lifecycle_state_count[IN_SERVICE]
             @std_out.puts("#{@auto_scaling_group_name} instances. Desired Capacity=#{desired_capacity}, #{lifecycle_state_output}")
-            break if in_service_count >= desired_capacity
-            attempts = attempts + 1
-            raise Aws::Waiters::Errors::TooManyAttemptsError.new(attempts) if attempts == @max_attempts
-            sleep(@delay)
-          end
-
+            waiter.stop = in_service_count >= desired_capacity
+          }
         end
 
         def create_lifecycle_state_output(lifecycle_state_count)
