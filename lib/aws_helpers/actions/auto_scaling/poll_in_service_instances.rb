@@ -1,22 +1,20 @@
 require 'aws-sdk-core'
-
 require 'aws_helpers/utilities/generic_waiter'
 
 module AwsHelpers
   module Actions
     module AutoScaling
 
-      class PollHealthyInstances
+      class PollInServiceInstances
 
         IN_SERVICE = 'InService'
 
-        def initialize(std_out, config, auto_scaling_group_name, delay, max_attempts)
+        def initialize(std_out, config, auto_scaling_group_name, delay = 15, max_attempts = 20)
           @std_out = std_out
           @config = config
           @auto_scaling_group_name = auto_scaling_group_name
           @delay = delay
           @max_attempts = max_attempts
-          @timeout = delay * max_attempts
         end
 
         def execute
@@ -28,21 +26,20 @@ module AwsHelpers
             instances = auto_scaling_group.instances
             lifecycle_state_count = count_lifecycle_states(instances)
             lifecycle_state_output = create_lifecycle_state_output(lifecycle_state_count)
-            in_service_count = lifecycle_state_count[IN_SERVICE]
-            @std_out.puts("#{@auto_scaling_group_name} instances. Desired Capacity=#{desired_capacity}, #{lifecycle_state_output}")
-            waiter.stop = in_service_count >= desired_capacity
+            @std_out.puts("Auto Scaling Group=#{@auto_scaling_group_name}. Desired Capacity=#{desired_capacity}#{lifecycle_state_output}")
+            waiter.stop = lifecycle_state_count[IN_SERVICE] >= desired_capacity
           }
         end
 
+        private
+
         def create_lifecycle_state_output(lifecycle_state_count)
-          lifecycle_state_count.sort_by { |name| name }.map { |state| state.join('=') }.join(', ')
+          lifecycle_state_count.sort_by { |name| name }.map { |state| ", #{state.join('=')}" }.join
         end
 
         def find_autoscaling_group(response)
           response.auto_scaling_groups.find { |auto_scaling_group| auto_scaling_group.auto_scaling_group_name = @auto_scaling_group_name }
         end
-
-        private
 
         def count_lifecycle_states(instances)
           instances.inject(Hash.new(0)) { |hash, instance| hash[instance.lifecycle_state] += 1; hash }
