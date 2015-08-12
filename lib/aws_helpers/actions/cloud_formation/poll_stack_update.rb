@@ -1,3 +1,5 @@
+require 'aws-sdk-core'
+
 require 'aws_helpers/utilities/wait_helper'
 
 include AwsHelpers::Utilities
@@ -26,19 +28,19 @@ module AwsHelpers
         # CLEANUP_IN_PROGRESS
         # UPDATE_ROLLBACK_COMPLETE
 
-        def initialize(stdout, config, stack_name, timeout)
+        def initialize(stdout, config, stack_name, max_attempts, delay)
           @stdout = stdout
           @config = config
           @stack_name = stack_name
-          @timeout = timeout
+          @max_attempts = max_attempts
+          @delay = delay
         end
 
         def execute
           client = @config.aws_cloud_formation_client
-          WaitHelper.wait(client, @timeout, :stack_update_complete, stack_name: @stack_name) { |_attempts, response|
-            stack_status = response.stack_status
-            @stdout.puts "Stack - #{@stack_name} status #{stack_status}"
-          }
+          responses = %w(CREATE_COMPLETE DELETE_COMPLETE ROLLBACK_COMPLETE UPDATE_COMPLETE UPDATE_ROLLBACK_COMPLETE ROLLBACK_FAILED UPDATE_ROLLBACK_FAILED DELETE_FAILED)
+          stack_info = Aws::CloudFormation::Stack.new(@stack_name, client: client)
+          stack_info.wait_until(max_attempts: @max_attempts, delay: @delay) { |stack_info| responses.include?(stack_info.stack_status) }
         end
 
       end

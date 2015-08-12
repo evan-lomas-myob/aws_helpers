@@ -4,7 +4,7 @@ require 'aws_helpers/actions/elastic_load_balancing/poll_healthy_instances'
 
 include AwsHelpers::Actions::ElasticLoadBalancing
 
-describe 'PollHealthyInstances' do
+describe PollHealthyInstances do
 
   let(:aws_elastic_load_balancing_client) { instance_double(Aws::ElasticLoadBalancing::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_elastic_load_balancing_client: aws_elastic_load_balancing_client) }

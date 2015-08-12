@@ -1,6 +1,6 @@
 require 'aws_helpers/client'
 
-describe 'Calling the config configure method' do
+describe Client do
 
   let(:options) { {stub_responses: true, endpoint: 'http://endpoint'} }
 

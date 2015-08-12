@@ -2,7 +2,7 @@ require 'aws_helpers/utilities/subtract_time'
 
 include AwsHelpers::Utilities
 
-describe '#initialize' do
+describe SubtractTime do
 
   let(:time) { Time.parse('01-Jan-2015 00:00:00' ) }
 

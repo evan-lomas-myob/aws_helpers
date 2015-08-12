@@ -218,7 +218,7 @@ describe AwsHelpers::CloudFormation do
       allow(stack_modify_parameters).to receive(:execute)
     end
 
-    let(:parameters) { %w('parameter1','parameter2') }
+    let(:parameters) { %w(parameter1 parameter2) }
 
     it 'should create StackModifyParameters' do
       expect(StackModifyParameters).to receive(:new).with(config, stack_name, parameters)

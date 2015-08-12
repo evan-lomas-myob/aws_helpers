@@ -4,7 +4,7 @@ require 'aws_helpers/actions/ec2/poll_healthy_images'
 
 include AwsHelpers::Actions::EC2
 
-describe 'PollHealthyImages' do
+describe PollHealthyImages do
 
   let(:aws_ec2_client) { instance_double(Aws::EC2::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: aws_ec2_client) }
