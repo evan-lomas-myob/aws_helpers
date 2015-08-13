@@ -23,9 +23,8 @@ module AwsHelpers
 
     # @param auto_scaling_group_name [String] The group name of the Auto scaling client
     # @param desired_capacity [Integer] The capacity level of the auto scaling group
-    # @param timeout [Integer] The number of seconds to wait for the request to timeout
-    def update_desired_capacity(auto_scaling_group_name:, desired_capacity:, timeout: 3600)
-      UpdateDesiredCapacity.new(config, auto_scaling_group_name, desired_capacity, timeout).execute
+    def update_desired_capacity(auto_scaling_group_name:, desired_capacity:)
+      UpdateDesiredCapacity.new(config, auto_scaling_group_name, desired_capacity).execute
     end
 
   end

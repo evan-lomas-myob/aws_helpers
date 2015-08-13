@@ -47,44 +47,23 @@ describe AwsHelpers::AutoScaling do
   describe '#update_desired_capacity' do
 
     let(:update_desired_capacity) { double(UpdateDesiredCapacity) }
-    let(:timeout) { 2 }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(UpdateDesiredCapacity).to receive(:new).with(anything, anything, anything, anything).and_return(update_desired_capacity)
+      allow(UpdateDesiredCapacity).to receive(:new).and_return(update_desired_capacity)
       allow(update_desired_capacity).to receive(:execute)
     end
 
-    context 'timeout is unset' do
+    subject { AwsHelpers::AutoScaling.new(options).update_desired_capacity(auto_scaling_group_name: auto_scaling_group_name, desired_capacity: desired_capacity) }
 
-      subject { AwsHelpers::AutoScaling.new(options).update_desired_capacity(auto_scaling_group_name: auto_scaling_group_name, desired_capacity: desired_capacity) }
-
-      it 'should create UpdateDesiredCapacity with default timeout parameter' do
-        expect(UpdateDesiredCapacity).to receive(:new).with(config, auto_scaling_group_name, desired_capacity, 3600)
-        subject
-      end
-
-      it 'should create UpdateDesiredCapacity execute method when timeout is not set' do
-        expect(update_desired_capacity).to receive(:execute)
-        subject
-      end
-
+    it 'should call UpdateDesiredCapacity with correct parameters' do
+      expect(UpdateDesiredCapacity).to receive(:new).with(config, auto_scaling_group_name, desired_capacity)
+      subject
     end
 
-    context 'timeout set' do
-
-      subject { AwsHelpers::AutoScaling.new(options).update_desired_capacity(auto_scaling_group_name: auto_scaling_group_name, desired_capacity: desired_capacity, timeout: timeout) }
-
-      it 'should create UpdateDesiredCapacity with timeout set to 2' do
-        expect(UpdateDesiredCapacity).to receive(:new).with(config, auto_scaling_group_name, desired_capacity, 2)
-        subject
-      end
-
-      it 'should create UpdateDesiredCapacity execute method when timeout is set' do
-        expect(update_desired_capacity).to receive(:execute)
-        subject
-      end
-
+    it 'should call UpdateDesiredCapacity #execute method' do
+      expect(update_desired_capacity).to receive(:execute)
+      subject
     end
 
   end

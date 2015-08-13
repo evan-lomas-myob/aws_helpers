@@ -9,7 +9,7 @@ module AwsHelpers
 
         IN_SERVICE = 'InService'
 
-        def initialize(std_out, config, auto_scaling_group_name, delay = 15, max_attempts = 20)
+        def initialize(std_out, config, auto_scaling_group_name, max_attempts = 20, delay = 15)
           @std_out = std_out
           @config = config
           @auto_scaling_group_name = auto_scaling_group_name
@@ -26,8 +26,9 @@ module AwsHelpers
             instances = auto_scaling_group.instances
             lifecycle_state_count = count_lifecycle_states(instances)
             lifecycle_state_output = create_lifecycle_state_output(lifecycle_state_count)
-            @std_out.puts("Auto Scaling Group=#{@auto_scaling_group_name}. Desired Capacity=#{desired_capacity}#{lifecycle_state_output}")
-            waiter.stop = lifecycle_state_count[IN_SERVICE] >= desired_capacity
+            output = "Auto Scaling Group=#{@auto_scaling_group_name}. Desired Capacity=#{desired_capacity}#{lifecycle_state_output}"
+            @std_out.puts(output)
+            waiter.stop = lifecycle_state_count[IN_SERVICE] == desired_capacity
           }
         end
 
