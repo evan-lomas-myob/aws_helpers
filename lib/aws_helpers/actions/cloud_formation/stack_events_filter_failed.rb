@@ -10,7 +10,7 @@ module AwsHelpers
 
         def execute
           @events.select { |event|
-            %w(CREATE_FAILED DELETE_FAILED UPDATE_FAILED ROLLBACK_FAILED UPDATE_ROLLBACK_FAILED ).include?(event.resource_status)
+            %w(CREATE_FAILED DELETE_FAILED UPDATE_FAILED ROLLBACK_FAILED UPDATE_ROLLBACK_FAILED).include?(event.resource_status)
           }
         end
 
