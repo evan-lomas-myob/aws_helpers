@@ -1,3 +1,6 @@
+require 'aws_helpers/actions/cloud_formation/stack_parameter_update_builder'
+require 'aws_helpers/actions/cloud_formation/poll_stack_update'
+
 module AwsHelpers
   module Actions
     module CloudFormation

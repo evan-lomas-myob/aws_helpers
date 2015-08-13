@@ -1,17 +1,25 @@
 require 'aws-sdk-core'
 require 'aws-sdk-resources'
 require 'aws_helpers'
+require 'aws_helpers/actions/cloud_formation/stack_error_events'
+require 'aws_helpers/actions/cloud_formation/stack_retrieve_events'
+require 'aws_helpers/actions/cloud_formation/stack_initiation_event'
+require 'aws_helpers/actions/cloud_formation/stack_completion_event'
+require 'aws_helpers/actions/cloud_formation/stack_events_filter_failed'
+require 'aws_helpers/actions/cloud_formation/stack_events_filter_post_initiation'
 
 describe AwsHelpers::CloudFormation do
 
+  config = AwsHelpers::Config.new({})
   stack_name = 'cloudformation-test-stack'
 
   before(:each) {
-    create_stack(stack_name)
+    create_stack(stack_name, config)
+    stack_events(stack_name, config)
   }
 
   after(:each) {
-    delete_stack(stack_name)
+    delete_stack(stack_name, config)
   }
 
   describe '#stack_exists?' do
@@ -24,14 +32,12 @@ describe AwsHelpers::CloudFormation do
 
   private
 
-  def delete_stack(stack_name)
-    client = Aws::CloudFormation::Client.new
-    client.delete_stack(stack_name: stack_name)
-    client.wait_until(:stack_delete_complete, stack_name: stack_name)
+  def delete_stack(stack_name, config)
+    AwsHelpers::Actions::CloudFormation::StackDelete.new($stdout, config, stack_name).execute
   end
 
-  def create_stack(stack_name)
-    client = Aws::CloudFormation::Client.new
+  def create_stack(stack_name, config)
+    client = config.aws_cloud_formation_client
     client.create_stack(
         {
             stack_name: stack_name,
@@ -44,6 +50,11 @@ describe AwsHelpers::CloudFormation do
       puts "Stack - #{stack_name} status #{stack_info.stack_status}"
       responses.include?(stack_info.stack_status)
     }
+    stack_events(stack_name, config)
+  end
+
+  def stack_events(stack_name, config)
+    AwsHelpers::Actions::CloudFormation::StackErrorEvents.new($stdout,config, stack_name).execute
   end
 
 end

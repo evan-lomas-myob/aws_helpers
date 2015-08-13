@@ -5,12 +5,12 @@ module AwsHelpers
       class StackCompletionEvent
 
         def initialize(event)
-          @events = event
+          @event = event
         end
 
         def execute
           event_list = %w( DELETE_COMPLETE )
-          event_list.include?(event.resource_status) && event.resource_type == 'AWS::CloudFormation::Stack'
+          event_list.include?(@event.resource_status) && @event.resource_type == 'AWS::CloudFormation::Stack'
         end
 
       end

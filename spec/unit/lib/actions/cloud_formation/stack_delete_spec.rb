@@ -15,7 +15,7 @@ describe StackDelete do
   it 'should call delete_stack to remove the stack' do
     allow(cloudformation_client).to receive(:delete_stack).with(stack_name: stack_name)
     allow(cloudformation_client).to receive(:wait_until).with(anything, stack_name: stack_name)
-    expect(stdout).to receive(:puts).with('Deleting my_stack_name')
+    expect(stdout).to receive(:puts).with('Deleted my_stack_name')
     AwsHelpers::Actions::CloudFormation::StackDelete.new(stdout, config, stack_name).execute
   end
 

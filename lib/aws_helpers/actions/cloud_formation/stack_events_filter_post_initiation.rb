@@ -1,3 +1,6 @@
+require 'aws_helpers/actions/cloud_formation/stack_initiation_event'
+require 'aws_helpers/actions/cloud_formation/stack_completion_event'
+
 module AwsHelpers
   module Actions
     module CloudFormation

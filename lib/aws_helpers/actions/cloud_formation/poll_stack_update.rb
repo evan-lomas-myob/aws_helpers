@@ -1,8 +1,4 @@
-require 'aws-sdk-core'
-
-require 'aws_helpers/utilities/wait_helper'
-
-include AwsHelpers::Utilities
+require 'aws-sdk-resources'
 
 module AwsHelpers
   module Actions

@@ -1,5 +1,6 @@
 require 'aws_helpers/cloud_formation'
 require 'aws_helpers/actions/cloud_formation/stack_retrieve_events'
+require 'aws_helpers/actions/cloud_formation/stack_initiation_event'
 
 include AwsHelpers
 include AwsHelpers::Actions::CloudFormation

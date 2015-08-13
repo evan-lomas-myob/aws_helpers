@@ -1,6 +1,8 @@
 require 'aws_helpers/cloud_formation'
 require 'aws_helpers/actions/cloud_formation/stack_error_events'
 require 'aws_helpers/actions/cloud_formation/stack_retrieve_events'
+require 'aws_helpers/actions/cloud_formation/stack_events_filter_post_initiation'
+require 'aws_helpers/actions/cloud_formation/stack_events_filter_failed'
 
 describe StackErrorEvents do
 
