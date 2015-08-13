@@ -9,6 +9,12 @@ describe StackCompletionEvent do
   let(:resource_type) { 'AWS::CloudFormation::Stack' }
   let(:resource_type_bad) { 'AWS::EC2::Instance' }
 
+  let(:complete_event) { instance_double(Aws::CloudFormation::Event,
+                                         stack_name: stack_name,
+                                         resource_status: 'DELETE_COMPLETE',
+                                         resource_type: resource_type)
+  }
+
   let(:initiation_event) { instance_double(Aws::CloudFormation::Event,
                                            stack_name: stack_name,
                                            resource_status: 'CREATE_IN_PROGRESS',
@@ -16,16 +22,11 @@ describe StackCompletionEvent do
   }
 
   let(:initiation_event_with_bad_type) { instance_double(Aws::CloudFormation::Event,
-                                           stack_name: stack_name,
-                                           resource_status: 'CREATE_IN_PROGRESS',
-                                           resource_type: resource_type_bad)
+                                                         stack_name: stack_name,
+                                                         resource_status: 'CREATE_IN_PROGRESS',
+                                                         resource_type: resource_type_bad)
   }
 
-  let(:complete_event) { instance_double(Aws::CloudFormation::Event,
-                                         stack_name: stack_name,
-                                         resource_status: 'DELETE_COMPLETE',
-                                         resource_type: resource_type)
-  }
 
   describe '#execute' do
 

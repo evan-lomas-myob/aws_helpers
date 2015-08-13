@@ -12,13 +12,13 @@ module AwsHelpers
         end
 
         def execute
-          result = []
+          results = []
           @events.each { |event|
-            result << event
+            results << event
             break if AwsHelpers::Actions::CloudFormation::StackInitiationEvent.new(event).execute ||
                 AwsHelpers::Actions::CloudFormation::StackCompletionEvent.new(event).execute
           }
-          result
+          results
         end
 
       end
