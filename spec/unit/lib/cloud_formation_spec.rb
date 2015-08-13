@@ -4,6 +4,7 @@ describe AwsHelpers::CloudFormation do
 
   let(:options) { {stub_responses: true, endpoint: 'http://endpoint'} }
   let(:config) { double(AwsHelpers::Config) }
+  let(:stdout) { instance_double(IO) }
   let(:stack_name) { 'my_stack_name' }
 
   describe '#initialize' do
@@ -101,11 +102,11 @@ describe AwsHelpers::CloudFormation do
 
   describe '#stack_delete' do
 
-    let(:stack_delete) { double(StackDelete) }
+    let(:stack_delete) { instance_double(StackDelete) }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(StackDelete).to receive(:new).with(anything, anything).and_return(stack_delete)
+      allow(StackDelete).to receive(:new).with(config, stack_name).and_return(stack_delete)
       allow(stack_delete).to receive(:execute)
     end
 
