@@ -39,7 +39,7 @@ describe StackUploadTemplate do
     StackUploadTemplate.new(config, stack_name, template_json, s3_bucket_name, bucket_encrypt, stdout).execute
   end
 
-  it 'should generate a request and call put_object' do
+  it 'should return the s3 bucket url' do
     expect(StackUploadTemplate.new(config, stack_name, template_json, s3_bucket_name, bucket_encrypt, stdout).execute).to eq(url)
   end
 
