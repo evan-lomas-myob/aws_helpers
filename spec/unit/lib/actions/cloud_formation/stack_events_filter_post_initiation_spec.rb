@@ -1,5 +1,6 @@
 require 'aws-sdk-resources'
 require 'aws_helpers/actions/cloud_formation/stack_events_filter_post_initiation'
+require_relative '../../../../../spec/create_event_helper'
 
 include AwsHelpers::Actions::CloudFormation
 
@@ -9,36 +10,11 @@ describe StackEventsFilterPostInitiation do
   let(:resource_type) { 'AWS::CloudFormation::Stack' }
   let(:resource_type_bad) { 'AWS::EC2::Instance' }
 
-  let(:create_in_progress_event) { instance_double(Aws::CloudFormation::Event,
-                                                   stack_name: stack_name,
-                                                   resource_status: 'CREATE_IN_PROGRESS',
-                                                   resource_type: resource_type)
-  }
-
-  let(:create_failed_event) { instance_double(Aws::CloudFormation::Event,
-                                              stack_name: stack_name,
-                                              resource_status: 'CREATE_FAILED',
-                                              resource_type: resource_type)
-  }
-
-  let(:rollback_in_progress_event) { instance_double(Aws::CloudFormation::Event,
-                                                     stack_name: stack_name,
-                                                     resource_status: 'ROLLBACK_IN_PROGRESS',
-                                                     resource_type: resource_type)
-  }
-
-  let(:initiation_event) { instance_double(Aws::CloudFormation::Event,
-                                           stack_name: stack_name,
-                                           resource_status: 'DELETE_IN_PROGRESS',
-                                           resource_type: resource_type)
-  }
-
-
-  let(:complete_event) { instance_double(Aws::CloudFormation::Event,
-                                         stack_name: stack_name,
-                                         resource_status: 'DELETE_COMPLETE',
-                                         resource_type: resource_type)
-  }
+  let(:create_in_progress_event) { CreateEventHelper.new(stack_name, 'CREATE_IN_PROGRESS', resource_type).execute }
+  let(:create_failed_event) { CreateEventHelper.new(stack_name, 'CREATE_FAILED', resource_type).execute }
+  let(:rollback_in_progress_event) { CreateEventHelper.new(stack_name, 'ROLLBACK_IN_PROGRESS', resource_type).execute }
+  let(:initiation_event) { CreateEventHelper.new(stack_name, 'DELETE_IN_PROGRESS', resource_type).execute }
+  let(:complete_event) { CreateEventHelper.new(stack_name, 'DELETE_COMPLETE', resource_type).execute }
 
   let(:stack_events_initiate) { [create_failed_event, rollback_in_progress_event, initiation_event] }
   let(:stack_events_complete) { [create_failed_event, rollback_in_progress_event, complete_event] }

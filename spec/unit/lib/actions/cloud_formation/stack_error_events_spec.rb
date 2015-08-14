@@ -17,34 +17,15 @@ describe StackErrorEvents do
   let(:stack_events_filter_failed) { instance_double(AwsHelpers::Actions::CloudFormation::StackEventsFilterFailed) }
 
   let(:stack_name) { 'my_stack_name' }
+  let(:resource_type) { 'AWS::CloudFormation::Stack' }
   let(:timestamp) { Time.parse('01-Jan-2015 00:00:00') }
-  let(:next_token) { nil }
   let(:logical_resource_id) { 'ResourceID' }
   let(:resource_status_reason) { 'Success/failure message' }
+  let(:next_token) { nil }
 
-  let(:initiation_event) { instance_double(Aws::CloudFormation::Event,
-                                           stack_name: stack_name,
-                                           timestamp: timestamp,
-                                           resource_status: 'CREATE_IN_PROGRESS',
-                                           logical_resource_id: logical_resource_id,
-                                           resource_status_reason: resource_status_reason)
-  }
-
-  let(:failed_event) { instance_double(Aws::CloudFormation::Event,
-                                       stack_name: stack_name,
-                                       timestamp: timestamp,
-                                       resource_status: 'CREATE_FAILED',
-                                       logical_resource_id: logical_resource_id,
-                                       resource_status_reason: resource_status_reason)
-  }
-
-  let(:complete_event) { instance_double(Aws::CloudFormation::Event,
-                                         stack_name: stack_name,
-                                         timestamp: timestamp,
-                                         resource_status: 'DELETE_COMPLETE',
-                                         logical_resource_id: logical_resource_id,
-                                         resource_status_reason: resource_status_reason)
-  }
+  let(:initiation_event) { CreateEventHelper.new(stack_name, 'CREATE_IN_PROGRESS', resource_type).execute }
+  let(:failed_event) { CreateEventHelper.new(stack_name, 'CREATE_FAILED', resource_type).execute }
+  let(:complete_event) { CreateEventHelper.new(stack_name, 'DELETE_COMPLETE', resource_type).execute }
 
   let(:stack_events) { [complete_event, failed_event, initiation_event] }
 
@@ -84,6 +65,5 @@ describe StackErrorEvents do
     expect(stdout).to receive(:puts).with("#{timestamp}, DELETE_COMPLETE, #{logical_resource_id}, #{resource_status_reason}")
     AwsHelpers::Actions::CloudFormation::StackErrorEvents.new(stdout, config, stack_name).execute
   end
-
 
 end

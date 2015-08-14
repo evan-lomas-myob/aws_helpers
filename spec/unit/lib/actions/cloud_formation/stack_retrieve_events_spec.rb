@@ -1,6 +1,7 @@
 require 'aws_helpers/cloud_formation'
 require 'aws_helpers/actions/cloud_formation/stack_retrieve_events'
 require 'aws_helpers/actions/cloud_formation/stack_initiation_event'
+require_relative '../../../../../spec/create_event_helper'
 
 include AwsHelpers
 include AwsHelpers::Actions::CloudFormation
@@ -16,23 +17,9 @@ describe StackRetrieveEvents do
 
   let(:resource_type) { 'AWS::CloudFormation::Stack' }
 
-  let(:initiation_event) { instance_double(Aws::CloudFormation::Event,
-                                           stack_name: stack_name,
-                                           resource_status: 'CREATE_IN_PROGRESS',
-                                           resource_type: resource_type)
-  }
-
-  let(:failed_event) { instance_double(Aws::CloudFormation::Event,
-                                       stack_name: stack_name,
-                                       resource_status: 'CREATE_FAILED',
-                                       resource_type: resource_type)
-  }
-
-  let(:complete_event) { instance_double(Aws::CloudFormation::Event,
-                                         stack_name: stack_name,
-                                         resource_status: 'DELETE_COMPLETE',
-                                         resource_type: resource_type )
-  }
+  let(:initiation_event) { CreateEventHelper.new(stack_name, 'CREATE_IN_PROGRESS', resource_type).execute }
+  let(:failed_event) { CreateEventHelper.new(stack_name, 'CREATE_FAILED', resource_type).execute }
+  let(:complete_event) { CreateEventHelper.new(stack_name, 'DELETE_COMPLETE', resource_type).execute }
 
   let(:stack_events) { [initiation_event, failed_event, complete_event] }
 
@@ -50,6 +37,6 @@ describe StackRetrieveEvents do
       expect(AwsHelpers::Actions::CloudFormation::StackRetrieveEvents.new(config, stack_name).execute).to eq(stack_events)
     end
 
-end
+  end
 
 end

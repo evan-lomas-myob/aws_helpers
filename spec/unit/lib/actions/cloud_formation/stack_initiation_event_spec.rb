@@ -1,5 +1,6 @@
 require 'aws-sdk-resources'
 require 'aws_helpers/actions/cloud_formation/stack_initiation_event'
+require_relative '../../../../create_event_helper'
 
 include AwsHelpers::Actions::CloudFormation
 
@@ -9,35 +10,11 @@ describe StackInitiationEvent do
   let(:resource_type) { 'AWS::CloudFormation::Stack' }
   let(:resource_type_bad) { 'AWS::EC2::Instance' }
 
-  let(:create_in_progress_event) { instance_double(Aws::CloudFormation::Event,
-                                                   stack_name: stack_name,
-                                                   resource_status: 'CREATE_IN_PROGRESS',
-                                                   resource_type: resource_type)
-  }
-
-  let(:update_in_progress_event) { instance_double(Aws::CloudFormation::Event,
-                                                   stack_name: stack_name,
-                                                   resource_status: 'UPDATE_IN_PROGRESS',
-                                                   resource_type: resource_type)
-  }
-
-  let(:delete_in_progress_event) { instance_double(Aws::CloudFormation::Event,
-                                                   stack_name: stack_name,
-                                                   resource_status: 'DELETE_IN_PROGRESS',
-                                                   resource_type: resource_type)
-  }
-
-  let(:create_in_progress_event_wrong_type) { instance_double(Aws::CloudFormation::Event,
-                                                              stack_name: stack_name,
-                                                              resource_status: 'CREATE_IN_PROGRESS',
-                                                              resource_type: resource_type_bad)
-  }
-
-  let(:wrong_event) { instance_double(Aws::CloudFormation::Event,
-                                      stack_name: stack_name,
-                                      resource_status: 'DELETE_COMPLETE',
-                                      resource_type: resource_type)
-  }
+  let(:create_in_progress_event) { CreateEventHelper.new(stack_name, 'CREATE_IN_PROGRESS', resource_type).execute }
+  let(:update_in_progress_event) { CreateEventHelper.new(stack_name, 'UPDATE_IN_PROGRESS', resource_type).execute }
+  let(:delete_in_progress_event) { CreateEventHelper.new(stack_name, 'DELETE_IN_PROGRESS', resource_type).execute }
+  let(:create_in_progress_event_wrong_type) { CreateEventHelper.new(stack_name, 'CREATE_IN_PROGRESS', resource_type_bad).execute }
+  let(:wrong_event) { CreateEventHelper.new(stack_name, 'DELETE_COMPLETE', resource_type).execute }
 
   describe '#execute' do
 

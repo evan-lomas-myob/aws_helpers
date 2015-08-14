@@ -1,5 +1,6 @@
 require 'aws-sdk-resources'
 require 'aws_helpers/actions/cloud_formation/stack_events_filter_failed'
+require_relative '../../../../../spec/create_event_helper'
 
 include AwsHelpers::Actions::CloudFormation
 
@@ -9,50 +10,16 @@ describe StackEventsFilterFailed do
   let(:resource_type) { 'AWS::CloudFormation::Stack' }
   let(:resource_type_bad) { 'AWS::EC2::Instance' }
 
-  let(:create_failed_event) { instance_double(Aws::CloudFormation::Event,
-                                              stack_name: stack_name,
-                                              resource_status: 'CREATE_FAILED',
-                                              resource_type: resource_type)
-  }
+  let(:create_failed_event) { CreateEventHelper.new(stack_name, 'CREATE_FAILED', resource_type).execute }
+  let(:delete_failed_event) { CreateEventHelper.new(stack_name, 'DELETE_FAILED', resource_type).execute }
+  let(:update_failed_event) { CreateEventHelper.new(stack_name, 'UPDATE_FAILED', resource_type).execute }
+  let(:rollback_failed_event) { CreateEventHelper.new(stack_name, 'ROLLBACK_FAILED', resource_type).execute }
+  let(:update_rollback_failed_event) { CreateEventHelper.new(stack_name, 'UPDATE_ROLLBACK_FAILED', resource_type).execute }
+  let(:create_failed_event_wrong_type) { CreateEventHelper.new(stack_name, 'CREATE_FAILED', resource_type_bad).execute }
+  let(:wrong_event) { CreateEventHelper.new(stack_name, 'DELETE_COMPLETE', resource_type).execute }
 
-  let(:delete_failed_event) { instance_double(Aws::CloudFormation::Event,
-                                              stack_name: stack_name,
-                                              resource_status: 'DELETE_FAILED',
-                                              resource_type: resource_type)
-  }
-
-  let(:update_failed_event) { instance_double(Aws::CloudFormation::Event,
-                                              stack_name: stack_name,
-                                              resource_status: 'UPDATE_FAILED',
-                                              resource_type: resource_type)
-  }
-
-  let(:rollback_failed_event) { instance_double(Aws::CloudFormation::Event,
-                                                stack_name: stack_name,
-                                                resource_status: 'ROLLBACK_FAILED',
-                                                resource_type: resource_type)
-  }
-
-  let(:update_rollback_failed_event) { instance_double(Aws::CloudFormation::Event,
-                                                       stack_name: stack_name,
-                                                       resource_status: 'UPDATE_ROLLBACK_FAILED',
-                                                       resource_type: resource_type)
-  }
-
-  let(:create_failed_event_wrong_type) { instance_double(Aws::CloudFormation::Event,
-                                                         stack_name: stack_name,
-                                                         resource_status: 'CREATE_FAILED',
-                                                         resource_type: resource_type_bad)
-  }
-
-  let(:wrong_event) { instance_double(Aws::CloudFormation::Event,
-                                      stack_name: stack_name,
-                                      resource_status: 'DELETE_COMPLETE',
-                                      resource_type: resource_type)
-  }
-
-  let(:stack_events_good) { [create_failed_event, delete_failed_event, update_failed_event, rollback_failed_event, update_rollback_failed_event ] }
-  let(:stack_events_bad_resource) { [create_failed_event, delete_failed_event, wrong_event, update_failed_event, rollback_failed_event, update_rollback_failed_event ] }
+  let(:stack_events_good) { [create_failed_event, delete_failed_event, update_failed_event, rollback_failed_event, update_rollback_failed_event] }
+  let(:stack_events_bad_resource) { [create_failed_event, delete_failed_event, wrong_event, update_failed_event, rollback_failed_event, update_rollback_failed_event] }
 
   describe '#execute' do
 
