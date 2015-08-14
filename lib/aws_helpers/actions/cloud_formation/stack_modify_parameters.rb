@@ -1,6 +1,7 @@
 require 'aws_helpers/actions/cloud_formation/stack_parameter_update_builder'
 require 'aws_helpers/actions/cloud_formation/poll_stack_update'
 require 'aws_helpers/actions/cloud_formation/stack_error_events'
+require 'aws_helpers/actions/cloud_formation/check_stack_failure'
 
 module AwsHelpers
   module Actions
@@ -28,8 +29,8 @@ module AwsHelpers
           client.update_stack(request)
 
           AwsHelpers::Actions::CloudFormation::PollStackUpdate.new(@stdout, @config, @stack_name, @max_attempts, @delay).execute
-          AwsHelpers::Actions::CloudFormation::StackErrorEvents.new(@stdout,@config, @stack_name).execute
-          # TODO Report and raise exception if issues are found
+          AwsHelpers::Actions::CloudFormation::StackErrorEvents.new(@stdout, @config, @stack_name).execute
+          AwsHelpers::Actions::CloudFormation::CheckStackFailure.new(@config, @stack_name).execute
 
         end
 
