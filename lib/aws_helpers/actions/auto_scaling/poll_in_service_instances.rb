@@ -1,5 +1,4 @@
-require 'aws-sdk-core'
-require 'aws_helpers/utilities/generic_waiter'
+require 'aws_helpers/utilities/polling'
 
 module AwsHelpers
   module Actions
@@ -19,7 +18,8 @@ module AwsHelpers
 
         def execute
           client = @config.aws_auto_scaling_client
-          AwsHelpers::Utilities::GenericWaiter.new.wait_unit(@delay, @max_attempts) { |waiter|
+          polling = AwsHelpers::Utilities::Polling.new
+          polling.start(@delay, @max_attempts) {
             response = client.describe_auto_scaling_groups(auto_scaling_group_names: [@auto_scaling_group_name])
             auto_scaling_group = find_autoscaling_group(response)
             desired_capacity = auto_scaling_group.desired_capacity
@@ -28,7 +28,7 @@ module AwsHelpers
             lifecycle_state_output = create_lifecycle_state_output(lifecycle_state_count)
             output = "Auto Scaling Group=#{@auto_scaling_group_name}. Desired Capacity=#{desired_capacity}#{lifecycle_state_output}"
             @stdout.puts(output)
-            waiter.stop = lifecycle_state_count[IN_SERVICE] == desired_capacity
+            polling.stop if lifecycle_state_count[IN_SERVICE] == desired_capacity
           }
         end
 

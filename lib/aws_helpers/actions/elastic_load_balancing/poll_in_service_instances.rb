@@ -1,6 +1,4 @@
-require 'aws_helpers/utilities/generic_waiter'
-
-include AwsHelpers::Utilities
+require 'aws_helpers/utilities/polling'
 
 module AwsHelpers
   module Actions
@@ -21,13 +19,14 @@ module AwsHelpers
         def execute
           client = @config.aws_elastic_load_balancing_client
           @load_balancer_names.each { |load_balancer_name|
-            AwsHelpers::Utilities::GenericWaiter.new.wait_unit(@delay, @max_attempts) { |waiter|
+            polling = AwsHelpers::Utilities::Polling.new
+            polling.start(@delay, @max_attempts) {
               response = client.describe_instance_health(load_balancer_name: load_balancer_name)
               instance_states = response.instance_states
               state_count = count_states(instance_states)
               state_output = create_state_output(state_count)
               @stdout.puts("Load Balancer Name=#{load_balancer_name}#{state_output}")
-              waiter.stop = state_count[IN_SERVICE] == instance_states.size
+              polling.stop if state_count[IN_SERVICE] == instance_states.size
             }
           }
         end

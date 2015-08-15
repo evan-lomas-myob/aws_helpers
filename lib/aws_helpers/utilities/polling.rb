@@ -1,20 +1,19 @@
 module AwsHelpers
   module Utilities
 
-    class GenericWaiter
+    class Polling
 
-      attr_accessor :stop
-
-      def initialize
-        @stop = false
+      def stop
+        @stop = true
       end
 
-      def wait_unit(delay, max_attempts, &block)
+      def start(delay, max_attempts, &block)
+        @stop = false
         attempts = 0
         while true
-          block.call(self)
-          break if stop
-          attempts = attempts + 1
+          block.call
+          break if @stop
+          attempts += 1
           raise Aws::Waiters::Errors::TooManyAttemptsError.new(attempts) if attempts == max_attempts
           sleep(delay)
         end
