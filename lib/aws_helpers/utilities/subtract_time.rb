@@ -6,7 +6,7 @@ module AwsHelpers
 
     class SubtractTime
 
-      def initialize(time, hours: nil , days: nil, months: nil, years: nil)
+      def initialize(time: Time.now, hours: nil , days: nil, months: nil, years: nil)
         @time = time
         @hours = hours
         @days = days

@@ -1,9 +1,5 @@
-require 'aws_helpers/rds'
 require 'aws_helpers/utilities/subtract_time'
 require 'aws_helpers/actions/rds/snapshots_delete'
-
-include AwsHelpers
-include AwsHelpers::Actions::RDS
 
 describe AwsHelpers::Actions::RDS::SnapshotsDelete do
 
@@ -47,8 +43,8 @@ describe AwsHelpers::Actions::RDS::SnapshotsDelete do
     end
 
     it 'should call AwsHelpers::Utilities::SubtractTime #new with correct parameters' do
-      options = { stdout: stdout, now: Time.parse('2015 Jan 1 00:00:00'), hours: 1, days: 2, months: 3, years: 4 }
-      expect(AwsHelpers::Utilities::SubtractTime).to receive(:new).with(now: options[:now], hours: 1, days: 2, months: 3, years: 4)
+      options = { stdout: stdout, hours: 1, days: 2, months: 3, years: 4 }
+      expect(AwsHelpers::Utilities::SubtractTime).to receive(:new).with(hours: 1, days: 2, months: 3, years: 4)
       AwsHelpers::Actions::RDS::SnapshotsDelete.new(config, db_instance_id, options).execute
     end
 
@@ -63,7 +59,7 @@ describe AwsHelpers::Actions::RDS::SnapshotsDelete do
     end
 
     it 'should call stdout with the snapshots being deleted' do
-      expect(stdout).to receive(:puts).with("Deleting Snapshot=#{db_snapshot_identifier_first}, Created=#{now - 1}")
+      expect(stdout).to receive(:puts).with("Deleting Snapshot=#{db_snapshot_identifier_second}, Created=#{now}")
       AwsHelpers::Actions::RDS::SnapshotsDelete.new(config, db_instance_id, stdout: stdout).execute
     end
 

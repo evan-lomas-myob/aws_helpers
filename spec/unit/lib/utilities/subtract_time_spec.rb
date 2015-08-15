@@ -1,57 +1,36 @@
 require 'aws_helpers/utilities/subtract_time'
 
-include AwsHelpers::Utilities
+describe AwsHelpers::Utilities::SubtractTime do
 
-describe SubtractTime do
+  let(:time) { Time.parse('31-Dec-2015 00:00:00') }
 
-  let(:time) { Time.parse('01-Jan-2015 00:00:00' ) }
-
-
-
-  let(:one_hour) { 1 }
-  let(:one_day) { 1 }
-  let(:one_month) { 1 }
-  let(:one_year) { 1 }
-
-  let(:an_hour_ago) { Time.parse('31-Dec-2014 23:00:00') }
-  let(:yesterday) { Time.parse('31-Dec-2014 00:00:00') }
-  let(:last_month) { Time.parse('01-Dec-2014 00:00:00') }
-  let(:last_year) { Time.parse('01-Jan-2014 00:00:00') }
-  let(:a_year_and_one_day) { Time.parse('31-Dec-2013 00:00:00') }
-  let(:a_month_and_one_day) { Time.parse('30-Nov-2014 00:00:00') }
-  let(:a_year_and_one_month) { Time.parse('01-Dec-2013 00:00:00') }
 
   it 'should simply return the time if not options given' do
-    expect(SubtractTime.new(time).execute).to be(time)
+    expect(subtract_time(time: time)).to be(time)
   end
 
-  it 'should subtract one hour from time' do
-    expect(SubtractTime.new(time, hours: one_hour).execute).to eq(an_hour_ago)
+  it 'should subtract two hours from 31-Dec-2015 00:00:00' do
+    expect(subtract_time(time: time, hours: 2)).to eq(Time.parse('30-Dec-2015 22:00:00'))
   end
 
-  it 'should subtract one day from time' do
-    expect(SubtractTime.new(time, days: one_day).execute).to eq(yesterday)
+  it 'should subtract three days from 31-Dec-2015 00:00:00' do
+    expect(subtract_time(time: time, days: 3)).to eq(Time.parse('28-Dec-2015 00:00:00'))
   end
 
-  it 'should subtract one month from time' do
-    expect(SubtractTime.new(time, months: one_month).execute).to eq(last_month)
+  it 'should subtract four months from 31-Dec-2015 00:00:00' do
+    expect(subtract_time(time: time, months: 2)).to eq(Time.parse('31-Oct-2015 00:00:00'))
   end
 
-  it 'should subtract one year from time' do
-    expect(SubtractTime.new(time, years: one_year).execute).to eq(last_year)
+  it 'should subtract five years from 31-Dec-2015 00:00:00' do
+    expect(subtract_time(time: time, years: 5)).to eq(Time.parse('31-Dec-2010 00:00:00'))
   end
 
-  it 'should subtract one day and one year from time' do
-    expect(SubtractTime.new(time, days: one_day, years: one_year).execute).to eq(a_year_and_one_day)
+  it 'should subtract one year, one month, one day, one hour from 31-Dec-2015 00:00:00' do
+    expect(subtract_time(time: time, years: 1, months: 1, days: 1, hours: 1)).to eq(Time.parse('29-Nov-2014 23:00:00'))
   end
 
-  it 'should subtract one day and one month from time' do
-    expect(SubtractTime.new(time, days: one_day, months: one_month).execute).to eq(a_month_and_one_day)
-  end
-
-  it 'should subtract one year from time' do
-    expect(SubtractTime.new(time, months: one_month, years: one_year).execute).to eq(a_year_and_one_month)
-
+  def subtract_time(options = {})
+    AwsHelpers::Utilities::SubtractTime.new(options).execute
   end
 
 end

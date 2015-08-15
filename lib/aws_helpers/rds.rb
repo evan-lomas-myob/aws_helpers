@@ -24,7 +24,6 @@ module AwsHelpers
     end
 
     # @param db_instance_id [String] Unique ID of the RDS instance
-
     def snapshots_delete(db_instance_id, options = {} )
       SnapshotsDelete.new(config, db_instance_id, options).execute
     end

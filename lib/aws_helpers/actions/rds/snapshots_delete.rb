@@ -10,17 +10,14 @@ module AwsHelpers
           @config = config
           @db_instance_id = db_instance_id
           @stdout = options[:stdout] ||= $stdout
-          @now = options[:now]
-          @hours = options[:hours]
-          @days = options[:days]
-          @months = options[:months]
-          @years = options[:years]
+          @options = options.clone
+          @options.delete(:stdout)
         end
 
         def execute
           client = @config.aws_rds_client
           response = client.describe_db_snapshots(db_instance_identifier: @db_instance_id, snapshot_type: 'manual')
-          delete_older_than = AwsHelpers::Utilities::SubtractTime.new(now: @now, hours: @hours, days: @days, months: @months, years: @years).execute
+          delete_older_than = AwsHelpers::Utilities::SubtractTime.new(@options).execute
           snapshots = response.db_snapshots
           snapshots.sort_by! { |snapshot| snapshot.snapshot_create_time }
           snapshots.each do |snapshot|

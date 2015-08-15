@@ -22,22 +22,21 @@ describe ImagesDelete do
     let(:days) { 2 }
     let(:months) { 3 }
     let(:years) { 5 }
-    let(:now) { Time.parse('02-Jan-2015')}
     let(:creation_time) { Time.parse('01-Jan-2015') }
 
     before(:each){
-      allow(SubtractTime).to receive(:new).with(now, hours: hours, days: days, months: months, years: years).and_return(subtract_time)
+      allow(SubtractTime).to receive(:new).and_return(subtract_time)
       allow(subtract_time).to receive(:execute).and_return(creation_time)
-      allow(ImagesDeleteByTime).to receive(:new).with(config, tag_name_value, creation_time).and_return(images_delete_by_time)
+      allow(ImagesDeleteByTime).to receive(:new).and_return(images_delete_by_time)
       allow(images_delete_by_time).to receive(:execute)
     }
 
     after(:each) {
-      ImagesDelete.new(config, tag_name_value, hours, days, months, years, now).execute
+      ImagesDelete.new(config, tag_name_value, hours, days, months, years).execute
     }
 
     it 'should create a new SubtractTime with the correct parameters' do
-      expect(SubtractTime).to receive(:new).with(now, hours: hours, days: days, months: months, years: years).and_return(subtract_time)
+      expect(SubtractTime).to receive(:new).with(hours: hours, days: days, months: months, years: years).and_return(subtract_time)
     end
 
     it 'should call execute on Subtract Time' do
