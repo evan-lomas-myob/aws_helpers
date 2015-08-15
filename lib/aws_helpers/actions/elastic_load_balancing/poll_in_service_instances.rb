@@ -10,12 +10,12 @@ module AwsHelpers
 
         IN_SERVICE = 'InService'
 
-        def initialize(stdout, config, load_balancer_names, max_attempts = 20, delay = 15)
-          @stdout = stdout
+        def initialize(config, load_balancer_names, options)
           @config = config
           @load_balancer_names = load_balancer_names
-          @max_attempts = max_attempts
-          @delay = delay
+          @stdout = options[:stdout] ||= $stdout
+          @max_attempts = options[:max_attempts] ||= 20
+          @delay = options[:delay] || 15
         end
 
         def execute

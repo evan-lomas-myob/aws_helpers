@@ -27,10 +27,10 @@ describe AwsHelpers::ElasticLoadBalancing do
       allow(poll_healthy_instances).to receive(:execute)
     end
 
-    subject { AwsHelpers::ElasticLoadBalancing.new(options).poll_in_service_instances(load_balancer_name: load_balancer_name) }
+    subject { AwsHelpers::ElasticLoadBalancing.new(options).poll_in_service_instances(load_balancer_name) }
 
     it 'should create PollHealthyInstances with correct parameters' do
-      expect(PollInServiceInstances).to receive(:new).with($stdout, config, [load_balancer_name])
+      expect(PollInServiceInstances).to receive(:new).with(config, [load_balancer_name], {})
       subject
     end
 

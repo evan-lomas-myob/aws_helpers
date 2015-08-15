@@ -19,8 +19,7 @@ describe AwsHelpers::AutoScaling do
     describe '#retrieve_desired_capacity' do
 
       it 'should return the desired capacity' do
-        expect(AwsHelpers::AutoScaling.new.retrieve_desired_capacity(
-                   auto_scaling_group_name: auto_scaling_group_name)).to be(0)
+        expect(AwsHelpers::AutoScaling.new.retrieve_desired_capacity(auto_scaling_group_name)).to be(0)
       end
 
     end
@@ -28,11 +27,8 @@ describe AwsHelpers::AutoScaling do
     describe '#update_desired_capacity' do
 
       it 'should update the auto scaling groups desired capacity' do
-        AwsHelpers::AutoScaling.new.update_desired_capacity(
-            auto_scaling_group_name: auto_scaling_group_name,
-            desired_capacity: 1)
-        expect(AwsHelpers::AutoScaling.new.retrieve_desired_capacity(
-                   auto_scaling_group_name: auto_scaling_group_name)).to be(1)
+        AwsHelpers::AutoScaling.new.update_desired_capacity(auto_scaling_group_name, 1)
+        expect(AwsHelpers::AutoScaling.new.retrieve_desired_capacity(auto_scaling_group_name)).to be(1)
 
       end
 
@@ -49,12 +45,8 @@ describe AwsHelpers::AutoScaling do
     describe '#update_desired_capacity' do
 
       it 'should update the auto scaling groups desired capacity' do
-        AwsHelpers::AutoScaling.new.update_desired_capacity(
-            auto_scaling_group_name: auto_scaling_group_name,
-            desired_capacity: 1)
-        expect(AwsHelpers::AutoScaling.new.retrieve_desired_capacity(
-                   auto_scaling_group_name: auto_scaling_group_name)).to be(1)
-
+        AwsHelpers::AutoScaling.new.update_desired_capacity(auto_scaling_group_name, 1)
+        expect(AwsHelpers::AutoScaling.new.retrieve_desired_capacity(auto_scaling_group_name)).to be(1)
       end
 
     end
@@ -72,10 +64,10 @@ describe AwsHelpers::AutoScaling do
   def create_stack(stack_name, fixture)
     client = Aws::CloudFormation::Client.new
     client.create_stack(
-        {
-            stack_name: stack_name,
-            template_body: IO.read(File.join(File.dirname(__FILE__), 'fixtures', fixture)),
-        }
+      {
+        stack_name: stack_name,
+        template_body: IO.read(File.join(File.dirname(__FILE__), 'fixtures', fixture)),
+      }
     )
     client.wait_until(:stack_create_complete, stack_name: stack_name)
     client.describe_stacks(stack_name: stack_name).stacks.first.outputs.find { |output| output.output_key == 'AutoScalingGroupName' }.output_value

@@ -8,19 +8,17 @@ module AwsHelpers
 
       class PollLoadBalancersInServiceInstances
 
-        def initialize(std_out, config, auto_scaling_group_name, max_attempts = 15, delay = 20)
-          @std_out = std_out
+        def initialize(config, auto_scaling_group_name, options = {})
           @config = config
           @auto_scaling_group_name = auto_scaling_group_name
-          @max_attempts = max_attempts
-          @delay = delay
+          @options = options
         end
 
         def execute
           auto_scaling_client = @config.aws_auto_scaling_client
           response = auto_scaling_client.describe_load_balancers(auto_scaling_group_name: @auto_scaling_group_name)
-          load_balancer_names = response.load_balancers.collect{|load_balancer|load_balancer.load_balancer_name}
-          AwsHelpers::Actions::ElasticLoadBalancing::PollInServiceInstances.new(@std_out, @config, load_balancer_names, @max_attempts, @delay).execute
+          load_balancer_names = response.load_balancers.collect { |load_balancer| load_balancer.load_balancer_name }
+          AwsHelpers::Actions::ElasticLoadBalancing::PollInServiceInstances.new(@config, load_balancer_names, @options).execute
         end
 
       end

@@ -5,7 +5,6 @@ describe AwsHelpers::Actions::AutoScaling::PollLoadBalancersInServiceInstances d
 
   describe '#execute' do
 
-    let(:std_out) { instance_double(IO) }
     let(:auto_scaling_client) { instance_double(Aws::AutoScaling::Client) }
     let(:config) { instance_double(AwsHelpers::Config, aws_auto_scaling_client: auto_scaling_client) }
     let(:poll_in_service_instances) { instance_double(AwsHelpers::Actions::ElasticLoadBalancing::PollInServiceInstances) }
@@ -27,7 +26,7 @@ describe AwsHelpers::Actions::AutoScaling::PollLoadBalancersInServiceInstances d
     end
 
     after(:each) do
-      AwsHelpers::Actions::AutoScaling::PollLoadBalancersInServiceInstances.new(std_out, config, auto_scaling_group_name).execute
+      AwsHelpers::Actions::AutoScaling::PollLoadBalancersInServiceInstances.new(config, auto_scaling_group_name).execute
     end
 
     it 'should call Aws::AutoScaling::Client #describe_load_balancers with correct parameters' do
@@ -35,7 +34,7 @@ describe AwsHelpers::Actions::AutoScaling::PollLoadBalancersInServiceInstances d
     end
 
     it 'should call PollInServiceInstances #new with correct parameters' do
-      expect(AwsHelpers::Actions::ElasticLoadBalancing::PollInServiceInstances).to receive(:new).with(std_out, config, [load_balancer_name_first, load_balancer_name_second], 15, 20)
+      expect(AwsHelpers::Actions::ElasticLoadBalancing::PollInServiceInstances).to receive(:new).with(config, [load_balancer_name_first, load_balancer_name_second], {})
     end
 
     it 'should call PollInServiceInstances #execute method' do

@@ -1,5 +1,5 @@
 require 'aws_helpers/config'
-require 'aws_helpers/actions/cloud_formation/bucket_url'
+require 'aws_helpers/actions/cloud_formation/s3_bucket_url'
 
 include AwsHelpers::Actions::CloudFormation
 
