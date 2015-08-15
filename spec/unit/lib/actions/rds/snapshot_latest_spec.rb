@@ -1,10 +1,10 @@
 require 'aws_helpers/rds'
-require 'aws_helpers/actions/rds/snapshot_latest'
+require 'aws_helpers/actions/rds/latest_snapshot'
 
 include AwsHelpers
 include AwsHelpers::Actions::RDS
 
-describe SnapshotLatest do
+describe LatestSnapshot do
 
   describe '#execute' do
 
@@ -25,7 +25,7 @@ describe SnapshotLatest do
 
     it 'should return the name of the latest snapshot' do
       allow(rds_client).to receive(:describe_db_snapshots).with(db_instance_identifier: db_instance_identifier).and_return(db_snapshots)
-      expect(SnapshotLatest.new(config, db_instance_identifier).execute).to be(db_snapshot_identifier_latest)
+      expect(LatestSnapshot.new(config, db_instance_identifier).execute).to be(db_snapshot_identifier_latest)
     end
 
   end

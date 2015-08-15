@@ -1,7 +1,7 @@
 require_relative 'client'
 require_relative 'actions/rds/snapshot_create'
 require_relative 'actions/rds/snapshots_delete'
-require_relative 'actions/rds/snapshot_latest'
+require_relative 'actions/rds/latest_snapshot'
 
 include AwsHelpers
 include AwsHelpers::Actions::RDS
@@ -19,22 +19,20 @@ module AwsHelpers
 
     # @param db_instance_id [String] Unique ID of the RDS instance
     # @param use_name [Boolean] Default: false
-    def snapshot_create(db_instance_id:, use_name: false)
+    def snapshot_create(db_instance_id, use_name = false)
       SnapshotCreate.new(config, db_instance_id, use_name).execute
     end
 
     # @param db_instance_id [String] Unique ID of the RDS instance
-    # @param days [Integer] Minus number of days to delete snapshots from
-    # @param months [Integer] Minus number of months to delete snapshots from
-    # @param years [Integer] Minus number of years to delete snapshots from
-    def snapshots_delete(db_instance_id:, hours: nil, days: nil, months: nil, years: nil)
-      SnapshotsDelete.new(config, db_instance_id, hours, days, months, years).execute
+
+    def snapshots_delete(db_instance_id, options = {} )
+      SnapshotsDelete.new(config, db_instance_id, options).execute
     end
 
-    # @param db_instance_id [String] Unique ID of the RDS instance
-    # @return [String] The latest snapshot name matching the DB instance ID
-    def snapshot_latest(db_instance_id:)
-      SnapshotLatest.new(config, db_instance_id).execute
+    # @param db_instance_id [String] the instance id
+    # @return [String] The latest snapshot id for the instance
+    def latest_snapshot(db_instance_id)
+      LatestSnapshot.new(config, db_instance_id).execute
     end
 
   end

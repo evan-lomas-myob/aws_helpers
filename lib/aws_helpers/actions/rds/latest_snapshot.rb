@@ -2,7 +2,7 @@ module AwsHelpers
   module Actions
     module RDS
 
-      class SnapshotLatest
+      class LatestSnapshot
 
         def initialize(config, db_instance_id)
           @config = config

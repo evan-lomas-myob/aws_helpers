@@ -5,46 +5,74 @@ require 'aws_helpers/actions/rds/snapshots_delete'
 include AwsHelpers
 include AwsHelpers::Actions::RDS
 
-describe SnapshotsDelete do
+describe AwsHelpers::Actions::RDS::SnapshotsDelete do
 
   let(:rds_client) { instance_double(Aws::RDS::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_rds_client: rds_client) }
+  let(:stdout) { instance_double(IO) }
 
-  let(:db_instance_identifier) { 'db_instance_id' }
-  let(:db_snapshot_identifier) { 'db_snapshot_identifier_1' }
+  let(:subtract_time) { instance_double(AwsHelpers::Utilities::SubtractTime) }
+  let(:db_instance_id) { 'db_instance_id' }
+  let(:now) { Time.parse('2015 Jan 1 00:00:00') }
+  let(:db_snapshot_identifier_first) { 'id_first' }
+  let(:db_snapshot_identifier_second) { 'id_second' }
+  let(:snapshots) {
+    Aws::RDS::Types::DBSnapshotMessage.new(
+      db_snapshots: [
+        Aws::RDS::Types::DBSnapshot.new(
+          db_snapshot_identifier: db_snapshot_identifier_second,
+          snapshot_create_time: now),
+        Aws::RDS::Types::DBSnapshot.new(
+          db_snapshot_identifier: 'id_third',
+          snapshot_create_time: Time.parse('2015 Jan 1 00:00:01')),
+        Aws::RDS::Types::DBSnapshot.new(
+          db_snapshot_identifier: db_snapshot_identifier_first,
+          snapshot_create_time: now - 1)
+      ])
+  }
 
-  let(:db_snapshots) { [
-      double(:db_snapshots, db_snapshot_identifier: 'db_snapshot_identifier_1', snapshot_create_time: Time.new(2015, 01, 01, 0, 0, 0)),
-  ] }
+  before(:each) {
+    allow(rds_client).to receive(:describe_db_snapshots).and_return(snapshots)
+    allow(AwsHelpers::Utilities::SubtractTime).to receive(:new).and_return(subtract_time)
+    allow(subtract_time).to receive(:execute).and_return(now)
+    allow(rds_client).to receive(:delete_db_snapshot)
+    allow(stdout).to receive(:puts)
+  }
 
-  let(:hours) { 1 }
-  let(:days) { 1 }
-  let(:months) { 1 }
-  let(:years) { 1 }
+  describe '#execute' do
 
-  before(:each) do
-    allow(rds_client).to receive(:describe_db_snapshots).with(db_instance_identifier: db_instance_identifier).and_return(db_snapshots)
-    allow(rds_client).to receive(:delete_db_snapshot).with(db_snapshot_identifier)
-  end
+    it 'should call Aws::RDS::Client #describe_db_snapshots with correct parameters' do
+      expect(rds_client).to receive(:describe_db_snapshots).with(db_instance_identifier: db_instance_id, snapshot_type: 'manual')
+      AwsHelpers::Actions::RDS::SnapshotsDelete.new(config, db_instance_id, stdout: stdout).execute
+    end
 
-  it 'should delete all snapshots older than now matching the db_instance_id' do
-    expect(SnapshotsDelete.new(config, db_instance_identifier, nil, nil, nil, nil).execute).to eq(db_snapshots)
-  end
+    it 'should call AwsHelpers::Utilities::SubtractTime #new with correct parameters' do
+      options = { stdout: stdout, now: Time.parse('2015 Jan 1 00:00:00'), hours: 1, days: 2, months: 3, years: 4 }
+      expect(AwsHelpers::Utilities::SubtractTime).to receive(:new).with(now: options[:now], hours: 1, days: 2, months: 3, years: 4)
+      AwsHelpers::Actions::RDS::SnapshotsDelete.new(config, db_instance_id, options).execute
+    end
 
-  it 'should delete all snapshots older than an hour matching the db_instance_id' do
-    expect(SnapshotsDelete.new(config, db_instance_identifier, hours, nil, nil, nil).execute).to eq(db_snapshots)
-  end
+    it 'should call AwsHelpers::Utilities::SubtractTime #execute method' do
+      expect(subtract_time).to receive(:execute)
+      AwsHelpers::Actions::RDS::SnapshotsDelete.new(config, db_instance_id, stdout: stdout).execute
+    end
 
-  it 'should delete all snapshots older than a day matching the db_instance_id' do
-    expect(SnapshotsDelete.new(config, db_instance_identifier, nil, days, nil, nil).execute).to eq(db_snapshots)
-  end
+    it 'should call Aws::RDS::Client #delete_db_snapshot with correct parameters for the first db_snapshot_identifier' do
+      expect(rds_client).to receive(:delete_db_snapshot).with(db_snapshot_identifier: db_snapshot_identifier_first)
+      AwsHelpers::Actions::RDS::SnapshotsDelete.new(config, db_instance_id, stdout: stdout).execute
+    end
 
-  it 'should delete all snapshots older than a month matching the db_instance_id' do
-    expect(SnapshotsDelete.new(config, db_instance_identifier, nil, nil, months, nil).execute).to eq(db_snapshots)
-  end
+    it 'should call stdout with the snapshots being deleted' do
+      expect(stdout).to receive(:puts).with("Deleting Snapshot=#{db_snapshot_identifier_first}, Created=#{now - 1}")
+      AwsHelpers::Actions::RDS::SnapshotsDelete.new(config, db_instance_id, stdout: stdout).execute
+    end
 
-  it 'should delete all snapshots older than a year matching the db_instance_id' do
-    expect(SnapshotsDelete.new(config, db_instance_identifier, nil, nil, nil, years).execute).to eq(db_snapshots)
+    it 'should call delete from oldest to newest' do
+      expect(rds_client).to receive(:delete_db_snapshot).with(db_snapshot_identifier: db_snapshot_identifier_first).ordered
+      expect(rds_client).to receive(:delete_db_snapshot).with(db_snapshot_identifier: db_snapshot_identifier_second).ordered
+      AwsHelpers::Actions::RDS::SnapshotsDelete.new(config, db_instance_id, stdout: stdout).execute
+    end
+
   end
 
 end
