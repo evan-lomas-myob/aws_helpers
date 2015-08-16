@@ -19,7 +19,7 @@ module AwsHelpers
     # @param [Hash] options Optional parameters that can be overridden.
     # @option options [IO] :stdout Override $stdout when logging pooling output
     # @option options [Integer] :max_attempts (20) Override number of attempts
-    # @option options [Integer] :delay (15) Overridethe delay between attempts
+    # @option options [Integer] :delay (15) Override the delay between attempts
     def poll_in_service_instances(load_balancer_name, options= {})
       PollInServiceInstances.new(config, [load_balancer_name], options).execute
     end
