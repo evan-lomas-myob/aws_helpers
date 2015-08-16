@@ -11,9 +11,9 @@ module AwsHelpers
         def initialize(config, auto_scaling_group_name, options = {})
           @config = config
           @auto_scaling_group_name = auto_scaling_group_name
-          @stdout = options[:stdout] ||= $stdout
-          @delay = options[:delay] ||= 15
-          @max_attempts = options[:max_attempts] ||= 20
+          @stdout = options[:stdout] || $stdout
+          @delay = options[:delay] || 15
+          @max_attempts = options[:max_attempts] || 20
         end
 
         def execute

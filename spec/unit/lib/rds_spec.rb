@@ -26,7 +26,7 @@ describe AwsHelpers::RDS do
     end
 
     it 'should create SnapshotCreate #new with correct parameters' do
-      expect(SnapshotCreate).to receive(:new).with(config, db_instance_id, false, {})
+      expect(SnapshotCreate).to receive(:new).with(config, db_instance_id, {})
       AwsHelpers::RDS.new.snapshot_create(db_instance_id)
     end
 
@@ -34,12 +34,6 @@ describe AwsHelpers::RDS do
       expect(snapshot_create).to receive(:execute)
       AwsHelpers::RDS.new.snapshot_create(db_instance_id)
     end
-
-    it 'should call SanpshotCreate #new with use_name set correctly' do
-      expect(SnapshotCreate).to receive(:new).with(config, db_instance_id, true, {})
-      AwsHelpers::RDS.new.snapshot_create(db_instance_id, true)
-    end
-
 
   end
 

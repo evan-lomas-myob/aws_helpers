@@ -9,7 +9,7 @@ module AwsHelpers
         def initialize(config, db_instance_id, options = {})
           @config = config
           @db_instance_id = db_instance_id
-          @stdout = options[:stdout] ||= $stdout
+          @stdout = options[:stdout] || $stdout
           @options = options.clone
           @options.delete(:stdout)
         end

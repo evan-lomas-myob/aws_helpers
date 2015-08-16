@@ -28,7 +28,7 @@ module AwsHelpers
     # @param auto_scaling_group_name [String] The group name of the Auto scaling client
     # @param desired_capacity [Integer] The capacity level of the auto scaling group
     # @param [Hash] options Optional parameters that can be overridden.
-    # @option options [IO] :stdout Override $stdout when logging pooling output
+    # @option options [IO] :stdout Override $stdout when logging output
     # @option options [Hash{Symbol => Integer}] :auto_scaling_polling Override auto scaling default polling
     #
     #   defaults:
