@@ -28,7 +28,7 @@ describe AwsHelpers::Actions::EC2::ImagesDelete do
     }
 
     after(:each) {
-      AwsHelpers::Actions::EC2::ImagesDelete.new(config, tag_name_value, hours, days, months, years).execute
+      AwsHelpers::Actions::EC2::ImagesDelete.new(config, tag_name_value, hours: hours, days: days, months: months, years: years).execute
     }
 
     it 'should call DeleteTimeBuilder #build with the correct parameters' do

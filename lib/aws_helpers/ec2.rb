@@ -20,28 +20,23 @@ module AwsHelpers
     # @param name [String] Name given to the AWS EC2 instance
     # @param instance_id [String] Unique ID of the AWS instance
     # @param additional_tags [Array] Optional tags to include
-    def image_create(name:, instance_id:, additional_tags: [])
+    def image_create(name, instance_id, additional_tags= [])
       ImageCreate.new(config, name, instance_id, additional_tags).execute
     end
 
-    # @param name [String] Name given to the AWS EC2 instance
-    # @param hours [Integer] Minus number of hours to delete images from
-    # @param days [Integer] Minus number of days to delete images from
-    # @param months [Integer] Minus number of months to delete images from
-    # @param years [Integer] Minus number of years to delete images from
-    def images_delete(name:, hours: nil, days: nil, months: nil, years: nil)
-      ImagesDelete.new(config, name, hours, days, months, years).execute
+    def images_delete(name, options ={})
+      ImagesDelete.new(config, name, options).execute
     end
 
     # @param name [String] Name given to the AWS EC2 instance
     # @param time [String] Oldest time string in EC2 instance tags to remove after
-    def images_delete_by_time(name:, time:)
+    def images_delete_by_time(name, time)
       ImagesDeleteByTime.new(config, name, time).execute
     end
 
     # @param tags [Array] List of tags to find matching EC2 instances for
     # @return [Array] list of images matching the tags list
-    def images_find_by_tags(tags: [])
+    def images_find_by_tags(tags = [])
       ImagesFindByTags.new(config, tags).execute
     end
 

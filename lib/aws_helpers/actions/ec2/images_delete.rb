@@ -6,13 +6,15 @@ module AwsHelpers
 
       class ImagesDelete
 
-        def initialize(config, tag_name_value, hours, days, months, years)
+        def initialize(config, tag_name_value, options = {})
           @config = config
           @tag_name_value = tag_name_value
-          @delete_time = AwsHelpers::Utilities::DeleteTimeBuilder.new.build(hours: hours, days: days, months: months, years: years)
+          @options = options
+          @date_time_builder = AwsHelpers::Utilities::DeleteTimeBuilder.new
         end
 
         def execute
+          @delete_time = @date_time_builder.build(@options)
           AwsHelpers::Actions::EC2::ImagesDeleteByTime.new(@config, @tag_name_value, @delete_time).execute
         end
 
