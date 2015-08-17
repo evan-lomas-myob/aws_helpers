@@ -55,14 +55,17 @@ describe StackModifyParameters do
     allow(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_return(stack_response)
     allow(cloudformation_client).to receive(:describe_stack_events).with(stack_name: stack_name, next_token: nil).and_return(stack_events_response)
     allow(cloudformation_client).to receive(:update_stack).with(stack_updated)
-    allow(PollStackUpdate).to receive(:new).with(stdout, config, stack_name, 10, 5).and_return(poll_stack_update)
+    allow(PollStackUpdate).to receive(:new).with(config, stack_name, 10, 5, stdout).and_return(poll_stack_update)
     allow(poll_stack_update).to receive(:execute)
+  end
+
+  after(:each) do
+    StackModifyParameters.new(config, stack_name, parameters_to_update, max_attempts, delay, stdout).execute
   end
 
 
   it 'should call describe stack to get the current stack parameters' do
     expect(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_return(stack_response)
-    StackModifyParameters.new(stdout, max_attempts, delay, config, stack_name, parameters_to_update).execute
   end
 
   it 'should build the request for the stack update' do
@@ -71,12 +74,10 @@ describe StackModifyParameters do
 
   it 'should call the update_stack method to start the stack update process' do
     expect(cloudformation_client).to receive(:update_stack).with(stack_updated)
-    StackModifyParameters.new(stdout, max_attempts, delay, config, stack_name, parameters_to_update).execute
   end
 
   it 'should call update_stack using the request generated' do
     expect(poll_stack_update).to receive(:execute)
-    StackModifyParameters.new(stdout, max_attempts, delay, config, stack_name, parameters_to_update).execute
   end
 
 end

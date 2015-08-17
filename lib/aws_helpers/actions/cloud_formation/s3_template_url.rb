@@ -4,7 +4,7 @@ module AwsHelpers
   module Actions
     module CloudFormation
 
-      class S3BucketUrl
+      class S3TemplateUrl
 
         def initialize(config, s3_bucket_name)
           @config = config

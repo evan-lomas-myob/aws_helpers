@@ -4,10 +4,10 @@ module AwsHelpers
 
       class StackDelete
 
-        def initialize(stdout = $stdout, config, stack_name)
-          @stdout = stdout
+        def initialize(config, stack_name, stdout = $stdout)
           @config = config
           @stack_name = stack_name
+          @stdout = stdout
         end
 
         def execute

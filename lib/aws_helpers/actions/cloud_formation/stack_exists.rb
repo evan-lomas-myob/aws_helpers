@@ -16,7 +16,7 @@ module AwsHelpers
           stack = Aws::CloudFormation::Stack.new(@stack_name, client: client)
 
           begin
-            true if stack.stack_id
+            true if stack.name
           rescue Aws::CloudFormation::Errors::ValidationError => validation_error
             if validation_error.message == "Stack with id #{@stack_name} does not exist"
               false

@@ -9,10 +9,10 @@ module AwsHelpers
 
       class StackErrorEvents
 
-        def initialize(stdout,config, stack_name)
-          @stdout = stdout
+        def initialize(config, stack_name, stdout)
           @config = config
           @stack_name = stack_name
+          @stdout = stdout
         end
 
         def execute

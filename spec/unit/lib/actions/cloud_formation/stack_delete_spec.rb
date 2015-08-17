@@ -19,7 +19,7 @@ describe StackDelete do
   end
 
   after(:each) do
-    AwsHelpers::Actions::CloudFormation::StackDelete.new(stdout, config, stack_name).execute
+    AwsHelpers::Actions::CloudFormation::StackDelete.new(config, stack_name, stdout).execute
   end
 
   it 'should call delete_stack to remove the stack' do

@@ -1,6 +1,6 @@
 require 'aws_helpers/config'
 require 'aws_helpers/actions/cloud_formation/stack_upload_template'
-require 'aws_helpers/actions/cloud_formation/s3_bucket_url'
+require 'aws_helpers/actions/cloud_formation/s3_template_url'
 
 include AwsHelpers::Actions::CloudFormation
 
@@ -11,7 +11,7 @@ describe StackUploadTemplate do
 
   let(:url) { 'https://my-bucket-url' }
   let(:stdout) { instance_double(IO) }
-  let(:s3_bucket_url) { instance_double(S3BucketUrl) }
+  let(:s3_template_url) { instance_double(S3TemplateUrl) }
 
   let(:stack_name) { 'my_stack_name' }
   let(:template_json) { 'json' }
@@ -24,8 +24,8 @@ describe StackUploadTemplate do
   before(:each) do
     allow(aws_s3_client).to receive(:put_object).with(request)
     allow(aws_s3_client).to receive(:head_bucket)
-    allow(S3BucketUrl).to receive(:new).with(config, s3_bucket_name).and_return(s3_bucket_url)
-    allow(s3_bucket_url).to receive(:execute).and_return(url)
+    allow(S3TemplateUrl).to receive(:new).with(config, s3_bucket_name).and_return(s3_template_url)
+    allow(s3_template_url).to receive(:execute).and_return(url)
     allow(stdout).to receive(:puts).with(anything)
   end
 

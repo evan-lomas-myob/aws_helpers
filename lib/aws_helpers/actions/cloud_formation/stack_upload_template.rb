@@ -1,4 +1,4 @@
-require 'aws_helpers/actions/cloud_formation/s3_bucket_url'
+require 'aws_helpers/actions/cloud_formation/s3_template_url'
 
 module AwsHelpers
   module Actions
@@ -28,7 +28,7 @@ module AwsHelpers
           s3_client.put_object(
               request
           )
-          AwsHelpers::Actions::CloudFormation::S3BucketUrl.new(@config, @s3_bucket_name).execute
+          AwsHelpers::Actions::CloudFormation::S3TemplateUrl.new(@config, @s3_bucket_name).execute
         end
 
       end

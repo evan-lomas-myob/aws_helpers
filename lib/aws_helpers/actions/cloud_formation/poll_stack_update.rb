@@ -6,12 +6,12 @@ module AwsHelpers
 
       class PollStackUpdate
 
-        def initialize(stdout, config, stack_name, max_attempts, delay)
-          @stdout = stdout
+        def initialize(config, stack_name, max_attempts, delay, stdout)
           @config = config
           @stack_name = stack_name
           @max_attempts = max_attempts
           @delay = delay
+          @stdout = stdout
         end
 
         def execute

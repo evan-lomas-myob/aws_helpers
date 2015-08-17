@@ -44,7 +44,7 @@ describe StackErrorEvents do
   end
 
   after(:each) do
-    AwsHelpers::Actions::CloudFormation::StackErrorEvents.new(stdout, config, stack_name).execute
+    AwsHelpers::Actions::CloudFormation::StackErrorEvents.new(config, stack_name, stdout).execute
   end
 
   it 'should call StackRetrieveEvents to get events' do
@@ -53,17 +53,14 @@ describe StackErrorEvents do
 
   it 'should call StackEventsFilterPostInitiation to collect problem events' do
     expect(stack_events_filter_post_initiation).to receive(:execute).and_return(stack_events)
-    AwsHelpers::Actions::CloudFormation::StackErrorEvents.new(stdout, config, stack_name).execute
   end
 
   it 'should call StackEventsFilterFailed filter out events that have failed' do
     expect(stack_events_filter_failed).to receive(:execute).and_return(stack_events)
-    AwsHelpers::Actions::CloudFormation::StackErrorEvents.new(stdout, config, stack_name).execute
   end
 
   it 'should send event information to standard output' do
     expect(stdout).to receive(:puts).with("#{timestamp}, DELETE_COMPLETE, #{logical_resource_id}, #{resource_status_reason}")
-    AwsHelpers::Actions::CloudFormation::StackErrorEvents.new(stdout, config, stack_name).execute
   end
 
 end

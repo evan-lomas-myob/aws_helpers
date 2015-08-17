@@ -15,9 +15,9 @@ module AwsHelpers
         def execute
           request = { stack_name: @stack_name }
           if @s3_bucket_url
-            request.merge!(s3_bucket_url: @s3_bucket_url)
+            request.merge!(template_url: @s3_bucket_url)
           else
-            request.merge!(template_json: @template_json)
+            request.merge!(template_body: @template_json)
           end
           request.merge!(parameters: @parameters) if @parameters
           request.merge!(capabilities: @capabilities) if @capabilities

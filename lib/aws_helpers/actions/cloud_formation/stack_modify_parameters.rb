@@ -9,13 +9,13 @@ module AwsHelpers
 
       class StackModifyParameters
 
-        def initialize(stdout = $stdout, max_attempts = 10, delay = 30, config, stack_name, parameters)
-          @stdout = stdout
+        def initialize(config, stack_name, parameters, max_attempts = 10, delay = 30, stdout = $stdout)
           @config = config
           @stack_name = stack_name
           @parameters = parameters
           @max_attempts = max_attempts
           @delay = delay
+          @stdout = stdout
         end
 
         def execute
@@ -28,8 +28,8 @@ module AwsHelpers
           client = @config.aws_cloud_formation_client
           client.update_stack(request)
 
-          AwsHelpers::Actions::CloudFormation::PollStackUpdate.new(@stdout, @config, @stack_name, @max_attempts, @delay).execute
-          AwsHelpers::Actions::CloudFormation::StackErrorEvents.new(@stdout, @config, @stack_name).execute
+          AwsHelpers::Actions::CloudFormation::PollStackUpdate.new(@config, @stack_name, @max_attempts, @delay, @stdout).execute
+          AwsHelpers::Actions::CloudFormation::StackErrorEvents.new(@config, @stack_name, @stdout).execute
           AwsHelpers::Actions::CloudFormation::CheckStackFailure.new(@config, @stack_name).execute
 
         end

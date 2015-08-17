@@ -21,18 +21,23 @@ describe PollStackUpdate do
   let(:delay) { 1 }
   let(:output) { 'Stack - my_stack_name status UPDATE_COMPLETE' }
 
+  before(:each) do
+    allow(Aws::CloudFormation::Stack).to receive(:new).with(stack_name, client: cloudformation_client).and_return(stack_resource)
+    allow(stack_resource).to receive(:wait_until).with(max_attempts: 1, delay: 1)
+  end
+
+  after(:each) do
+    PollStackUpdate.new(config, stack_name, max_attempts, delay, stdout).execute
+  end
+
   describe '#execute' do
 
     it 'should create Stack resource' do
       expect(Aws::CloudFormation::Stack).to receive(:new).with(stack_name, client: cloudformation_client).and_return(stack_resource)
-      allow(stack_resource).to receive(:wait_until).with(max_attempts: 1, delay: 1)
-      PollStackUpdate.new(stdout, config, stack_name, max_attempts, delay).execute
     end
 
     it 'should call wait_until method on the Stack resource' do
-      allow(Aws::CloudFormation::Stack).to receive(:new).with(stack_name, client: cloudformation_client).and_return(stack_resource)
       expect(stack_resource).to receive(:wait_until).with(max_attempts: 1, delay: 1)
-      PollStackUpdate.new(stdout, config, stack_name, max_attempts, delay).execute
     end
 
   end
