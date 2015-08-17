@@ -1,13 +1,13 @@
 require 'aws-sdk-core'
 require 'aws-sdk-resources'
 require 'aws_helpers/cloud_formation'
-require 'aws_helpers/actions/cloud_formation/stack_update'
+require 'aws_helpers/actions/cloud_formation/stack_create'
 
 include Aws::CloudFormation::Types
 include AwsHelpers
 include AwsHelpers::Actions::CloudFormation
 
-describe StackUpdate do
+describe StackCreate do
 
   let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client) }
@@ -41,7 +41,7 @@ describe StackUpdate do
   let(:stack_update) { instance_double(DescribeStacksOutput, stacks: stack_update_complete) }
 
   before(:each) do
-    allow(cloudformation_client).to receive(:update_stack).with(request)
+    allow(cloudformation_client).to receive(:create_stack).with(request)
     allow(cloudformation_client).to receive(:describe_stacks).with(stack_name)
     allow(PollStackUpdate).to receive(:new).with(config, stack_name, max_attempts, delay, stdout).and_return(poll_stack_update)
     allow(poll_stack_update).to receive(:execute)
@@ -50,14 +50,15 @@ describe StackUpdate do
     allow(stack_error_events).to receive(:execute)
     allow(CheckStackFailure).to receive(:new).with(config, stack_name).and_return(check_stack_failure)
     allow(check_stack_failure).to receive(:execute)
+    AwsHelpers::Actions::CloudFormation::StackCreate.new(config, stack_name, request, max_attempts, delay, stdout).execute
   end
 
   after(:each) do
-    AwsHelpers::Actions::CloudFormation::StackUpdate.new(config, stack_name, request, max_attempts, delay, stdout).execute
+    AwsHelpers::Actions::CloudFormation::StackCreate.new(config, stack_name, request, max_attempts, delay, stdout).execute
   end
 
-  it 'should call update_stack to update the stack' do
-    expect(cloudformation_client).to receive(:update_stack).with(request)
+  it 'should call create_stack to update the stack' do
+    expect(cloudformation_client).to receive(:create_stack).with(request)
   end
 
   it 'should poll for stack update completion' do
