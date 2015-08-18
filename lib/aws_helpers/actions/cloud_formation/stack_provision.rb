@@ -1,4 +1,4 @@
-require 'aws_helpers/actions/s3/stack_upload_template'
+require 'aws_helpers/actions/s3/s3_upload_template'
 require 'aws_helpers/actions/cloud_formation/stack_rollback_complete'
 require 'aws_helpers/actions/cloud_formation/stack_delete'
 require 'aws_helpers/actions/cloud_formation/stack_create_request_builder'

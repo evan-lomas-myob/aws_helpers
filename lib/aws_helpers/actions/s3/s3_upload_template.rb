@@ -1,3 +1,4 @@
+require 'aws_helpers/actions/s3/s3_exists'
 require 'aws_helpers/actions/s3/s3_template_url'
 
 module AwsHelpers
@@ -17,7 +18,6 @@ module AwsHelpers
 
         def execute
           s3_client = @config.aws_s3_client
-          @stdout.puts "Uploading #{@stack_name} to S3 bucket #{@s3_bucket_name}"
 
           request = {
               bucket: @s3_bucket_name,
@@ -25,9 +25,18 @@ module AwsHelpers
               body: @template_json,
           }
           request.merge!(server_side_encryption: 'AES256') if @bucket_encrypt
+
+
+          @stdout.puts "Uploading #{@stack_name} to S3 bucket #{@s3_bucket_name}"
+
+          unless AwsHelpers::Actions::S3::S3Exists.new(@config, @stack_name).execute
+            AwsHelpers::Actions::S3::S3Create.new(@config, @s3_bucket_name).execute
+          end
+
           s3_client.put_object(
               request
           )
+
           AwsHelpers::Actions::S3::S3TemplateUrl.new(@config, @s3_bucket_name).execute
         end
 
