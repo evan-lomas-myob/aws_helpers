@@ -24,29 +24,28 @@ module AwsHelpers
           @stdout = stdout
 
           @max_attempts = 10
-          @delay = 30
+          @delay = 5
 
         end
 
         def execute
           template_url = StackUploadTemplate.new(@config, @stack_name, @template_json, @s3_bucket_name, @bucket_encrypt, @stdout).execute if @s3_bucket_name
 
-          if StackRollbackComplete.new(@config, @stack_name).execute
+          if StackExists.new(@config, @stack_name).execute && StackRollbackComplete.new(@config, @stack_name).execute
             StackDelete.new(@config, @stack_name, @stdout).execute
           end
 
           request = StackCreateRequestBuilder.new(@stack_name, template_url, @template_json, @parameters, @capabilities).execute
-
           StackExists.new(@config, @stack_name).execute ? update(request) : create(request)
-
+          StackInformation.new(@config, @stack_name, 'outputs').execute
         end
 
         def update(request)
-          StackUpdate.new(@config,@stack_name,request,@max_attempts,@delay,@stdout).execute
+          StackUpdate.new(@config, @stack_name, request, @max_attempts, @delay, @stdout).execute
         end
 
         def create(request)
-          StackCreate.new(@config,@stack_name,request,@max_attempts,@delay,@stdout).execute
+          StackCreate.new(@config, @stack_name, request, @max_attempts, @delay, @stdout).execute
         end
 
       end
