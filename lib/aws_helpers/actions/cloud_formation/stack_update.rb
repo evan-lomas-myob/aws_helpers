@@ -28,7 +28,7 @@ module AwsHelpers
             AwsHelpers::Actions::CloudFormation::CheckStackFailure.new(@config, @stack_name).execute
           rescue Aws::CloudFormation::Errors::ValidationError => validation_error
             if validation_error.message == 'No updates are to be performed.'
-              puts "No updates to perform for #{@stack_name}."
+              @stdout.puts "No updates to perform for #{@stack_name}."
             else
               raise validation_error
             end
