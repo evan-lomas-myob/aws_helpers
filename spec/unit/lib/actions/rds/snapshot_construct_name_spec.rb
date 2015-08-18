@@ -45,7 +45,6 @@ describe SnapshotConstructName do
         .to eql("#{db_instance_identifier}-2015-02-01-03-04")
     end
 
-
     context 'with optional parameter user_name: set to true' do
 
       it 'should return the region in the iam client' do

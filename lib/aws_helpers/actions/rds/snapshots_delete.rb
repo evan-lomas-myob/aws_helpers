@@ -10,7 +10,7 @@ module AwsHelpers
           @config = config
           @db_instance_id = db_instance_id
           @stdout = options[:stdout] || $stdout
-          @delete_time = DeleteTimeBuilder.new.build(options)
+          @delete_time = AwsHelpers::Utilities::DeleteTimeBuilder.new.build(options)
         end
 
         def execute

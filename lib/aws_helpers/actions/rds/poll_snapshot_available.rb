@@ -23,8 +23,8 @@ module AwsHelpers
             snapshot = response.db_snapshots.find{|snapshot| snapshot.db_snapshot_identifier == @snapshot_id}
             status = snapshot.status
             percent_progress = snapshot.percent_progress
-            @stdout.puts "Snapshot #{@snapshot_id} #{status}, progress #{percent_progress}%"
-            raise "Failed to create snapshot #{@snapshot_id}" if status == SnapshotStatus::DELETING
+            @stdout.puts "RDS Snapshot #{@snapshot_id} #{status}, progress #{percent_progress}%"
+            raise "RDS Failed to create snapshot #{@snapshot_id}" if status == SnapshotStatus::DELETING
             pooling.stop if status == SnapshotStatus::AVAILABLE
           }
         end

@@ -1,0 +1,23 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "DBInstance": {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "AllocatedStorage": "5",
+        "DBInstanceClass": "db.t1.micro",
+        "Engine": "MySQL",
+        "StorageType": "gp2",
+        "MasterUsername": "username",
+        "MasterUserPassword": "password"
+      }
+    }
+  },
+  "Outputs": {
+    "DBInstanceId": {
+      "Value": {
+        "Ref": "DBInstance"
+      }
+    }
+  }
+}

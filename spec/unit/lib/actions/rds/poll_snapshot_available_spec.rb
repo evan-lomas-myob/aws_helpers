@@ -32,7 +32,7 @@ describe AwsHelpers::Actions::RDS::PollSnapshotAvailable do
               .and_return(
                 create_response(snapshot_id, 'available', 100)
               )
-      expect(stdout).to receive(:puts).with("Snapshot #{snapshot_id} available, progress 100%")
+      expect(stdout).to receive(:puts).with("RDS Snapshot #{snapshot_id} available, progress 100%")
       poll_db_snapshot(config, snapshot_id, stdout: stdout, max_attempts: 1, delay: 0)
     end
 
@@ -56,7 +56,7 @@ describe AwsHelpers::Actions::RDS::PollSnapshotAvailable do
               )
       expect {
         poll_db_snapshot(config, snapshot_id, stdout: stdout, max_attempts: 1, delay: 0)
-      }.to raise_error(StandardError, "Failed to create snapshot #{snapshot_id}")
+      }.to raise_error(StandardError, "RDS Failed to create snapshot #{snapshot_id}")
     end
 
     it 'should raise a Aws::Waiters::Errors::TooManyAttemptsError if the snapshot is not available within the number of attempts' do
