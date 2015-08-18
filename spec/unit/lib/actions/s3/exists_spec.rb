@@ -1,5 +1,5 @@
 require 'aws_helpers/config'
-require 'aws_helpers/actions/s3/s3_exists'
+require 'aws_helpers/actions/s3/exists'
 
 include AwsHelpers::Actions::S3
 

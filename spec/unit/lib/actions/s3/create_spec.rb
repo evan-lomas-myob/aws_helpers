@@ -1,5 +1,5 @@
 require 'aws_helpers/config'
-require 'aws_helpers/actions/s3/s3_create'
+require 'aws_helpers/actions/s3/create'
 
 include AwsHelpers::Actions::S3
 
@@ -15,6 +15,7 @@ describe S3Create do
   let(:bucket_location) { instance_double(Aws::S3::Types::CreateBucketOutput, location: location) }
 
   before(:each) do
+    allow(aws_s3_client).to receive(:create_bucket).with(acl: 'private', bucket: s3_bucket_name).and_return(bucket_location)
     allow(stdout).to receive(:puts).with(anything)
     allow(aws_s3_client).to receive(:wait_until)
   end
@@ -25,13 +26,11 @@ describe S3Create do
   end
 
   it 'should wait until the bucket is created' do
-    allow(aws_s3_client).to receive(:create_bucket).with(acl: 'private', bucket: s3_bucket_name).and_return(bucket_location)
     expect(aws_s3_client).to receive(:wait_until).with(:bucket_exists, bucket: s3_bucket_name)
     AwsHelpers::Actions::S3::S3Create.new(config, s3_bucket_name, stdout).execute
   end
 
   it 'should receive a message saying the bucket was created' do
-    allow(aws_s3_client).to receive(:create_bucket).with(acl: 'private', bucket: s3_bucket_name).and_return(bucket_location)
     expect(stdout).to receive(:puts).with("Created S3 Bucket #{s3_bucket_name}")
     AwsHelpers::Actions::S3::S3Create.new(config, s3_bucket_name, stdout).execute
   end

@@ -1,6 +1,6 @@
 require 'aws_helpers/config'
-require 'aws_helpers/actions/s3/s3_upload_template'
-require 'aws_helpers/actions/s3/s3_template_url'
+require 'aws_helpers/actions/s3/upload_template'
+require 'aws_helpers/actions/s3/template_url'
 
 include AwsHelpers::Actions::S3
 
