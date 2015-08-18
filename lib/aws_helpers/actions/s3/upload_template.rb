@@ -1,4 +1,5 @@
 require 'aws_helpers/actions/s3/exists'
+require 'aws_helpers/actions/s3/create'
 require 'aws_helpers/actions/s3/template_url'
 
 module AwsHelpers
@@ -29,9 +30,7 @@ module AwsHelpers
 
           @stdout.puts "Uploading #{@stack_name} to S3 bucket #{@s3_bucket_name}"
 
-          unless AwsHelpers::Actions::S3::S3Exists.new(@config, @stack_name).execute
-            AwsHelpers::Actions::S3::S3Create.new(@config, @s3_bucket_name).execute
-          end
+          AwsHelpers::Actions::S3::S3Create.new(@config, @s3_bucket_name).execute if ! AwsHelpers::Actions::S3::S3Exists.new(@config, @s3_bucket_name).execute
 
           s3_client.put_object(
               request

@@ -17,7 +17,7 @@ module AwsHelpers
           begin
             client.head_bucket(bucket: @s3_bucket_name)
             true
-          rescue Aws::S3::Errors::NotFound
+          rescue Aws::S3::Errors::NotFound, Aws::S3::Errors::Http301Error
             false
           end
 
