@@ -11,9 +11,8 @@ describe S3Exists do
   let(:response) { instance_double(Seahorse::Client::Response) }
   let(:not_found) { Aws::S3::Errors::NotFound.new(config, '') }
 
-
   let(:s3_bucket_name) { 'my-bucket' }
-  let(:bucket) { instance_double(Aws::S3::Bucket, url: 's3-bucket-url',) }
+  let(:bucket) { instance_double(Aws::S3::Bucket, url: 's3-bucket-url') }
 
   it 'should return true if a s3 bucket exists' do
     allow(aws_s3_client).to receive(:wait_until)
