@@ -24,7 +24,7 @@ module AwsHelpers
           @stdout = stdout
 
           @max_attempts = 10
-          @delay = 5
+          @delay = 30
 
         end
 
