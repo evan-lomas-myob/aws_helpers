@@ -2,9 +2,9 @@ require 'aws-sdk-resources'
 
 module AwsHelpers
   module Actions
-    module CloudFormation
+    module S3
 
-      class S3TemplateUrl
+      class S3Exists
 
         def initialize(config, s3_bucket_name)
           @config = config
@@ -16,7 +16,7 @@ module AwsHelpers
 
           begin
             client.head_bucket(bucket: @s3_bucket_name)
-            Aws::S3::Bucket.new(@s3_bucket_name, client: client).url
+            true
           rescue Aws::S3::Errors::NotFound
             false
           end

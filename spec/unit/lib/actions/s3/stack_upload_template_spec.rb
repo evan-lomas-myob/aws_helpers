@@ -1,10 +1,10 @@
 require 'aws_helpers/config'
-require 'aws_helpers/actions/cloud_formation/stack_upload_template'
-require 'aws_helpers/actions/cloud_formation/s3_template_url'
+require 'aws_helpers/actions/s3/stack_upload_template'
+require 'aws_helpers/actions/s3/s3_template_url'
 
-include AwsHelpers::Actions::CloudFormation
+include AwsHelpers::Actions::S3
 
-describe StackUploadTemplate do
+describe S3UploadTemplate do
 
   let(:aws_s3_client) { instance_double(Aws::S3::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_s3_client: aws_s3_client) }
@@ -31,16 +31,16 @@ describe StackUploadTemplate do
 
   it 'should return a message that it will upload a template' do
     expect(stdout).to receive(:puts).with("Uploading #{stack_name} to S3 bucket #{s3_bucket_name}")
-    StackUploadTemplate.new(config, stack_name, template_json, s3_bucket_name, bucket_encrypt, stdout).execute
+    S3UploadTemplate.new(config, stack_name, template_json, s3_bucket_name, bucket_encrypt, stdout).execute
   end
 
   it 'should generate a request and call put_object' do
     expect(aws_s3_client).to receive(:put_object).with(request)
-    StackUploadTemplate.new(config, stack_name, template_json, s3_bucket_name, bucket_encrypt, stdout).execute
+    S3UploadTemplate.new(config, stack_name, template_json, s3_bucket_name, bucket_encrypt, stdout).execute
   end
 
   it 'should return the s3 bucket url' do
-    expect(StackUploadTemplate.new(config, stack_name, template_json, s3_bucket_name, bucket_encrypt, stdout).execute).to eq(url)
+    expect(S3UploadTemplate.new(config, stack_name, template_json, s3_bucket_name, bucket_encrypt, stdout).execute).to eq(url)
   end
 
 end

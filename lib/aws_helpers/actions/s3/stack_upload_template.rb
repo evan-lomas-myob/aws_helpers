@@ -1,10 +1,10 @@
-require 'aws_helpers/actions/cloud_formation/s3_template_url'
+require 'aws_helpers/actions/s3/s3_template_url'
 
 module AwsHelpers
   module Actions
-    module CloudFormation
+    module S3
 
-      class StackUploadTemplate
+      class S3UploadTemplate
 
         def initialize(config, stack_name, template_json, s3_bucket_name, bucket_encrypt, stdout = $stdout)
           @config = config
@@ -28,7 +28,7 @@ module AwsHelpers
           s3_client.put_object(
               request
           )
-          AwsHelpers::Actions::CloudFormation::S3TemplateUrl.new(@config, @s3_bucket_name).execute
+          AwsHelpers::Actions::S3::S3TemplateUrl.new(@config, @s3_bucket_name).execute
         end
 
       end

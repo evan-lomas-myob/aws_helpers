@@ -2,7 +2,7 @@ require 'aws-sdk-core'
 require 'aws-sdk-resources'
 require 'aws_helpers/cloud_formation'
 require 'aws_helpers/actions/cloud_formation/stack_provision'
-require 'aws_helpers/actions/cloud_formation/stack_upload_template'
+require 'aws_helpers/actions/s3/stack_upload_template'
 require 'aws_helpers/actions/cloud_formation/stack_rollback_complete'
 require 'aws_helpers/actions/cloud_formation/stack_delete'
 require 'aws_helpers/actions/cloud_formation/stack_create_request_builder'
@@ -11,13 +11,14 @@ require 'aws_helpers/actions/cloud_formation/stack_exists'
 include AwsHelpers
 include Aws::CloudFormation::Types
 include AwsHelpers::Actions::CloudFormation
+include AwsHelpers::Actions::S3
 
 describe StackProvision do
 
   let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
   let(:aws_s3_client) { instance_double(Aws::S3::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client, aws_s3_client: aws_s3_client) }
-  let(:stack_upload_template) { instance_double(StackUploadTemplate) }
+  let(:stack_upload_template) { instance_double(S3UploadTemplate) }
   let(:stack_rollback_complete) { instance_double(StackRollbackComplete) }
   let(:stack_delete) { instance_double(StackDelete) }
   let(:stack_request_url) { instance_double(StackCreateRequestBuilder) }
@@ -78,7 +79,7 @@ describe StackProvision do
   context 'template upload required' do
 
     before(:each) do
-      allow(StackUploadTemplate).to receive(:new).with(config, stack_name, anything, s3_bucket_name, bucket_encrypt, stdout).and_return(stack_upload_template)
+      allow(S3UploadTemplate).to receive(:new).with(config, stack_name, anything, s3_bucket_name, bucket_encrypt, stdout).and_return(stack_upload_template)
       allow(stack_upload_template).to receive(:execute).and_return(url)
       allow(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_return(stack_rolledback)
       allow(StackDelete).to receive(:new).with(config, stack_name, stdout).and_return(stack_delete)

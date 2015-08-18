@@ -1,4 +1,4 @@
-require 'aws_helpers/actions/cloud_formation/stack_upload_template'
+require 'aws_helpers/actions/s3/stack_upload_template'
 require 'aws_helpers/actions/cloud_formation/stack_rollback_complete'
 require 'aws_helpers/actions/cloud_formation/stack_delete'
 require 'aws_helpers/actions/cloud_formation/stack_create_request_builder'
@@ -6,6 +6,7 @@ require 'aws_helpers/actions/cloud_formation/stack_update'
 require 'aws_helpers/actions/cloud_formation/stack_create'
 
 include AwsHelpers::Actions::CloudFormation
+include AwsHelpers::Actions::S3
 
 module AwsHelpers
   module Actions
@@ -29,7 +30,7 @@ module AwsHelpers
         end
 
         def execute
-          template_url = StackUploadTemplate.new(@config, @stack_name, @template_json, @s3_bucket_name, @bucket_encrypt, @stdout).execute if @s3_bucket_name
+          template_url = S3UploadTemplate.new(@config, @stack_name, @template_json, @s3_bucket_name, @bucket_encrypt, @stdout).execute if @s3_bucket_name
 
           if StackExists.new(@config, @stack_name).execute && StackRollbackComplete.new(@config, @stack_name).execute
             StackDelete.new(@config, @stack_name, @stdout).execute
