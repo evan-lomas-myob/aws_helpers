@@ -15,6 +15,11 @@ describe S3TemplateUrl do
   let(:bucket) { instance_double(Aws::S3::Bucket, url: url) }
 
   let(:response) { instance_double(Seahorse::Client::Response) }
+  let(:not_found) { Aws::S3::Errors::NotFound.new(config, '') }
+
+  before(:each) do
+    allow(aws_s3_client).to receive(:head_bucket)
+  end
 
   it 'should return true if a s3 bucket exists' do
     allow(AwsHelpers::Actions::S3::S3Exists).to receive(:new).with(config, s3_bucket_name).and_return(s3_exists)
@@ -24,9 +29,13 @@ describe S3TemplateUrl do
   end
 
   it 'should return the URL' do
-    allow(aws_s3_client).to receive(:head_bucket)
     allow(Aws::S3::Bucket).to receive(:new).with(s3_bucket_name, client: aws_s3_client).and_return(bucket)
     expect(AwsHelpers::Actions::S3::S3TemplateUrl.new(config, s3_bucket_name).execute).to eq(url)
+  end
+
+  it 'should return false if the bucket does not exist' do
+    allow(Aws::S3::Bucket).to receive(:new).with(s3_bucket_name, client: aws_s3_client).and_raise(not_found)
+    expect(AwsHelpers::Actions::S3::S3TemplateUrl.new(config, s3_bucket_name).execute).to eq(false)
   end
 
 end
