@@ -34,12 +34,6 @@ describe StackUpdate do
   let(:max_attempts) { 10 }
   let(:delay) { 30 }
 
-  let(:stack_update_complete) { [
-      instance_double(Aws::CloudFormation::Stack, stack_name: stack_name, stack_status: 'UPDATE_COMPLETE')
-  ] }
-
-  let(:stack_update) { instance_double(DescribeStacksOutput, stacks: stack_update_complete) }
-
   before(:each) do
     allow(cloudformation_client).to receive(:update_stack).with(request)
     allow(cloudformation_client).to receive(:describe_stacks).with(stack_name)

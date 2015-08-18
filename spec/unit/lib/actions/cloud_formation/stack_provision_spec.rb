@@ -90,6 +90,8 @@ describe StackProvision do
       allow(stack_exists).to receive(:execute).and_return(stack_exists_true)
       allow(StackUpdate).to receive(:new).with(config, stack_name, request_with_url, max_attempts, delay, stdout).and_return(stack_update)
       allow(stack_update).to receive(:execute)
+      allow(StackCreate).to receive(:new).with(config, stack_name, request_with_url, max_attempts, delay, stdout).and_return(stack_create)
+      allow(stack_create).to receive(:execute)
       allow(StackInformation).to receive(:new).with(config, stack_name, 'outputs').and_return(stack_information)
       allow(stack_information).to receive(:execute).and_return(outputs)
     end
@@ -119,8 +121,14 @@ describe StackProvision do
       expect(stack_exists).to receive(:execute).and_return(stack_exists_true)
     end
 
-    it 'should call create stack if the stack doesnt exist' do
+    it 'should call update stack if the stack already exists' do
       expect(stack_update).to receive(:execute)
+    end
+
+    it 'should call create stack if the stack does not exists' do
+      allow(StackExists).to receive(:new).with(config, stack_name).and_return(stack_exists)
+      allow(stack_exists).to receive(:execute).and_return(stack_exists_false)
+      expect(stack_create).to receive(:execute)
     end
 
     it 'should return the outputs' do
