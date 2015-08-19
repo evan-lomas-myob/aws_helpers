@@ -15,9 +15,9 @@ describe StackCreate do
   let(:stack_error_events) { instance_double(StackErrorEvents) }
   let(:check_stack_failure) { instance_double(CheckStackFailure) }
   let(:stdout) { instance_double(IO) }
-  let(:options) { { stdout: stdout} }
+  let(:options) { {stdout: stdout} }
 
-  let(:stack_name) { 'my_stack_name'}
+  let(:stack_name) { 'my_stack_name' }
   let(:url) { 'https://my-bucket-url' }
   let(:parameters) { [
       Parameter.new(parameter_key: 'param_key_1', parameter_value: 'param_value_1'),

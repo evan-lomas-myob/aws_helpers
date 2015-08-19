@@ -36,21 +36,21 @@ describe AwsHelpers::Actions::AutoScaling::UpdateDesiredCapacity do
     end
 
     it 'should call PollHealthyInstances with stdout if set in options' do
-      options = { stdout: $stdout }
+      options = {stdout: $stdout}
       expect(AwsHelpers::Actions::AutoScaling::PollInServiceInstances).to receive(:new).with(config, auto_scaling_group_name, options)
       AwsHelpers::Actions::AutoScaling::UpdateDesiredCapacity.new(config, auto_scaling_group_name, desired_capacity, options).execute
     end
 
     it 'should call PollHealthyInstances with max_attempts if set in options' do
-      pooling_options = { max_attempts: 1 }
-      options = { auto_scaling_polling: pooling_options }
+      pooling_options = {max_attempts: 1}
+      options = {auto_scaling_polling: pooling_options}
       expect(AwsHelpers::Actions::AutoScaling::PollInServiceInstances).to receive(:new).with(config, auto_scaling_group_name, pooling_options)
       AwsHelpers::Actions::AutoScaling::UpdateDesiredCapacity.new(config, auto_scaling_group_name, desired_capacity, options).execute
     end
 
     it 'should call PollHealthyInstances with delay if set in options' do
-      pooling_options = { delay: 1 }
-      options = { auto_scaling_polling: pooling_options }
+      pooling_options = {delay: 1}
+      options = {auto_scaling_polling: pooling_options}
       expect(AwsHelpers::Actions::AutoScaling::PollInServiceInstances).to receive(:new).with(config, auto_scaling_group_name, pooling_options)
       AwsHelpers::Actions::AutoScaling::UpdateDesiredCapacity.new(config, auto_scaling_group_name, desired_capacity, options).execute
     end
@@ -67,21 +67,21 @@ describe AwsHelpers::Actions::AutoScaling::UpdateDesiredCapacity do
 
 
     it 'should call PollLoadBalancersInServiceInstances with stdout if set in options' do
-      options = { stdout: $stdout }
+      options = {stdout: $stdout}
       expect(AwsHelpers::Actions::AutoScaling::PollLoadBalancersInServiceInstances).to receive(:new).with(config, auto_scaling_group_name, options)
       AwsHelpers::Actions::AutoScaling::UpdateDesiredCapacity.new(config, auto_scaling_group_name, desired_capacity, options).execute
     end
 
     it 'should call PollLoadBalancersInServiceInstances with max_attempts if set in options' do
-      pooling_options = { max_attempts: 1 }
-      options = { load_balancer_polling: pooling_options }
+      pooling_options = {max_attempts: 1}
+      options = {load_balancer_polling: pooling_options}
       expect(AwsHelpers::Actions::AutoScaling::PollLoadBalancersInServiceInstances).to receive(:new).with(config, auto_scaling_group_name, pooling_options)
       AwsHelpers::Actions::AutoScaling::UpdateDesiredCapacity.new(config, auto_scaling_group_name, desired_capacity, options).execute
     end
 
     it 'should call PollLoadBalancersInServiceInstances with delay if set in options' do
-      pooling_options = { delay: 1 }
-      options = { load_balancer_polling: pooling_options }
+      pooling_options = {delay: 1}
+      options = {load_balancer_polling: pooling_options}
       expect(AwsHelpers::Actions::AutoScaling::PollLoadBalancersInServiceInstances).to receive(:new).with(config, auto_scaling_group_name, pooling_options)
       AwsHelpers::Actions::AutoScaling::UpdateDesiredCapacity.new(config, auto_scaling_group_name, desired_capacity, options).execute
     end

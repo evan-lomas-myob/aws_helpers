@@ -48,20 +48,20 @@ describe AwsHelpers::Actions::RDS::PollInstanceAvailable do
 
   def allow_describe_db_instances(rds_client, db_instance_identifier, *responses)
     allow(rds_client)
-      .to receive(:describe_db_instances)
-            .and_return(
-              *responses.map { |response| create_response(db_instance_identifier, response) }
-            )
+        .to receive(:describe_db_instances)
+                .and_return(
+                    *responses.map { |response| create_response(db_instance_identifier, response) }
+                )
   end
 
   def create_response(db_instance_identifier, status)
     Aws::RDS::Types::DBInstanceMessage.new(
-      db_instances: [
-        Aws::RDS::Types::DBInstance.new(
-          db_instance_identifier: db_instance_identifier,
-          db_instance_status: status
-        )
-      ]
+        db_instances: [
+            Aws::RDS::Types::DBInstance.new(
+                db_instance_identifier: db_instance_identifier,
+                db_instance_status: status
+            )
+        ]
 
     )
   end

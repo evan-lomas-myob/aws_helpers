@@ -24,7 +24,7 @@ describe StackInformation do
 
   let(:stack_list) { [
       instance_double(Stack, stack_name: stack_name, parameters: parameters, outputs: outputs)
-      ] }
+  ] }
 
   let(:response) { instance_double(DescribeStacksOutput, stacks: stack_list) }
 

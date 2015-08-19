@@ -19,7 +19,7 @@ describe PollStackStatus do
   let(:max_attempts) { 2 }
   let(:delay) { 1 }
 
-  let(:options) { { stdout: stdout, max_attempts: max_attempts, delay: delay}}
+  let(:options) { {stdout: stdout, max_attempts: max_attempts, delay: delay} }
 
   let(:stack_name) { 'my_stack_name' }
 
@@ -53,7 +53,7 @@ describe PollStackStatus do
       it 'should throw an error if expected number of servers is not reached by the retry period' do
         allow(stdout).to receive(:puts).with(anything)
         allow(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_return(describe_stack_progress, describe_stack_progress, describe_stack_progress)
-        expect{ PollStackStatus.new(config, stack_name, options).execute }.to raise_error("stopped waiting after #{max_attempts} attempts without success")
+        expect { PollStackStatus.new(config, stack_name, options).execute }.to raise_error("stopped waiting after #{max_attempts} attempts without success")
       end
 
     end

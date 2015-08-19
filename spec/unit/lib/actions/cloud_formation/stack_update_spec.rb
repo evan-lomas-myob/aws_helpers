@@ -15,7 +15,7 @@ describe StackUpdate do
   let(:stack_error_events) { instance_double(StackErrorEvents) }
   let(:check_stack_failure) { instance_double(CheckStackFailure) }
   let(:stdout) { instance_double(IO) }
-  let(:options) { { stdout: stdout} }
+  let(:options) { {stdout: stdout} }
 
   let(:validation_error_no_update) { Aws::CloudFormation::Errors::ValidationError.new(config, 'No updates are to be performed.') }
   let(:validation_error_general) { Aws::CloudFormation::Errors::ValidationError.new(config, 'General Error') }

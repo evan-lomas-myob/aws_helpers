@@ -14,10 +14,10 @@ describe AwsHelpers::Actions::RDS::LatestSnapshot do
 
     let(:response) {
       Aws::RDS::Types::DBSnapshotMessage.new(
-        db_snapshots: [
-          Aws::RDS::Types::DBSnapshot.new(db_snapshot_identifier: db_snapshot_identifier_oldest, snapshot_create_time: '2005-02-01 12:00'),
-          Aws::RDS::Types::DBSnapshot.new(db_snapshot_identifier: db_snapshot_identifier_latest, snapshot_create_time: '2005-02-01 12:10')
-        ])
+          db_snapshots: [
+              Aws::RDS::Types::DBSnapshot.new(db_snapshot_identifier: db_snapshot_identifier_oldest, snapshot_create_time: '2005-02-01 12:00'),
+              Aws::RDS::Types::DBSnapshot.new(db_snapshot_identifier: db_snapshot_identifier_latest, snapshot_create_time: '2005-02-01 12:10')
+          ])
     }
 
     it 'should return the name of the latest snapshot' do

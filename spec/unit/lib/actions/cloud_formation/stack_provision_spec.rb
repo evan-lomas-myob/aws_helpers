@@ -34,12 +34,12 @@ describe StackProvision do
   let(:max_attempts) { 1 }
   let(:delay) { 1 }
 
-  let(:stack_create_polling) { {max_attempts: max_attempts, delay: delay } }
-  let(:stack_update_polling) { {max_attempts: max_attempts, delay: delay } }
+  let(:stack_create_polling) { {max_attempts: max_attempts, delay: delay} }
+  let(:stack_update_polling) { {max_attempts: max_attempts, delay: delay} }
 
-  let(:options) { { stdout: stdout, stack_create_polling: stack_create_polling, stack_update_polling: stack_update_polling } }
-  let(:stack_create_options) { { stdout: stdout, max_attempts: max_attempts, delay: delay } }
-  let(:stack_update_options) { { stdout: stdout, max_attempts: max_attempts, delay: delay } }
+  let(:options) { {stdout: stdout, stack_create_polling: stack_create_polling, stack_update_polling: stack_update_polling} }
+  let(:stack_create_options) { {stdout: stdout, max_attempts: max_attempts, delay: delay} }
+  let(:stack_update_options) { {stdout: stdout, max_attempts: max_attempts, delay: delay} }
 
   let(:stack_name) { 'my_stack_name' }
   let(:template_json) { 'json' }
@@ -69,15 +69,15 @@ describe StackProvision do
   let(:url) { 'https://my-bucket-url' }
 
   let(:request_with_url) { {stack_name: stack_name,
-                   template_url: url,
-                   parameters: parameters,
-                   capabilities: capabilities
+                            template_url: url,
+                            parameters: parameters,
+                            capabilities: capabilities
   } }
 
   let(:request_with_body) { {stack_name: stack_name,
-                            template_body: template_json,
-                            parameters: parameters,
-                            capabilities: capabilities
+                             template_body: template_json,
+                             parameters: parameters,
+                             capabilities: capabilities
   } }
 
   let(:stack_exists_true) { true }

@@ -10,7 +10,7 @@ describe StackDelete do
   let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client) }
   let(:stdout) { instance_double(IO) }
 
-  let(:stack_name) { 'my_stack_name'}
+  let(:stack_name) { 'my_stack_name' }
 
   before(:each) do
     allow(cloudformation_client).to receive(:delete_stack).with(stack_name: stack_name)

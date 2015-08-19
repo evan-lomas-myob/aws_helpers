@@ -27,8 +27,8 @@ describe StackParameterUpdateBuilder do
   ] }
 
   let(:stack_existing) {
-      Stack.new(stack_name: stack_name, parameters: existing_parameters, capabilities: ['CAPABILITY_IAM'])
-   }
+    Stack.new(stack_name: stack_name, parameters: existing_parameters, capabilities: ['CAPABILITY_IAM'])
+  }
 
   let(:stack_updated) {
     {stack_name: stack_name, use_previous_template: true, parameters: updated_parameters, capabilities: ['CAPABILITY_IAM']}

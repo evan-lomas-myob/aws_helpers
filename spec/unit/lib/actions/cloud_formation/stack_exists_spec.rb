@@ -33,7 +33,7 @@ describe StackExists do
 
   it 'any other exception gets raised' do
     allow(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_raise(validation_error_general)
-    expect{ StackExists.new(config, stack_name).execute }.to raise_error(validation_error_general)
+    expect { StackExists.new(config, stack_name).execute }.to raise_error(validation_error_general)
   end
 
 end

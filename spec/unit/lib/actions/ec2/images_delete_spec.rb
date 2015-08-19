@@ -20,7 +20,7 @@ describe AwsHelpers::Actions::EC2::ImagesDelete do
     let(:years) { 5 }
     let(:delete_time) { Time.parse('01-Jan-2015') }
 
-    before(:each){
+    before(:each) {
       allow(AwsHelpers::Utilities::DeleteTimeBuilder).to receive(:new).and_return(delete_time_builder)
       allow(delete_time_builder).to receive(:build).and_return(delete_time)
       allow(AwsHelpers::Actions::EC2::ImagesDeleteByTime).to receive(:new).and_return(images_delete_by_time)

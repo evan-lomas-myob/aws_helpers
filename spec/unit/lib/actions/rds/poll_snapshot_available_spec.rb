@@ -12,26 +12,26 @@ describe AwsHelpers::Actions::RDS::PollSnapshotAvailable do
 
   describe '#execute' do
 
-    before(:each){
+    before(:each) {
       allow(stdout).to receive(:puts)
     }
 
     it 'should call Aws::RDS::Client #describe_db_snapshots with correct parameters' do
       allow(rds_client)
-        .to receive(:describe_db_snapshots)
-              .and_return(
-                create_response(snapshot_id, 'available')
-              )
+          .to receive(:describe_db_snapshots)
+                  .and_return(
+                      create_response(snapshot_id, 'available')
+                  )
       expect(rds_client).to receive(:describe_db_snapshots).with(db_snapshot_identifier: snapshot_id)
       poll_db_snapshot(config, snapshot_id, stdout: stdout, max_attempts: 1, delay: 0)
     end
 
     it 'should call stdout with the snapshot status and progress' do
       allow(rds_client)
-        .to receive(:describe_db_snapshots)
-              .and_return(
-                create_response(snapshot_id, 'available', 100)
-              )
+          .to receive(:describe_db_snapshots)
+                  .and_return(
+                      create_response(snapshot_id, 'available', 100)
+                  )
       expect(stdout).to receive(:puts).with("RDS Snapshot #{snapshot_id} available, progress 100%")
       poll_db_snapshot(config, snapshot_id, stdout: stdout, max_attempts: 1, delay: 0)
     end
@@ -39,21 +39,21 @@ describe AwsHelpers::Actions::RDS::PollSnapshotAvailable do
 
     it 'should poll until the snapshot status is available' do
       allow(rds_client)
-        .to receive(:describe_db_snapshots)
-              .and_return(
-                create_response(snapshot_id, 'creating'),
-                create_response(snapshot_id, 'available')
-              )
+          .to receive(:describe_db_snapshots)
+                  .and_return(
+                      create_response(snapshot_id, 'creating'),
+                      create_response(snapshot_id, 'available')
+                  )
       expect(rds_client).to receive(:describe_db_snapshots).with(db_snapshot_identifier: snapshot_id).exactly(2).times
       poll_db_snapshot(config, snapshot_id, stdout: stdout, max_attempts: 2, delay: 0)
     end
 
     it 'should raise a StandardError if the snapshot status is deleting' do
       allow(rds_client)
-        .to receive(:describe_db_snapshots)
-              .and_return(
-                create_response(snapshot_id, 'deleting')
-              )
+          .to receive(:describe_db_snapshots)
+                  .and_return(
+                      create_response(snapshot_id, 'deleting')
+                  )
       expect {
         poll_db_snapshot(config, snapshot_id, stdout: stdout, max_attempts: 1, delay: 0)
       }.to raise_error(StandardError, "RDS Failed to create snapshot #{snapshot_id}")
@@ -61,10 +61,10 @@ describe AwsHelpers::Actions::RDS::PollSnapshotAvailable do
 
     it 'should raise a Aws::Waiters::Errors::TooManyAttemptsError if the snapshot is not available within the number of attempts' do
       allow(rds_client)
-        .to receive(:describe_db_snapshots)
-              .and_return(
-                create_response(snapshot_id, 'creating')
-              )
+          .to receive(:describe_db_snapshots)
+                  .and_return(
+                      create_response(snapshot_id, 'creating')
+                  )
       expect {
         poll_db_snapshot(config, snapshot_id, stdout: stdout, max_attempts: 1, delay: 0)
       }.to raise_error(Aws::Waiters::Errors::TooManyAttemptsError)
@@ -79,12 +79,12 @@ describe AwsHelpers::Actions::RDS::PollSnapshotAvailable do
 
   def create_response(snapshot_id, response, percent_progress = nil)
     Aws::RDS::Types::DBSnapshotMessage.new(
-      db_snapshots: [
-        Aws::RDS::Types::DBSnapshot.new(
-          db_snapshot_identifier: snapshot_id,
-          status: response,
-          percent_progress: percent_progress)
-      ]
+        db_snapshots: [
+            Aws::RDS::Types::DBSnapshot.new(
+                db_snapshot_identifier: snapshot_id,
+                status: response,
+                percent_progress: percent_progress)
+        ]
     )
   end
 

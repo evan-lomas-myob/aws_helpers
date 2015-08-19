@@ -7,7 +7,7 @@ describe S3Create do
 
   let(:aws_s3_client) { instance_double(Aws::S3::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_s3_client: aws_s3_client) }
-  let(:stdout) { instance_double(IO)}
+  let(:stdout) { instance_double(IO) }
 
   let(:s3_bucket_name) { 'my-bucket' }
 

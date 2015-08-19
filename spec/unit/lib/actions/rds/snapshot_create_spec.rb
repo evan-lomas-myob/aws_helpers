@@ -39,21 +39,21 @@ describe AwsHelpers::Actions::RDS::SnapshotCreate do
     end
 
     it 'should call PollInstanceAvailable with stdout if set in options' do
-      options = { stdout: stdout }
+      options = {stdout: stdout}
       expect(AwsHelpers::Actions::RDS::PollInstanceAvailable).to receive(:new).with(config, db_instance_identifier, options)
       AwsHelpers::Actions::RDS::SnapshotCreate.new(config, db_instance_identifier, options).execute
     end
 
     it 'should call PollInstanceAvailable with max_attempts if set in options' do
-      pooling_options = { max_attempts: 1 }
-      options = { instance_polling: pooling_options }
+      pooling_options = {max_attempts: 1}
+      options = {instance_polling: pooling_options}
       expect(AwsHelpers::Actions::RDS::PollInstanceAvailable).to receive(:new).with(config, db_instance_identifier, pooling_options)
       AwsHelpers::Actions::RDS::SnapshotCreate.new(config, db_instance_identifier, options).execute
     end
 
     it 'should call PollInstanceAvailable with delay if set in options' do
-      pooling_options = { delay: 1 }
-      options = { instance_polling: pooling_options }
+      pooling_options = {delay: 1}
+      options = {instance_polling: pooling_options}
       expect(AwsHelpers::Actions::RDS::PollInstanceAvailable).to receive(:new).with(config, db_instance_identifier, pooling_options)
       AwsHelpers::Actions::RDS::SnapshotCreate.new(config, db_instance_identifier, options).execute
     end
@@ -80,34 +80,34 @@ describe AwsHelpers::Actions::RDS::SnapshotCreate do
 
     it 'should call Aws::RDS::Client #create_db_snapshot with correct parameters' do
       expect(rds_client)
-        .to receive(:create_db_snapshot)
-              .with(db_instance_identifier: db_instance_identifier, db_snapshot_identifier: snapshot_name)
+          .to receive(:create_db_snapshot)
+                  .with(db_instance_identifier: db_instance_identifier, db_snapshot_identifier: snapshot_name)
       AwsHelpers::Actions::RDS::SnapshotCreate.new(config, db_instance_identifier).execute
     end
 
     it 'should call PollSnapshotAvailable #new with correct parameters' do
       expect(AwsHelpers::Actions::RDS::PollSnapshotAvailable)
-        .to receive(:new)
-              .with(config, snapshot_name, {})
+          .to receive(:new)
+                  .with(config, snapshot_name, {})
       AwsHelpers::Actions::RDS::SnapshotCreate.new(config, db_instance_identifier).execute
     end
 
     it 'should call PollSnapshotAvailable with stdout if set in options' do
-      options = { stdout: stdout }
+      options = {stdout: stdout}
       expect(AwsHelpers::Actions::RDS::PollSnapshotAvailable).to receive(:new).with(config, snapshot_name, options)
       AwsHelpers::Actions::RDS::SnapshotCreate.new(config, db_instance_identifier, options).execute
     end
 
     it 'should call PollSnapshotAvailable with max_attempts if set in options' do
-      pooling_options = { max_attempts: 1 }
-      options = { snapshot_polling: pooling_options }
+      pooling_options = {max_attempts: 1}
+      options = {snapshot_polling: pooling_options}
       expect(AwsHelpers::Actions::RDS::PollSnapshotAvailable).to receive(:new).with(config, snapshot_name, pooling_options)
       AwsHelpers::Actions::RDS::SnapshotCreate.new(config, db_instance_identifier, options).execute
     end
 
     it 'should call PollSnapshotAvailable with delay if set in options' do
-      pooling_options = { delay: 1 }
-      options = { snapshot_polling: pooling_options }
+      pooling_options = {delay: 1}
+      options = {snapshot_polling: pooling_options}
       expect(AwsHelpers::Actions::RDS::PollSnapshotAvailable).to receive(:new).with(config, snapshot_name, pooling_options)
       AwsHelpers::Actions::RDS::SnapshotCreate.new(config, db_instance_identifier, options).execute
     end

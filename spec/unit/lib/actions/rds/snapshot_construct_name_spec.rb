@@ -18,16 +18,16 @@ describe SnapshotConstructName do
   let(:resource_name) { "arn:aws:rds:#{rds_configuration.region}:#{iam_user_id}:db:#{db_instance_identifier}" }
   let(:list_users_response) {
     Aws::IAM::Types::ListUsersResponse.new(
-      users: [
-        Aws::IAM::Types::User.new(arn: iam_user_arn)
-      ]
+        users: [
+            Aws::IAM::Types::User.new(arn: iam_user_arn)
+        ]
     )
   }
   let(:tag_list_response) {
     Aws::RDS::Types::TagListMessage.new(
-      tag_list: [
-        Aws::RDS::Types::Tag.new(key: 'Name', value: db_instance_name)
-      ]
+        tag_list: [
+            Aws::RDS::Types::Tag.new(key: 'Name', value: db_instance_name)
+        ]
 
     )
   }
@@ -42,7 +42,7 @@ describe SnapshotConstructName do
 
     it 'should return the name consisting of instance identifier and date correctly' do
       expect(SnapshotConstructName.new(config, db_instance_identifier, now: Time.parse('1 Feb 2015 03:04:05')).execute)
-        .to eql("#{db_instance_identifier}-2015-02-01-03-04")
+          .to eql("#{db_instance_identifier}-2015-02-01-03-04")
     end
 
     context 'with optional parameter user_name: set to true' do
@@ -64,7 +64,7 @@ describe SnapshotConstructName do
 
       it 'should return the name consisting of instance name and date correctly' do
         expect(SnapshotConstructName.new(config, db_instance_identifier, use_name: true, now: Time.parse('1 Feb 2015 03:04:05')).execute)
-          .to eql("#{db_instance_name}-2015-02-01-03-04")
+            .to eql("#{db_instance_name}-2015-02-01-03-04")
       end
 
     end

@@ -17,25 +17,25 @@ describe AwsHelpers::Actions::RDS::SnapshotsDelete do
 
   let(:snapshots) {
     [
-      Aws::RDS::Types::DBSnapshot.new(
-        db_snapshot_identifier: '1',
-        snapshot_create_time: now.prev_year(1)),
-      Aws::RDS::Types::DBSnapshot.new(
-        db_snapshot_identifier: '2',
-        snapshot_create_time: now.prev_month(1)),
-      Aws::RDS::Types::DBSnapshot.new(
-        db_snapshot_identifier: '3',
-        snapshot_create_time: now.prev_day(1)),
-      Aws::RDS::Types::DBSnapshot.new(
-        db_snapshot_identifier: '4',
-        snapshot_create_time: now.prev_hour(1)),
-      Aws::RDS::Types::DBSnapshot.new(
-        db_snapshot_identifier: '5',
-        snapshot_create_time: now)
+        Aws::RDS::Types::DBSnapshot.new(
+            db_snapshot_identifier: '1',
+            snapshot_create_time: now.prev_year(1)),
+        Aws::RDS::Types::DBSnapshot.new(
+            db_snapshot_identifier: '2',
+            snapshot_create_time: now.prev_month(1)),
+        Aws::RDS::Types::DBSnapshot.new(
+            db_snapshot_identifier: '3',
+            snapshot_create_time: now.prev_day(1)),
+        Aws::RDS::Types::DBSnapshot.new(
+            db_snapshot_identifier: '4',
+            snapshot_create_time: now.prev_hour(1)),
+        Aws::RDS::Types::DBSnapshot.new(
+            db_snapshot_identifier: '5',
+            snapshot_create_time: now)
     ].shuffle
   }
   let(:response) { Aws::RDS::Types::DBSnapshotMessage.new(
-    db_snapshots: snapshots)
+      db_snapshots: snapshots)
   }
 
   describe '#execute' do
