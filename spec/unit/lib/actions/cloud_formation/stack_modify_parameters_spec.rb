@@ -17,10 +17,10 @@ describe StackModifyParameters do
   let(:max_attempts) { 1 }
   let(:delay) { 1 }
 
-  let(:stack_modify_parameters_polling) { {max_attempts: max_attempts, delay: delay } }
+  let(:stack_modify_parameters_polling) { {max_attempts: max_attempts, delay: delay} }
 
-  let(:options) { { stdout: stdout, stack_modify_parameters_polling: stack_modify_parameters_polling } }
-  let(:stack_modify_parameters_options) { { stdout: stdout, max_attempts: max_attempts, delay: delay } }
+  let(:options) { {stdout: stdout, stack_modify_parameters_polling: stack_modify_parameters_polling} }
+  let(:stack_modify_parameters_options) { {stdout: stdout, max_attempts: max_attempts, delay: delay} }
 
   let(:stack_name) { 'my_stack_name' }
 
@@ -44,14 +44,14 @@ describe StackModifyParameters do
   ] }
 
   let(:stack_existing) { [
-    Stack.new(stack_name: stack_name, parameters: existing_parameters, capabilities: ['CAPABILITY_IAM'] )
-   ] }
+      Stack.new(stack_name: stack_name, parameters: existing_parameters, capabilities: ['CAPABILITY_IAM'])
+  ] }
 
   let(:stack_updated) {
-      {stack_name: stack_name, use_previous_template: true, parameters: updated_parameters, capabilities: ['CAPABILITY_IAM']}
-   }
+    {stack_name: stack_name, use_previous_template: true, parameters: updated_parameters, capabilities: ['CAPABILITY_IAM']}
+  }
 
-  let(:stack_events) { [ instance_double(StackEvent, resource_status: 'status' ) ] }
+  let(:stack_events) { [instance_double(StackEvent, resource_status: 'status')] }
   let(:stack_response) { instance_double(DescribeStacksOutput, stacks: stack_existing) }
   let(:stack_events_response) { instance_double(DescribeStackEventsOutput, stack_events: stack_events, next_token: nil) }
 
@@ -70,7 +70,6 @@ describe StackModifyParameters do
   after(:each) do
     StackModifyParameters.new(config, stack_name, parameters_to_update, options).execute
   end
-
 
   it 'should call describe stack to get the current stack parameters' do
     expect(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_return(stack_response)
