@@ -29,7 +29,6 @@ describe AwsHelpers::AutoScaling do
       it 'should update the auto scaling groups desired capacity' do
         AwsHelpers::AutoScaling.new.update_desired_capacity(auto_scaling_group_name, 1)
         expect(AwsHelpers::AutoScaling.new.retrieve_desired_capacity(auto_scaling_group_name)).to be(1)
-
       end
 
     end
