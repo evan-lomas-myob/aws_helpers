@@ -17,7 +17,7 @@ describe PollStackStatus do
   let(:stdout) { instance_double(IO) }
 
   let(:max_attempts) { 2 }
-  let(:delay) { 1 }
+  let(:delay) { 0 }
 
   let(:options) { {stdout: stdout, max_attempts: max_attempts, delay: delay} }
 

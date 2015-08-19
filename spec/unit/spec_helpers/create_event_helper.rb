@@ -1,6 +1,5 @@
 require 'time'
 require 'aws-sdk-resources'
-require 'rspec'
 
 class CreateEventHelper
 

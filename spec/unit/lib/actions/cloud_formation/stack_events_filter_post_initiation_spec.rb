@@ -1,6 +1,6 @@
 require 'aws-sdk-resources'
 require 'aws_helpers/actions/cloud_formation/stack_events_filter_post_initiation'
-require_relative '../../../../../spec/create_event_helper'
+require_relative '../../../spec_helpers/create_event_helper'
 
 include AwsHelpers::Actions::CloudFormation
 
