@@ -36,12 +36,14 @@ module AwsHelpers
       ImagesDelete.new(config, image_id, options).execute
     end
 
+    # Delete images older than specified time
     # @param image_id [String] The ID of the AMI
     # @param time [String] Oldest time string in EC2 instance tags to remove after
     def images_delete_by_time(image_id, time)
       ImagesDeleteByTime.new(config, image_id, time).execute
     end
 
+    # Return a list of images that match a given list of tags
     # @param tags [Array] List of tags to filter AMI's on
     # @return [Array] list of images matching the tags list
     def images_find_by_tags(tags = [])
