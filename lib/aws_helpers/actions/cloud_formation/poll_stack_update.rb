@@ -1,4 +1,4 @@
-require 'aws-sdk-resources'
+require 'aws_helpers/utilities/polling'
 
 module AwsHelpers
   module Actions
@@ -15,12 +15,14 @@ module AwsHelpers
         end
 
         def execute
+          states = %w(CREATE_COMPLETE DELETE_COMPLETE ROLLBACK_COMPLETE UPDATE_COMPLETE UPDATE_ROLLBACK_COMPLETE ROLLBACK_FAILED UPDATE_ROLLBACK_FAILED DELETE_FAILED)
           client = @config.aws_cloud_formation_client
-          responses = %w(CREATE_COMPLETE DELETE_COMPLETE ROLLBACK_COMPLETE UPDATE_COMPLETE UPDATE_ROLLBACK_COMPLETE ROLLBACK_FAILED UPDATE_ROLLBACK_FAILED DELETE_FAILED)
-          stack_info = Aws::CloudFormation::Stack.new(@stack_name, client: client)
-          stack_info.wait_until(max_attempts: @max_attempts, delay: @delay) { |stack_info|
-            @stdout.puts "Stack - #{@stack_name} status #{stack_info.stack_status}"
-            responses.include?(stack_info.stack_status)
+          polling = AwsHelpers::Utilities::Polling.new
+          polling.start(@delay, @max_attempts) {
+            response = client.describe_stacks(stack_name: @stack_name).stacks.first
+            output = "Stack - #{@stack_name} status #{response.stack_status}"
+            @stdout.puts(output)
+            polling.stop if states.include?(response.stack_status)
           }
         end
 
@@ -29,4 +31,5 @@ module AwsHelpers
     end
 
   end
+
 end
