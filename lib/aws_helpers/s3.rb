@@ -17,22 +17,22 @@ module AwsHelpers
     end
 
     # @param s3_bucket_name [String] Name given to the S3 Bucket to create
-    def s3_create(s3_bucket_name:)
+    def s3_create(s3_bucket_name)
       AwsHelpers::Actions::S3::S3Create.new(config, s3_bucket_name).execute
     end
 
     # @param s3_bucket_name [String] Name given to the S3 Bucket
-    def s3_exists?(s3_bucket_name:)
+    def s3_exists?(s3_bucket_name)
       AwsHelpers::Actions::S3::S3Exists.new(config, s3_bucket_name).execute
     end
 
     # @param s3_bucket_name [String] Name given to the S3 Bucket
-    def s3_url(s3_bucket_name:)
+    def s3_url(s3_bucket_name)
       AwsHelpers::Actions::S3::S3TemplateUrl.new(config, s3_bucket_name).execute
     end
 
     # @param s3_bucket_name [String] Name given to the S3 Bucket
-    def s3_location(s3_bucket_name:)
+    def s3_location(s3_bucket_name)
       AwsHelpers::Actions::S3::S3Location.new(config, s3_bucket_name).execute
     end
 
@@ -41,7 +41,7 @@ module AwsHelpers
     # @param s3_bucket_name [String] Name given to the S3 Bucket
     # @param bucket_encrypt [Boolean] Encrypt to S3 content
 
-    def upload_stack_template(stack_name:, template_json:, s3_bucket_name:, bucket_encrypt:)
+    def upload_stack_template(stack_name, template_json, s3_bucket_name, bucket_encrypt)
       AwsHelpers::Actions::S3::S3UploadTemplate.new(config, stack_name, template_json, s3_bucket_name, bucket_encrypt).execute
     end
 
