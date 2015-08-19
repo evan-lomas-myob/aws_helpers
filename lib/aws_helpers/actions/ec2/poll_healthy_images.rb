@@ -16,12 +16,12 @@ module AwsHelpers
         # STOPPING      = 'stopping'      # 64
         # STOPPED       = 'stopped'       # 80
 
-        def initialize(stdout, config, instance_id, expected_number, timeout)
-          @stdout = stdout
+        def initialize(config, instance_id, expected_number, timeout, stdout = $stdout)
           @config = config
           @instance_id = instance_id
           @expected_number = expected_number
           @timeout = timeout
+          @stdout = stdout
         end
 
         def execute

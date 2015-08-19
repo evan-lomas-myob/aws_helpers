@@ -4,14 +4,14 @@ module AwsHelpers
 
       class ImagesDeleteByTime
 
-        def initialize(config, tag_name_value, creation_time)
+        def initialize(config, image_id, creation_time)
           @config = config
-          @tag_name_value = tag_name_value
+          @image_id = image_id
           @creation_time = creation_time
         end
 
         def execute
-          response = ImagesFindByTags.new(@config, [ {name: 'Name', value: @tag_name_value} ]).execute
+          response = ImagesFindByTags.new(@config, [ {name: 'Name', value: @image_id} ]).execute
           response.images.each do |image|
             next unless image.state == 'available'
             should_delete = Time.parse(image.creation_date) <= @creation_time

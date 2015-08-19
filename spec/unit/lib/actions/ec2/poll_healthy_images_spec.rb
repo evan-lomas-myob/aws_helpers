@@ -33,17 +33,17 @@ describe PollHealthyImages do
 
     it 'should call describe wait_until with correct parameters on the AWS::EC2::Client' do
       expect(aws_ec2_client).to receive(:wait_until).with(:instance_status_ok, instance_id: [instance_id])
-      PollHealthyImages.new(stdout, config, instance_id, 1, 60).execute
+      PollHealthyImages.new(config, instance_id, 1, 60, stdout).execute
     end
 
     it 'should set the waiters max attempts to 4' do
       expect(waiter).to receive(:max_attempts=).with(4)
-      PollHealthyImages.new(stdout, config, instance_id, 1, 60).execute
+      PollHealthyImages.new(config, instance_id, 1, 60, stdout).execute
     end
 
     it 'log to stdout' do
       expect(stdout).to receive(:puts).with('Image State is running')
-      PollHealthyImages.new(stdout, config, instance_id, 1, 60).execute
+      PollHealthyImages.new(config, instance_id, 1, 60, stdout).execute
     end
 
   end

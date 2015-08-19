@@ -15,11 +15,11 @@ module AwsHelpers
 
         def execute
           client = @config.aws_ec2_client
-          image_ami_id = client.create_image(instance_id: @instance_id, name: @instance_name)
-          client.create_tags(resources: [image_ami_id],
+          image_id = client.create_image(instance_id: @instance_id, name: @instance_name)
+          client.create_tags(resources: [image_id],
                              tags: [{key: 'Name', value: @instance_name}, {key: 'Date', value: @now.to_s}] + @additional_tags
           )
-          AwsHelpers::Actions::EC2::PollHealthyImages.new(@stdout, @config, @instance_id, 1, 60).execute
+          AwsHelpers::Actions::EC2::PollHealthyImages.new(@config, @instance_id, 1, 60).execute
         end
 
       end
