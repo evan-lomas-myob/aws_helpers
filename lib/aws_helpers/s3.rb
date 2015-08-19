@@ -16,31 +16,39 @@ module AwsHelpers
       super(options)
     end
 
+    # Create a new s3 bucket
     # @param s3_bucket_name [String] Name given to the S3 Bucket to create
     def s3_create(s3_bucket_name)
       AwsHelpers::Actions::S3::S3Create.new(config, s3_bucket_name).execute
     end
 
+    # Return true if the s3 Bucket exists
     # @param s3_bucket_name [String] Name given to the S3 Bucket
+    # @return [Boolean] True if the Bucket exists
     def s3_exists?(s3_bucket_name)
       AwsHelpers::Actions::S3::S3Exists.new(config, s3_bucket_name).execute
     end
 
+    # Get the S3 Bucket URL
     # @param s3_bucket_name [String] Name given to the S3 Bucket
+    # @return [String] The S3 Bucket URL
     def s3_url(s3_bucket_name)
       AwsHelpers::Actions::S3::S3TemplateUrl.new(config, s3_bucket_name).execute
     end
 
+    # Get the S3 Bucket location
     # @param s3_bucket_name [String] Name given to the S3 Bucket
+    # @return [String] The S3 Bucket AWS Location
     def s3_location(s3_bucket_name)
       AwsHelpers::Actions::S3::S3Location.new(config, s3_bucket_name).execute
     end
 
+    # Create an s3 bucket if it doesn't exist and upload a CloudFormation templates
     # @param stack_name [String] Name given to the stack
     # @param template_json [String] JSON Template as the request body
     # @param s3_bucket_name [String] Name given to the S3 Bucket
     # @param bucket_encrypt [Boolean] Encrypt to S3 content
-
+    # @return [String] The S3 Bucket URL
     def upload_stack_template(stack_name, template_json, s3_bucket_name, bucket_encrypt)
       AwsHelpers::Actions::S3::S3UploadTemplate.new(config, stack_name, template_json, s3_bucket_name, bucket_encrypt).execute
     end
