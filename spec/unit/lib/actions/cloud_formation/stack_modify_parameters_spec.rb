@@ -2,7 +2,7 @@ require 'aws_helpers/cloud_formation'
 require 'aws_helpers/actions/cloud_formation/stack_information'
 require 'aws_helpers/actions/cloud_formation/stack_parameter_update_builder'
 require 'aws_helpers/actions/cloud_formation/stack_modify_parameters'
-require 'aws_helpers/actions/cloud_formation/poll_stack_update'
+require 'aws_helpers/actions/cloud_formation/poll_stack_status'
 
 include Aws::CloudFormation::Types
 include AwsHelpers
@@ -13,12 +13,13 @@ describe StackModifyParameters do
   let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client) }
   let(:stdout) { instance_double(IO) }
+  let(:options) { { stdout: stdout} }
 
   let(:stack_name) { 'my_stack_name' }
 
   let(:stack_information) { instance_double(StackInformation) }
   let(:stack_parameter_update_builder) { instance_double(StackParameterUpdateBuilder) }
-  let(:poll_stack_update) { instance_double(PollStackUpdate) }
+  let(:poll_stack_update) { instance_double(PollStackStatus) }
 
   let(:parameters_to_update) { [
       {parameter_key: 'param_key_1', parameter_value: 'param_value_1'},
@@ -55,12 +56,12 @@ describe StackModifyParameters do
     allow(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_return(stack_response)
     allow(cloudformation_client).to receive(:describe_stack_events).with(stack_name: stack_name, next_token: nil).and_return(stack_events_response)
     allow(cloudformation_client).to receive(:update_stack).with(stack_updated)
-    allow(PollStackUpdate).to receive(:new).with(config, stack_name, 10, 5, stdout).and_return(poll_stack_update)
+    allow(PollStackStatus).to receive(:new).with(config, stack_name, options).and_return(poll_stack_update)
     allow(poll_stack_update).to receive(:execute)
   end
 
   after(:each) do
-    StackModifyParameters.new(config, stack_name, parameters_to_update, max_attempts, delay, stdout).execute
+    StackModifyParameters.new(config, stack_name, parameters_to_update, options).execute
   end
 
 

@@ -4,13 +4,12 @@ module AwsHelpers
 
       class StackCreate
 
-        def initialize(config, stack_name, request, max_attempts = 10, delay = 30, stdout = $stdout)
+        def initialize(config, stack_name, request, options = {})
           @config = config
           @stack_name = stack_name
           @request = request
-          @max_attempts = max_attempts
-          @delay = delay
-          @stdout = stdout
+          @options = options
+          @stdout = options[:stdout] || $stdout
         end
 
         def execute
@@ -20,7 +19,7 @@ module AwsHelpers
           @stdout.puts "Creating #{@stack_name}"
           client.create_stack(@request)
 
-          AwsHelpers::Actions::CloudFormation::PollStackUpdate.new(@config, @stack_name, @max_attempts, @delay, @stdout).execute
+          AwsHelpers::Actions::CloudFormation::PollStackStatus.new(@config, @stack_name, @options).execute
           AwsHelpers::Actions::CloudFormation::StackErrorEvents.new(@config, @stack_name, @stdout).execute
           AwsHelpers::Actions::CloudFormation::CheckStackFailure.new(@config, @stack_name).execute
 

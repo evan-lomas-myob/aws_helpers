@@ -14,7 +14,7 @@ module AwsHelpers
 
       class StackProvision
 
-        def initialize(config, stack_name, template_json, parameters, capabilities, s3_bucket_name, bucket_encrypt, stdout = $stdout)
+        def initialize(config, stack_name, template_json, parameters, capabilities, s3_bucket_name, bucket_encrypt, options = {})
           @config = config
           @stack_name = stack_name
           @template_json = template_json
@@ -22,11 +22,9 @@ module AwsHelpers
           @capabilities = capabilities
           @s3_bucket_name = s3_bucket_name
           @bucket_encrypt = bucket_encrypt
-          @stdout = stdout
-
-          @max_attempts = 10
-          @delay = 30
-
+          @stdout = options[:stdout]
+          @poll_stack_create_options = create_options(@stdout, options[:stack_provision_polling])
+          @poll_stack_update_options = create_options(@stdout, options[:stack_update_polling])
         end
 
         def execute
@@ -41,12 +39,24 @@ module AwsHelpers
           StackInformation.new(@config, @stack_name, 'outputs').execute
         end
 
+        def create_options(stdout, pooling)
+          options = {}
+          options[:stdout] = stdout if stdout
+          if pooling
+            max_attempts = pooling[:max_attempts]
+            delay = pooling[:delay]
+            options[:max_attempts] = max_attempts if max_attempts
+            options[:delay] = delay if delay
+          end
+          options
+        end
+
         def update(request)
-          StackUpdate.new(@config, @stack_name, request, @max_attempts, @delay, @stdout).execute
+          StackUpdate.new(@config, @stack_name, request, @poll_stack_update_options).execute
         end
 
         def create(request)
-          StackCreate.new(@config, @stack_name, request, @max_attempts, @delay, @stdout).execute
+          StackCreate.new(@config, @stack_name, request, @poll_stack_create_options).execute
         end
 
       end

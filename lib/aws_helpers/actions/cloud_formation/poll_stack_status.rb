@@ -4,14 +4,14 @@ module AwsHelpers
   module Actions
     module CloudFormation
 
-      class PollStackUpdate
+      class PollStackStatus
 
-        def initialize(config, stack_name, max_attempts, delay, stdout)
+        def initialize(config, stack_name, options = {})
           @config = config
           @stack_name = stack_name
-          @max_attempts = max_attempts
-          @delay = delay
-          @stdout = stdout
+          @stdout = options[:stdout] || $stdout
+          @delay = options[:delay] || 15
+          @max_attempts = options[:max_attempts] || 20
         end
 
         def execute

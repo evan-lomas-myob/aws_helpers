@@ -30,6 +30,7 @@ describe StackProvision do
   let(:stack_create) { instance_double(StackCreate) }
 
   let(:stdout) { instance_double(IO) }
+  let(:options) { { stdout: stdout}}
 
   let(:stack_name) { 'my_stack_name' }
   let(:template_json) { 'json' }
@@ -88,16 +89,16 @@ describe StackProvision do
       allow(stack_request_body).to receive(:execute).and_return(request_with_url)
       allow(StackExists).to receive(:new).with(config, stack_name).and_return(stack_exists)
       allow(stack_exists).to receive(:execute).and_return(stack_exists_true)
-      allow(StackUpdate).to receive(:new).with(config, stack_name, request_with_url, max_attempts, delay, stdout).and_return(stack_update)
+      allow(StackUpdate).to receive(:new).with(config, stack_name, request_with_url, options).and_return(stack_update)
       allow(stack_update).to receive(:execute)
-      allow(StackCreate).to receive(:new).with(config, stack_name, request_with_url, max_attempts, delay, stdout).and_return(stack_create)
+      allow(StackCreate).to receive(:new).with(config, stack_name, request_with_url, options).and_return(stack_create)
       allow(stack_create).to receive(:execute)
       allow(StackInformation).to receive(:new).with(config, stack_name, 'outputs').and_return(stack_information)
       allow(stack_information).to receive(:execute).and_return(outputs)
     end
 
     after(:each) do
-      StackProvision.new(config, stack_name, template_json, parameters, capabilities, s3_bucket_name, bucket_encrypt, stdout).execute
+      StackProvision.new(config, stack_name, template_json, parameters, capabilities, s3_bucket_name, bucket_encrypt, options).execute
     end
 
     it 'should upload the template if the s3_bucket_name is not nil' do
@@ -132,7 +133,7 @@ describe StackProvision do
     end
 
     it 'should return the outputs' do
-      expect(StackProvision.new(config, stack_name, template_json, parameters, capabilities, s3_bucket_name, bucket_encrypt, stdout).execute).to eq(outputs)
+      expect(StackProvision.new(config, stack_name, template_json, parameters, capabilities, s3_bucket_name, bucket_encrypt, options).execute).to eq(outputs)
     end
 
   end
@@ -146,11 +147,11 @@ describe StackProvision do
       allow(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_return(stack_created)
       allow(StackCreateRequestBuilder).to receive(:new).with(stack_name, nil, template_json, parameters, capabilities).and_return(stack_request_body)
       expect(stack_request_body).to receive(:execute).and_return(request_with_body)
-      allow(StackUpdate).to receive(:new).with(config, stack_name, request_with_body, max_attempts, delay, stdout).and_return(stack_update)
+      allow(StackUpdate).to receive(:new).with(config, stack_name, request_with_body, options).and_return(stack_update)
       allow(stack_update).to receive(:execute)
       allow(StackInformation).to receive(:new).with(config, stack_name, 'outputs').and_return(stack_information)
       allow(stack_information).to receive(:execute).and_return(outputs)
-      StackProvision.new(config, stack_name, template_json, parameters, capabilities, s3_bucket_name, bucket_encrypt, stdout).execute
+      StackProvision.new(config, stack_name, template_json, parameters, capabilities, s3_bucket_name, bucket_encrypt, options).execute
     end
 
   end
