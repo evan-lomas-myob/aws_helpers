@@ -60,8 +60,8 @@ describe AwsHelpers::CloudFormation do
                                                    default_options).and_return(stack_provision)
 
       AwsHelpers::CloudFormation.new(options).stack_provision(
-          stack_name: stack_name,
-          template: template)
+          stack_name,
+          template)
 
     end
 
@@ -77,33 +77,33 @@ describe AwsHelpers::CloudFormation do
                                                    options).and_return(stack_provision)
 
       AwsHelpers::CloudFormation.new(options).stack_provision(
-          stack_name: stack_name,
-          template: template,
-          parameters: parameters,
-          capabilities: capabilities,
-          bucket_name: bucket_name,
-          bucket_encrypt: bucket_encrypt,
-          options: options)
+          stack_name,
+          template,
+          parameters,
+          capabilities,
+          bucket_name,
+          bucket_encrypt,
+          options)
 
     end
 
     it 'should call StackProvision execute method' do
       expect(stack_provision).to receive(:execute)
       AwsHelpers::CloudFormation.new(options).stack_provision(
-          stack_name: stack_name,
-          template: template)
+          stack_name,
+          template)
     end
 
     it 'should call StackProvision execute method with values' do
       expect(stack_provision).to receive(:execute)
       AwsHelpers::CloudFormation.new(options).stack_provision(
-          stack_name: stack_name,
-          template: template,
-          parameters: parameters,
-          capabilities: capabilities,
-          bucket_name: bucket_name,
-          bucket_encrypt: bucket_encrypt,
-          options: options)
+          stack_name,
+          template,
+          parameters,
+          capabilities,
+          bucket_name,
+          bucket_encrypt,
+          options)
     end
 
   end
@@ -118,7 +118,7 @@ describe AwsHelpers::CloudFormation do
       allow(stack_delete).to receive(:execute)
     end
 
-    subject { AwsHelpers::CloudFormation.new(options).stack_delete(stack_name: stack_name, stdout: stdout) }
+    subject { AwsHelpers::CloudFormation.new(options).stack_delete(stack_name, stdout) }
 
     it 'should create StackDelete with stack name as argument' do
       expect(StackDelete).to receive(:new).with(config, stack_name, stdout)
@@ -145,7 +145,7 @@ describe AwsHelpers::CloudFormation do
       allow(stack_exists).to receive(:execute)
     end
 
-    subject { AwsHelpers::CloudFormation.new(options).stack_exists?(stack_name: stack_name) }
+    subject { AwsHelpers::CloudFormation.new(options).stack_exists?(stack_name) }
 
     it 'should create StackExists with correct parameters ' do
       expect(StackExists).to receive(:new).with(config, stack_name)
@@ -158,12 +158,12 @@ describe AwsHelpers::CloudFormation do
     end
 
     it 'should return true is the stack exists' do
-      allow(stack_exists).to receive(:execute).with(stack_name: stack_name).and_return(true)
+      allow(stack_exists).to receive(:execute).with(stack_name).and_return(true)
       # Add expect
     end
 
     it 'should return false if the stack does not exist' do
-      allow(stack_exists).to receive(:execute).with(stack_name: stack_name).and_return(false)
+      allow(stack_exists).to receive(:execute).with(stack_name).and_return(false)
       # Add expect
     end
 
@@ -183,12 +183,12 @@ describe AwsHelpers::CloudFormation do
 
       it 'should call StackInformation execute method' do
         expect(stack_information).to receive(:execute)
-        AwsHelpers::CloudFormation.new(options).stack_information(stack_name: stack_name)
+        AwsHelpers::CloudFormation.new(options).stack_information(stack_name)
       end
 
       it 'should create StackInformation with default parameters info_field' do
         expect(StackInformation).to receive(:new).with(config, stack_name, 'parameters')
-        AwsHelpers::CloudFormation.new(options).stack_information(stack_name: stack_name)
+        AwsHelpers::CloudFormation.new(options).stack_information(stack_name)
       end
 
     end
@@ -199,7 +199,7 @@ describe AwsHelpers::CloudFormation do
 
       it 'should create StackInformation using parameters info_field' do
         expect(StackInformation).to receive(:new).with(config, stack_name, info_field)
-        AwsHelpers::CloudFormation.new(options).stack_information(stack_name: stack_name, info_field: info_field)
+        AwsHelpers::CloudFormation.new(options).stack_information(stack_name, info_field)
       end
 
     end
@@ -210,7 +210,7 @@ describe AwsHelpers::CloudFormation do
 
       it 'should create StackInformation using output info_field' do
         expect(StackInformation).to receive(:new).with(config, stack_name, info_field)
-        AwsHelpers::CloudFormation.new(options).stack_information(stack_name: stack_name, info_field: info_field)
+        AwsHelpers::CloudFormation.new(options).stack_information(stack_name, info_field)
       end
 
     end
@@ -231,12 +231,12 @@ describe AwsHelpers::CloudFormation do
 
     it 'should create StackModifyParameters' do
       expect(StackModifyParameters).to receive(:new).with(config, stack_name, parameters, options)
-      AwsHelpers::CloudFormation.new(options).stack_modify_parameters(stack_name: stack_name, parameters: parameters, options: options)
+      AwsHelpers::CloudFormation.new(options).stack_modify_parameters(stack_name, parameters, options)
     end
 
     it 'should call StackModifyParameters execute method' do
       expect(stack_modify_parameters).to receive(:execute)
-      AwsHelpers::CloudFormation.new(options).stack_modify_parameters(stack_name: stack_name, parameters: parameters, options: options)
+      AwsHelpers::CloudFormation.new(options).stack_modify_parameters(stack_name, parameters, options)
     end
 
   end
