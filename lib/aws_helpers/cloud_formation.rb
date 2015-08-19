@@ -24,7 +24,7 @@ module AwsHelpers
     # @param bucket_encrypt [Boolean] Optional server side encryption 'AES256'
     # @param [Hash] options Optional parameters that can be overridden.
     # @option options [IO] :stdout Override $stdout when logging output
-    # @option options [Hash{Symbol => Integer}] :stack_provision_polling Override auto scaling default polling
+    # @option options [Hash{Symbol => Integer}] :stack_create_polling Override auto scaling default polling
     #
     #   defaults:
     #

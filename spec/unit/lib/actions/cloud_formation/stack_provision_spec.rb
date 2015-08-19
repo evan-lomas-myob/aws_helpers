@@ -30,7 +30,16 @@ describe StackProvision do
   let(:stack_create) { instance_double(StackCreate) }
 
   let(:stdout) { instance_double(IO) }
-  let(:options) { { stdout: stdout}}
+
+  let(:max_attempts) { 1 }
+  let(:delay) { 1 }
+
+  let(:stack_create_polling) { {max_attempts: max_attempts, delay: delay } }
+  let(:stack_update_polling) { {max_attempts: max_attempts, delay: delay } }
+
+  let(:options) { { stdout: stdout, stack_create_polling: stack_create_polling, stack_update_polling: stack_update_polling } }
+  let(:stack_create_options) { { stdout: stdout, max_attempts: max_attempts, delay: delay } }
+  let(:stack_update_options) { { stdout: stdout, max_attempts: max_attempts, delay: delay } }
 
   let(:stack_name) { 'my_stack_name' }
   let(:template_json) { 'json' }
@@ -74,9 +83,6 @@ describe StackProvision do
   let(:stack_exists_true) { true }
   let(:stack_exists_false) { false }
 
-  let(:max_attempts) { 10 }
-  let(:delay) { 30 }
-
   context 'template upload required' do
 
     before(:each) do
@@ -89,9 +95,9 @@ describe StackProvision do
       allow(stack_request_body).to receive(:execute).and_return(request_with_url)
       allow(StackExists).to receive(:new).with(config, stack_name).and_return(stack_exists)
       allow(stack_exists).to receive(:execute).and_return(stack_exists_true)
-      allow(StackUpdate).to receive(:new).with(config, stack_name, request_with_url, options).and_return(stack_update)
+      allow(StackUpdate).to receive(:new).with(config, stack_name, request_with_url, stack_update_options).and_return(stack_update)
       allow(stack_update).to receive(:execute)
-      allow(StackCreate).to receive(:new).with(config, stack_name, request_with_url, options).and_return(stack_create)
+      allow(StackCreate).to receive(:new).with(config, stack_name, request_with_url, stack_create_options).and_return(stack_create)
       allow(stack_create).to receive(:execute)
       allow(StackInformation).to receive(:new).with(config, stack_name, 'outputs').and_return(stack_information)
       allow(stack_information).to receive(:execute).and_return(outputs)
@@ -147,7 +153,7 @@ describe StackProvision do
       allow(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_return(stack_created)
       allow(StackCreateRequestBuilder).to receive(:new).with(stack_name, nil, template_json, parameters, capabilities).and_return(stack_request_body)
       expect(stack_request_body).to receive(:execute).and_return(request_with_body)
-      allow(StackUpdate).to receive(:new).with(config, stack_name, request_with_body, options).and_return(stack_update)
+      allow(StackUpdate).to receive(:new).with(config, stack_name, request_with_body, stack_update_options).and_return(stack_update)
       allow(stack_update).to receive(:execute)
       allow(StackInformation).to receive(:new).with(config, stack_name, 'outputs').and_return(stack_information)
       allow(stack_information).to receive(:execute).and_return(outputs)

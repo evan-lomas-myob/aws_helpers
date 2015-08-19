@@ -23,7 +23,7 @@ module AwsHelpers
           @s3_bucket_name = s3_bucket_name
           @bucket_encrypt = bucket_encrypt
           @stdout = options[:stdout]
-          @poll_stack_create_options = create_options(@stdout, options[:stack_provision_polling])
+          @poll_stack_create_options = create_options(@stdout, options[:stack_create_polling])
           @poll_stack_update_options = create_options(@stdout, options[:stack_update_polling])
         end
 
