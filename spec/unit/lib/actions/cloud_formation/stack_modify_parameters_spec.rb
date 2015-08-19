@@ -13,7 +13,14 @@ describe StackModifyParameters do
   let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client) }
   let(:stdout) { instance_double(IO) }
-  let(:options) { { stdout: stdout} }
+
+  let(:max_attempts) { 1 }
+  let(:delay) { 1 }
+
+  let(:stack_modify_parameters_polling) { {max_attempts: max_attempts, delay: delay } }
+
+  let(:options) { { stdout: stdout, stack_modify_parameters_polling: stack_modify_parameters_polling } }
+  let(:stack_modify_parameters_options) { { stdout: stdout, max_attempts: max_attempts, delay: delay } }
 
   let(:stack_name) { 'my_stack_name' }
 
@@ -56,7 +63,7 @@ describe StackModifyParameters do
     allow(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_return(stack_response)
     allow(cloudformation_client).to receive(:describe_stack_events).with(stack_name: stack_name, next_token: nil).and_return(stack_events_response)
     allow(cloudformation_client).to receive(:update_stack).with(stack_updated)
-    allow(PollStackStatus).to receive(:new).with(config, stack_name, options).and_return(poll_stack_update)
+    allow(PollStackStatus).to receive(:new).with(config, stack_name, stack_modify_parameters_options).and_return(poll_stack_update)
     allow(poll_stack_update).to receive(:execute)
   end
 
