@@ -52,13 +52,13 @@ describe AwsHelpers::CloudFormation do
   end
 
   after(:each) do
-    AwsHelpers::CloudFormation.new.stack_delete(stack_name: stack_name)
+    AwsHelpers::CloudFormation.new.stack_delete(stack_name)
   end
 
   describe '#stack_exists?' do
 
     it 'should check if the stack exists once it is created' do
-      expect(AwsHelpers::CloudFormation.new.stack_exists?(stack_name: stack_name)).to eq(true)
+      expect(AwsHelpers::CloudFormation.new.stack_exists?(stack_name)).to eq(true)
     end
 
   end
@@ -67,12 +67,12 @@ describe AwsHelpers::CloudFormation do
 
     it 'should retrieve the updated parameters' do
       info_field = 'parameters'
-      expect(AwsHelpers::CloudFormation.new.stack_information(stack_name: stack_name, info_field: info_field)).to eq(parameters_initial)
+      expect(AwsHelpers::CloudFormation.new.stack_information(stack_name, info_field)).to eq(parameters_initial)
     end
 
     it 'should retrieve the outputs' do
       info_field = 'outputs'
-      expect(AwsHelpers::CloudFormation.new.stack_information(stack_name: stack_name, info_field: info_field)).to eq(outputs)
+      expect(AwsHelpers::CloudFormation.new.stack_information(stack_name, info_field)).to eq(outputs)
     end
 
   end
@@ -81,9 +81,9 @@ describe AwsHelpers::CloudFormation do
 
     it 'should retrieve the original parameters, modify, then check the new parameters' do
       info_field = 'parameters'
-      expect(AwsHelpers::CloudFormation.new.stack_information(stack_name: stack_name, info_field: info_field)).to eq(parameters_initial)
-      expect(AwsHelpers::CloudFormation.new.stack_modify_parameters(stack_name: stack_name, parameters: parameters_to_update)).to be(nil)
-      expect(AwsHelpers::CloudFormation.new.stack_information(stack_name: stack_name, info_field: info_field)).to eq(parameters_post_update)
+      expect(AwsHelpers::CloudFormation.new.stack_information(stack_name, info_field)).to eq(parameters_initial)
+      expect(AwsHelpers::CloudFormation.new.stack_modify_parameters(stack_name, parameters_to_update)).to be(nil)
+      expect(AwsHelpers::CloudFormation.new.stack_information(stack_name, info_field)).to eq(parameters_post_update)
     end
 
   end
@@ -93,15 +93,7 @@ describe AwsHelpers::CloudFormation do
   def create_stack(stack_name, parameters, capabilities)
 
     template_json = IO.read(File.join(File.dirname(__FILE__), 'fixtures', 'cloudformation.template.json'))
-
-    AwsHelpers::CloudFormation.new.stack_provision(
-        stack_name: stack_name,
-        template: template_json,
-        parameters: parameters,
-        capabilities: capabilities,
-        bucket_name: nil,
-        bucket_encrypt: false
-    )
+    AwsHelpers::CloudFormation.new.stack_provision(stack_name, template_json, parameters, capabilities, nil, false)
 
   end
 

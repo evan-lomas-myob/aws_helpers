@@ -6,6 +6,8 @@ module AwsHelpers
 
       class PollStackStatus
 
+        include AwsHelpers::Utilities::Polling
+
         def initialize(config, stack_name, options = {})
           @config = config
           @stack_name = stack_name
@@ -17,13 +19,13 @@ module AwsHelpers
         def execute
           states = %w(CREATE_COMPLETE DELETE_COMPLETE ROLLBACK_COMPLETE UPDATE_COMPLETE UPDATE_ROLLBACK_COMPLETE ROLLBACK_FAILED UPDATE_ROLLBACK_FAILED DELETE_FAILED)
           client = @config.aws_cloud_formation_client
-          polling = AwsHelpers::Utilities::Polling.new
-          polling.start(@delay, @max_attempts) {
+
+          poll(@delay, @max_attempts) do
             response = client.describe_stacks(stack_name: @stack_name).stacks.first
             output = "Stack - #{@stack_name} status #{response.stack_status}"
             @stdout.puts(output)
-            polling.stop if states.include?(response.stack_status)
-          }
+            states.include?(response.stack_status)
+          end
         end
 
       end

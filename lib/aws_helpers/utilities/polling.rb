@@ -1,18 +1,12 @@
 module AwsHelpers
   module Utilities
 
-    class Polling
+    module Polling
 
-      def stop
-        @stop = true
-      end
-
-      def start(delay, max_attempts, &block)
-        @stop = false
+      def poll(delay, max_attempts, &block)
         attempts = 0
         while true
-          block.call
-          break if @stop
+          break if block.call
           attempts += 1
           raise Aws::Waiters::Errors::TooManyAttemptsError.new(attempts) if attempts == max_attempts
           sleep(delay)
@@ -21,6 +15,5 @@ module AwsHelpers
       end
 
     end
-
   end
 end

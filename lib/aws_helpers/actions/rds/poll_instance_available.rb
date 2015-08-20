@@ -7,6 +7,8 @@ module AwsHelpers
 
       class PollInstanceAvailable
 
+        include AwsHelpers::Utilities::Polling
+
         def initialize(config, db_instance_identifier, options={})
           @config = config
           @db_instance_identifier = db_instance_identifier
@@ -17,13 +19,12 @@ module AwsHelpers
 
         def execute
           rds_client = @config.aws_rds_client
-          pooling = AwsHelpers::Utilities::Polling.new
-          pooling.start(@delay, @max_attempts) {
+          poll(@delay, @max_attempts) {
             response = rds_client.describe_db_instances(db_instance_identifier: @db_instance_identifier)
             instance = response.db_instances.find { |instance| instance.db_instance_identifier = @db_instance_identifier }
             status = instance.db_instance_status
             @stdout.puts "RDS Instance=#{@db_instance_identifier}, Status=#{status}"
-            pooling.stop if status == InstanceState::AVAILABLE
+            status == InstanceState::AVAILABLE
           }
         end
 

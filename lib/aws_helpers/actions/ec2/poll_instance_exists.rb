@@ -6,6 +6,8 @@ module AwsHelpers
 
       class PollInstanceExists
 
+        include AwsHelpers::Utilities::Polling
+
         def initialize(instance_id, options = {})
           @instance_id = instance_id
           @stdout = options[:stdout] || $stdout
@@ -14,10 +16,8 @@ module AwsHelpers
         end
 
         def execute
-          polling = AwsHelpers::Utilities::Polling.new
-          polling.start(@delay, @max_attempts) {
-            exists = Aws::EC2::Instance.new(@instance_id).exists?
-            polling.stop if exists
+          poll(@delay, @max_attempts) {
+            Aws::EC2::Instance.new(@instance_id).exists?
           }
         end
 

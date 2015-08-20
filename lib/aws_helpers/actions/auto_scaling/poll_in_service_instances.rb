@@ -6,6 +6,8 @@ module AwsHelpers
 
       class PollInServiceInstances
 
+        include AwsHelpers::Utilities::Polling
+
         IN_SERVICE = 'InService'
 
         def initialize(config, auto_scaling_group_name, options = {})
@@ -18,8 +20,7 @@ module AwsHelpers
 
         def execute
           client = @config.aws_auto_scaling_client
-          polling = AwsHelpers::Utilities::Polling.new
-          polling.start(@delay, @max_attempts) {
+          poll(@delay, @max_attempts) {
             response = client.describe_auto_scaling_groups(auto_scaling_group_names: [@auto_scaling_group_name])
             auto_scaling_group = find_autoscaling_group(response)
             desired_capacity = auto_scaling_group.desired_capacity
@@ -28,7 +29,7 @@ module AwsHelpers
             lifecycle_state_output = create_lifecycle_state_output(lifecycle_state_count)
             output = "Auto Scaling Group=#{@auto_scaling_group_name}. Desired Capacity=#{desired_capacity}#{lifecycle_state_output}"
             @stdout.puts(output)
-            polling.stop if lifecycle_state_count[IN_SERVICE] == desired_capacity
+            lifecycle_state_count[IN_SERVICE] == desired_capacity
           }
         end
 

@@ -1,13 +1,15 @@
 require 'aws-sdk-core'
 require 'aws_helpers/utilities/polling'
 
+include AwsHelpers::Utilities::Polling
+
 describe AwsHelpers::Utilities::Polling do
 
   Struct.new('PollingStatus', :status)
 
   let(:stdout) { instance_double(IO) }
 
-  let(:delay) { 1 }
+  let(:delay) { 0 }
   let(:max_attempts) { 1 }
 
   let(:output) { 'Some output of state' }
@@ -29,12 +31,10 @@ describe AwsHelpers::Utilities::Polling do
   end
 
   def call_polling(delay, max_attempts, response)
-    polling = AwsHelpers::Utilities::Polling.new
-    polling.start(delay, max_attempts) {
-      #Check if the status changed
+    poll(delay, max_attempts) {
       output = "Delay = #{delay}: Max Attempts = #{max_attempts}"
       stdout.puts(output)
-      polling.stop if response.status == 'Good'
+      response.status == 'Good'
     }
   end
 

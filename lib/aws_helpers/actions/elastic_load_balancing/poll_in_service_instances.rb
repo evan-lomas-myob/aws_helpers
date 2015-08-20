@@ -6,6 +6,8 @@ module AwsHelpers
 
       class PollInServiceInstances
 
+        include AwsHelpers::Utilities::Polling
+
         IN_SERVICE = 'InService'
 
         def initialize(config, load_balancer_names, options)
@@ -19,14 +21,13 @@ module AwsHelpers
         def execute
           client = @config.aws_elastic_load_balancing_client
           @load_balancer_names.each { |load_balancer_name|
-            polling = AwsHelpers::Utilities::Polling.new
-            polling.start(@delay, @max_attempts) {
+            poll(@delay, @max_attempts) {
               response = client.describe_instance_health(load_balancer_name: load_balancer_name)
               instance_states = response.instance_states
               state_count = count_states(instance_states)
               state_output = create_state_output(state_count)
               @stdout.puts("Load Balancer Name=#{load_balancer_name}#{state_output}")
-              polling.stop if state_count[IN_SERVICE] == instance_states.size
+              state_count[IN_SERVICE] == instance_states.size
             }
           }
         end
