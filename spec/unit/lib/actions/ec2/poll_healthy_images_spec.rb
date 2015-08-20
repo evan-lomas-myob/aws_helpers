@@ -42,7 +42,7 @@ describe PollHealthyInstances do
     end
 
     it 'log to stdout' do
-      expect(stdout).to receive(:puts).with('Image State is running')
+      expect(stdout).to receive(:puts).with('Instance State is running')
       PollHealthyInstances.new(config, instance_id, 1, 60, stdout).execute
     end
 
