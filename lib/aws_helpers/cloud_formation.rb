@@ -33,7 +33,7 @@ module AwsHelpers
     #
     #   ```
     #   {
-    #     :max_attempts => 20,
+    #     :max_attempts => 40,
     #     :delay => 15 # seconds
     #   }
     #   ```
@@ -43,7 +43,7 @@ module AwsHelpers
     #
     #   ```
     #   {
-    #     :max_attempts => 20,
+    #     :max_attempts => 40,
     #     :delay => 15 # seconds
     #   }
     #   ```
@@ -71,7 +71,7 @@ module AwsHelpers
     #
     #   ```
     #   {
-    #     :max_attempts => 20,
+    #     :max_attempts => 40,
     #     :delay => 15 # seconds
     #   }
     #   ```
