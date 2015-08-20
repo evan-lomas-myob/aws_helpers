@@ -11,7 +11,7 @@ module AwsHelpers
           @stack_name = stack_name
           @stdout = options[:stdout] || $stdout
           @delay = options[:delay] || 15
-          @max_attempts = options[:max_attempts] || 20
+          @max_attempts = options[:max_attempts] || 40
         end
 
         def execute
