@@ -5,6 +5,8 @@ require_relative 'actions/ec2/images_delete_by_time'
 require_relative 'actions/ec2/images_find_by_tags'
 require_relative 'actions/ec2/instance_create'
 require_relative 'actions/ec2/instance_terminate'
+require_relative 'actions/ec2/instance_stop'
+require_relative 'actions/ec2/instance_start'
 require_relative 'actions/ec2/instance_find_by_tag_value'
 
 include AwsHelpers::Actions::EC2
@@ -78,13 +80,47 @@ module AwsHelpers
     #
     #   ```
     #   {
-    #     :max_attempts => 40,
+    #     :max_attempts => 8,
     #     :delay => 15 # seconds
     #   }
     #   ```
     # @return [String] Instance ID
     def instance_create(image_id, min_count, max_count, monitoring, options)
       InstanceCreate.new(config, image_id, min_count, max_count, monitoring, options).execute
+    end
+
+    # Start an EC2 instance
+    # @param instance_id [String] The ID of the EC2 instance
+    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
+    # @option options [Hash{Symbol => Integer}] :instance_running Override instance running polling
+    #
+    #   defaults:
+    #
+    #   ```
+    #   {
+    #     :max_attempts => 8,
+    #     :delay => 15 # seconds
+    #   }
+    #   ```
+    def instance_start(instance_id, options)
+      InstanceStart.new(config, instance_id, options).execute
+    end
+
+    # Stop an EC2 instance
+    # @param instance_id [String] The ID of the EC2 instance
+    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
+    # @option options [Hash{Symbol => Integer}] :instance_stopped Override instance stopped polling
+    #
+    #   defaults:
+    #
+    #   ```
+    #   {
+    #     :max_attempts => 8,
+    #     :delay => 15 # seconds
+    #   }
+    #   ```
+    def instance_stop(instance_id, options)
+      InstanceStop.new(config, instance_id, options).execute
     end
 
     # Terminate an EC2 instance
@@ -96,7 +132,7 @@ module AwsHelpers
     # Return a list of instances that match a given list of tags
     # @param tags [Array] List of tags to filter Instances on
     # @return [Aws::EC2::Types::DescribeInstancesResult] list of Aws::EC2::Types::Reservation types
-    def instance_find_by_tags(tags = [])
+    def instance_find_by_tag_value(tags = [])
       InstanceFindByTagValue.new(config, tags).execute
     end
 

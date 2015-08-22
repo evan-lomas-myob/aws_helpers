@@ -124,5 +124,141 @@ describe AwsHelpers::EC2 do
 
   end
 
+  describe '#instance_create' do
+
+    let(:instance_create) { double(InstanceCreate) }
+    let(:image_id) { 'image_id' }
+    let(:min_count) { 1 }
+    let(:max_count) { 1 }
+    let(:monitoring) { true }
+    let(:options) { {} } #just use defaults
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(instance_create).to receive(:execute)
+      allow(InstanceCreate).to receive(:new).with(config, image_id, min_count, max_count, monitoring, options).and_return(instance_create)
+    end
+
+    subject { AwsHelpers::EC2.new.instance_create(image_id, min_count, max_count, monitoring, options) }
+
+    it 'should create InstanceCreate' do
+      expect(InstanceCreate).to receive(:new).with(config, image_id, min_count, max_count, monitoring, options).and_return(instance_create)
+      subject
+    end
+
+    it 'should call InstanceCreate execute method' do
+      expect(instance_create).to receive(:execute)
+      subject
+    end
+
+  end
+
+  describe '#instance_start' do
+
+    let(:instance_start) { double(InstanceStart) }
+    let(:image_id) { 'image_id' }
+
+    let(:options) { {} } #just use defaults
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(instance_start).to receive(:execute)
+      allow(InstanceStart).to receive(:new).with(config, image_id, options).and_return(instance_start)
+    end
+
+    subject { AwsHelpers::EC2.new.instance_start(image_id, options) }
+
+    it 'should create InstanceStart' do
+      expect(InstanceStart).to receive(:new).with(config, image_id, options).and_return(instance_start)
+      subject
+    end
+
+    it 'should call InstanceStart execute method' do
+      expect(instance_start).to receive(:execute)
+      subject
+    end
+
+  end
+
+  describe '#instance_stop' do
+
+    let(:instance_stop) { double(InstanceStop) }
+    let(:image_id) { 'image_id' }
+
+    let(:options) { {} } #just use defaults
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(instance_stop).to receive(:execute)
+      allow(InstanceStop).to receive(:new).with(config, image_id, options).and_return(instance_stop)
+    end
+
+    subject { AwsHelpers::EC2.new.instance_stop(image_id, options) }
+
+    it 'should create InstanceStop' do
+      expect(InstanceStop).to receive(:new).with(config, image_id, options).and_return(instance_stop)
+      subject
+    end
+
+    it 'should call InstanceStop execute method' do
+      expect(instance_stop).to receive(:execute)
+      subject
+    end
+
+  end
+
+  describe '#instance_terminate' do
+
+    let(:instance_terminate) { double(InstanceTerminate) }
+    let(:image_id) { 'image_id' }
+
+    let(:options) { {} } #just use defaults
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(instance_terminate).to receive(:execute)
+      allow(InstanceTerminate).to receive(:new).with(config, image_id).and_return(instance_terminate)
+    end
+
+    subject { AwsHelpers::EC2.new.instance_terminate(image_id) }
+
+    it 'should create InstanceTerminate' do
+      expect(InstanceTerminate).to receive(:new).with(config, image_id).and_return(instance_terminate)
+      subject
+    end
+
+    it 'should call InstanceTerminate execute method' do
+      expect(instance_terminate).to receive(:execute)
+      subject
+    end
+
+  end
+
+  describe '#instance_find_by_tag_value' do
+
+    let(:instance_find_by_tag_value) { double(InstanceFindByTagValue) }
+    let(:image_id) { 'image_id' }
+
+    let(:options) { {} } #just use defaults
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(instance_find_by_tag_value).to receive(:execute)
+      allow(InstanceFindByTagValue).to receive(:new).with(config, image_id).and_return(instance_find_by_tag_value)
+    end
+
+    subject { AwsHelpers::EC2.new.instance_find_by_tag_value(image_id) }
+
+    it 'should create InstanceTerminate' do
+      expect(InstanceFindByTagValue).to receive(:new).with(config, image_id).and_return(instance_find_by_tag_value)
+      subject
+    end
+
+    it 'should call InstanceTerminate execute method' do
+      expect(instance_find_by_tag_value).to receive(:execute)
+      subject
+    end
+
+  end
 
 end

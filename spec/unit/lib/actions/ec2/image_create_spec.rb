@@ -32,6 +32,7 @@ describe ImageCreate do
     let(:instance_statuses_bad) { [instance_double(Aws::EC2::Types::InstanceStatus, instance_state: instance_state_bad)] }
     let(:describe_instance_status_result_bad) { instance_double(Aws::EC2::Types::DescribeInstanceStatusResult, instance_statuses: instance_statuses_bad) }
 
+
     let (:additional_tags) { [
         {key: 'Key', value: additional_tag_name},
         {key: 'Value', value: additional_tag_value}

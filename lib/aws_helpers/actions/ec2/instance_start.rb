@@ -9,7 +9,7 @@ module AwsHelpers
         def initialize(config, instance_id, options)
           @config = config
           @instance_id = instance_id
-          @stdout = options[:stdout]
+          @stdout = options[:stdout] || $stdout
           @instance_running_polling = create_polling_options(@stdout, options[:instance_running])
         end
 
@@ -22,7 +22,7 @@ module AwsHelpers
 
         def create_polling_options(stdout, polling)
           options = {}
-          options[:stdout] = stdout if stdout
+          options[:stdout] = stdout
           if polling
             max_attempts = polling[:max_attempts]
             delay = polling[:delay]

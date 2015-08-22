@@ -14,7 +14,7 @@ module AwsHelpers
           @instance_id = instance_id
           @stdout = options[:stdout] || $stdout
           @delay = options[:delay] || 15
-          @max_attempts = options[:max_attempts] || 40
+          @max_attempts = options[:max_attempts] || 8
         end
 
         def execute

@@ -26,8 +26,13 @@ describe AwsHelpers::EC2 do
   end
 
   it 'should return the instance_id of the instance created' do
-    response = AwsHelpers::EC2.new.instance_find_by_tags(tags)
+    response = AwsHelpers::EC2.new.instance_find_by_tag_value(tags)
     expect(response.reservations.first.instances.first.instance_id).to eq(instance_id)
+  end
+
+  it 'should stop and start the instance' do
+    AwsHelpers::EC2.new.instance_stop(instance_id, {})
+    AwsHelpers::EC2.new.instance_start(instance_id, {})
   end
 
 end
