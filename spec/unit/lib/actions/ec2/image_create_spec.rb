@@ -1,7 +1,7 @@
 require 'time'
 require 'aws_helpers/ec2'
 require 'aws_helpers/actions/ec2/image_create'
-require 'aws_helpers/actions/ec2/poll_healthy_instances'
+require 'aws_helpers/actions/ec2/poll_instance_healthy'
 
 include AwsHelpers
 include AwsHelpers::Actions::EC2

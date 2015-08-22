@@ -12,10 +12,10 @@ describe EC2InstanceRun do
   let(:image_id) { 'ami-image-id' }
   let(:min_count) { 1 }
   let(:max_count) { 1 }
-  let(:monitoring) { {enabled: true} }
-  let(:monitoring_disabled) { {enabled: false} }
+  let(:monitoring) { true }
+  let(:monitoring_disabled) { false }
 
-  let(:default_instance_type) { 't1.micro' }
+  let(:default_instance_type) { 't2.micro' }
   let(:larger_instance_type) { 'c4.large' }
 
   let(:options_with_instance) { {instance_type: larger_instance_type, stdout: stdout} }
@@ -31,7 +31,7 @@ describe EC2InstanceRun do
                                        min_count: min_count,
                                        max_count: max_count,
                                        instance_type: default_instance_type,
-                                       monitoring: monitoring)
+                                       monitoring: {enabled: monitoring} )
                                  .and_return(reservation)
     allow(stdout).to receive(:puts).and_return("Starting Instance with #{image_id}")
   end
@@ -46,7 +46,7 @@ describe EC2InstanceRun do
                                         min_count: min_count,
                                         max_count: max_count,
                                         instance_type: default_instance_type,
-                                        monitoring: monitoring)
+                                        monitoring: {enabled: monitoring} )
                                   .and_return(reservation)
     EC2InstanceRun.new(config, image_id, min_count, max_count, monitoring, options_with_stdout).execute
   end
@@ -61,7 +61,7 @@ describe EC2InstanceRun do
                                         min_count: min_count,
                                         max_count: max_count,
                                         instance_type: larger_instance_type,
-                                        monitoring: monitoring)
+                                        monitoring: {enabled: monitoring} )
                                   .and_return(reservation)
     EC2InstanceRun.new(config, image_id, min_count, max_count, monitoring, options_with_instance).execute
   end

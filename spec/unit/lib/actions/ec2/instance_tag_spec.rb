@@ -19,7 +19,7 @@ describe EC2InstanceTag do
     {
         resources: [instance_id],
         tags: [
-            {key: 'Name', value: ''},
+            {key: 'Name', value: 'no-name-supplied'},
             {key: 'Date', value: now.to_s}
         ]
     }
@@ -39,7 +39,7 @@ describe EC2InstanceTag do
     {
         resources: [instance_id],
         tags: [
-            {key: 'Name', value: ''},
+            {key: 'Name', value: 'no-name-supplied'},
             {key: 'Build Number', value: build_number},
             {key: 'Date', value: now.to_s}
         ]

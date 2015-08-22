@@ -4,13 +4,13 @@ module AwsHelpers
 
       class EC2InstanceRun
 
-        def initialize(config, image_id, min_count, max_count, monitoring, options = {} )
+        def initialize(config, image_id, min_count, max_count, monitoring, options = {})
           @config = config
           @image_id = image_id
           @min_count = min_count
           @max_count = max_count
-          @monitoring = monitoring
-          @instance_type = options[:instance_type] || 't1.micro'
+          @monitoring = {enabled: monitoring}
+          @instance_type = options[:instance_type] || 't2.micro'
           @stdout = options[:stdout] || $stdout
         end
 

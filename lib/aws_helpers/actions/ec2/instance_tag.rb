@@ -4,16 +4,16 @@ module AwsHelpers
 
       class EC2InstanceTag
 
-        def initialize(config, instance_id, app_name = nil, build_number = nil, time = Time.now)
+        def initialize(config, instance_id, name_tag = nil, build_number = nil, time = Time.now)
           @config = config
           @instance_id = instance_id
-          @app_name = app_name || ''
+          @name_tag = name_tag || 'no-name-supplied'
           @build_number = build_number
           @time = time
         end
 
         def execute
-          tags = build_tag(@app_name, @build_number, @time)
+          tags = build_tag(@name_tag, @build_number, @time)
           client = @config.aws_ec2_client
           client.create_tags(
               resources: [@instance_id],
@@ -21,9 +21,9 @@ module AwsHelpers
           )
         end
 
-        def build_tag(app_name, build_number, time)
+        def build_tag(name_tag, build_number, time)
           tags = []
-          tags << {key: 'Name', value: app_name}
+          tags << {key: 'Name', value: name_tag}
           tags << {key: 'Build Number', value: build_number} if build_number
           tags << {key: 'Date', value: time.to_s}
           tags

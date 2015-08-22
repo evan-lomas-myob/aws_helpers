@@ -3,6 +3,9 @@ require_relative 'actions/ec2/image_create'
 require_relative 'actions/ec2/images_delete'
 require_relative 'actions/ec2/images_delete_by_time'
 require_relative 'actions/ec2/images_find_by_tags'
+require_relative 'actions/ec2/instance_create'
+require_relative 'actions/ec2/instance_terminate'
+require_relative 'actions/ec2/instance_find_by_tag_value'
 
 include AwsHelpers::Actions::EC2
 
@@ -48,6 +51,53 @@ module AwsHelpers
     # @return [Array] list of images matching the tags list
     def images_find_by_tags(tags = [])
       ImagesFindByTags.new(config, tags).execute
+    end
+
+    # Create a desired number of EC2 instances using a known AMI
+    # @param image_id [String] Name of the AMI to use
+    # @param min_count [String] Minimum number of instances to create
+    # @param max_count [String] Maximum number of instance to create
+    # @param monitoring [Boolean] Is monitoring required or not
+    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
+    # @option options [String] :instance_type (t2.micro) Override the type of instance to create
+    # @option options [String] :app_name (no-name-supplied) Name for the instance
+    # @option options [String] :build_number (nil) Build Number associated with the instance
+    # @option options [Hash{Symbol => Integer}] :poll_exists Override instance exists polling
+    #
+    #   defaults:
+    #
+    #   ```
+    #   {
+    #     :max_attempts => 8,
+    #     :delay => 15 # seconds
+    #   }
+    #   ```
+    # @option options [Hash{Symbol => Integer}] :poll_running Override instance running polling
+    #
+    #   defaults:
+    #
+    #   ```
+    #   {
+    #     :max_attempts => 40,
+    #     :delay => 15 # seconds
+    #   }
+    #   ```
+    # @return [String] Instance ID
+    def instance_create(image_id, min_count, max_count, monitoring, options)
+      InstanceCreate.new(config, image_id, min_count, max_count, monitoring, options).execute
+    end
+
+    # Terminate an EC2 instance
+    # @param instance_id [String] The ID of the EC2 instance
+    def instance_terminate(instance_id)
+      InstanceTerminate.new(config, instance_id).execute
+    end
+
+    # Return a list of instances that match a given list of tags
+    # @param tags [Array] List of tags to filter Instances on
+    # @return [Aws::EC2::Types::DescribeInstancesResult] list of Aws::EC2::Types::Reservation types
+    def instance_find_by_tags(tags = [])
+      InstanceFindByTagValue.new(config, tags).execute
     end
 
   end
