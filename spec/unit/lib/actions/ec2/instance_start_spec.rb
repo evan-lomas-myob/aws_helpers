@@ -16,17 +16,21 @@ describe InstanceStart do
 
   let(:instance_id) { 'i-abcd1234' }
 
-  let(:polling_options) { {stdout: stdout} }
+  let(:max_attempts) { 1 }
+  let(:delay) { 0 }
 
-  let(:starting_instances) { [ instance_double(Aws::EC2::Types::InstanceStateChange, instance_id: instance_id) ] }
-  let(:starting_result) { instance_double(Aws::EC2::Types::StartInstancesResult, starting_instances: starting_instances)}
+  let(:polling_options) { {stdout: stdout, max_attempts: max_attempts, delay: delay} }
+  let(:options) { {stdout: stdout, instance_running: {max_attempts: max_attempts, delay: delay}} }
+
+  let(:starting_instances) { [instance_double(Aws::EC2::Types::InstanceStateChange, instance_id: instance_id)] }
+  let(:starting_result) { instance_double(Aws::EC2::Types::StartInstancesResult, starting_instances: starting_instances) }
 
   it 'should start the instance' do
     allow(stdout).to receive(:puts).with("Starting #{instance_id}")
     allow(PollInstanceHealthy).to receive(:new).with(instance_id, polling_options).and_return(poll_instance_healthy)
     allow(poll_instance_healthy).to receive(:execute)
     expect(aws_ec2_client).to receive(:start_instances).with(instance_ids: [instance_id]).and_return(starting_result)
-    InstanceStart.new(config, instance_id, polling_options).execute
+    InstanceStart.new(config, instance_id, options).execute
   end
 
 end

@@ -16,7 +16,12 @@ describe InstanceStop do
 
   let(:instance_id) { 'i-abcd1234' }
 
-  let(:polling_options) { {stdout: stdout} }
+
+  let(:max_attempts) { 1 }
+  let(:delay) { 0 }
+
+  let(:polling_options) { {stdout: stdout, max_attempts: max_attempts, delay: delay} }
+  let(:options) { {stdout: stdout, instance_stopped: {max_attempts: max_attempts, delay: delay}} }
 
   let(:stopping_instances) { [ instance_double(Aws::EC2::Types::InstanceStateChange, instance_id: instance_id) ] }
   let(:stopping_result) { instance_double(Aws::EC2::Types::StopInstancesResult, stopping_instances: stopping_instances)}
@@ -26,7 +31,7 @@ describe InstanceStop do
     allow(PollInstanceStopped).to receive(:new).with(instance_id, polling_options).and_return(poll_instance_stopped)
     allow(poll_instance_stopped).to receive(:execute)
     expect(aws_ec2_client).to receive(:stop_instances).with(instance_ids: [instance_id]).and_return(stopping_result)
-    InstanceStop.new(config, instance_id, polling_options).execute
+    InstanceStop.new(config, instance_id, options).execute
   end
 
 end
