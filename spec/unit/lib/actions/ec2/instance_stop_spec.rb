@@ -16,7 +16,6 @@ describe InstanceStop do
 
   let(:instance_id) { 'i-abcd1234' }
 
-
   let(:max_attempts) { 1 }
   let(:delay) { 0 }
 

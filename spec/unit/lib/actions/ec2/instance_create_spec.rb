@@ -29,32 +29,21 @@ describe InstanceCreate do
   let(:app_name) { 'my-app-name' }
   let(:build_number) { 'build12345' }
 
-  let(:create_options) { {stdout: stdout, app_name: app_name, build_number: build_number, instance_type: nil} }
-  let(:polling_options) { {stdout: stdout} }
+  let(:max_attempts) { 1 }
+  let(:delay) { 0 }
+
+  let(:polling_request) { {max_attempts: max_attempts, delay: delay} }
+
+  let(:create_options) { {stdout: stdout,
+                          app_name: app_name,
+                          build_number: build_number,
+                          instance_type: nil,
+                          instance_exists: polling_request,
+                          instance_running: polling_request}
+  }
+
+  let(:polling_options) { {stdout: stdout, max_attempts: max_attempts, delay: delay} }
   let(:instance_run_options) { {stdout: stdout, instance_type: nil} }
-
-  # instance_id = start_instance(image_id)
-  # tag_instance(instance_id)
-  # poll_instance_running(instance_id)
-  # poll_instance_patched(instance_id)
-  # restart_instance(instance_id)
-  # instance = poll_instance_running(instance_id)
-  # poll_ssh(instance)
-
-
-  # puts 'Starting Instance'
-  # user_public_key = IO.read(File.join(ENV['HOME'], '.ssh', 'id_rsa.pub'))
-  # user_data_template = File.join(File.dirname(__FILE__), 'files', 'base_ami_user_data.yaml.erb')
-  # user_data = ErbParser.new(user_data_template, user_public_key: user_public_key).parse
-  # run_response = @ec2.run_instances(
-  #     image_id: image_id,
-  #     min_count: 1,
-  #     max_count: 1,
-  #     instance_type: 'c4.large',
-  #     monitoring: {enabled: true},
-  #     user_data: Base64.encode64(user_data)
-  # )
-  # run_response[:instances].first[:instance_id]
 
   before(:each) do
     allow(aws_ec2_client).to receive(:create_tags).with(anything)

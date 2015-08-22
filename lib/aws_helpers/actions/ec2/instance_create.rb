@@ -19,7 +19,7 @@ module AwsHelpers
           @build_number = options[:build_number]
           stdout = options[:stdout]
           @instance_run_options = create_instance_run_options(stdout, options[:instance_type], options[:time])
-          @instance_exists_polling = create_polling_options(stdout, options[:instance_polling])
+          @instance_exists_polling = create_polling_options(stdout, options[:instance_exists])
           @instance_running_polling = create_polling_options(stdout, options[:instance_running])
         end
 
