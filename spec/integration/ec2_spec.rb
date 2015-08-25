@@ -13,9 +13,7 @@ describe AwsHelpers::EC2 do
   let(:app_name) { "ec2-integration-test-#{random_string}" }
   let(:options) { {app_name: app_name} }
 
-  let(:tags) { [
-      {values: app_name},
-  ] }
+  let(:tags) { [ app_name ] }
 
   before(:each) do
     instance_id = AwsHelpers::EC2.new.instance_create(image_id, min_count, max_count, monitoring, options)

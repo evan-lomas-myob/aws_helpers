@@ -25,7 +25,7 @@ describe InstanceFindByTagValue do
 
   it 'should find the images using a tags array as a filter' do
     allow(ec2_client).to receive(:describe_instances).with(request).and_return(describe_instances_result)
-    expect(InstanceFindByTagValue.new(config, tags).execute).to be(describe_instances_result)
+    expect(InstanceFindByTagValue.new(config, request_values).execute).to be(describe_instances_result)
   end
 
 end
