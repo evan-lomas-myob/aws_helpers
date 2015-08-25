@@ -4,16 +4,16 @@ module AwsHelpers
 
       class InstanceFindByTagValue
 
-        def initialize(config, tags)
+        def initialize(config, tag_values)
           @config = config
-          @tags = tags
+          @tag_values = tag_values
         end
 
         def execute
           client = @config.aws_ec2_client
           filters = []
-          @tags.each do |tag|
-            filters << {name: 'tag-value', values: [tag[:values]]}
+          @tag_values.each do |value|
+            filters << {name: 'tag-value', values: [ value ]}
           end
 
           client.describe_instances(filters: filters)

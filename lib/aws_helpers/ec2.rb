@@ -132,8 +132,8 @@ module AwsHelpers
     # Return a list of instances that match a given list of tags
     # @param tags [Array] List of tags to filter Instances on
     # @return [Aws::EC2::Types::DescribeInstancesResult] list of Aws::EC2::Types::Reservation types
-    def instance_find_by_tag_value(tags = [])
-      InstanceFindByTagValue.new(config, tags).execute
+    def instance_find_by_tag_value(tag_values = [])
+      InstanceFindByTagValue.new(config, tag_values).execute
     end
 
   end
