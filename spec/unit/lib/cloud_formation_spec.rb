@@ -213,4 +213,55 @@ describe AwsHelpers::CloudFormation do
 
   end
 
+  describe '#stack_resources' do
+
+    let(:stack_resources) { instance_double(StackResources) }
+    let(:stack_name) { 'my_stack_name' }
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(StackResources).to receive(:new).with(anything, anything).and_return(stack_resources)
+      allow(stack_resources).to receive(:execute)
+    end
+
+    after(:each) do
+      AwsHelpers::CloudFormation.new(options).stack_resources(stack_name)
+    end
+
+    it 'should create StackModifyParameters' do
+      expect(StackResources).to receive(:new).with(config, stack_name)
+    end
+
+    it 'should call StackModifyParameters execute method' do
+      expect(stack_resources).to receive(:execute)
+    end
+
+  end
+
+  describe '#stack_named_resource' do
+
+    let(:stack_named_resource) { instance_double(StackNamedResource) }
+    let(:stack_name) { 'my_stack_name' }
+    let(:logical_resource_id) { 'my_resource_id' }
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(StackNamedResource).to receive(:new).with(anything, anything, anything).and_return(stack_named_resource)
+      allow(stack_named_resource).to receive(:execute)
+    end
+
+    after(:each) do
+      AwsHelpers::CloudFormation.new(options).stack_named_resource(stack_name, logical_resource_id)
+    end
+
+    it 'should create StackModifyParameters' do
+      expect(StackNamedResource).to receive(:new).with(config, stack_name, logical_resource_id)
+    end
+
+    it 'should call StackModifyParameters execute method' do
+      expect(stack_named_resource).to receive(:execute)
+    end
+
+  end
+
 end

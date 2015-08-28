@@ -4,6 +4,8 @@ require_relative 'actions/cloud_formation/stack_delete'
 require_relative 'actions/cloud_formation/stack_modify_parameters'
 require_relative 'actions/cloud_formation/stack_information'
 require_relative 'actions/cloud_formation/stack_exists'
+require_relative 'actions/cloud_formation/stack_resources'
+require_relative 'actions/cloud_formation/stack_named_resource'
 
 module AwsHelpers
 
@@ -90,6 +92,19 @@ module AwsHelpers
     # @return [Boolean] True if the stack exists
     def stack_exists?(stack_name)
       AwsHelpers::Actions::CloudFormation::StackExists.new(config, stack_name).execute
+    end
+
+    # @param stack_name [String] Name given to the Stack
+    # @return [Array] The list of resources defined for the Stack
+    def stack_resources(stack_name)
+      AwsHelpers::Actions::CloudFormation::StackResources.new(config, stack_name).execute
+    end
+
+    # @param stack_name [String] Name given to the Stack
+    # @param resource_id [String] The Logical Resource Identifier
+    # @return [Array] The list of resources defined for the Stack
+    def stack_named_resource(stack_name, resource_id)
+      AwsHelpers::Actions::CloudFormation::StackNamedResource.new(config, stack_name, resource_id).execute
     end
 
   end
