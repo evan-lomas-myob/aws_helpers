@@ -9,7 +9,7 @@ module AwsHelpers
           @s3_bucket_url = s3_bucket_url
           @template_json = template_json
           @parameters = parameters
-          @capabilities = capabilities
+          @capabilities = capabilities || ['CAPABILITY_IAM']
         end
 
         def execute
