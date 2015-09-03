@@ -19,6 +19,7 @@ describe S3UploadTemplate do
   let(:template_json) { 'json' }
 
   let(:s3_bucket_name) { 'my bucket' }
+  let(:acl) { 'private' }
   let(:bucket_encrypt) { true }
 
   let(:request) { {bucket: s3_bucket_name, key: stack_name, body: 'json', server_side_encryption: 'AES256'} }
@@ -39,7 +40,7 @@ describe S3UploadTemplate do
   it 'should create a new bucket if the bucket does not exist' do
     allow(AwsHelpers::Actions::S3::S3Exists).to receive(:new).with(config, s3_bucket_name).and_return(s3_exists)
     allow(s3_exists).to receive(:execute).and_return(false)
-    allow(AwsHelpers::Actions::S3::S3Create).to receive(:new).with(config, s3_bucket_name).and_return(s3_create)
+    allow(AwsHelpers::Actions::S3::S3Create).to receive(:new).with(config, s3_bucket_name, acl).and_return(s3_create)
     expect(s3_create).to receive(:execute).and_return("Created S3 Bucket #{s3_bucket_name}")
     S3UploadTemplate.new(config, stack_name, template_json, s3_bucket_name, bucket_encrypt, stdout).execute
   end

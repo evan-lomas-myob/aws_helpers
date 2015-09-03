@@ -29,7 +29,7 @@ module AwsHelpers
 
           @stdout.puts "Uploading #{@stack_name} to S3 bucket #{@s3_bucket_name}"
 
-          AwsHelpers::Actions::S3::S3Create.new(@config, @s3_bucket_name).execute if ! AwsHelpers::Actions::S3::S3Exists.new(@config, @s3_bucket_name).execute
+          AwsHelpers::Actions::S3::S3Create.new(@config, @s3_bucket_name, 'private').execute if ! AwsHelpers::Actions::S3::S3Exists.new(@config, @s3_bucket_name).execute
 
           s3_client.put_object(
               request
