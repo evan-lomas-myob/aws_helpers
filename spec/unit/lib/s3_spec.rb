@@ -6,6 +6,7 @@ describe AwsHelpers::S3 do
 
   let(:config) { instance_double(AwsHelpers::Config) }
   let(:s3_bucket_name) { 'bucket-name' }
+  let(:acl) { 'private' }
 
   describe '#initialize' do
 
@@ -24,19 +25,37 @@ describe AwsHelpers::S3 do
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
       allow(s3_create).to receive(:execute)
-      allow(S3Create).to receive(:new).with(config, s3_bucket_name).and_return(s3_create)
+      allow(S3Create).to receive(:new).with(config, s3_bucket_name, acl).and_return(s3_create)
     end
 
-    after(:each) do
-      AwsHelpers::S3.new.s3_create(s3_bucket_name)
+    context 'default acl = private' do
+
+      after(:each) do
+        AwsHelpers::S3.new.s3_create(s3_bucket_name)
+      end
+
+      it 'should create an s3 bucket with default parameters' do
+        expect(S3Create).to receive(:new).with(config, s3_bucket_name, acl).and_return(s3_create)
+      end
+
+      it 'should create an s3 bucket with default parameters' do
+        expect(S3Create).to receive(:new).with(config, s3_bucket_name, acl).and_return(s3_create)
+      end
+
+      it 'should call the s3_create execute method' do
+        expect(s3_create).to receive(:execute)
+      end
+
     end
 
-    it 'should create an s3 bucket with default parameters' do
-      expect(S3Create).to receive(:new).with(config, s3_bucket_name).and_return(s3_create)
-    end
+    context 'acl set to public-read' do
 
-    it 'should call the s3_create execute method' do
-      expect(s3_create).to receive(:execute)
+      let(:acl) { 'public-read' }
+
+      it 'should create an s3 bucket with public-read' do
+        expect(S3Create).to receive(:new).with(config, s3_bucket_name, acl).and_return(s3_create)
+        AwsHelpers::S3.new.s3_create(s3_bucket_name, acl)
+      end
     end
 
   end

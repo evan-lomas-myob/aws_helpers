@@ -18,8 +18,9 @@ module AwsHelpers
 
     # Create a new s3 bucket
     # @param s3_bucket_name [String] Name given to the S3 Bucket to create
-    def s3_create(s3_bucket_name)
-      AwsHelpers::Actions::S3::S3Create.new(config, s3_bucket_name).execute
+    # @param acl [String] accepts private, public-read, public-read-write, authenticated-read
+    def s3_create(s3_bucket_name, acl = 'private')
+      AwsHelpers::Actions::S3::S3Create.new(config, s3_bucket_name, acl).execute
     end
 
     # Return true if the s3 Bucket exists

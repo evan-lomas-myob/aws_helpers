@@ -12,7 +12,7 @@ module AwsHelpers
           @config = config
           @stack_name = stack_name
           @stdout = options[:stdout] || $stdout
-          @delay = options[:delay] || 15
+          @delay = options[:delay] || 30
           @max_attempts = options[:max_attempts] || 40
         end
 
