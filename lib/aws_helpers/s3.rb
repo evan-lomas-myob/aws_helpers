@@ -4,6 +4,7 @@ require_relative 'actions/s3/exists'
 require_relative 'actions/s3/template_url'
 require_relative 'actions/s3/location'
 require_relative 'actions/s3/upload_template'
+require_relative 'actions/s3/bucket_website'
 
 module AwsHelpers
 
@@ -52,6 +53,14 @@ module AwsHelpers
     # @return [String] The S3 Bucket URL
     def upload_stack_template(stack_name, template_json, s3_bucket_name, bucket_encrypt)
       AwsHelpers::Actions::S3::S3UploadTemplate.new(config, stack_name, template_json, s3_bucket_name, bucket_encrypt).execute
+    end
+
+    # Configure website hosting for an S3 bucket
+    # @param s3_bucket_name [String] Name given to the S3 Bucket
+    # @param website_configuration [Aws::S3::Types::WebsiteConfiguration] Name given to the stack
+    # @return [String] The S3 Bucket URL
+    def bucket_website(s3_bucket_name, website_configuration)
+      AwsHelpers::Actions::S3::S3BucketWebsite.new(config, s3_bucket_name, website_configuration).execute
     end
 
   end

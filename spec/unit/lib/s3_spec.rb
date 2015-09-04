@@ -157,5 +157,32 @@ describe AwsHelpers::S3 do
 
   end
 
+  describe '#bucket_website' do
+
+    let(:bucket_website) { instance_double(S3BucketWebsite) }
+
+    let(:bucket_encrypt) { true }
+    let(:index_document) { 'index.html' }
+    let(:website_configuration) { instance_double(Aws::S3::Types::WebsiteConfiguration, index_document: {key: index_document}) }
+
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(bucket_website).to receive(:execute)
+      allow(S3BucketWebsite).to receive(:new).with(config, s3_bucket_name, website_configuration).and_return(bucket_website)
+    end
+    after(:each) do
+      AwsHelpers::S3.new.bucket_website(s3_bucket_name, website_configuration)
+    end
+
+    it 'should create the s3_location class' do
+      expect(S3BucketWebsite).to receive(:new).with(config, s3_bucket_name, website_configuration).and_return(bucket_website)
+    end
+
+    it 'should call the s3_location execute method' do
+      expect(bucket_website).to receive(:execute)
+    end
+
+  end
 
 end
