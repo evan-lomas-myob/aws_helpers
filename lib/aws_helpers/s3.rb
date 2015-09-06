@@ -59,7 +59,7 @@ module AwsHelpers
     # @param s3_bucket_name [String] Name given to the S3 Bucket
     # @param website_configuration [Aws::S3::Types::WebsiteConfiguration] Name given to the stack
     # @return [String] The S3 Bucket URL
-    def bucket_website(s3_bucket_name, website_configuration)
+    def bucket_website(s3_bucket_name, website_configuration = nil)
       AwsHelpers::Actions::S3::S3BucketWebsite.new(config, s3_bucket_name, website_configuration).execute
     end
 

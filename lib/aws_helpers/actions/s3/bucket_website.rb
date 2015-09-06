@@ -10,7 +10,7 @@ module AwsHelpers
         def initialize(config, s3_bucket_name, website_configuration, stdout = $stdout)
           @config = config
           @s3_bucket_name = s3_bucket_name
-          @website_configuration = website_configuration
+          @website_configuration = build_config(website_configuration)
           @stdout = stdout
         end
 
@@ -26,6 +26,19 @@ module AwsHelpers
           end
 
         end
+
+        private
+
+        def build_config(config)
+          config || {
+              error_document: {
+                  key: 'error.html'},
+              index_document: {
+                  suffix: 'index.html'
+              },
+          }
+        end
+
 
       end
 
