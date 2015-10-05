@@ -1,6 +1,6 @@
 # AwsHelpers
 
-TODO: Write a gem description
+The AWS Helpers gem provides a range of utility classes to manage resources within AWS.
 
 ## Installation
 

@@ -10,8 +10,13 @@ require_relative 'aws_helpers/elastic_load_balancing/poll_healthy_instances'
 require_relative 'aws_helpers/elastic_beanstalk/version'
 require_relative 'aws_helpers/rds/instance'
 require_relative 'aws_helpers/ec2/image'
+require_relative 'aws_helpers/auto_scaling_group/drain_instances'
 require_relative 'aws_helpers/auto_scaling_group/retrieve_desired_capacity'
+require_relative 'aws_helpers/auto_scaling_group/retrieve_group_configuration'
+require_relative 'aws_helpers/auto_scaling_group/resume_alarm_process'
+require_relative 'aws_helpers/auto_scaling_group/suspend_alarm_process'
 require_relative 'aws_helpers/auto_scaling_group/update_desired_capacity'
+require_relative 'aws_helpers/auto_scaling_group/update_minmax_capacity'
 
 module AwsHelpers
   extend self
@@ -56,8 +61,28 @@ module AwsHelpers
       AutoScalingGroup::RetrieveDesiredCapacity.new(auto_scaling_client, auto_scaling_group_name).execute
     end
 
+    def auto_scaling_group_retrieve_group_configuration(auto_scaling_group_name)
+      AutoScalingGroup::RetrieveGroupConfiguration.new(auto_scaling_client, auto_scaling_group_name).execute
+    end
+
+    def auto_scaling_group_drain_instances(auto_scaling_group_name)
+      AutoScalingGroup::DrainInstances.new(auto_scaling_client, auto_scaling_group_name).execute
+    end
+
+    def auto_scaling_group_suspend_alarm_process(auto_scaling_group_name)
+      AutoScalingGroup::SuspendAlarmProcess.new(auto_scaling_client, auto_scaling_group_name).execute
+    end
+
+    def auto_scaling_group_resume_alarm_process(auto_scaling_group_name)
+      AutoScalingGroup::ResumeAlarmProcess.new(auto_scaling_client, auto_scaling_group_name).execute
+    end
+
     def auto_scaling_group_update_desired_capacity(auto_scaling_group_name, desired_capacity, timeout)
       AutoScalingGroup::UpdateDesiredCapacity.new(auto_scaling_client, elb_client, auto_scaling_group_name, desired_capacity, timeout).execute
+    end
+
+    def auto_scaling_group_update_minmax_capacity(auto_scaling_group_name, min_size, max_size)
+      AutoScalingGroup::UpdateMinMaxCapacity.new(auto_scaling_client, auto_scaling_group_name, min_size, max_size).execute
     end
 
     def beanstalk_deploy(application, environment, version)
