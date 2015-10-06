@@ -131,18 +131,18 @@ describe AwsHelpers::EC2 do
     let(:min_count) { 1 }
     let(:max_count) { 1 }
     let(:monitoring) { true }
-    let(:options) { {} } #just use defaults
+    let(:options) { { min_count: min_count, max_count: max_count, monitoring: monitoring } }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
       allow(instance_create).to receive(:execute)
-      allow(InstanceCreate).to receive(:new).with(config, image_id, min_count, max_count, monitoring, options).and_return(instance_create)
+      allow(InstanceCreate).to receive(:new).and_return(instance_create)
     end
 
-    subject { AwsHelpers::EC2.new.instance_create(image_id, min_count, max_count, monitoring, options) }
+    subject { AwsHelpers::EC2.new.instance_create(image_id, options) }
 
     it 'should create InstanceCreate' do
-      expect(InstanceCreate).to receive(:new).with(config, image_id, min_count, max_count, monitoring, options).and_return(instance_create)
+      expect(InstanceCreate).to receive(:new).with(config, image_id, options).and_return(instance_create)
       subject
     end
 

@@ -32,33 +32,39 @@ describe InstanceCreate do
   let(:max_attempts) { 1 }
   let(:delay) { 0 }
 
-  let(:polling_request) { {max_attempts: max_attempts, delay: delay} }
+  let(:polling_request) { { max_attempts: max_attempts, delay: delay } }
 
-  let(:create_options) { {stdout: stdout,
-                          app_name: app_name,
-                          build_number: build_number,
-                          instance_type: nil,
-                          instance_exists: polling_request,
-                          instance_running: polling_request}
+  let(:create_options) {
+    {
+      min_count: min_count,
+      max_count: max_count,
+      monitoring: monitoring,
+      stdout: stdout,
+      app_name: app_name,
+      build_number: build_number,
+      instance_type: nil,
+      poll_exists: polling_request,
+      poll_running: polling_request
+    }
   }
 
-  let(:polling_options) { {stdout: stdout, max_attempts: max_attempts, delay: delay} }
-  let(:instance_run_options) { {stdout: stdout, instance_type: nil} }
+  let(:polling_options) { { stdout: stdout, max_attempts: max_attempts, delay: delay } }
+  let(:instance_run_options) { { stdout: stdout, instance_type: nil } }
 
   before(:each) do
     allow(aws_ec2_client).to receive(:create_tags).with(anything)
-    allow(EC2InstanceRun).to receive(:new).with(config, image_id, min_count, max_count, monitoring, instance_run_options).and_return(ec2_instance_run)
+    allow(EC2InstanceRun).to receive(:new).and_return(ec2_instance_run)
     allow(ec2_instance_run).to receive(:execute).and_return(instance_id)
-    allow(EC2InstanceTag).to receive(:new).with(config, instance_id, app_name, build_number).and_return(ec2_instance_tag)
+    allow(EC2InstanceTag).to receive(:new).and_return(ec2_instance_tag)
     allow(ec2_instance_tag).to receive(:execute)
-    allow(PollInstanceExists).to receive(:new).with(instance_id, polling_options).and_return(poll_instance_exists)
+    allow(PollInstanceExists).to receive(:new).and_return(poll_instance_exists)
     allow(poll_instance_exists).to receive(:execute)
-    allow(PollInstanceHealthy).to receive(:new).with(instance_id, polling_options).and_return(poll_instance_healthy)
+    allow(PollInstanceHealthy).to receive(:new).and_return(poll_instance_healthy)
     allow(poll_instance_healthy).to receive(:execute)
   end
 
   after(:each) do
-    InstanceCreate.new(config, image_id, min_count, max_count, monitoring, create_options).execute
+    InstanceCreate.new(config, image_id, create_options).execute
   end
 
   it 'should run a new EC2 instance from an AMI image' do

@@ -19,7 +19,7 @@ describe StackModifyParameters do
 
   let(:stack_modify_parameters_polling) { {max_attempts: max_attempts, delay: delay} }
 
-  let(:options) { {stdout: stdout, stack_modify_parameters_polling: stack_modify_parameters_polling} }
+  let(:options) { {stdout: stdout, polling: stack_modify_parameters_polling} }
   let(:stack_modify_parameters_options) { {stdout: stdout, max_attempts: max_attempts, delay: delay} }
 
   let(:stack_name) { 'my_stack_name' }

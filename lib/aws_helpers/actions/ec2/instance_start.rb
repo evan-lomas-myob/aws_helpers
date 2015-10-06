@@ -10,17 +10,17 @@ module AwsHelpers
           @config = config
           @instance_id = instance_id
           @stdout = options[:stdout] || $stdout
-          @instance_running_polling = create_polling_options(@stdout, options[:instance_running])
+          @instance_healthy_options = instance_healthy_options(@stdout, options[:poll_running])
         end
 
         def execute
           @stdout.puts("Starting #{@instance_id}")
           client = @config.aws_ec2_client
           client.start_instances(instance_ids: [@instance_id])
-          AwsHelpers::Actions::EC2::PollInstanceHealthy.new(@instance_id, @instance_running_polling).execute
+          AwsHelpers::Actions::EC2::PollInstanceHealthy.new(@instance_id, @instance_healthy_options).execute
         end
 
-        def create_polling_options(stdout, polling)
+        def instance_healthy_options(stdout, polling)
           options = {}
           options[:stdout] = stdout
           if polling

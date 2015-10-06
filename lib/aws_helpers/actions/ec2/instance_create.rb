@@ -9,18 +9,18 @@ module AwsHelpers
 
       class InstanceCreate
 
-        def initialize(config, image_id, min_count, max_count, monitoring, options)
+        def initialize(config, image_id, options)
           @config = config
           @image_id = image_id
-          @min_count = min_count
-          @max_count = max_count
-          @monitoring = monitoring
+          @min_count = options[:min_count] || 1
+          @max_count = options[:max_count] || 1
+          @monitoring = options[:monitoring] || false
           @app_name = options[:app_name]
           @build_number = options[:build_number]
           stdout = options[:stdout]
           @instance_run_options = create_instance_run_options(stdout, options[:instance_type], options[:time])
-          @instance_exists_polling = create_polling_options(stdout, options[:instance_exists])
-          @instance_running_polling = create_polling_options(stdout, options[:instance_running])
+          @instance_exists_polling = create_polling_options(stdout, options[:poll_exists])
+          @instance_running_polling = create_polling_options(stdout, options[:poll_running])
         end
 
         def execute

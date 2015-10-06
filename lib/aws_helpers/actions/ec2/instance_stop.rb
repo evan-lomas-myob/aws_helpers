@@ -10,17 +10,17 @@ module AwsHelpers
           @config = config
           @instance_id = instance_id
           @stdout = options[:stdout] || $stdout
-          @instance_stopped_polling = create_polling_options(@stdout, options[:instance_stopped])
+          @instance_stopped_options = create_instance_stopped_options(@stdout, options[:poll_stopped])
         end
 
         def execute
           @stdout.puts("Stopping #{@instance_id}")
           client = @config.aws_ec2_client
           client.stop_instances(instance_ids: [@instance_id])
-          AwsHelpers::Actions::EC2::PollInstanceStopped.new(@instance_id, @instance_stopped_polling).execute
+          AwsHelpers::Actions::EC2::PollInstanceStopped.new(@instance_id, @instance_stopped_options).execute
         end
 
-        def create_polling_options(stdout, polling)
+        def create_instance_stopped_options(stdout, polling)
           options = {}
           options[:stdout] = stdout
           if polling

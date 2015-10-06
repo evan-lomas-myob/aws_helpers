@@ -24,9 +24,10 @@ module AwsHelpers
     # Create an AMI using an existing image that is either running or stopped
     # @param name [String] Name to assign to the AMI
     # @param instance_id [String] ID of the EC2 Instance
-    # @param additional_tags [Array] Optional tags to include
-    def image_create(name, instance_id, additional_tags= [])
-      ImageCreate.new(config, name, instance_id, additional_tags).execute
+    # @param [Hash] options Optional parameters that can be overridden.
+    # @option options [Array] :additional_tags tags to include
+    def image_create(name, instance_id, options= {})
+      ImageCreate.new(config, name, instance_id, options).execute
     end
 
     # De-register AMI images older than now
@@ -50,19 +51,20 @@ module AwsHelpers
     # Return a list of images that match a given list of tags
     # @param tags [Array] List of tags to filter AMI's on
     # @return [Array] list of images matching the tags list
-    def images_find_by_tags(tags = [])
+    def images_find_by_tags(tags)
       ImagesFindByTags.new(config, tags).execute
     end
 
     # Create a desired number of EC2 instances using a known AMI
     # @param image_id [String] Name of the AMI to use
-    # @param min_count [String] Minimum number of instances to create
-    # @param max_count [String] Maximum number of instance to create
-    # @param monitoring [Boolean] Is monitoring required or not
-    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
+    # @param [Hash] options Optional parameters that can be overridden.
     # @option options [String] :instance_type (t2.micro) Override the type of instance to create
+    # @option options [Integer] :min_count Minimum number of instances to create
+    # @option options [Integer] :max_count Maximum number of instance to create
+    # @option options [Boolean] :monitoring Is monitoring required or not
     # @option options [String] :app_name (no-name-supplied) Name for the instance
     # @option options [String] :build_number (nil) Build Number associated with the instance
+    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
     # @option options [Hash{Symbol => Integer}] :poll_exists Override instance exists polling
     #
     #   defaults:
@@ -84,14 +86,14 @@ module AwsHelpers
     #   }
     #   ```
     # @return [String] Instance ID
-    def instance_create(image_id, min_count, max_count, monitoring, options)
-      InstanceCreate.new(config, image_id, min_count, max_count, monitoring, options).execute
+    def instance_create(image_id, options)
+      InstanceCreate.new(config, image_id, options).execute
     end
 
     # Start an EC2 instance
     # @param instance_id [String] The ID of the EC2 instance
     # @option options [IO] :stdout ($stdout) Override $stdout when logging output
-    # @option options [Hash{Symbol => Integer}] :instance_running Override instance running polling
+    # @option options [Hash{Symbol => Integer}] :poll_running Override instance running polling
     #
     #   defaults:
     #
@@ -108,7 +110,7 @@ module AwsHelpers
     # Stop an EC2 instance
     # @param instance_id [String] The ID of the EC2 instance
     # @option options [IO] :stdout ($stdout) Override $stdout when logging output
-    # @option options [Hash{Symbol => Integer}] :instance_stopped Override instance stopped polling
+    # @option options [Hash{Symbol => Integer}] :poll_stopped Override instance stopped polling
     #
     #   defaults:
     #
@@ -129,9 +131,9 @@ module AwsHelpers
     end
 
     # Return a list of instances that match a given list of tags
-    # @param tags [Array] List of tags to filter Instances on
+    # @param tag_values [Array] List of tags to filter Instances on
     # @return [Aws::EC2::Types::DescribeInstancesResult] list of Aws::EC2::Types::Reservation types
-    def instance_find_by_tag_value(tag_values = [])
+    def instance_find_by_tag_value(tag_values)
       InstanceFindByTagValue.new(config, tag_values).execute
     end
 

@@ -50,8 +50,6 @@ module AwsHelpers
     end
 
     # Modify the parameters of an existing stack.
-    # The parameter names must be known in advance to be included in the parameters array
-    #
     # @param stack_name [String] Name given to the Stack
     # @param parameters [Array] List of parameters to modify in stack e.g. [{ parameter_key: 'key', parameter_value: 'value' }]
     # @param [Hash] options Optional parameters that can be overridden.
