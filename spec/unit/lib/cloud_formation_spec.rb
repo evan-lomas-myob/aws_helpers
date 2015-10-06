@@ -2,10 +2,10 @@ require 'aws_helpers/cloud_formation'
 
 describe AwsHelpers::CloudFormation do
 
-  let(:options) { {stub_responses: true, endpoint: 'http://endpoint'} }
-  let(:config) { double(AwsHelpers::Config) }
+  let(:options) { { stub_responses: true, endpoint: 'http://endpoint' } }
+  let(:config) { instance_double(AwsHelpers::Config) }
   let(:stdout) { instance_double(IO) }
-  let(:options) { {stdout: stdout} }
+  let(:options) { { stdout: stdout } }
 
   let(:stack_name) { 'my_stack_name' }
 
@@ -96,20 +96,23 @@ describe AwsHelpers::CloudFormation do
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(StackDelete).to receive(:new).with(config, stack_name, stdout).and_return(stack_delete)
+      allow(StackDelete).to receive(:new).and_return(stack_delete)
       allow(stack_delete).to receive(:execute)
     end
 
-    subject { AwsHelpers::CloudFormation.new(options).stack_delete(stack_name, stdout) }
-
     it 'should create StackDelete with stack name as argument' do
-      expect(StackDelete).to receive(:new).with(config, stack_name, stdout)
-      subject
+      expect(StackDelete).to receive(:new).with(config, stack_name, {})
+      AwsHelpers::CloudFormation.new(options).stack_delete(stack_name)
+    end
+
+    it 'should create StackDelete with stack optional stdout' do
+      expect(StackDelete).to receive(:new).with(config, stack_name, { stdout: stdout })
+      AwsHelpers::CloudFormation.new(options).stack_delete(stack_name, stdout: stdout)
     end
 
     it 'should call StackDelete execute method' do
       expect(stack_delete).to receive(:execute)
-      subject
+      AwsHelpers::CloudFormation.new(options).stack_delete(stack_name)
     end
 
   end

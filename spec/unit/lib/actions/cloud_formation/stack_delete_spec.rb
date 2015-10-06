@@ -13,13 +13,13 @@ describe StackDelete do
   let(:stack_name) { 'my_stack_name' }
 
   before(:each) do
-    allow(cloudformation_client).to receive(:delete_stack).with(stack_name: stack_name)
-    allow(cloudformation_client).to receive(:wait_until).with(anything, stack_name: stack_name)
-    allow(stdout).to receive(:puts).with('Deleted my_stack_name')
+    allow(cloudformation_client).to receive(:delete_stack)
+    allow(cloudformation_client).to receive(:wait_until)
+    allow(stdout).to receive(:puts)
   end
 
   after(:each) do
-    AwsHelpers::Actions::CloudFormation::StackDelete.new(config, stack_name, stdout).execute
+    AwsHelpers::Actions::CloudFormation::StackDelete.new(config, stack_name, stdout: stdout).execute
   end
 
   it 'should call delete_stack to remove the stack' do

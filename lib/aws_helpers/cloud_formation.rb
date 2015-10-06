@@ -13,7 +13,6 @@ module AwsHelpers
 
     # CloudFormation utilities for creating, deleting and modifying templates
     # @param options [Hash] Optional Arguments to include when calling the AWS SDK
-    # @return [AwsHelpers::Config] A Config object with options initialized
     def initialize(options = {})
       super(options)
     end
@@ -55,9 +54,10 @@ module AwsHelpers
 
     # Delete an existing stack by providing the stack name
     # @param stack_name [String] Name given to the Stack
-    # @param stdout [IO] :stdout Override $stdout when logging output
-    def stack_delete(stack_name, stdout = $stdout)
-      AwsHelpers::Actions::CloudFormation::StackDelete.new(config, stack_name, stdout).execute
+    # @param [Hash] options Optional parameters that can be overridden.
+    # @option options [IO] :stdout Override $stdout when logging output
+    def stack_delete(stack_name, options = {})
+      AwsHelpers::Actions::CloudFormation::StackDelete.new(config, stack_name, options).execute
     end
 
     # Modify the parameters of an existing stack.

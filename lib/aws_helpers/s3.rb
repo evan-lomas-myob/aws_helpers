@@ -12,7 +12,6 @@ module AwsHelpers
 
     # Utilities for S3 creation and uploading
     # @param options [Hash] Optional Arguments to include when calling the AWS SDK
-    # @return [AwsHelpers::Config] A Config object with options initialized
     def initialize(options = {})
       super(options)
     end
