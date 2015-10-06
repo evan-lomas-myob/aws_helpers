@@ -5,8 +5,6 @@ describe AwsHelpers::CloudFormation do
   let(:options) { { stub_responses: true, endpoint: 'http://endpoint' } }
   let(:config) { instance_double(AwsHelpers::Config) }
   let(:stdout) { instance_double(IO) }
-  let(:options) { { stdout: stdout } }
-
   let(:stack_name) { 'my_stack_name' }
 
   describe '#initialize' do
@@ -22,70 +20,57 @@ describe AwsHelpers::CloudFormation do
 
     let(:stack_provision) { instance_double(StackProvision) }
 
-    let(:template) { 'my_stack_template' }
-
-    let(:default_parameters) { nil }
-    let(:default_capabilities) { nil }
-    let(:default_bucket_name) { nil }
-    let(:default_bucket_encrypt) { false }
-    let(:default_options) { {} }
-
-    let(:parameters) { 'my_stack_parameters' }
-    let(:capabilities) { 'my_capabilities' }
+    let(:template) { '{"AWSTemplateFormatVersion" : "2010-09-09"}' }
+    let(:parameters) { [{ parameter_key: 'key', parameter_value: 'value' }] }
+    let(:capabilities) { ['CAPABILITY_IAM'] }
     let(:bucket_name) { 'my_bucket_name' }
     let(:bucket_encrypt) { true }
+    let(:polling) { { max_attempts: 5, delay: 1 } }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(StackProvision).to receive(:new).with(anything,
-                                                  anything,
-                                                  anything,
-                                                  anything,
-                                                  anything,
-                                                  anything,
-                                                  anything,
-                                                  anything).and_return(stack_provision)
+      allow(StackProvision).to receive(:new).and_return(stack_provision)
       allow(stack_provision).to receive(:execute)
     end
 
-    context 'using default options' do
-
-      after(:each) do
-        AwsHelpers::CloudFormation.new(options).stack_provision(stack_name, template)
-      end
-
-      it 'should create StackProvision with stack_name,template and defaults' do
-
-        expect(StackProvision).to receive(:new).with(config, stack_name,
-                                                     template,
-                                                     default_parameters,
-                                                     default_capabilities,
-                                                     default_bucket_name,
-                                                     default_bucket_encrypt,
-                                                     default_options).and_return(stack_provision)
-
-      end
-
-      it 'should call StackProvision execute method' do
-        expect(stack_provision).to receive(:execute)
-      end
-
+    it 'should create StackProvision with default parameters' do
+      expect(StackProvision).to receive(:new).with(config, stack_name, template, {})
+      AwsHelpers::CloudFormation.new(options).stack_provision(stack_name, template)
     end
 
-    context 'give options values' do
+    it 'should create StackProvision with optional :parameters' do
+      expect(StackProvision).to receive(:new).with(config, stack_name, template, parameters: parameters)
+      AwsHelpers::CloudFormation.new(options).stack_provision(stack_name, template, parameters: parameters)
+    end
 
-      after(:each) do
-        AwsHelpers::CloudFormation.new(options).stack_provision(stack_name, template, parameters, capabilities, bucket_name, bucket_encrypt, options)
-      end
+    it 'should create StackProvision with optional :capabilities' do
+      expect(StackProvision).to receive(:new).with(config, stack_name, template, capabilities: capabilities)
+      AwsHelpers::CloudFormation.new(options).stack_provision(stack_name, template, capabilities: capabilities)
+    end
 
-      it 'should call StackProvision execute method with values' do
-        expect(stack_provision).to receive(:execute)
-      end
+    it 'should create StackProvision with optional :bucket_name' do
+      expect(StackProvision).to receive(:new).with(config, stack_name, template, bucket_name: bucket_name)
+      AwsHelpers::CloudFormation.new(options).stack_provision(stack_name, template, bucket_name: bucket_name)
+    end
 
-      it 'should create StackProvision with stack_name,template and other values defined' do
-        expect(StackProvision).to receive(:new).with(config, stack_name, template, parameters, capabilities, bucket_name, bucket_encrypt, options).and_return(stack_provision)
-      end
+    it 'should create StackProvision with optional :bucket_encrypt' do
+      expect(StackProvision).to receive(:new).with(config, stack_name, template, bucket_encrypt: bucket_encrypt)
+      AwsHelpers::CloudFormation.new(options).stack_provision(stack_name, template, bucket_encrypt: bucket_encrypt)
+    end
 
+    it 'should create StackProvision with optional :stdout' do
+      expect(StackProvision).to receive(:new).with(config, stack_name, template, stdout: stdout)
+      AwsHelpers::CloudFormation.new(options).stack_provision(stack_name, template, stdout: stdout)
+    end
+
+    it 'should create StackProvision with optional :stack_polling' do
+      expect(StackProvision).to receive(:new).with(config, stack_name, template, polling: polling)
+      AwsHelpers::CloudFormation.new(options).stack_provision(stack_name, template, polling: polling)
+    end
+
+    it 'should call StackProvision execute method' do
+      expect(stack_provision).to receive(:execute)
+      AwsHelpers::CloudFormation.new(options).stack_provision(stack_name, template)
     end
 
   end
@@ -123,7 +108,7 @@ describe AwsHelpers::CloudFormation do
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(StackExists).to receive(:new).with(anything, anything).and_return(stack_exists)
+      allow(StackExists).to receive(:new).and_return(stack_exists)
       allow(stack_exists).to receive(:execute)
     end
 
@@ -141,64 +126,49 @@ describe AwsHelpers::CloudFormation do
 
   end
 
-  describe '#stack_information' do
+  describe '#stack_parameters' do
 
     let(:stack_information) { instance_double(StackInformation) }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(StackInformation).to receive(:new).with(anything, anything, anything).and_return(stack_information)
+      allow(StackInformation).to receive(:new).and_return(stack_information)
       allow(stack_information).to receive(:execute)
     end
 
-    context 'defaults' do
-
-      after(:each) do
-        AwsHelpers::CloudFormation.new(options).stack_information(stack_name)
-
-      end
-      it 'should call StackInformation execute method' do
-        expect(stack_information).to receive(:execute)
-      end
-
-      it 'should create StackInformation with default parameters info_field' do
-        expect(StackInformation).to receive(:new).with(config, stack_name, 'parameters')
-      end
-
-    end
-
-    context 'info_field is parameters' do
-
-      let(:info_field) { 'parameters' }
-
-      it 'should create StackInformation using parameters info_field' do
-        expect(StackInformation).to receive(:new).with(config, stack_name, info_field)
-        AwsHelpers::CloudFormation.new(options).stack_information(stack_name, info_field)
-      end
-
-    end
-
-    context 'info_field is output' do
-
-      let(:info_field) { 'outputs' }
-
-      it 'should create StackInformation using output info_field' do
-        expect(StackInformation).to receive(:new).with(config, stack_name, info_field)
-        AwsHelpers::CloudFormation.new(options).stack_information(stack_name, info_field)
-      end
-
+    it 'should create StackInformation using parameters info_field' do
+      expect(StackInformation).to receive(:new).with(config, stack_name, 'parameters')
+      AwsHelpers::CloudFormation.new(options).stack_parameters(stack_name)
     end
 
   end
 
-  describe '#stack_modify_parameters' do
+  describe '#stack_outputs' do
 
-    let(:stack_modify_parameters) { instance_double(StackModifyParameters) }
-    let(:parameters) { %w(parameter1 parameter2) }
+    let(:stack_information) { instance_double(StackInformation) }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(StackModifyParameters).to receive(:new).with(anything, anything, anything, anything).and_return(stack_modify_parameters)
+      allow(StackInformation).to receive(:new).and_return(stack_information)
+      allow(stack_information).to receive(:execute)
+    end
+
+    it 'should create StackInformation using output info_field' do
+      expect(StackInformation).to receive(:new).with(config, stack_name, 'output')
+      AwsHelpers::CloudFormation.new(options).stack_outputs(stack_name)
+    end
+
+  end
+
+
+  describe '#stack_modify_parameters' do
+
+    let(:stack_modify_parameters) { instance_double(StackModifyParameters) }
+    let(:parameters) { [{ parameter_key: 'key', parameter_value: 'value' }] }
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(StackModifyParameters).to receive(:new).and_return(stack_modify_parameters)
       allow(stack_modify_parameters).to receive(:execute)
     end
 
@@ -223,7 +193,7 @@ describe AwsHelpers::CloudFormation do
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(StackResources).to receive(:new).with(anything, anything).and_return(stack_resources)
+      allow(StackResources).to receive(:new).and_return(stack_resources)
       allow(stack_resources).to receive(:execute)
     end
 
@@ -249,7 +219,7 @@ describe AwsHelpers::CloudFormation do
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(StackNamedResource).to receive(:new).with(anything, anything, anything).and_return(stack_named_resource)
+      allow(StackNamedResource).to receive(:new).and_return(stack_named_resource)
       allow(stack_named_resource).to receive(:execute)
     end
 
