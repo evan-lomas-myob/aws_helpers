@@ -20,7 +20,7 @@ describe InstanceStop do
   let(:delay) { 0 }
 
   let(:polling_options) { {stdout: stdout, max_attempts: max_attempts, delay: delay} }
-  let(:options) { {stdout: stdout, poll_stopped: {max_attempts: max_attempts, delay: delay}} }
+  let(:options) { {stdout: stdout, instance_stopped: {max_attempts: max_attempts, delay: delay}} }
 
   let(:stopping_instances) { [ instance_double(Aws::EC2::Types::InstanceStateChange, instance_id: instance_id) ] }
   let(:stopping_result) { instance_double(Aws::EC2::Types::StopInstancesResult, stopping_instances: stopping_instances)}

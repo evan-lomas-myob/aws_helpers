@@ -5,44 +5,44 @@ describe AwsHelpers::CloudFormation do
   stack_name = 'cloudformation-test-stack'
 
   parameters_to_create = [
-    { parameter_key: 'MinSize', parameter_value: '0' },
-    { parameter_key: 'MaxSize', parameter_value: '1' }
+      {parameter_key: 'MinSize', parameter_value: '0'},
+      {parameter_key: 'MaxSize', parameter_value: '1'}
   ]
 
   parameters_to_update = [
-    { parameter_key: 'MinSize', parameter_value: '0' },
-    { parameter_key: 'MaxSize', parameter_value: '2' }
+      {parameter_key: 'MinSize', parameter_value: '0'},
+      {parameter_key: 'MaxSize', parameter_value: '2'}
   ]
 
   parameters_initial =
 
-    [
-      Aws::CloudFormation::Types::Parameter.new(
-        parameter_key: 'MaxSize',
-        parameter_value: '1',
-        use_previous_value: nil
-      ),
-      Aws::CloudFormation::Types::Parameter.new(
-        parameter_key: 'MinSize',
-        parameter_value: '0',
-        use_previous_value: nil
-      )
-    ]
+      [
+          Aws::CloudFormation::Types::Parameter.new(
+              parameter_key: 'MaxSize',
+              parameter_value: '1',
+              use_previous_value: nil
+          ),
+          Aws::CloudFormation::Types::Parameter.new(
+              parameter_key: 'MinSize',
+              parameter_value: '0',
+              use_previous_value: nil
+          )
+      ]
 
   parameters_post_update =
 
-    [
-      Aws::CloudFormation::Types::Parameter.new(
-        parameter_key: 'MaxSize',
-        parameter_value: '2',
-        use_previous_value: nil
-      ),
-      Aws::CloudFormation::Types::Parameter.new(
-        parameter_key: 'MinSize',
-        parameter_value: '0',
-        use_previous_value: nil
-      )
-    ]
+      [
+          Aws::CloudFormation::Types::Parameter.new(
+              parameter_key: 'MaxSize',
+              parameter_value: '2',
+              use_previous_value: nil
+          ),
+          Aws::CloudFormation::Types::Parameter.new(
+              parameter_key: 'MinSize',
+              parameter_value: '0',
+              use_previous_value: nil
+          )
+      ]
 
   capabilities = ['CAPABILITY_IAM']
   outputs = ''
@@ -63,18 +63,16 @@ describe AwsHelpers::CloudFormation do
 
   end
 
-  describe '#stack_ouputs' do
-
-    it 'should retrieve the outputs' do
-      expect(AwsHelpers::CloudFormation.new.stack_outputs(stack_name)).to eq(outputs)
-    end
-
-  end
-
-  describe '#stack_parameters' do
+  describe '#stack_information' do
 
     it 'should retrieve the updated parameters' do
-      expect(AwsHelpers::CloudFormation.new.stack_parameters(stack_name)).to eq(parameters_initial)
+      info_field = 'parameters'
+      expect(AwsHelpers::CloudFormation.new.stack_information(stack_name, info_field)).to eq(parameters_initial)
+    end
+
+    it 'should retrieve the outputs' do
+      info_field = 'outputs'
+      expect(AwsHelpers::CloudFormation.new.stack_information(stack_name, info_field)).to eq(outputs)
     end
 
   end
@@ -82,9 +80,10 @@ describe AwsHelpers::CloudFormation do
   describe '#stack_modify_parameters' do
 
     it 'should retrieve the original parameters, modify, then check the new parameters' do
-      expect(AwsHelpers::CloudFormation.new.stack_parameters(stack_name)).to eq(parameters_initial)
+      info_field = 'parameters'
+      expect(AwsHelpers::CloudFormation.new.stack_information(stack_name, info_field)).to eq(parameters_initial)
       expect(AwsHelpers::CloudFormation.new.stack_modify_parameters(stack_name, parameters_to_update)).to be(nil)
-      expect(AwsHelpers::CloudFormation.new.stack_parameters(stack_name)).to eq(parameters_post_update)
+      expect(AwsHelpers::CloudFormation.new.stack_information(stack_name, info_field)).to eq(parameters_post_update)
     end
 
   end
@@ -94,7 +93,7 @@ describe AwsHelpers::CloudFormation do
   def create_stack(stack_name, parameters, capabilities)
 
     template_json = IO.read(File.join(File.dirname(__FILE__), 'fixtures', 'cloudformation.template.json'))
-    AwsHelpers::CloudFormation.new.stack_provision(stack_name, template_json, parameters: parameters, capabilities: capabilities)
+    AwsHelpers::CloudFormation.new.stack_provision(stack_name, template_json, parameters, capabilities, nil, false)
 
   end
 

@@ -14,16 +14,17 @@ module AwsHelpers
 
       class StackProvision
 
-        def initialize(config, stack_name, template_json, options = {})
+        def initialize(config, stack_name, template_json, parameters, capabilities, s3_bucket_name, bucket_encrypt, options = {})
           @config = config
           @stack_name = stack_name
           @template_json = template_json
-          @parameters = options[:parameters]
-          @capabilities = options[:capabilities]
-          @s3_bucket_name = options[:s3_bucket_name]
-          @bucket_encrypt = options[:bucket_encrypt]
+          @parameters = parameters
+          @capabilities = capabilities
+          @s3_bucket_name = s3_bucket_name
+          @bucket_encrypt = bucket_encrypt
           @stdout = options[:stdout]
-          @polling = create_options(@stdout, options[:polling])
+          @poll_stack_create_options = create_options(@stdout, options[:stack_create_polling])
+          @poll_stack_update_options = create_options(@stdout, options[:stack_update_polling])
         end
 
         def execute
@@ -51,11 +52,11 @@ module AwsHelpers
         end
 
         def update(request)
-          StackUpdate.new(@config, @stack_name, request, @polling).execute
+          StackUpdate.new(@config, @stack_name, request, @poll_stack_update_options).execute
         end
 
         def create(request)
-          StackCreate.new(@config, @stack_name, request, @polling).execute
+          StackCreate.new(@config, @stack_name, request, @poll_stack_create_options).execute
         end
 
       end

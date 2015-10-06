@@ -20,7 +20,7 @@ describe InstanceStart do
   let(:delay) { 0 }
 
   let(:polling_options) { {stdout: stdout, max_attempts: max_attempts, delay: delay} }
-  let(:options) { {stdout: stdout, poll_running: {max_attempts: max_attempts, delay: delay}} }
+  let(:options) { {stdout: stdout, instance_running: {max_attempts: max_attempts, delay: delay}} }
 
   let(:starting_instances) { [instance_double(Aws::EC2::Types::InstanceStateChange, instance_id: instance_id)] }
   let(:starting_result) { instance_double(Aws::EC2::Types::StartInstancesResult, starting_instances: starting_instances) }

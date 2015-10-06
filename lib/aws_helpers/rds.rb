@@ -12,6 +12,7 @@ module AwsHelpers
 
     # Utilities for manipulating RDS instances
     # @param options [Hash] Optional Arguments to include when calling the AWS SDK
+    # @return [AwsHelpers::Config] A Config object with options initialized
     def initialize(options = {})
       super(options)
     end

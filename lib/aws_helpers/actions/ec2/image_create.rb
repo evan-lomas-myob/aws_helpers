@@ -4,13 +4,13 @@ module AwsHelpers
 
       class ImageCreate
 
-        def initialize(config, instance_id, instance_name, options = {})
+        def initialize(config, instance_id, instance_name, additional_tags = [], now = Time.now, stdout = $stdout)
           @config = config
           @instance_id = instance_id
           @instance_name = instance_name
-          @additional_tags = options[:additional_tags] || []
-          @now = options[:now] || Time.now
-          @stdout = options[:stdout] || $stdout
+          @additional_tags = additional_tags
+          @now = now
+          @stdout = stdout
         end
 
         def execute
@@ -18,9 +18,9 @@ module AwsHelpers
           check_image_state(client, @instance_id)
           image_id = client.create_image(instance_id: @instance_id, name: @instance_name)
           client.create_tags(resources: [image_id],
-                             tags: [{ key: 'Name', value: @instance_name }, { key: 'Date', value: @now.to_s }] + @additional_tags
+                             tags: [{key: 'Name', value: @instance_name}, {key: 'Date', value: @now.to_s}] + @additional_tags
           )
-        end
+          end
 
         def check_image_state(client, instance_id)
           states = %w(running stopped)

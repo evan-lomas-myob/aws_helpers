@@ -10,6 +10,7 @@ module AwsHelpers
 
     # AutoScaling utilities for retrieving and updating
     # @param options [Hash] Optional Arguments to include when calling the AWS SDK
+    # @return [AwsHelpers::Config] A Config object with options initialized
     def initialize(options = {})
       super(options)
     end
