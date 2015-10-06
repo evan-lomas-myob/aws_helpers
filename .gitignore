@@ -24,14 +24,3 @@ aws-helper-docs
 .idea/vcs.xml
 .idea/workspace.xml
 .project
-/.bundle/
-/.idea
-/.yardoc
-/Gemfile.lock
-/_yardoc/
-/coverage/
-/doc/
-/aws_helper-docs/
-/pkg/
-/spec/reports/
-/tmp/

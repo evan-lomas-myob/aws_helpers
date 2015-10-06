@@ -1,0 +1,28 @@
+PATH
+  remote: .
+  specs:
+    aws_helpers (2.0.1)
+      aws-sdk-core (~> 2.1)
+      retryable (~> 2.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    aws-sdk-core (2.1.7)
+      jmespath (~> 1.0)
+    jmespath (1.0.2)
+      multi_json (~> 1.0)
+    multi_json (1.11.2)
+    rake (10.4.2)
+    retryable (2.0.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  aws_helpers!
+  bundler (~> 1.10)
+  rake
+
+BUNDLED WITH
+   1.10.5
