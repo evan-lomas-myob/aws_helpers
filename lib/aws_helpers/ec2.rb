@@ -137,6 +137,12 @@ module AwsHelpers
       InstanceFindByTagValue.new(config, tag_values).execute
     end
 
+    # Polls a given instance until it is running and healthy
+    # @param instance_id [String] Instance Unique ID
+    def poll_instance_healthy(instance_id)
+      PollInstanceHealthy.new(instance_id).execute
+    end
+
   end
 
 end

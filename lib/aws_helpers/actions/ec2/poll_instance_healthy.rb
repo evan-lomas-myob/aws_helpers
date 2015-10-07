@@ -1,3 +1,4 @@
+require 'base64'
 require 'aws_helpers/utilities/polling'
 
 include AwsHelpers::Utilities
@@ -19,9 +20,20 @@ module AwsHelpers
 
         def execute
           poll(@delay, @max_attempts) {
-            current_state = Aws::EC2::Instance.new(@instance_id).state.name
+            client = Aws::EC2::Instance.new(@instance_id)
+            current_state = client.state.name
             @stdout.puts "Instance State is #{current_state}."
-            current_state == 'running'
+
+            if client.platform == 'windows'
+              output = client.console_output.output
+              unless output.nil?
+                output = Base64.decode64(output)
+              end
+              ready = !!(output =~ /Windows is Ready to use/)
+            end
+
+            current_state == 'running' && ready
+
           }
         end
 
