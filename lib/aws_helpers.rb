@@ -10,6 +10,7 @@ require_relative 'aws_helpers/elastic_load_balancing/poll_healthy_instances'
 require_relative 'aws_helpers/elastic_beanstalk/version'
 require_relative 'aws_helpers/rds/instance'
 require_relative 'aws_helpers/ec2/image'
+require_relative 'aws_helpers/ec2/utils'
 require_relative 'aws_helpers/auto_scaling_group/drain_instances'
 require_relative 'aws_helpers/auto_scaling_group/retrieve_desired_capacity'
 require_relative 'aws_helpers/auto_scaling_group/retrieve_group_configuration'
@@ -121,6 +122,14 @@ module AwsHelpers
       EC2::Image.new(ec2_client).find_by_tag(tags)
     end
 
+    def ec2_get_windows_password(instance_id)
+      EC2::Utils.new(ec2_client).get_windows_password(instance_id)
+    end
+    
+    def ec2_get_decrypted_windows_password(instance_id, private_keyfile)
+      EC2::Utils.new(ec2_client).get_decrypted_windows_password(instance_id, private_keyfile)
+    end
+    
     private
 
     def cf_client
