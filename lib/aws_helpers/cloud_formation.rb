@@ -77,7 +77,7 @@ module AwsHelpers
     # @param stack_name [String] Name given to the Stack
     # @return [Array] The list of outputs defined for the Stack
     def stack_outputs(stack_name)
-      AwsHelpers::Actions::CloudFormation::StackInformation.new(config, stack_name, 'output').execute
+      AwsHelpers::Actions::CloudFormation::StackInformation.new(config, stack_name, 'outputs').execute
     end
 
     # @param stack_name [String] Name of the stack to check
