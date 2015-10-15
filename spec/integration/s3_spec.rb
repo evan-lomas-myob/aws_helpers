@@ -41,7 +41,7 @@ describe AwsHelpers::S3 do
     describe '#s3_location' do
 
       it 'should check the s3 bucket location' do
-        expect(AwsHelpers::S3.new.s3_location(s3_bucket_name)).to eq(s3_bucket_location)
+        expect(AwsHelpers::S3.new.s3_location(s3_bucket_name)[:location_constraint]).to eq(s3_bucket_location)
       end
 
     end
