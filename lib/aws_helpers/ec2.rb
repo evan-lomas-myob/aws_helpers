@@ -1,4 +1,5 @@
 require_relative 'client'
+require_relative 'actions/ec2/get_windows_password'
 require_relative 'actions/ec2/image_create'
 require_relative 'actions/ec2/images_delete'
 require_relative 'actions/ec2/images_delete_by_time'
@@ -141,6 +142,13 @@ module AwsHelpers
     # @param instance_id [String] Instance Unique ID
     def poll_instance_healthy(instance_id)
       PollInstanceHealthy.new(instance_id).execute
+    end
+
+    # Returns the decrypted Windows administrator password for a given instance.
+    # @param instance_id [String] Instance Unique ID
+    # @param pem_path [String] Path to PEM-encoded private key file
+    def get_windows_password(instance_id, pem_path)
+      GetWindowsPassword.new(config, instance_id, pem).get_password
     end
 
   end
