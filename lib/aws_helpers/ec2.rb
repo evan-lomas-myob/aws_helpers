@@ -148,7 +148,7 @@ module AwsHelpers
     # @param instance_id [String] Instance Unique ID
     # @param pem_path [String] Path to PEM-encoded private key file
     def get_windows_password(instance_id, pem_path)
-      GetWindowsPassword.new(config, instance_id, pem).get_password
+      GetWindowsPassword.new(config, instance_id, pem_path).get_password
     end
 
   end
