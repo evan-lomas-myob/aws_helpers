@@ -154,7 +154,7 @@ describe AwsHelpers::CloudFormation do
     end
 
     it 'should create StackInformation using output info_field' do
-      expect(StackInformation).to receive(:new).with(config, stack_name, 'output')
+      expect(StackInformation).to receive(:new).with(config, stack_name, 'outputs')
       AwsHelpers::CloudFormation.new(options).stack_outputs(stack_name)
     end
 
