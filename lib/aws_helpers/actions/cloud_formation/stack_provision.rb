@@ -30,7 +30,7 @@ module AwsHelpers
           template_url = S3UploadTemplate.new(@config, @stack_name, @template_json, @s3_bucket_name, @bucket_encrypt, @stdout).execute if @s3_bucket_name
 
           if StackExists.new(@config, @stack_name).execute && StackRollbackComplete.new(@config, @stack_name).execute
-            StackDelete.new(@config, @stack_name, @stdout).execute
+            StackDelete.new(@config, @stack_name, stdout: @stdout).execute
           end
 
           request = StackCreateRequestBuilder.new(@stack_name, template_url, @template_json, @parameters, @capabilities).execute

@@ -7,6 +7,9 @@ module AwsHelpers
         def initialize(config, stack_name, options = {})
           @config = config
           @stack_name = stack_name
+          puts "#########"
+          puts options
+
           @stdout = options[:stdout] || $stdout
         end
 
