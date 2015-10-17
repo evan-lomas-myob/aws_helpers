@@ -23,12 +23,20 @@ module AwsHelpers
     end
 
     # Create an AMI using an existing image that is either running or stopped
-    # @param name [String] Name to assign to the AMI
     # @param instance_id [String] ID of the EC2 Instance
+    # @param name [String] Name to assign to the AMI
     # @param [Hash] options Optional parameters that can be overridden.
-    # @option options [Array] :additional_tags tags to include
-    def image_create(name, instance_id, options= {})
-      ImageCreate.new(config, name, instance_id, options).execute
+    # @option options [Array] :additional_tags
+    #
+    #   ```
+    #   [
+    #     { key: 'Tag Key', value: 'Tag Value' }
+    #   ]
+    #   ```
+    # @option options [Time] :now Override the current time
+    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
+    def image_create(instance_id, name, options= {})
+      ImageCreate.new(config, instance_id, name, options).execute
     end
 
     # De-register AMI images older than now

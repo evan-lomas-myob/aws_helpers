@@ -6,7 +6,7 @@ module AwsHelpers
       def poll(delay, max_attempts, &block)
         attempts = 0
         while true
-          break if block.call
+          break if block.call(attempts)
           attempts += 1
           raise Aws::Waiters::Errors::TooManyAttemptsError.new(attempts) if attempts == max_attempts
           sleep(delay)

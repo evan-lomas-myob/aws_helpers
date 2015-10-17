@@ -1,31 +1,33 @@
+require 'aws_helpers/actions/ec2/poll_image_exists'
+require 'aws_helpers/actions/ec2/tag_image'
+require 'aws_helpers/actions/ec2/poll_image_available'
+
 module AwsHelpers
   module Actions
     module EC2
 
       class ImageCreate
 
-        def initialize(config, instance_id, instance_name, options = {})
+        def initialize(config, instance_id, name, options = {})
           @config = config
+          @client = @config.aws_ec2_client
           @instance_id = instance_id
-          @instance_name = instance_name
-          @additional_tags = options[:additional_tags] || []
+          @name = name
           @now = options[:now] || Time.now
+          @additional_tags = options[:additional_tags] || []
           @stdout = options[:stdout] || $stdout
         end
 
         def execute
-          client = @config.aws_ec2_client
-          check_image_state(client, @instance_id)
-          image_id = client.create_image(instance_id: @instance_id, name: @instance_name)
-          client.create_tags(resources: [image_id],
-                             tags: [{ key: 'Name', value: @instance_name }, { key: 'Date', value: @now.to_s }] + @additional_tags
-          )
-        end
+          image_name = "#{@name} #{@now.strftime('%Y-%m-%d-%H-%M')}"
+          @stdout.puts "Creating Image #{image_name}"
+          image_response = @client.create_image(instance_id: @instance_id, name: image_name, description: image_name)
+          image_id =image_response.image_id
+          PollImageExists.new(@config, image_id).execute
+          TagImage.new(@config, image_id, image_name, @now, @additional_tags).execute
+          PollImageAvailable.new(@config, image_id).execute
+          #TODO: Delete image on Error
 
-        def check_image_state(client, instance_id)
-          states = %w(running stopped)
-          image_status = client.describe_instance_status(instance_ids: [instance_id]).instance_statuses.first.instance_state.name
-          raise "AMI creation from #{instance_id} failed. State is #{image_status}" unless states.include?(image_status)
         end
 
       end
