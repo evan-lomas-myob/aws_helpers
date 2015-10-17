@@ -2,7 +2,7 @@ module AwsHelpers
   module Actions
     module EC2
 
-      class DeleteSnapshots
+      class SnapshotsDescribe
 
         def initialize(config, snapshot_ids, options={})
           @client = config.aws_ec2_client
@@ -11,9 +11,9 @@ module AwsHelpers
         end
 
         def execute
-          @snapshot_ids.each { |snapshot_id|
-            @stdout.puts "Deleting Snapshot:#{snapshot_id}"
-            @client.delete_snapshot(snapshot_id: snapshot_id)
+          response = @client.describe_snapshots(snapshot_ids: @snapshot_ids)
+          response.snapshots.each { |snapshot|
+            @stdout.puts "Snapshot:#{snapshot.snapshot_id} State:#{snapshot.state} Progress:#{snapshot.progress}"
           }
         end
 

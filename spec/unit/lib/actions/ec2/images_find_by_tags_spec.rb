@@ -8,13 +8,28 @@ describe ImagesFindByTags do
 
   let(:ec2_client) { instance_double(Aws::EC2::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: ec2_client) }
+  let(:tags) { [{ name: 'Name', value: 'value' }] }
+  let(:images) { [instance_double(Aws::EC2::Types::Image)] }
 
-  let(:images) { %w('image1', 'image2') }
-  let(:tags) { [{name: 'Name', values: %w('tag1', 'tag2')}] }
-
-  it 'should find the images using a tags array as a filter' do
-    allow(ec2_client).to receive(:describe_images).with(tags).and_return(images)
-    expect(ImagesFindByTags.new(config, tags).execute).to be(images)
+  before(:each) do
+    allow(ec2_client)
+      .to receive(:describe_images)
+            .and_return(
+              instance_double(
+                Aws::EC2::Types::DescribeImagesResult,
+                images: images
+              )
+            )
   end
+
+  it 'should call Aws::EC2::Client #describe_images with correct parameters' do
+    expect(ec2_client).to receive(:describe_images).with(filters: [{ name: 'tag:Name', values: ['value'] }])
+    ImagesFindByTags.new(config, tags).execute
+  end
+
+  it 'should return a list of images' do
+    expect(ImagesFindByTags.new(config, tags).execute).to eql(images)
+  end
+
 
 end

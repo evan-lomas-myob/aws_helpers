@@ -1,11 +1,11 @@
 require 'aws_helpers/actions/ec2/poll_image_deleted'
-require 'aws_helpers/actions/ec2/delete_snapshots'
+require 'aws_helpers/actions/ec2/snapshots_delete'
 
 module AwsHelpers
   module Actions
     module EC2
 
-      class DeleteImage
+      class ImageDelete
 
         def initialize(config, image_id, options={})
           @config = config
@@ -20,7 +20,7 @@ module AwsHelpers
           snapshot_ids = snapshot_ids(response.images.first)
           @client.deregister_image(image_id: @image_id)
           PollImageDeleted.new(@config, @image_id, stdout: @stdout).execute
-          DeleteSnapshots.new(@config, snapshot_ids, stdout: @stdout).execute
+          SnapshotsDelete.new(@config, snapshot_ids, stdout: @stdout).execute
         end
 
         private

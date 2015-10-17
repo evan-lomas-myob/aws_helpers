@@ -26,19 +26,19 @@ describe AwsHelpers::Actions::EC2::PollImageExists do
       end
 
       it 'should call stdout #puts with a description of the image it is waiting for' do
-        expect(stdout).to receive(:puts).with("Waiting for Image:#{image_id}")
+        expect(stdout).to receive(:puts).with("Waiting for Image:#{image_id} to be created")
         AwsHelpers::Actions::EC2::PollImageExists.new(config, image_id, stdout: stdout).execute
       end
 
       it 'should call its poll method with defaults for max_attempts and poll' do
         poll_image_exists = AwsHelpers::Actions::EC2::PollImageExists.new(config, image_id, stdout: stdout)
-        expect(poll_image_exists).to receive(:poll).with(10, 3)
+        expect(poll_image_exists).to receive(:poll).with(5, 3)
         poll_image_exists.execute
       end
 
       it 'should call its poll method correctly with optional max_attempts' do
         poll_image_exists = AwsHelpers::Actions::EC2::PollImageExists.new(config, image_id, stdout: stdout, max_attempts: 1)
-        expect(poll_image_exists).to receive(:poll).with(10, 1)
+        expect(poll_image_exists).to receive(:poll).with(5, 1)
         poll_image_exists.execute
       end
 

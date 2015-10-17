@@ -234,31 +234,4 @@ describe AwsHelpers::EC2 do
 
   end
 
-  describe '#instance_find_by_tag_value' do
-
-    let(:instance_find_by_tag_value) { double(InstanceFindByTagValue) }
-    let(:image_id) { 'image_id' }
-
-    let(:options) { {} } #just use defaults
-
-    before(:each) do
-      allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(instance_find_by_tag_value).to receive(:execute)
-      allow(InstanceFindByTagValue).to receive(:new).with(config, image_id).and_return(instance_find_by_tag_value)
-    end
-
-    subject { AwsHelpers::EC2.new.instance_find_by_tag_value(image_id) }
-
-    it 'should create InstanceTerminate' do
-      expect(InstanceFindByTagValue).to receive(:new).with(config, image_id).and_return(instance_find_by_tag_value)
-      subject
-    end
-
-    it 'should call InstanceTerminate execute method' do
-      expect(instance_find_by_tag_value).to receive(:execute)
-      subject
-    end
-
-  end
-
 end

@@ -1,8 +1,8 @@
 require 'aws-sdk-core'
 require 'aws_helpers/config'
-require 'aws_helpers/actions/ec2/describe_snapshots'
+require 'aws_helpers/actions/ec2/snapshots_describe'
 
-describe AwsHelpers::Actions::EC2::DescribeSnapshots do
+describe AwsHelpers::Actions::EC2::SnapshotsDescribe do
 
   describe '#execute' do
 
@@ -26,12 +26,12 @@ describe AwsHelpers::Actions::EC2::DescribeSnapshots do
 
     it 'should call Aws::EC2::Client #describe_snapshots with correct parameters' do
       expect(aws_ec2_client).to receive(:describe_snapshots).with(snapshot_ids: snapshot_ids)
-      AwsHelpers::Actions::EC2::DescribeSnapshots.new(config, snapshot_ids, stdout: stdout).execute
+      AwsHelpers::Actions::EC2::SnapshotsDescribe.new(config, snapshot_ids, stdout: stdout).execute
     end
 
     it 'should call stdout #puts with the snapshot details' do
       expect(stdout).to receive(:puts).with('Snapshot:snapshot_id State:state Progress:50')
-      AwsHelpers::Actions::EC2::DescribeSnapshots.new(config, snapshot_ids, stdout: stdout).execute
+      AwsHelpers::Actions::EC2::SnapshotsDescribe.new(config, snapshot_ids, stdout: stdout).execute
     end
 
   end

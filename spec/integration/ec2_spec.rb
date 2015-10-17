@@ -1,32 +1,42 @@
 require 'aws_helpers/ec2'
+require 'aws_helpers/cloud_formation'
 
 describe AwsHelpers::EC2 do
 
-  random_string = ('a'..'z').to_a.shuffle[0, 8].join
-  instance_id = nil
-
-  let(:image_id) { 'ami-69631053' }
-  let(:app_name) { "ec2-integration-test-#{random_string}" }
-  let(:options) { {app_name: app_name} }
-
-  let(:tags) { [ app_name ] }
-
-  before(:each) do
-    instance_id = AwsHelpers::EC2.new.instance_create(image_id, options)
+  before(:all) do
+    template_json = IO.read(File.join(File.dirname(__FILE__), 'fixtures', 'ec2.template.json'))
+    AwsHelpers::CloudFormation.new.stack_provision('test-stack', template_json)
+    outputs = AwsHelpers::CloudFormation.new.stack_outputs('test-stack')
+    @instance_id_one = outputs.find { |output| output.output_key == 'InstanceIdOne' }.output_value
+    @instance_id_two = outputs.find { |output| output.output_key == 'InstanceIdTwo' }.output_value
   end
 
-  after(:each) do
-    AwsHelpers::EC2.new.instance_terminate(instance_id) if instance_id
+  after(:all) do
+    AwsHelpers::CloudFormation.new.stack_delete('test-stack')
   end
 
-  it 'should return the instance_id of the instance created' do
-    response = AwsHelpers::EC2.new.instance_find_by_tag_value(tags)
-    expect(response.reservations.first.instances.first.instance_id).to eq(instance_id)
+  describe '#image_create' do
+
+    after(:each) do
+      AwsHelpers::EC2.new.image_delete(@image_id) if @image_id
+    end
+
+    it 'should create an image based on the instance' do
+     @image_id = AwsHelpers::EC2.new.image_create(@instance_id_one, 'test-image')
+    end
+
   end
 
-  it 'should stop and start the instance' do
-    AwsHelpers::EC2.new.instance_stop(instance_id, {})
-    AwsHelpers::EC2.new.instance_start(instance_id, {})
+  describe '#image_delete' do
+
+    before(:each) do
+      @image_id = AwsHelpers::EC2.new.image_create(@instance_id_two, 'test-image')
+    end
+
+    it 'should delete an image based on an image_id' do
+      AwsHelpers::EC2.new.image_delete(@image_id)
+    end
+
   end
 
 end

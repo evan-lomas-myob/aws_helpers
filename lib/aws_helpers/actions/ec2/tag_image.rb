@@ -6,17 +6,19 @@ module AwsHelpers
 
       class TagImage
 
-        def initialize(config, image_id, image_name, time, additional_tags = [])
+        def initialize(config, image_id, name, time, options={})
           @config = config
           @image_id = image_id
-          @image_name = image_name
+          @name = name
           @time = time
-          @additional_tags = additional_tags
+          @additional_tags = options[:additional_tags] || []
+          @stdout = options[:stdout] || $stdout
         end
 
         def execute
+          @stdout.puts "Tagging Image:#{@image_id}"
           tags = [
-            { key: 'Name', value: @image_name },
+            { key: 'Name', value: @name },
             { key: 'Date', value: @time.to_s }
           ] + @additional_tags
           TagResource.new(@config, @image_id, tags).execute

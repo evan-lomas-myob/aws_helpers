@@ -1,21 +1,23 @@
+require 'aws_helpers/actions/ec2/images_delete'
+
 module AwsHelpers
   module Actions
     module EC2
 
       class ImagesDeleteByTime
 
-        def initialize(config, image_id, creation_time)
+        def initialize(config, name_tag_value, creation_time, options = {})
           @config = config
-          @image_id = image_id
+          @name_tag_value = name_tag_value
           @creation_time = creation_time
+          @stdout = options[:stdout] || $stdout
         end
 
         def execute
-          response = ImagesFindByTags.new(@config, [ {name: 'Name', value: @image_id} ]).execute
-          response.images.each do |image|
-            next unless image.state == 'available'
-            should_delete = Time.parse(image.creation_date) <= @creation_time
-            @config.aws_ec2_client.deregister_image(image_id: image.image_id) if should_delete
+          @stdout.puts "Deleting images tagged with Name:#{@name_tag_value} created before #{@creation_time}"
+          images = ImagesFindByTags.new(@config, [{ name: 'Name', value: @name_tag_value }]).execute
+          images.each do |image|
+            ImageDelete.new(@config, image.image_id, stdout: @stdout).execute
           end
         end
 
