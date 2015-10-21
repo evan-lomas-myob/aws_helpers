@@ -55,7 +55,7 @@ describe PollInstanceHealthy do
     it 'should wait until the console output contains Windows is Ready to use' do
       allow(stdout).to receive(:print).with("Instance State is #{is_pending}")
       allow(stdout).to receive(:print).with("Instance State is #{is_running}")
-      allow(stdout).to receive(:print).with(' but wait longer for Windows')
+      allow(stdout).to receive(:print).with('. Wait for Windows to be Ready')
       allow(stdout).to receive(:print).with(".\n")
       expect(Aws::EC2::Instance).to receive(:new).and_return(instance_pending, instance_not_ready, instance_running)
       PollInstanceHealthy.new(instance_id, options).execute
