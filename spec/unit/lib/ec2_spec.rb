@@ -98,7 +98,6 @@ describe AwsHelpers::EC2 do
 
   end
 
-
   describe '#images_find_by_tags' do
 
     let(:images_find_by_tags) { double(ImagesFindByTags) }
@@ -202,6 +201,31 @@ describe AwsHelpers::EC2 do
 
     it 'should call InstanceStop execute method' do
       expect(instance_stop).to receive(:execute)
+      subject
+    end
+
+  end
+
+  describe '#instances_find_by_tags' do
+
+    let(:instances_find_by_tags) { double(InstancesFindByTags) }
+    let(:tags) { %w('tag1', 'tag2') }
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(InstancesFindByTags).to receive(:new).with(anything, anything).and_return(instances_find_by_tags)
+      allow(instances_find_by_tags).to receive(:execute)
+    end
+
+    subject { AwsHelpers::EC2.new.instances_find_by_tags(tags) }
+
+    it 'should create InstancesFindByTags' do
+      expect(InstancesFindByTags).to receive(:new).with(config, tags)
+      subject
+    end
+
+    it 'should call InstancesFindByTags execute method' do
+      expect(instances_find_by_tags).to receive(:execute)
       subject
     end
 

@@ -22,9 +22,12 @@ module AwsHelpers
           poll(@delay, @max_attempts) {
             client = Aws::EC2::Instance.new(@instance_id)
             current_state = client.state.name
-            @stdout.puts "Instance State is #{current_state}."
+            @stdout.print "Instance State is #{current_state}"
+
+            ready = true
 
             if client.platform == 'windows'
+              @stdout.print ' but wait longer for Windows' if current_state == 'running'
               output = client.console_output.output
               unless output.nil?
                 output = Base64.decode64(output)
@@ -32,8 +35,8 @@ module AwsHelpers
               ready = !!(output =~ /Windows is Ready to use/)
             end
 
+            @stdout.print ".\n"
             current_state == 'running' && ready
-
           }
         end
 

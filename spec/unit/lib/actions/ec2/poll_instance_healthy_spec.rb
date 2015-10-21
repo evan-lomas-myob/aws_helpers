@@ -24,8 +24,8 @@ describe PollInstanceHealthy do
   let(:running_state) { instance_double(Aws::EC2::Types::InstanceState, name: is_running) }
   let(:pending_state) { instance_double(Aws::EC2::Types::InstanceState, name: is_pending) }
 
-  let(:instance_running) { instance_double(Aws::EC2::Instance, state: running_state, platform: 'windows', console_output: ready_console_output) }
-  let(:instance_pending) { instance_double(Aws::EC2::Instance, state: pending_state, platform: 'windows', console_output: ready_console_output) }
+  let(:instance_running) { instance_double(Aws::EC2::Instance, state: running_state, platform: 'not_windows', console_output: ready_console_output) }
+  let(:instance_pending) { instance_double(Aws::EC2::Instance, state: pending_state, platform: 'not_windows', console_output: ready_console_output) }
 
   let(:instance_not_ready) { instance_double(Aws::EC2::Instance, state: running_state, platform: 'windows', console_output: not_ready_console_output) }
 
@@ -38,21 +38,25 @@ describe PollInstanceHealthy do
   describe '#execute' do
 
     it 'should use the AwsHelpers::Utilities::Polling to poll until the image exists' do
-      allow(stdout).to receive(:puts).with("Instance State is #{is_pending}.")
-      allow(stdout).to receive(:puts).with("Instance State is #{is_running}.")
+      allow(stdout).to receive(:print).with("Instance State is #{is_pending}")
+      allow(stdout).to receive(:print).with("Instance State is #{is_running}")
+      allow(stdout).to receive(:print).with(".\n")
       expect(Aws::EC2::Instance).to receive(:new).and_return(instance_pending, instance_running)
       PollInstanceHealthy.new(instance_id, options).execute
     end
 
     it 'should raise an exception is polling reaches max attempts' do
-      allow(stdout).to receive(:puts).with("Instance State is #{is_pending}.")
+      allow(stdout).to receive(:print).with("Instance State is #{is_pending}")
+      allow(stdout).to receive(:print).with(".\n")
       allow(Aws::EC2::Instance).to receive(:new).and_return(instance_pending)
       expect { PollInstanceHealthy.new(instance_id, options).execute }.to raise_error("stopped waiting after #{max_attempts} attempts without success")
     end
 
     it 'should wait until the console output contains Windows is Ready to use' do
-      allow(stdout).to receive(:puts).with("Instance State is #{is_pending}.")
-      allow(stdout).to receive(:puts).with("Instance State is #{is_running}.")
+      allow(stdout).to receive(:print).with("Instance State is #{is_pending}")
+      allow(stdout).to receive(:print).with("Instance State is #{is_running}")
+      allow(stdout).to receive(:print).with(' but wait longer for Windows')
+      allow(stdout).to receive(:print).with(".\n")
       expect(Aws::EC2::Instance).to receive(:new).and_return(instance_pending, instance_not_ready, instance_running)
       PollInstanceHealthy.new(instance_id, options).execute
     end
