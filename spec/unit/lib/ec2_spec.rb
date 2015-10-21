@@ -231,6 +231,31 @@ describe AwsHelpers::EC2 do
 
   end
 
+  describe '#instances_find_by_ids' do
+
+    let(:instances_find_by_ids) { double(InstancesFindByIds) }
+    let(:ids) { %w('id1', 'id2') }
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(InstancesFindByIds).to receive(:new).with(anything, anything).and_return(instances_find_by_ids)
+      allow(instances_find_by_ids).to receive(:execute)
+    end
+
+    subject { AwsHelpers::EC2.new.instances_find_by_ids(ids) }
+
+    it 'should create InstancesFindByIds' do
+      expect(InstancesFindByIds).to receive(:new).with(config, ids)
+      subject
+    end
+
+    it 'should call InstancesFindByIds execute method' do
+      expect(instances_find_by_ids).to receive(:execute)
+      subject
+    end
+
+  end
+
   describe '#instance_terminate' do
 
     let(:instance_terminate) { double(InstanceTerminate) }

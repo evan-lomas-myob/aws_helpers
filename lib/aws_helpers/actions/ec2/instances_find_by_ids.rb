@@ -2,19 +2,16 @@ module AwsHelpers
   module Actions
     module EC2
 
-      class InstancesFindByTags
+      class InstancesFindByIds
 
-        def initialize(config, tags)
+        def initialize(config, ids)
           @config = config
-          @tags = tags
+          @ids = ids
         end
 
         def execute
           client = @config.aws_ec2_client
-          filters = @tags.map { |tag|
-            { name: "tag:#{tag[:name]}", values: [tag[:value]] }
-          }
-          response = client.describe_instances(filters: filters).reservations[0].instances
+          response = client.describe_instances(instance_ids: @ids).reservations[0].instances
 
           instances = []
           response.each do | instance |

@@ -9,6 +9,7 @@ require_relative 'actions/ec2/instance_terminate'
 require_relative 'actions/ec2/instance_stop'
 require_relative 'actions/ec2/instance_start'
 require_relative 'actions/ec2/instances_find_by_tags'
+require_relative 'actions/ec2/instances_find_by_ids'
 
 include AwsHelpers::Actions::EC2
 
@@ -157,6 +158,13 @@ module AwsHelpers
     # @return [Array] list of instances matching the tags list
     def instances_find_by_tags(tags)
       InstancesFindByTags.new(config, tags).execute
+    end
+
+    # Return a list of instances that match a given list of tags
+    # @param ids [Array] List of tags to filter Instances on
+    # @return [Array] list of instances matching the tags list
+    def instances_find_by_ids(ids)
+      InstancesFindByIds.new(config, ids).execute
     end
 
     # Terminate an EC2 instance
