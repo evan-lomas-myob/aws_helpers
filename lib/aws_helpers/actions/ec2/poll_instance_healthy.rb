@@ -24,22 +24,15 @@ module AwsHelpers
             current_state = client.state.name
             @stdout.print "Instance State is #{current_state}"
 
-            @retain_line ||= ''
-            ready = false
+            ready = true
 
-            if client.platform == 'windows' && current_state == 'running'
-              @stdout.print '. Wait for Windows to be Ready'
+            if client.platform == 'windows'
+              @stdout.print '. Wait for Windows to be Ready' if current_state == 'running'
               output = client.console_output.output
               unless output.nil?
                 output = Base64.decode64(output)
-                line = output.split("\n").grep(/Windows is Ready to use/)
-                # The aws console can initially output a pre-reboot console (really? yes - really)
-                # I'm working around this by checking twice with a delay
-                # Confirm that both times, the same message (including timestamp) appear
-                line == @retain_line ? ready = true : @retain_line = line
               end
-            else
-              ready = true
+              ready = !!(output =~ /Windows is Ready to use/)
             end
 
             @stdout.print ".\n"
