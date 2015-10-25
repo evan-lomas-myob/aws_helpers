@@ -26,13 +26,13 @@ module AwsHelpers
 
             ready = true
 
-            if client.platform == 'windows' && current_state == 'running'
-              @stdout.print '. Wait for Windows to be Ready'
+            if client.platform == 'windows'
+              @stdout.print '. Wait for Windows to be Ready' if current_state == 'running'
               output = client.console_output.output
               unless output.nil?
                 output = Base64.decode64(output)
               end
-              ready = !!(output =~ /SSM Config:/)
+              ready = !!(output =~ /Windows is Ready to use/)
             end
 
             @stdout.print ".\n"
