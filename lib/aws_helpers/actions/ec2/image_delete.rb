@@ -29,7 +29,7 @@ module AwsHelpers
           snapshot_ids = []
           image.block_device_mappings.each { |device_mapping|
             ebs = device_mapping.ebs
-            snapshot_ids << ebs.snapshot_id if ebs
+            snapshot_ids << ebs.snapshot_id if ebs && !ebs.snapshot_id.to_s.empty?
           }
           snapshot_ids
         end
