@@ -11,16 +11,15 @@ describe StackUpdate do
 
   let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client) }
-  let(:poll_stack_update) { instance_double(PollStackStatus) }
-  let(:stack_error_events) { instance_double(StackErrorEvents) }
-  let(:check_stack_failure) { instance_double(CheckStackFailure) }
+  let(:stack_progress) { instance_double(StackProgress) }
+  let(:stack_name) { 'my_stack_name' }
   let(:stdout) { instance_double(IO) }
-  let(:options) { {stdout: stdout} }
+
+  let(:options) { {stack_name: stack_name, stdout: stdout} }
 
   let(:validation_error_no_update) { Aws::CloudFormation::Errors::ValidationError.new(config, 'No updates are to be performed.') }
   let(:validation_error_general) { Aws::CloudFormation::Errors::ValidationError.new(config, 'General Error') }
 
-  let(:stack_name) { 'my_stack_name' }
   let(:url) { 'https://my-bucket-url' }
   let(:parameters) { [
       Parameter.new(parameter_key: 'param_key_1', parameter_value: 'param_value_1'),
@@ -42,12 +41,8 @@ describe StackUpdate do
     allow(cloudformation_client).to receive(:update_stack).with(request)
     allow(cloudformation_client).to receive(:describe_stacks).with(stack_name)
     allow(stdout).to receive(:puts).and_return(anything)
-    allow(PollStackStatus).to receive(:new).with(config, stack_name, options).and_return(poll_stack_update)
-    allow(poll_stack_update).to receive(:execute)
-    allow(StackErrorEvents).to receive(:new).with(config, stack_name, stdout).and_return(stack_error_events)
-    allow(stack_error_events).to receive(:execute)
-    allow(CheckStackFailure).to receive(:new).with(config, stack_name).and_return(check_stack_failure)
-    allow(check_stack_failure).to receive(:execute)
+    allow(StackProgress).to receive(:new).with(config, options).and_return(stack_progress)
+    allow(stack_progress).to receive(:execute)
   end
 
   context 'Update Stack Succeeds' do
@@ -61,15 +56,7 @@ describe StackUpdate do
     end
 
     it 'should poll for stack update completion' do
-      expect(poll_stack_update).to receive(:execute)
-    end
-
-    it 'should check for error events' do
-      expect(stack_error_events).to receive(:execute)
-    end
-
-    it 'should check for stack update failure' do
-      expect(check_stack_failure).to receive(:execute)
+      expect(stack_progress).to receive(:execute)
     end
 
     it 'should raise an exception if not updates are required' do

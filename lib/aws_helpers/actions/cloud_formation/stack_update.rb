@@ -1,6 +1,4 @@
-require 'aws_helpers/actions/cloud_formation/poll_stack_status'
-require 'aws_helpers/actions/cloud_formation/stack_error_events'
-require 'aws_helpers/actions/cloud_formation/check_stack_failure'
+require_relative 'stack_progress'
 
 module AwsHelpers
   module Actions
@@ -14,6 +12,7 @@ module AwsHelpers
           @request = request
           @options = options
           @stdout = options[:stdout] || $stdout
+          @options[:stack_name] = @stack_name
         end
 
         def execute
@@ -22,9 +21,7 @@ module AwsHelpers
           begin
             @stdout.puts "Updating #{@stack_name}"
             client.update_stack(@request)
-            AwsHelpers::Actions::CloudFormation::PollStackStatus.new(@config, @stack_name, @options).execute
-            AwsHelpers::Actions::CloudFormation::StackErrorEvents.new(@config, @stack_name, @stdout).execute
-            AwsHelpers::Actions::CloudFormation::CheckStackFailure.new(@config, @stack_name).execute
+            AwsHelpers::Actions::CloudFormation::StackProgress.new(@config, @options).execute
           rescue Aws::CloudFormation::Errors::ValidationError => validation_error
             if validation_error.message == 'No updates are to be performed.'
               @stdout.puts "No updates to perform for #{@stack_name}."

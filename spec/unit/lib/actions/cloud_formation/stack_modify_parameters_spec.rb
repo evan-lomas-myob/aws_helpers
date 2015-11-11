@@ -17,12 +17,11 @@ describe StackModifyParameters do
   let(:max_attempts) { 1 }
   let(:delay) { 1 }
 
+  let(:stack_name) { 'my_stack_name' }
   let(:stack_modify_parameters_polling) { {max_attempts: max_attempts, delay: delay} }
+  let(:stack_modify_parameters_options) { {stack_name: stack_name, stdout: stdout, max_attempts: max_attempts, delay: delay} }
 
   let(:options) { {stdout: stdout, polling: stack_modify_parameters_polling} }
-  let(:stack_modify_parameters_options) { {stdout: stdout, max_attempts: max_attempts, delay: delay} }
-
-  let(:stack_name) { 'my_stack_name' }
 
   let(:stack_information) { instance_double(StackInformation) }
   let(:stack_parameter_update_builder) { instance_double(StackParameterUpdateBuilder) }
@@ -63,7 +62,7 @@ describe StackModifyParameters do
     allow(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_return(stack_response)
     allow(cloudformation_client).to receive(:describe_stack_events).with(stack_name: stack_name, next_token: nil).and_return(stack_events_response)
     allow(cloudformation_client).to receive(:update_stack).with(stack_updated)
-    allow(PollStackStatus).to receive(:new).with(config, stack_name, stack_modify_parameters_options).and_return(poll_stack_update)
+    allow(PollStackStatus).to receive(:new).with(config, stack_modify_parameters_options).and_return(poll_stack_update)
     allow(poll_stack_update).to receive(:execute)
   end
 

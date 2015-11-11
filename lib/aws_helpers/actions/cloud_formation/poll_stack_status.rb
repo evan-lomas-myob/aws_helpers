@@ -1,4 +1,5 @@
 require 'aws_helpers/utilities/polling'
+require 'aws_helpers/utilities/target_stack_validate'
 
 module AwsHelpers
   module Actions
@@ -8,12 +9,12 @@ module AwsHelpers
 
         include AwsHelpers::Utilities::Polling
 
-        def initialize(config, stack_name, options = {})
+        def initialize(config, options = {})
           @config = config
-          @stack_name = stack_name
           @stdout = options[:stdout] || $stdout
           @delay = options[:delay] || 30
           @max_attempts = options[:max_attempts] || 40
+          @target_stack = AwsHelpers::Utilities::TargetStackValidate.new.execute(options)
         end
 
         def execute
@@ -21,8 +22,8 @@ module AwsHelpers
           client = @config.aws_cloud_formation_client
 
           poll(@delay, @max_attempts) do
-            response = client.describe_stacks(stack_name: @stack_name).stacks.first
-            output = "Stack - #{@stack_name} status #{response.stack_status}"
+            response = client.describe_stacks(stack_name: @target_stack).stacks.first
+            output = "Stack - #{response.stack_name} status #{response.stack_status}"
             @stdout.puts(output)
             states.include?(response.stack_status)
           end

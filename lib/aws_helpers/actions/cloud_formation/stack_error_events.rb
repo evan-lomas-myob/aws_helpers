@@ -9,17 +9,16 @@ module AwsHelpers
 
       class StackErrorEvents
 
-        def initialize(config, stack_name, stdout)
+        def initialize(config, options)
           @config = config
-          @stack_name = stack_name
-          @stdout = stdout
+          @options = options
+          @stdout = options[:stdout] || $stdout
         end
 
         def execute
-          events = AwsHelpers::Actions::CloudFormation::StackRetrieveEvents.new(@config, @stack_name).execute
+          events = AwsHelpers::Actions::CloudFormation::StackRetrieveEvents.new(@config, @options).execute
           events = AwsHelpers::Actions::CloudFormation::StackEventsFilterPostInitiation.new(events).execute
           events = AwsHelpers::Actions::CloudFormation::StackEventsFilterFailed.new(events).execute
-
           events.each { |event|
             @stdout.puts "#{event.timestamp}, #{event.resource_status}, #{event.logical_resource_id}, #{event.resource_status_reason}"
           }

@@ -1,3 +1,5 @@
+require_relative 'stack_progress'
+
 module AwsHelpers
   module Actions
     module CloudFormation
@@ -10,19 +12,14 @@ module AwsHelpers
           @request = request
           @options = options
           @stdout = options[:stdout] || $stdout
+          @options[:stack_name] = @stack_name
         end
 
         def execute
-
           client = @config.aws_cloud_formation_client
-
           @stdout.puts "Creating #{@stack_name}"
           client.create_stack(@request)
-
-          AwsHelpers::Actions::CloudFormation::PollStackStatus.new(@config, @stack_name, @options).execute
-          AwsHelpers::Actions::CloudFormation::StackErrorEvents.new(@config, @stack_name, @stdout).execute
-          AwsHelpers::Actions::CloudFormation::CheckStackFailure.new(@config, @stack_name).execute
-
+          AwsHelpers::Actions::CloudFormation::StackProgress.new(@config, @options).execute
         end
 
       end
