@@ -7,6 +7,8 @@ require_relative 'aws_helpers/cloud_formation/stack_exists'
 require_relative 'aws_helpers/cloud_formation/stack_outputs'
 require_relative 'aws_helpers/cloud_formation/stack_parameters'
 require_relative 'aws_helpers/elastic_load_balancing/poll_healthy_instances'
+require_relative 'aws_helpers/elastic_load_balancing/create_tag'
+require_relative 'aws_helpers/elastic_load_balancing/read_tag'
 require_relative 'aws_helpers/elastic_beanstalk/version'
 require_relative 'aws_helpers/rds/instance'
 require_relative 'aws_helpers/ec2/image'
@@ -56,6 +58,14 @@ module AwsHelpers
 
     def elb_poll_healthy_instances(load_balancer_name, required_instances, timeout)
       ElasticLoadBalancing::PollHealthyInstances.new(elb_client, load_balancer_name, required_instances, timeout).execute
+    end
+
+    def elb_create_tag(load_balancer_name, tag_key, tag_value)
+      ElasticLoadBalancing::CreateTag.new(elb_client, load_balancer_name, tag_key, tag_value).execute
+    end
+
+    def elb_read_tag(load_balancer_name, tag_key)
+      ElasticLoadBalancing::ReadTag.new(elb_client, load_balancer_name, tag_key).execute
     end
 
     def auto_scaling_group_retrieve_desired_capacity(auto_scaling_group_name)
