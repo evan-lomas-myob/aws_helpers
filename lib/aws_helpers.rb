@@ -60,6 +60,10 @@ module AwsHelpers
       ElasticLoadBalancing::PollHealthyInstances.new(elb_client, load_balancer_name, required_instances, timeout).execute
     end
 
+    def elb_poll_max_healthy_instances(load_balancer_name, required_instances, timeout)
+      ElasticLoadBalancing::PollHealthyInstances.new(elb_client, load_balancer_name, required_instances, timeout).execute
+    end
+
     def elb_create_tag(load_balancer_name, tag_key, tag_value)
       ElasticLoadBalancing::CreateTag.new(elb_client, load_balancer_name, tag_key, tag_value).execute
     end
