@@ -7,6 +7,7 @@ require_relative 'aws_helpers/cloud_formation/stack_exists'
 require_relative 'aws_helpers/cloud_formation/stack_outputs'
 require_relative 'aws_helpers/cloud_formation/stack_parameters'
 require_relative 'aws_helpers/elastic_load_balancing/poll_healthy_instances'
+require_relative 'aws_helpers/elastic_load_balancing/poll_max_healthy_instances'
 require_relative 'aws_helpers/elastic_load_balancing/create_tag'
 require_relative 'aws_helpers/elastic_load_balancing/read_tag'
 require_relative 'aws_helpers/elastic_beanstalk/version'
@@ -61,7 +62,7 @@ module AwsHelpers
     end
 
     def elb_poll_max_healthy_instances(load_balancer_name, required_instances, timeout)
-      ElasticLoadBalancing::PollHealthyInstances.new(elb_client, load_balancer_name, required_instances, timeout).execute
+      ElasticLoadBalancing::PollMaxHealthyInstances.new(elb_client, load_balancer_name, required_instances, timeout).execute
     end
 
     def elb_create_tag(load_balancer_name, tag_key, tag_value)
