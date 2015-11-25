@@ -11,10 +11,8 @@ module AwsHelpers
 
         def execute
           client = @config.aws_ec2_client
-          filters = @tags.map { |tag|
-            { name: "tag:#{tag[:name]}", values: [tag[:value]] }
-          }
-          response = client.describe_instances(filters: filters).reservations[0].instances
+
+          response = client.describe_instances(filters: get_tag_filters).reservations[0].instances
 
           instances = []
           response.each do | instance |
@@ -22,6 +20,20 @@ module AwsHelpers
           end
 
           instances
+        end
+
+        private
+
+        def get_tag_filters
+          case @tags
+            when Array
+              warn 'Deprecation warning: AWS::EC2#instances_find_by_tags now accepts a hash instead of an array'
+              @tags.map { |tag| { name: "tag:#{tag[:name]}", values: [tag[:value]] } }
+            when Hash
+              @tags.map { |name, *values| { name: "tag:#{name}", values: values.flatten } }
+            else
+              raise ArgumentError.new('Could not parse tags')
+          end
         end
 
       end

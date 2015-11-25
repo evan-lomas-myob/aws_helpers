@@ -12,7 +12,7 @@ namespace :spec do
   end
 end
 
-RSpec::Core::RakeTask.new(:spec)
+task spec: 'spec:unit'
 
 task default: 'spec:unit'
 

@@ -78,7 +78,12 @@ module AwsHelpers
     end
 
     # Return a list of images that match a given list of tags
-    # @param tags [Array] List of tags to filter AMI's on
+    # @param tags [Hash] a hash of tag names mapped to one or more tag values
+    #
+    #   ```
+    #   { 'Tag1' => ['Value1', 'Value2'], 'Tag2' => 'Value2' }
+    #   ```
+    #
     # @return [Array] list of images matching the tags list
     def images_find_by_tags(tags)
       ImagesFindByTags.new(config, tags).execute
@@ -154,14 +159,19 @@ module AwsHelpers
     end
 
     # Return a list of instances that match a given list of tags
-    # @param tags [Array] List of tags to filter Instances on
+    # @param tags [Hash] a hash of tag names mapped to one or more tag values
+    #
+    #   ```
+    #   { 'Tag1' => ['Value1', 'Value2'], 'Tag2' => 'Value2' }
+    #   ```
+    #
     # @return [Array] list of instances matching the tags list
     def instances_find_by_tags(tags)
       InstancesFindByTags.new(config, tags).execute
     end
 
     # Return a list of instances that match a given list of tags
-    # @param ids [Array] List of tags to filter Instances on
+    # @param ids [Array] List of ids to filter Instances on
     # @return [Array] list of instances matching the tags list
     def instances_find_by_ids(ids)
       InstancesFindByIds.new(config, ids).execute
