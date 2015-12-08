@@ -18,7 +18,7 @@ module AwsHelpers
 
     # @param options [Hash] Optional arguments to pass to the AWS Ruby SDK
     def initialize(options)
-      @options = {retry_limit: 5}.merge(options)
+      @options = {retry_limit: 8}.merge(options)
     end
 
     # @return [Aws::AutoScaling::Client]
