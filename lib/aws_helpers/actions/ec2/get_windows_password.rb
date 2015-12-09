@@ -18,7 +18,8 @@ module AwsHelpers
           encrypted_password = client.get_password_data(instance_id: @instance_id).password_data
           puts "Encrypted Password: #{encrypted_password}"
           private_key = OpenSSL::PKey::RSA.new(File.read(@pem_path))
-          puts "Private Key: \n#{private_key} from #{@pem_path}"
+          puts "Private Key \n#{private_key.to_s.slice(0,50)} ..."
+          puts "Private Key from #{@pem_path}"
           decoded = Base64.decode64(encrypted_password)
           begin
             private_key.private_decrypt(decoded)
