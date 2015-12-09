@@ -19,10 +19,10 @@ module AwsHelpers
 
         def get_password
           client = @config ? @config.aws_ec2_client : Aws::EC2::Client.new()
-          @stdout.puts 'Get encrypted windows password'
+          encrypted_password = ''
           poll(@delay, @max_attempts) {
             encrypted_password = client.get_password_data(instance_id: @instance_id).password_data
-            encrypted_password.empty?
+            !encrypted_password.empty?
           }
           private_key = OpenSSL::PKey::RSA.new(File.read(@pem_path))
           decoded = Base64.decode64(encrypted_password)
