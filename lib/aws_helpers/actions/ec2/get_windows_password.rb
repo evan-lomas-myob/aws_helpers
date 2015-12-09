@@ -1,25 +1,30 @@
 require 'aws-sdk-core'
+require 'aws_helpers/utilities/polling'
 
 module AwsHelpers
   module Actions
     module EC2
 
       class GetWindowsPassword
+        include AwsHelpers::Utilities::Polling
 
-        def initialize(config, instance_id, pem_path, stdout = $stdout)
+        def initialize(config, instance_id, pem_path, options)
           @config = config
           @instance_id = instance_id
           @pem_path = pem_path
-          @stdout = stdout
+          @stdout = options[:stdout] || $stdout
+          @delay = options[:delay] || 10
+          @max_attempts = options[:max_attempts] || 6
         end
 
         def get_password
           client = @config ? @config.aws_ec2_client : Aws::EC2::Client.new()
-          encrypted_password = client.get_password_data(instance_id: @instance_id).password_data
-          puts "Encrypted Password: #{encrypted_password}"
+          @stdout.puts 'Get encrypted windows password'
+          poll(@delay, @max_attempts) {
+            encrypted_password = client.get_password_data(instance_id: @instance_id).password_data
+            encrypted_password.empty?
+          }
           private_key = OpenSSL::PKey::RSA.new(File.read(@pem_path))
-          puts "Private Key \n#{private_key.to_s.slice(0,50)} ..."
-          puts "Private Key from #{@pem_path}"
           decoded = Base64.decode64(encrypted_password)
           begin
             private_key.private_decrypt(decoded)

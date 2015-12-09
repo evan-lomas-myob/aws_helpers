@@ -192,8 +192,19 @@ module AwsHelpers
     # Returns the decrypted Windows administrator password for a given instance.
     # @param instance_id [String] Instance Unique ID
     # @param pem_path [String] Path to PEM-encoded private key file
-    def get_windows_password(instance_id, pem_path)
-      GetWindowsPassword.new(config, instance_id, pem_path).get_password
+    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
+    # @option options [Hash{Symbol => Integer}] :poll_stopped Override instance stopped polling
+    #
+    #   defaults:
+    #
+    #   ```
+    #   {
+    #     :delay => 10 # seconds
+    #     :max_attempts => 6,
+    #   }
+    #   ```
+    def get_windows_password(instance_id, pem_path, options)
+      GetWindowsPassword.new(config, instance_id, pem_path, options).get_password
     end
 
   end
