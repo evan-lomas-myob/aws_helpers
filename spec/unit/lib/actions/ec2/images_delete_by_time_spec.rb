@@ -16,13 +16,16 @@ describe AwsHelpers::Actions::EC2::ImagesDeleteByTime do
     let(:images_find_by_tags) { instance_double(AwsHelpers::Actions::EC2::ImagesFindByTags) }
     let(:image_id) { 'image_id' }
     let(:images_delete) { instance_double(AwsHelpers::Actions::EC2::ImagesDelete) }
+    let(:date_tag) { instance_double(Aws::EC2::Types::Tag, key: 'Name', value: 'Jenkins Slave Image') }
+    let(:name_tag) { instance_double(Aws::EC2::Types::Tag, key: 'Date', value: '2015-12-16 11:57:42 +1100') }
+    let(:tags) { [ date_tag, name_tag ] }
 
     before(:each) do
       allow(stdout).to receive(:puts)
       allow(AwsHelpers::Actions::EC2::ImagesFindByTags).to receive(:new).and_return(images_find_by_tags)
       allow(images_find_by_tags)
         .to receive(:execute)
-              .and_return([instance_double(Aws::EC2::Types::Image, image_id: image_id)])
+              .and_return([instance_double(Aws::EC2::Types::Image, image_id: image_id, tags: tags)])
       allow(AwsHelpers::Actions::EC2::ImageDelete).to receive(:new).and_return(images_delete)
       allow(images_delete).to receive(:execute)
     end
