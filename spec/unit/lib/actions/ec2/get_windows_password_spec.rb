@@ -9,6 +9,7 @@ describe GetWindowsPassword do
   let(:aws_ec2_client) { instance_double(Aws::EC2::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: aws_ec2_client) }
   let(:stdout) { instance_double(IO) }
+  let(:options) { { stdout: stdout } }
 
   let(:instance_id) { 'my-instance_id'}
   let(:path_to_pem) { '/path_to_pem_file/pem.file' }
@@ -50,7 +51,7 @@ XipewzZEyjdrrYTOVZ0Dn7ZYjs4anmEsl2Uw/GZp5m92U350e+TLEfrqoreB7ax8
 cgjPr3q6+hb7avSNivEdgQ==' }
 
   let(:response) { instance_double(Aws::EC2::Types::GetPasswordDataResult, password_data: password_data)}
-  let(:error_response) { instance_double(Aws::EC2::Types::GetPasswordDataResult, password_data: '' )}
+  let(:error_response) { instance_double(Aws::EC2::Types::GetPasswordDataResult, password_data: 'BADPASSWORDDATA' )}
 
   let(:password) { "my-password\n" }
 
@@ -62,26 +63,26 @@ cgjPr3q6+hb7avSNivEdgQ==' }
   it 'should get the password data' do
     allow(File).to receive(:read).with(path_to_pem).and_return(pkcs8)
     expect(aws_ec2_client).to receive(:get_password_data).with(instance_id: instance_id).and_return(response)
-    GetWindowsPassword.new(config, instance_id, path_to_pem, stdout).get_password
+    GetWindowsPassword.new(config, instance_id, path_to_pem, options).get_password
   end
 
   it 'should read the pem file' do
     expect(File).to receive(:read).with(path_to_pem).and_return(pkcs8)
     allow(aws_ec2_client).to receive(:get_password_data).with(instance_id: instance_id).and_return(response)
-    GetWindowsPassword.new(config, instance_id, path_to_pem, stdout).get_password
+    GetWindowsPassword.new(config, instance_id, path_to_pem, options).get_password
   end
 
 
   it 'should decrypt and return the correct password' do
     allow(File).to receive(:read).with(path_to_pem).and_return(pkcs8)
     allow(aws_ec2_client).to receive(:get_password_data).with(instance_id: instance_id).and_return(response)
-    expect(GetWindowsPassword.new(config, instance_id, path_to_pem, stdout).get_password).to eq(password)
+    expect(GetWindowsPassword.new(config, instance_id, path_to_pem, options).get_password).to eq(password)
   end
 
   it 'should throw and error' do
     allow(File).to receive(:read).with(path_to_pem).and_return(pkcs8)
     allow(aws_ec2_client).to receive(:get_password_data).with(instance_id: instance_id).and_return(error_response)
-    expect { GetWindowsPassword.new(config, instance_id, path_to_pem, stdout ).get_password }.to raise_error(OpenSSL::PKey::RSAError)
+    expect { GetWindowsPassword.new(config, instance_id, path_to_pem, options).get_password }.to raise_error(OpenSSL::PKey::RSAError)
   end
 
 end
