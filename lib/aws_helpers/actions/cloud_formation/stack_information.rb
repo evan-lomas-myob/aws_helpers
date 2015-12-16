@@ -12,7 +12,7 @@ module AwsHelpers
 
         def execute
           client = @config.aws_cloud_formation_client
-          client.describe_stacks(stack_name: @stack_name).stacks.first.send(@info_field)
+          client.describe_stacks(stack_name: @stack_name).stacks.find { |stack| stack.stack_name == @stack_name }.send(@info_field)
         end
 
       end
