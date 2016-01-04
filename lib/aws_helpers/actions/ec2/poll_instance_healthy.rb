@@ -11,7 +11,8 @@ module AwsHelpers
 
         include AwsHelpers::Utilities::Polling
 
-        def initialize(instance_id, options = {})
+        def initialize(config, instance_id, options = {})
+          @config = config
           @instance_id = instance_id
           @stdout = options[:stdout] || $stdout
           @delay = options[:delay] || 15
@@ -20,23 +21,20 @@ module AwsHelpers
 
         def execute
           poll(@delay, @max_attempts) {
-            client = Aws::EC2::Instance.new(@instance_id)
-            current_state = client.state.name
-            @stdout.print "Instance State is #{current_state}"
-
-            ready = true
-
-            if client.platform == 'windows' && current_state == 'running'
-              @stdout.print '. Wait for Windows to be Ready'
-              output = client.console_output.output
-              unless output.nil?
-                output = Base64.decode64(output)
-              end
-              ready = !!(output =~ /Windows is Ready to use/)
+            ready = false
+            client = @config.aws_ec2_client
+            response = client.describe_instance_status(
+                {
+                    instance_ids: [@instance_id]
+                }
+            )
+            unless response.instance_statuses[0].nil?
+              state = response.instance_statuses[0].instance_state.name
+              status = response.instance_statuses[0].instance_status.status
+              @stdout.print "Instance State is #{state}.\tInstance Status is #{status}.\n"
+              ready = true if state == 'running' && status == 'ok'
             end
-
-            @stdout.print ".\n"
-            current_state == 'running' && ready
+            ready
           }
         end
 

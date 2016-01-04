@@ -17,7 +17,7 @@ module AwsHelpers
           @stdout.puts("Starting #{@instance_id}")
           client = @config.aws_ec2_client
           client.start_instances(instance_ids: [@instance_id])
-          AwsHelpers::Actions::EC2::PollInstanceHealthy.new(@instance_id, @instance_healthy_options).execute
+          AwsHelpers::Actions::EC2::PollInstanceHealthy.new(@config, @instance_id, @instance_healthy_options).execute
         end
 
         def instance_healthy_options(stdout, polling)

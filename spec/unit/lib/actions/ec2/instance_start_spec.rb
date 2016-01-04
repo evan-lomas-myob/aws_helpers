@@ -27,7 +27,7 @@ describe InstanceStart do
 
   it 'should start the instance' do
     allow(stdout).to receive(:puts).with("Starting #{instance_id}")
-    allow(PollInstanceHealthy).to receive(:new).with(instance_id, polling_options).and_return(poll_instance_healthy)
+    allow(PollInstanceHealthy).to receive(:new).with(config, instance_id, polling_options).and_return(poll_instance_healthy)
     allow(poll_instance_healthy).to receive(:execute)
     expect(aws_ec2_client).to receive(:start_instances).with(instance_ids: [instance_id]).and_return(starting_result)
     InstanceStart.new(config, instance_id, options).execute

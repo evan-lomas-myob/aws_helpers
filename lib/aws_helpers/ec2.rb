@@ -185,8 +185,8 @@ module AwsHelpers
 
     # Polls a given instance until it is running and healthy
     # @param instance_id [String] Instance Unique ID
-    def poll_instance_healthy(instance_id)
-      PollInstanceHealthy.new(instance_id).execute
+    def poll_instance_healthy(instance_id, options)
+      PollInstanceHealthy.new(config, instance_id, options).execute
     end
 
     # Returns the decrypted Windows administrator password for a given instance.
