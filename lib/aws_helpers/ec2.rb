@@ -144,7 +144,7 @@ module AwsHelpers
     # Stop an EC2 instance
     # @param instance_id [String] The ID of the EC2 instance
     # @option options [IO] :stdout ($stdout) Override $stdout when logging output
-    # @option options [Hash{Symbol => Integer}] :poll_stopped Override instance stopped polling
+    # @option options [Hash{Symbol => Integer}] :poll_running Override instance stopped polling
     #
     #   defaults:
     #
@@ -185,15 +185,43 @@ module AwsHelpers
 
     # Polls a given instance until it is running and healthy
     # @param instance_id [String] Instance Unique ID
+    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
+    # @option options [Hash] Override instance healthy polling
+    #
+    #   defaults:
+    #
+    #   ```
+    #   {
+    #     :delay => 15 # seconds
+    #     :max_attempts => 8,
+    #   }
+    #   ```
     def poll_instance_healthy(instance_id, options)
       PollInstanceHealthy.new(config, instance_id, options).execute
+    end
+
+    # Polls a given instance until it is stopped
+    # @param instance_id [String] Instance Unique ID
+    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
+    # @option options [Hash] Override instance healthy polling
+    #
+    #   defaults:
+    #
+    #   ```
+    #   {
+    #     :delay => 15 # seconds
+    #     :max_attempts => 8,
+    #   }
+    #   ```
+    def poll_instance_stopped(instance_id, options)
+      PollInstanceStopped.new(instance_id, options).execute
     end
 
     # Returns the decrypted Windows administrator password for a given instance.
     # @param instance_id [String] Instance Unique ID
     # @param pem_path [String] Path to PEM-encoded private key file
     # @option options [IO] :stdout ($stdout) Override $stdout when logging output
-    # @option options [Hash{Symbol => Integer}] :poll_stopped Override instance stopped polling
+    # @option options [Hash] Override instance polling
     #
     #   defaults:
     #

@@ -283,4 +283,57 @@ describe AwsHelpers::EC2 do
 
   end
 
+  describe '#poll_instance_healthy' do
+
+    let(:poll_inst_healthy) { double(PollInstanceHealthy) }
+    let(:image_id) { 'image_id' }
+
+    let(:options) { {} } #just use defaults
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(poll_inst_healthy).to receive(:execute)
+      allow(PollInstanceHealthy).to receive(:new).with(config, image_id, options).and_return(poll_inst_healthy)
+    end
+
+    subject { AwsHelpers::EC2.new.poll_instance_healthy(image_id, options) }
+
+    it 'should create PollInstanceHealthy' do
+      expect(PollInstanceHealthy).to receive(:new).with(config, image_id, options).and_return(poll_inst_healthy)
+      subject
+    end
+
+    it 'should call PollInstanceHealthy execute method' do
+      expect(poll_inst_healthy).to receive(:execute)
+      subject
+    end
+
+  end
+
+  describe '#poll_instance_stopped' do
+
+    let(:poll_inst_stopped) { double(PollInstanceStopped) }
+    let(:image_id) { 'image_id' }
+
+    let(:options) { {} } #just use defaults
+
+    before(:each) do
+      allow(poll_inst_stopped).to receive(:execute)
+      allow(PollInstanceStopped).to receive(:new).with(image_id, options).and_return(poll_inst_stopped)
+    end
+
+    subject { AwsHelpers::EC2.new.poll_instance_stopped(image_id, options) }
+
+    it 'should create PollInstanceStopped' do
+      expect(PollInstanceStopped).to receive(:new).with(image_id, options).and_return(poll_inst_stopped)
+      subject
+    end
+
+    it 'should call PollInstanceStopped execute method' do
+      expect(poll_inst_stopped).to receive(:execute)
+      subject
+    end
+
+  end
+
 end
