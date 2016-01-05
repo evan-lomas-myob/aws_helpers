@@ -35,7 +35,7 @@ module AwsHelpers
           options = {}
           options[:stdout] = stdout || nil
           options[:instance_type] = instance_type || nil
-          options.merge(additional_opts) if additional_opts
+          options[:additional_opts] = additional_opts || {}
           options
         end
 
