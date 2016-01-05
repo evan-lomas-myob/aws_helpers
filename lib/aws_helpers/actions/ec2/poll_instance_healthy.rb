@@ -30,9 +30,16 @@ module AwsHelpers
             )
             unless response.instance_statuses[0].nil?
               state = response.instance_statuses[0].instance_state.name
-              status = response.instance_statuses[0].instance_status.status
-              @stdout.print "Instance State is #{state}.\tInstance Status is #{status}.\n"
-              ready = true if state == 'running' && status == 'ok'
+              @stdout.print "Instance State is #{state}."
+              ready = true if state == 'running'
+
+              if client.describe_instances({ instance_ids: [@instance_id]}).reservations.first.instances.first.platform == 'windows'
+                ready = false
+                status = response.instance_statuses[0].instance_status.status
+                @stdout.print " Windows Status is #{status}."
+                ready = true if status == 'ok'
+              end
+              @stdout.print "\n"
             end
             ready
           }
