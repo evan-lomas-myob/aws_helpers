@@ -18,7 +18,7 @@ module AwsHelpers
           @app_name = options[:app_name]
           @build_number = options[:build_number]
           stdout = options[:stdout]
-          @instance_run_options = create_instance_run_options(stdout, options[:instance_type], options[:time])
+          @instance_run_options = create_instance_run_options(stdout, options[:instance_type], options[:additional_opts])
           @instance_exists_polling = create_polling_options(stdout, options[:poll_exists])
           @instance_running_polling = create_polling_options(stdout, options[:poll_running])
         end
@@ -31,10 +31,11 @@ module AwsHelpers
           instance_id
         end
 
-        def create_instance_run_options(stdout, instance_type, time)
+        def create_instance_run_options(stdout, instance_type, additional_opts)
           options = {}
           options[:stdout] = stdout || nil
           options[:instance_type] = instance_type || nil
+          options.merge(additional_opts) if additional_opts
           options
         end
 
