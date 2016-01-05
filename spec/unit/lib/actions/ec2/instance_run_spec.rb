@@ -20,6 +20,7 @@ describe EC2InstanceRun do
 
   let(:options_with_instance) { {instance_type: larger_instance_type, stdout: stdout} }
   let(:options_with_stdout) { {stdout: stdout} }
+  let(:additional_opts) { {instance_type: larger_instance_type, additional_opts: {key_name: 'test-key'}} }
 
   let(:instance_id) { 'my-instance-id' }
   let(:instances) { [instance_double(Aws::EC2::Types::Instance, instance_id: instance_id)] }
@@ -27,12 +28,12 @@ describe EC2InstanceRun do
 
   before(:each) do
     allow(aws_ec2_client).to receive(:run_instances)
-                               .with(image_id: image_id,
-                                     min_count: min_count,
-                                     max_count: max_count,
-                                     instance_type: default_instance_type,
-                                     monitoring: { enabled: monitoring })
-                               .and_return(reservation)
+                                 .with(image_id: image_id,
+                                       min_count: min_count,
+                                       max_count: max_count,
+                                       instance_type: default_instance_type,
+                                       monitoring: {enabled: monitoring})
+                                 .and_return(reservation)
     allow(stdout).to receive(:puts).and_return("Starting Instance with #{image_id}")
   end
   it 'should output a message saying it is starting an instance' do
@@ -42,12 +43,12 @@ describe EC2InstanceRun do
 
   it 'should call run_instances to start the new AWS EC2 instances' do
     expect(aws_ec2_client).to receive(:run_instances)
-                                .with(image_id: image_id,
-                                      min_count: min_count,
-                                      max_count: max_count,
-                                      instance_type: default_instance_type,
-                                      monitoring: { enabled: monitoring })
-                                .and_return(reservation)
+                                  .with(image_id: image_id,
+                                        min_count: min_count,
+                                        max_count: max_count,
+                                        instance_type: default_instance_type,
+                                        monitoring: {enabled: monitoring})
+                                  .and_return(reservation)
     EC2InstanceRun.new(config, image_id, min_count, max_count, monitoring, options_with_stdout).execute
   end
 
@@ -61,9 +62,23 @@ describe EC2InstanceRun do
                                         min_count: min_count,
                                         max_count: max_count,
                                         instance_type: larger_instance_type,
-                                        monitoring: {enabled: monitoring} )
+                                        monitoring: {enabled: monitoring})
                                   .and_return(reservation)
     EC2InstanceRun.new(config, image_id, min_count, max_count, monitoring, options_with_instance).execute
   end
+
+  it 'should call run_instances with additional options' do
+    expect(aws_ec2_client).to receive(:run_instances)
+                                  .with(image_id: image_id,
+                                        min_count: min_count,
+                                        max_count: max_count,
+                                        instance_type: larger_instance_type,
+                                        monitoring: {enabled: monitoring},
+                                        key_name: 'test-key'
+                                  )
+                                  .and_return(reservation)
+    EC2InstanceRun.new(config, image_id, min_count, max_count, monitoring, additional_opts).execute
+  end
+
 
 end
