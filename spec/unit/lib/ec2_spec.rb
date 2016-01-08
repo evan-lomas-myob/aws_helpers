@@ -3,7 +3,6 @@ require 'aws_helpers/ec2'
 
 describe AwsHelpers::EC2 do
 
-
   let(:config) { double(AwsHelpers::Config) }
   let(:image_name) { 'ec2_name' }
 
@@ -331,6 +330,33 @@ describe AwsHelpers::EC2 do
 
     it 'should call PollInstanceStopped execute method' do
       expect(poll_inst_stopped).to receive(:execute)
+      subject
+    end
+
+  end
+
+  describe '#poll_instance_state' do
+
+    let(:poll_inst_state) { double(PollInstanceState) }
+    let(:state) { 'running' }
+    let(:image_id) { 'image_id' }
+
+    let(:options) { {} } #just use defaults
+
+    before(:each) do
+      allow(poll_inst_state).to receive(:execute)
+      allow(PollInstanceState).to receive(:new).with(image_id, state, options).and_return(poll_inst_state)
+    end
+
+    subject { AwsHelpers::EC2.new.poll_instance_state(image_id, state, options) }
+
+    it 'should create PollInstanceState' do
+      expect(PollInstanceState).to receive(:new).with(image_id, state, options).and_return(poll_inst_state)
+      subject
+    end
+
+    it 'should call PollInstanceState execute method' do
+      expect(poll_inst_state).to receive(:execute)
       subject
     end
 

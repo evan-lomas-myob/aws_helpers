@@ -217,6 +217,25 @@ module AwsHelpers
       PollInstanceStopped.new(instance_id, options).execute
     end
 
+
+    # Polls a given instance until it is stopped
+    # @param instance_id [String] Instance Unique ID
+    # @param state [String] Instance State to Poll for
+    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
+    # @option options [Hash] Override instance healthy polling
+    #
+    #   defaults:
+    #
+    #   ```
+    #   {
+    #     :delay => 15 # seconds
+    #     :max_attempts => 8,
+    #   }
+    #   ```
+    def poll_instance_state(instance_id, state, options)
+      PollInstanceState.new(instance_id, state, options).execute
+    end
+
     # Returns the decrypted Windows administrator password for a given instance.
     # @param instance_id [String] Instance Unique ID
     # @param pem_path [String] Path to PEM-encoded private key file
