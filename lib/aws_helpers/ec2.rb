@@ -10,6 +10,7 @@ require_relative 'actions/ec2/instance_stop'
 require_relative 'actions/ec2/instance_start'
 require_relative 'actions/ec2/instances_find_by_tags'
 require_relative 'actions/ec2/instances_find_by_ids'
+require_relative 'actions/ec2/poll_instance_state'
 
 include AwsHelpers::Actions::EC2
 
