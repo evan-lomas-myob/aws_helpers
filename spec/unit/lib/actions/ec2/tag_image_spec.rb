@@ -46,7 +46,7 @@ describe AwsHelpers::Actions::EC2::TagImage do
     it 'should call AwsHelpers::Actions::EC2::TagResource #new with optional additional tags' do
       additional_tags = [{ key: 'key', value: 'value' }]
       expect(AwsHelpers::Actions::EC2::TagResource).to receive(:new).with(config, image_id, tags + additional_tags)
-      AwsHelpers::Actions::EC2::TagImage.new(config, image_id, image_name, now, additional_tags: additional_tags).execute
+      AwsHelpers::Actions::EC2::TagImage.new(config, image_id, image_name, now, additional_tags: additional_tags, stdout: stdout).execute
     end
 
   end

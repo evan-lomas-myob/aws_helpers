@@ -20,7 +20,7 @@ describe EC2InstanceRun do
 
   let(:options_with_instance) { {instance_type: larger_instance_type, stdout: stdout} }
   let(:options_with_stdout) { {stdout: stdout} }
-  let(:additional_opts) { {instance_type: larger_instance_type, additional_opts: {key_name: 'test-key'}} }
+  let(:additional_opts) { {instance_type: larger_instance_type, additional_opts: {key_name: 'test-key'}, stdout: stdout} }
 
   let(:instance_id) { 'my-instance-id' }
   let(:instances) { [instance_double(Aws::EC2::Types::Instance, instance_id: instance_id)] }

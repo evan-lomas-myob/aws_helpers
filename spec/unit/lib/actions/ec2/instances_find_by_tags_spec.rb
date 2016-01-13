@@ -9,7 +9,7 @@ describe InstancesFindByTags do
   let(:ec2_client) { instance_double(Aws::EC2::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: ec2_client) }
   let(:tags_array) { [{name: 'Name', value: 'value'}] }
-  let(:tags_hash) { { 'Name' => 'value', 'Multi' => ['a', 'b'] } }
+  let(:tags_hash) { {'Name' => 'value', 'Multi' => ['a', 'b']} }
   let(:state) { instance_double(Aws::EC2::Types::InstanceState, name: 'running') }
   let(:instances) { [instance_double(Aws::EC2::Types::Instance, instance_id: 'i-12345678', state: state)] }
 
@@ -19,7 +19,7 @@ describe InstancesFindByTags do
 
   before(:each) do
     allow(ec2_client)
-        .to receive(:describe_instances)
+        .to receive(:describe_instances).with(anything)
                 .and_return(
                     instance_double(
                         Aws::EC2::Types::DescribeInstancesResult,
@@ -28,22 +28,21 @@ describe InstancesFindByTags do
                 )
   end
 
-  it 'should call Aws::EC2::Client #describe_instances with correct parameters when called with an array' do
-    expect(ec2_client).to receive(:describe_instances).with(filters: [{name: 'tag:Name', values: ['value']}])
-    InstancesFindByTags.new(config, tags_array).execute
+  it 'should display a deprecation warning when called with an array' do
+    expect { InstancesFindByTags.new(config, tags_array).execute }.to output("Deprecation warning: AWS::EC2#instances_find_by_tags now accepts a hash instead of an array\n").to_stderr
   end
 
   it 'should call Aws::EC2::Client #describe_instances with correct parameters when called with a hash' do
     expected_filters = [
-      { name: 'tag:Name', values: ['value'] },
-      { name: 'tag:Multi', values: ['a', 'b'] },
+        {name: 'tag:Name', values: ['value']},
+        {name: 'tag:Multi', values: ['a', 'b']},
     ]
     expect(ec2_client).to receive(:describe_instances).with(filters: expected_filters)
     InstancesFindByTags.new(config, tags_hash).execute
   end
 
   it 'should return the instance ID matching the tag' do
-    expect(InstancesFindByTags.new(config, tags_array).execute).to eql(instances)
+    expect(InstancesFindByTags.new(config, tags_hash).execute).to eql(instances)
   end
 
 

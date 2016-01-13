@@ -23,9 +23,8 @@ describe ImagesFindByTags do
             )
   end
 
-  it 'should call Aws::EC2::Client #describe_images with correct parameters when given an array' do
-    expect(ec2_client).to receive(:describe_images).with(filters: [{ name: 'tag:Name', values: ['value'] }])
-    ImagesFindByTags.new(config, tags_array).execute
+  it 'should display a deprecation warning when called with an array' do
+    expect { ImagesFindByTags.new(config, tags_array).execute }.to output("Deprecation warning: AWS::EC2#images_find_by_tags now accepts a hash instead of an array\n").to_stderr
   end
 
   it 'should call Aws::EC2::Client #describe_images with correct parameters when given a hash' do
@@ -38,7 +37,7 @@ describe ImagesFindByTags do
   end
 
   it 'should return a list of images' do
-    expect(ImagesFindByTags.new(config, tags_array).execute).to eql(images)
+    expect(ImagesFindByTags.new(config, tags_hash).execute).to eql(images)
   end
 
 
