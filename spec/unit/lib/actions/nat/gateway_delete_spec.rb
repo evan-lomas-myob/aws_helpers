@@ -24,7 +24,7 @@ describe GatewayDelete do
   end
 
   it 'should create a NAT gateway' do
-    expect(aws_ec2_client).to receive(:delete_nat_gateway).with(gateway_id)
+    expect(aws_ec2_client).to receive(:delete_nat_gateway).with(nat_gateway_id: gateway_id)
     GatewayDelete.new(config, gateway_id).execute
   end
 

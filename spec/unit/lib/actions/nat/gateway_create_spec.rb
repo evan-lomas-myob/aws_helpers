@@ -17,14 +17,14 @@ describe GatewayCreate do
   let(:allocation_id) { 'my-allocation-id' }
 
   before(:each) do
-    allow(aws_ec2_client).to receive(:create_nat_gateway).with(subnet_id, allocation_id).and_return(gateway_response)
+    allow(aws_ec2_client).to receive(:create_nat_gateway).with(subnet_id: subnet_id, allocation_id: allocation_id).and_return(gateway_response)
     allow(gateway_response).to receive(:nat_gateway).and_return(gateway_object)
     allow(gateway_object).to receive(:nat_gateway_id).and_return(gateway_id)
     allow(gateway_create).to receive(:execute).and_return(gateway_id)
   end
 
   it 'should create a NAT gateway' do
-    expect(aws_ec2_client).to receive(:create_nat_gateway).with(subnet_id, allocation_id)
+    expect(aws_ec2_client).to receive(:create_nat_gateway).with(subnet_id: subnet_id, allocation_id: allocation_id)
     GatewayCreate.new(config, subnet_id, allocation_id).execute
   end
 
