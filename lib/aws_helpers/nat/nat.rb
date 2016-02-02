@@ -1,4 +1,4 @@
-require_relative 'client'
+require 'aws-sdk-core'
 
 module AwsHelpers
 
@@ -15,14 +15,14 @@ module AwsHelpers
         # @param allocation_id [String] ID of the allocation associated with an Elastic IP address
         # @param [Hash] options Optional parameters that can be overridden.
         # @return [String] the gateway id
-        def gateway_create(subnet_id, allocation_id)
+        def create(subnet_id, allocation_id)
           result = @ec2_client.create_nat_gateway(subnet_id: subnet_id, allocation_id: allocation_id)
           result.nat_gateway.nat_gateway_id
         end
 
         # Delete a NAT gateway
         # @param gateway_id [String] the id of the NAT gateway
-        def gateway_delete(gateway_id)
+        def delete(gateway_id)
           @ec2_client.delete_nat_gateway(nat_gateway_id: gateway_id)
         end
     end
