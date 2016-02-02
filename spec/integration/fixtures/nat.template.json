@@ -1,0 +1,37 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "VPC": {
+       "Type" : "AWS::EC2::VPC",
+       "Properties" : {
+          "CidrBlock" : "10.0.0.0/24"
+       }
+    },
+    "ElasticIP": {
+       "Type" : "AWS::EC2::EIP",
+       "Properties" : {
+          "Domain" : "vpc"
+       }
+    },
+    "Subnet": {
+       "Type" : "AWS::EC2::Subnet",
+       "Properties" : {
+          "CidrBlock" : "10.0.0.0/24",
+          "VpcId" : { "Ref" : "VPC" }
+       }
+    }
+
+  },
+  "Outputs": {
+    "AllocationId": {
+      "Value": {
+        "Fn::GetAtt" : [ "ElasticIP" , "AllocationId" ]
+      }
+    },
+    "SubnetId": {
+      "Value": {
+        "Ref" : "Subnet"
+      }
+    }
+  }
+}
