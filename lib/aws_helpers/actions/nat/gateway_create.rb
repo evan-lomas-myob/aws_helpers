@@ -8,8 +8,6 @@ module AwsHelpers
           @config = config
           @subnet_id = subnet_id
           @allocation_id = allocation_id
-          puts subnet_id
-          puts allocation_id
         end
 
         def execute
