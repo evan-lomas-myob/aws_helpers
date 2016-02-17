@@ -70,6 +70,30 @@ describe AwsHelpers::EC2 do
 
   end
 
+  describe '#image_add_user' do
+
+    let(:image_add_user) { double(ImageAddUser) }
+
+    let(:image_id) { 'ami_id' }
+    let(:user_id) { 'aws_user' }
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(ImageAddUser).to receive(:new).and_return(image_add_user)
+      allow(image_add_user).to receive(:execute)
+    end
+
+    it 'should create ImageCreate with default parameters' do
+      expect(ImageAddUser).to receive(:new).with(config, image_id, user_id, {})
+      AwsHelpers::EC2.new.image_add_user(image_id, user_id)
+    end
+
+    it 'should call ImageCreate execute method' do
+      expect(image_add_user).to receive(:execute)
+      AwsHelpers::EC2.new.image_add_user(image_id, user_id)
+    end
+
+  end
 
   describe '#images_delete_by_time' do
 

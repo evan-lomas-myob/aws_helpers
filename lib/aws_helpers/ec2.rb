@@ -2,6 +2,7 @@ require_relative 'client'
 require_relative 'actions/ec2/get_windows_password'
 require_relative 'actions/ec2/image_create'
 require_relative 'actions/ec2/images_delete'
+require_relative 'actions/ec2/image_add_user'
 require_relative 'actions/ec2/images_delete_by_time'
 require_relative 'actions/ec2/images_find_by_tags'
 require_relative 'actions/ec2/instance_create'
@@ -59,6 +60,16 @@ module AwsHelpers
     def image_delete(image_id, options={})
       ImageDelete.new(config, image_id, options).execute
     end
+
+    # De-register an AMI image and its associated snapshots
+    # @param image_id [String] the id of the AMI
+    # @param user_id [String] the id of the User to share the image with
+    # @param [Hash] options Optional parameters that can be overridden.
+    # @option options [IO] :stdout ($stdout) override $stdout when logging output
+    def image_add_user(image_id, user_id, options={})
+      ImageAddUser.new(config, image_id, user_id, options).execute
+    end
+
 
     # De-register AMI images older than now
     # @param name [String] The value of the Name tag for the image
