@@ -9,6 +9,7 @@ module AwsHelpers
       end
 
       def execute
+        sleep rand(5..10)
         resp = @elastic_load_balancing_client.describe_tags({load_balancer_names: [@load_balancer_name]})
         if resp.tag_descriptions.length == 1
           tag =  resp.tag_descriptions[0].tags.select { |tag| tag.key == @tag_key }
