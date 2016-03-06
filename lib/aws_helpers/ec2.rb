@@ -12,6 +12,7 @@ require_relative 'actions/ec2/instance_start'
 require_relative 'actions/ec2/instances_find_by_tags'
 require_relative 'actions/ec2/instances_find_by_ids'
 require_relative 'actions/ec2/poll_instance_state'
+require_relative 'actions/ec2/get_vpc_id_by_name'
 
 include AwsHelpers::Actions::EC2
 
@@ -264,6 +265,13 @@ module AwsHelpers
     #   ```
     def get_windows_password(instance_id, pem_path, options)
       GetWindowsPassword.new(config, instance_id, pem_path, options).get_password
+    end
+
+    # Returns the VPC ID for a given VPC Name.
+    # @param vpc_name [String] VPC Unique Name Tag
+    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
+    def get_vpc_id_by_name(vpc_name, options)
+      GetVpcIdByName.new(config, vpc_name, options).get_id
     end
 
   end

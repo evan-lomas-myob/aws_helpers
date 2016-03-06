@@ -3,7 +3,7 @@ require 'aws_helpers/ec2'
 
 describe AwsHelpers::EC2 do
 
-  let(:config) { double(AwsHelpers::Config) }
+  let(:config) { instance_double(AwsHelpers::Config, options: {retry_limit: 8}) }
   let(:image_name) { 'ec2_name' }
 
   describe '#initialize' do
@@ -385,5 +385,34 @@ describe AwsHelpers::EC2 do
     end
 
   end
+
+  describe '#get_vpc_id_by_name' do
+
+    let(:get_vpc_by_name) { instance_double(GetVpcIdByName) }
+    let(:vpc_name) { 'VPC Name' }
+    let(:vpc_id) { 'VPC ID' }
+
+    let(:options) { {} } #just use defaults
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(GetVpcIdByName).to receive(:new).and_return(get_vpc_by_name)
+      allow(get_vpc_by_name).to receive(:get_id)
+    end
+
+    subject { AwsHelpers::EC2.new.get_vpc_id_by_name(vpc_name, options) }
+
+    it 'should create GetVpcIdByName' do
+      expect(GetVpcIdByName).to receive(:new).with(config, vpc_name, options).and_return(get_vpc_by_name)
+      subject
+    end
+
+    it 'should call GetVpcIdByName get_id method' do
+      expect(get_vpc_by_name).to receive(:get_id)
+      subject
+    end
+
+  end
+
 
 end
