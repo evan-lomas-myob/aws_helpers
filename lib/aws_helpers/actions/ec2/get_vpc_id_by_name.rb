@@ -15,9 +15,10 @@ module AwsHelpers
 
         def get_id
           client = @config ? @config.aws_ec2_client : Aws::EC2::Client.new()
-          client.describe_vpcs(filters: [
+          response = client.describe_vpcs(filters: [
               {name: 'tag:Name', values: [@vpc_name]}
-          ]).vpcs.first.vpc_id
+          ])
+          response.vpcs.first.vpc_id unless response.vpcs.empty?
         end
 
       end

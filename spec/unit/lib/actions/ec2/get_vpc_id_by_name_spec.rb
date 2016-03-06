@@ -18,25 +18,35 @@ describe GetVpcIdByName do
   let(:options) { {} }
   let(:stdout_options) { {stdout: 'file_handle'} }
 
-  before(:each) do
-    allow(ec2_client)
-        .to receive(:describe_vpcs)
-                .and_return(
-                    instance_double(
-                        Aws::EC2::Types::DescribeVpcsResult,
-                        vpcs: vpcs
-                    )
-                )
+  context 'VPC Name is found' do
+
+    before(:each) do
+      allow(ec2_client)
+          .to receive(:describe_vpcs)
+                  .and_return(
+                      instance_double(
+                          Aws::EC2::Types::DescribeVpcsResult,
+                          vpcs: vpcs
+                      )
+                  )
+    end
+
+    it 'should call Aws::EC2::Client #describe_vpcs with filter' do
+      expect(ec2_client).to receive(:describe_vpcs).with(filters: filter_tags)
+      GetVpcIdByName.new(config, vpc_name, options).get_id
+    end
+
+    it 'should return vpc id matching a name' do
+      expect(GetVpcIdByName.new(config, vpc_name, options).get_id).to eql(vpc_id)
+    end
   end
 
-  it 'should call Aws::EC2::Client #describe_vpcs with filter' do
-    expect(ec2_client).to receive(:describe_vpcs).with(filters: filter_tags)
-    GetVpcIdByName.new(config, vpc_name, options).get_id
-  end
+  context 'No matching VPC Name is found' do
 
-  it 'should return vpc id matching a name' do
-    expect(GetVpcIdByName.new(config, vpc_name, options).get_id).to eql(vpc_id)
+    it 'should return nil if no matching ID is found' do
+      allow(ec2_client).to receive(:describe_vpcs).and_return(instance_double(Aws::EC2::Types::DescribeVpcsResult, vpcs: []))
+      expect(GetVpcIdByName.new(config, vpc_name, options).get_id).to eql(nil)
+    end
   end
-
 
 end
