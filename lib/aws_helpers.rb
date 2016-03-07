@@ -22,6 +22,7 @@ require_relative 'aws_helpers/auto_scaling_group/suspend_alarm_process'
 require_relative 'aws_helpers/auto_scaling_group/update_desired_capacity'
 require_relative 'aws_helpers/auto_scaling_group/update_minmax_capacity'
 
+
 module AwsHelpers
   extend self
 
@@ -123,6 +124,10 @@ module AwsHelpers
 
     def ec2_image_create(name, instance_id, additional_tags = [])
       EC2::Image.new(ec2_client).create(instance_id, name, additional_tags)
+    end
+
+    def ec2_image_add_user(image_id, user_id)
+      EC2::Image.new(ec2_client).image_add_user(image_id, user_id, options={})
     end
 
     def ec2_images_delete(name, options = nil)

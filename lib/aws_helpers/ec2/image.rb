@@ -9,7 +9,24 @@ module AwsHelpers
       def initialize(ec2_client)
         @now = Time.now
         @ec2_client = ec2_client
+        puts "ec2_client => #{@ec2_client}"
       end
+
+      def image_add_user(image_id, user_id, options={})
+        begin
+          options = {}
+          options[:image_id] = image_id
+          options[:launch_permission] = create_launch_permission(user_id)
+          puts "Sharing Image #{image_id} with #{user_id} with options #{options}"
+          response = @ec2_client.modify_image_attribute(options=options)
+        rescue Exception => e
+          puts "## Got an error when sharing the image... #{e.cause} -> #{e.message}"
+          raise
+        end
+      end
+
+
+      ### END REWRITE ###
 
       def create(instance_id, name, additional_tags = [])
         image_name = "#{name} #{@now.strftime('%Y-%m-%d-%H-%M')}"
@@ -56,6 +73,16 @@ module AwsHelpers
       end
 
       private
+
+      def create_launch_permission(user_id)
+        {
+            add: [
+                {
+                    user_id: user_id
+                },
+            ]
+        }
+      end
 
       def delete_by_id(image_id)
         puts "Deleting Image #{image_id}"
