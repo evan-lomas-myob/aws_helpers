@@ -1,5 +1,4 @@
 require 'aws-sdk-core'
-require 'aws_helpers/utilities/polling'
 
 module AwsHelpers
   module Actions

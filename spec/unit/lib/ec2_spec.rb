@@ -414,5 +414,32 @@ describe AwsHelpers::EC2 do
 
   end
 
+  describe '#get_security_group_id_by_name' do
+
+    let(:get_group_by_name) { instance_double(GetSecurityGroupIdByName) }
+    let(:sg_name) { 'Group Name' }
+    let(:sg_id) { 'Group ID' }
+
+    let(:options) { {} } #just use defaults
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(GetSecurityGroupIdByName).to receive(:new).and_return(get_group_by_name)
+      allow(get_group_by_name).to receive(:get_id)
+    end
+
+    subject { AwsHelpers::EC2.new.get_group_id_by_name(sg_name, options) }
+
+    it 'should create GetVpcIdByName' do
+      expect(GetSecurityGroupIdByName).to receive(:new).with(config, sg_name, options).and_return(get_group_by_name)
+      subject
+    end
+
+    it 'should call GetVpcIdByName get_id method' do
+      expect(get_group_by_name).to receive(:get_id)
+      subject
+    end
+
+  end
 
 end

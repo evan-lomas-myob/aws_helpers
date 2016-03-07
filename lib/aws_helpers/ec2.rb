@@ -13,6 +13,7 @@ require_relative 'actions/ec2/instances_find_by_tags'
 require_relative 'actions/ec2/instances_find_by_ids'
 require_relative 'actions/ec2/poll_instance_state'
 require_relative 'actions/ec2/get_vpc_id_by_name'
+require_relative 'actions/ec2/get_security_group_id_by_name'
 
 include AwsHelpers::Actions::EC2
 
@@ -273,6 +274,14 @@ module AwsHelpers
     def get_vpc_id_by_name(vpc_name, options)
       GetVpcIdByName.new(config, vpc_name, options).get_id
     end
+
+    # Returns the Group ID for a given Security Group Name.
+    # @param security_group_name [String] Security Group Name to Find
+    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
+    def get_group_id_by_name(security_group_name, options)
+      GetSecurityGroupIdByName.new(config, security_group_name, options).get_id
+    end
+
 
   end
 
