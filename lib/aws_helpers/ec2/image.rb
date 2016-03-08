@@ -9,7 +9,6 @@ module AwsHelpers
       def initialize(ec2_client)
         @now = Time.now
         @ec2_client = ec2_client
-        puts "ec2_client => #{@ec2_client}"
       end
 
       def image_add_user(image_id, user_id, options={})
