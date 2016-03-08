@@ -15,6 +15,7 @@ module AwsHelpers
     attr_accessor :aws_iam_client
     attr_accessor :aws_rds_client
     attr_accessor :aws_s3_client
+    attr_accessor :aws_kms_client
 
     # @param options [Hash] Optional arguments to pass to the AWS Ruby SDK
     def initialize(options)
@@ -58,6 +59,11 @@ module AwsHelpers
     # @return [Aws::S3::Client]
     def aws_s3_client
       @aws_s3_client = Aws::S3::Client.new(options)
+    end
+
+    # @return [Aws::KMS::Client]
+    def aws_kms_client
+      @aws_kms_client = Aws::KMS::Client.new(options)
     end
 
   end
