@@ -14,8 +14,8 @@ module AwsHelpers
     # Returns the KMS key arn given an alias
     # @param [String] alias_name
     # @return [String] the kms arn
-    def key_arn(alias_name)
-      AwsHelpers::Actions::KMS::ArnRetrieve.new(config, alias_name).execute
+    def key_arn(alias_name, options={})
+      AwsHelpers::Actions::KMS::ArnRetrieve.new(config, alias_name, options).execute
     end
 
   end
