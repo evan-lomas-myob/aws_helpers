@@ -10,6 +10,7 @@ require_relative 'aws_helpers/elastic_load_balancing/poll_healthy_instances'
 require_relative 'aws_helpers/elastic_load_balancing/poll_max_healthy_instances'
 require_relative 'aws_helpers/elastic_load_balancing/create_tag'
 require_relative 'aws_helpers/elastic_load_balancing/read_tag'
+require_relative 'aws_helpers/elastic_load_balancing/instance'
 require_relative 'aws_helpers/elastic_beanstalk/version'
 require_relative 'aws_helpers/rds/instance'
 require_relative 'aws_helpers/ec2/image'
@@ -72,6 +73,10 @@ module AwsHelpers
 
     def elb_read_tag(load_balancer_name, tag_key)
       ElasticLoadBalancing::ReadTag.new(elb_client, load_balancer_name, tag_key).execute
+    end
+
+    def elb_get_instances(load_balancer_name)
+      ElasticLoadBalancing::Instance.new(elb_client, load_balancer_name).execute
     end
 
     def auto_scaling_group_retrieve_desired_capacity(auto_scaling_group_name)
