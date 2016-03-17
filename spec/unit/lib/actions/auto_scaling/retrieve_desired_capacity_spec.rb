@@ -22,12 +22,12 @@ describe AwsHelpers::Actions::AutoScaling::RetrieveDesiredCapacity do
       allow(auto_scaling_client).to receive(:describe_auto_scaling_groups).and_return(response)
     end
 
-    it 'should call Aws::AutoScaling::Client describe_auto_scaling_groups with correct parameters' do
+    it 'should call describe_auto_scaling_groups with correct parameters' do
       expect(auto_scaling_client).to receive(:describe_auto_scaling_groups).with(auto_scaling_group_names: [auto_scaling_group_name])
       subject
     end
 
-    it 'should extract the desired capacity from the aws client response' do
+    it 'should return the desired capacity' do
       expect(subject).to be(desired_capacity)
     end
 

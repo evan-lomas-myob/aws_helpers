@@ -3,7 +3,7 @@ require 'aws_helpers/auto_scaling'
 describe AwsHelpers::AutoScaling do
 
   let(:auto_scaling_group_name) { 'my_group_name' }
-  let(:config) { double(AwsHelpers::Config) }
+  let(:config) { instance_double(AwsHelpers::Config) }
   let(:desired_capacity) { 1 }
 
   describe '#initialize' do
@@ -18,7 +18,7 @@ describe AwsHelpers::AutoScaling do
 
   describe '#retrieve_desired_capacity' do
 
-    let(:retrieve_desired_capacity) { double(RetrieveDesiredCapacity) }
+    let(:retrieve_desired_capacity) { instance_double(RetrieveDesiredCapacity) }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
@@ -46,7 +46,7 @@ describe AwsHelpers::AutoScaling do
 
   describe '#update_desired_capacity' do
 
-    let(:update_desired_capacity) { double(UpdateDesiredCapacity) }
+    let(:update_desired_capacity) { instance_double(UpdateDesiredCapacity) }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
