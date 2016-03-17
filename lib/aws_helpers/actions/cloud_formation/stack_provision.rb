@@ -4,9 +4,11 @@ require 'aws_helpers/actions/cloud_formation/stack_delete'
 require 'aws_helpers/actions/cloud_formation/stack_create_request_builder'
 require 'aws_helpers/actions/cloud_formation/stack_update'
 require 'aws_helpers/actions/cloud_formation/stack_create'
+require 'aws_helpers/utilities/polling_options'
 
 include AwsHelpers::Actions::CloudFormation
 include AwsHelpers::Actions::S3
+include AwsHelpers::Utilities::PollingOptions
 
 module AwsHelpers
   module Actions
@@ -36,18 +38,6 @@ module AwsHelpers
           request = StackCreateRequestBuilder.new(@stack_name, template_url, @template_json, @parameters, @capabilities).execute
           StackExists.new(@config, @stack_name).execute ? update(request) : create(request)
           StackInformation.new(@config, @stack_name, 'outputs').execute
-        end
-
-        def create_options(stdout, pooling)
-          options = {}
-          options[:stdout] = stdout if stdout
-          if pooling
-            max_attempts = pooling[:max_attempts]
-            delay = pooling[:delay]
-            options[:max_attempts] = max_attempts if max_attempts
-            options[:delay] = delay if delay
-          end
-          options
         end
 
         def update(request)
