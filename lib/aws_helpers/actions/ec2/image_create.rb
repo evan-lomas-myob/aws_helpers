@@ -2,12 +2,15 @@ require 'aws_helpers/actions/ec2/poll_image_exists'
 require 'aws_helpers/actions/ec2/tag_image'
 require 'aws_helpers/actions/ec2/poll_image_available'
 require 'aws_helpers/actions/ec2/image_delete'
+require 'aws_helpers/utilities/polling_options'
 
 module AwsHelpers
   module Actions
     module EC2
 
       class ImageCreate
+
+        include AwsHelpers::Utilities::PollingOptions
 
         def initialize(config, instance_id, name, options = {})
           @config = config
@@ -34,20 +37,6 @@ module AwsHelpers
             ImageDelete.new(@config, image_id, stdout: @stdout).execute
             raise
           end
-        end
-
-        private
-
-        def create_options(stdout, polling)
-          options = {}
-          options[:stdout] = stdout if stdout
-          if polling
-            max_attempts = polling[:max_attempts]
-            delay = polling[:delay]
-            options[:max_attempts] = max_attempts if max_attempts
-            options[:delay] = delay if delay
-          end
-          options
         end
 
       end
