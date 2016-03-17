@@ -20,7 +20,6 @@ end
 describe AwsHelpers::Utilities::FailedStateError do
 
   let(:attempts) { 5 }
-  let(:response) { instance_double(AwsHelpers::Utilities::TooManyAttemptsError, "stopped waiting after #{attempts} attempts without success") }
 
   it 'should return and instance of PollingFailed' do
     expect(AwsHelpers::Utilities::TooManyAttemptsError.new(attempts)).to be_a_kind_of(AwsHelpers::Utilities::PollingFailed)
@@ -28,7 +27,7 @@ describe AwsHelpers::Utilities::FailedStateError do
 
   it 'should return a PollingFailed with message' do
     allow(AwsHelpers::Utilities::PollingFailed).to receive(:new).with(5)
-    expect(AwsHelpers::Utilities::TooManyAttemptsError.new(attempts)).to be(response)
+    expect(AwsHelpers::Utilities::TooManyAttemptsError.new(attempts)).to eq(nil)
   end
 
   it 'should return the number of attempts' do
