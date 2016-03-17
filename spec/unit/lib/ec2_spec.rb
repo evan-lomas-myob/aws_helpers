@@ -18,7 +18,7 @@ describe AwsHelpers::EC2 do
 
   describe '#image_create' do
 
-    let(:image_create) { double(ImageCreate) }
+    let(:image_create) { instance_double(ImageCreate) }
 
     let(:instance_id) { 'ec2_id' }
     let(:tags) { %w('tag1', 'tag2') }
@@ -43,7 +43,7 @@ describe AwsHelpers::EC2 do
 
   describe '#images_delete' do
 
-    let(:images_delete) { double(ImagesDelete) }
+    let(:images_delete) { instance_double(ImagesDelete) }
 
     let(:hours) { 1 }
     let(:days) { 2 }
@@ -72,7 +72,7 @@ describe AwsHelpers::EC2 do
 
   describe '#image_add_user' do
 
-    let(:image_add_user) { double(ImageAddUser) }
+    let(:image_add_user) { instance_double(ImageAddUser) }
 
     let(:image_id) { 'ami_id' }
     let(:user_id) { 'aws_user' }
@@ -97,7 +97,7 @@ describe AwsHelpers::EC2 do
 
   describe '#images_delete_by_time' do
 
-    let(:images_delete_by_time) { double(ImagesDeleteByTime) }
+    let(:images_delete_by_time) { instance_double(ImagesDeleteByTime) }
 
     let(:time) { Time.parse('01-Jan-2015') }
 
@@ -123,7 +123,7 @@ describe AwsHelpers::EC2 do
 
   describe '#images_find_by_tags' do
 
-    let(:images_find_by_tags) { double(ImagesFindByTags) }
+    let(:images_find_by_tags) { instance_double(ImagesFindByTags) }
     let(:tags) { %w('tag1', 'tag2') }
 
     before(:each) do
@@ -148,7 +148,7 @@ describe AwsHelpers::EC2 do
 
   describe '#instance_create' do
 
-    let(:instance_create) { double(InstanceCreate) }
+    let(:instance_create) { instance_double(InstanceCreate) }
     let(:image_id) { 'image_id' }
     let(:min_count) { 1 }
     let(:max_count) { 1 }
@@ -177,7 +177,7 @@ describe AwsHelpers::EC2 do
 
   describe '#instance_start' do
 
-    let(:instance_start) { double(InstanceStart) }
+    let(:instance_start) { instance_double(InstanceStart) }
     let(:image_id) { 'image_id' }
 
     let(:options) { {} } #just use defaults
@@ -204,7 +204,7 @@ describe AwsHelpers::EC2 do
 
   describe '#instance_stop' do
 
-    let(:instance_stop) { double(InstanceStop) }
+    let(:instance_stop) { instance_double(InstanceStop) }
     let(:image_id) { 'image_id' }
 
     let(:options) { {} } #just use defaults
@@ -231,7 +231,7 @@ describe AwsHelpers::EC2 do
 
   describe '#instances_find_by_tags' do
 
-    let(:instances_find_by_tags) { double(InstancesFindByTags) }
+    let(:instances_find_by_tags) { instance_double(InstancesFindByTags) }
     let(:tags) { %w('tag1', 'tag2') }
 
     before(:each) do
@@ -256,7 +256,7 @@ describe AwsHelpers::EC2 do
 
   describe '#instances_find_by_ids' do
 
-    let(:instances_find_by_ids) { double(InstancesFindByIds) }
+    let(:instances_find_by_ids) { instance_double(InstancesFindByIds) }
     let(:ids) { %w('id1', 'id2') }
 
     before(:each) do
@@ -281,7 +281,7 @@ describe AwsHelpers::EC2 do
 
   describe '#instance_terminate' do
 
-    let(:instance_terminate) { double(InstanceTerminate) }
+    let(:instance_terminate) { instance_double(InstanceTerminate) }
     let(:image_id) { 'image_id' }
 
     let(:options) { {} } #just use defaults
@@ -308,7 +308,7 @@ describe AwsHelpers::EC2 do
 
   describe '#poll_instance_healthy' do
 
-    let(:poll_inst_healthy) { double(PollInstanceHealthy) }
+    let(:poll_inst_healthy) { instance_double(PollInstanceHealthy) }
     let(:image_id) { 'image_id' }
 
     let(:options) { {} } #just use defaults
@@ -335,7 +335,7 @@ describe AwsHelpers::EC2 do
 
   describe '#poll_instance_stopped' do
 
-    let(:poll_inst_stopped) { double(PollInstanceStopped) }
+    let(:poll_inst_stopped) { instance_double(PollInstanceStopped) }
     let(:image_id) { 'image_id' }
 
     let(:options) { {} } #just use defaults
@@ -361,7 +361,7 @@ describe AwsHelpers::EC2 do
 
   describe '#poll_instance_state' do
 
-    let(:poll_inst_state) { double(PollInstanceState) }
+    let(:poll_inst_state) { instance_double(PollInstanceState) }
     let(:state) { 'running' }
     let(:image_id) { 'image_id' }
 

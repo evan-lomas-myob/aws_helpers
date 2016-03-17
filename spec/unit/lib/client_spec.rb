@@ -1,6 +1,6 @@
 require 'aws_helpers/client'
 
-describe Client do
+describe AwsHelpers::Client do
 
   let(:options) { {stub_responses: true, endpoint: 'http://endpoint'} }
 
@@ -24,7 +24,7 @@ describe Client do
 
     context 'block given' do
 
-      let(:config) { double(AwsHelpers::Config) }
+      let(:config) { instance_double(AwsHelpers::Config) }
 
       it 'should yield when a block is given' do
         expect { |config| client.configure(&config) }.to yield_control

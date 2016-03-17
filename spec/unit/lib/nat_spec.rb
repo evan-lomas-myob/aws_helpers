@@ -5,7 +5,7 @@ describe AwsHelpers::NAT do
 
   let(:subnet_id) { '1' }
   let(:allocation_id) { '1' }
-  let(:config) { double(AwsHelpers::Config) }
+  let(:config) { instance_double(AwsHelpers::Config) }
   let(:image_name) { 'ec2_name' }
 
   describe '#initialize' do
@@ -18,7 +18,7 @@ describe AwsHelpers::NAT do
 
   describe '#gateway_create' do
 
-    let(:gateway_create) { double(GatewayCreate) }
+    let(:gateway_create) { instance_double(GatewayCreate) }
 
     # let(:instance_id) { 'ec2_id' }
     # let(:tags) { %w('tag1', 'tag2') }
@@ -43,7 +43,7 @@ describe AwsHelpers::NAT do
 
   describe '#gateway_delete' do
 
-    let(:gateway_delete) { double(GatewayDelete) }
+    let(:gateway_delete) { instance_double(GatewayDelete) }
     let(:gateway_id) { '1' }
 
     before(:each) do

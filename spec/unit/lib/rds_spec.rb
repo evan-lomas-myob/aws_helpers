@@ -17,7 +17,7 @@ describe AwsHelpers::RDS do
 
   describe '#snapshot_create' do
 
-    let(:snapshot_create) { double(SnapshotCreate) }
+    let(:snapshot_create) { instance_double(SnapshotCreate) }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
@@ -39,7 +39,7 @@ describe AwsHelpers::RDS do
 
   describe '#snapshots_delete' do
 
-    let(:snapshots_delete) { double(SnapshotsDelete) }
+    let(:snapshots_delete) { instance_double(SnapshotsDelete) }
 
     let(:hours) { 1 }
     let(:days) { 2 }
