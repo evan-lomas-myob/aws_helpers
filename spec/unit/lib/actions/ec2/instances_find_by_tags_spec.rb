@@ -8,6 +8,7 @@ describe InstancesFindByTags do
 
   let(:ec2_client) { instance_double(Aws::EC2::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: ec2_client) }
+  let(:tags_string) { 'name: value' }
   let(:tags_array) { [{name: 'Name', value: 'value'}] }
   let(:tags_hash) { {'Name' => 'value', 'Multi' => ['a', 'b']} }
   let(:state) { instance_double(Aws::EC2::Types::InstanceState, name: 'running') }
@@ -43,6 +44,10 @@ describe InstancesFindByTags do
 
   it 'should return the instance ID matching the tag' do
     expect(InstancesFindByTags.new(config, tags_hash).execute).to eql(instances)
+  end
+
+  it 'should raise an error when the wrong tag type' do
+    expect { InstancesFindByTags.new(config, tags_string).execute }.to raise_error(ArgumentError)
   end
 
 
