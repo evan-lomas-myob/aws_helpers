@@ -30,13 +30,13 @@ describe AwsHelpers::EC2 do
     end
 
     it 'should create ImageCreate with default parameters' do
-      expect(ImageCreate).to receive(:new).with(config, image_name, instance_id, tags)
-      AwsHelpers::EC2.new.image_create(image_name, instance_id, tags)
+      expect(ImageCreate).to receive(:new).with(config, image_name, image_id, tags)
+      AwsHelpers::EC2.new.image_create(image_name, image_id, tags)
     end
 
     it 'should call ImageCreate execute method' do
       expect(image_create).to receive(:execute)
-      AwsHelpers::EC2.new.image_create(image_name, instance_id, tags)
+      AwsHelpers::EC2.new.image_create(image_name, image_id, tags)
     end
 
   end
