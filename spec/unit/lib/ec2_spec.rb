@@ -20,7 +20,7 @@ describe AwsHelpers::EC2 do
 
     let(:image_create) { instance_double(ImageCreate) }
 
-    let(:instance_id) { 'ec2_id' }
+    let(:image_id) { 'ami_id' }
     let(:tags) { %w('tag1', 'tag2') }
 
     before(:each) do
@@ -37,6 +37,32 @@ describe AwsHelpers::EC2 do
     it 'should call ImageCreate execute method' do
       expect(image_create).to receive(:execute)
       AwsHelpers::EC2.new.image_create(image_name, instance_id, tags)
+    end
+
+  end
+
+  describe '#image_delete' do
+
+    let(:image_delete) { instance_double(ImageDelete) }
+    let(:image_id) { 'ami_id' }
+    let(:options) {}
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(ImageDelete).to receive(:new).and_return(image_delete)
+      allow(image_delete).to receive(:execute)
+    end
+
+    subject { AwsHelpers::EC2.new.image_delete(image_id, options) }
+
+    it 'should create ImageDelete with default parameters' do
+      expect(ImageDelete).to receive(:new).with(config, image_id, options)
+      subject
+    end
+
+    it 'should call ImageDelete execute method' do
+      expect(image_delete).to receive(:execute)
+      subject
     end
 
   end
