@@ -57,4 +57,10 @@ describe AwsHelpers::Config do
     end
   end
 
+  context '#aws_kms_client' do
+    it 'should create an instance of Aws::KMS::Client' do
+      expect(AwsHelpers::Config.new(options).aws_kms_client).to be_a(Aws::KMS::Client)
+    end
+  end
+
 end
