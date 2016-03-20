@@ -9,7 +9,7 @@ describe AwsHelpers::EC2 do
   describe '#initialize' do
 
     it 'should call AwsHelpers::Client initialize method' do
-      options = { endpoint: 'http://endpoint' }
+      options = {endpoint: 'http://endpoint'}
       expect(AwsHelpers::Client).to receive(:new).with(options)
       AwsHelpers::EC2.new(options)
     end
@@ -179,7 +179,7 @@ describe AwsHelpers::EC2 do
     let(:min_count) { 1 }
     let(:max_count) { 1 }
     let(:monitoring) { true }
-    let(:options) { { min_count: min_count, max_count: max_count, monitoring: monitoring } }
+    let(:options) { {min_count: min_count, max_count: max_count, monitoring: monitoring} }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
@@ -412,6 +412,33 @@ describe AwsHelpers::EC2 do
 
   end
 
+  describe '#get_windows_password' do
+
+    let(:get_windows_password) { instance_double(GetWindowsPassword) }
+    let(:instance_id) { 'ec2id' }
+    let(:pem_path) { '/path/to/pem/file' }
+    let(:options) { {} }
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(GetWindowsPassword).to receive(:new).and_return(get_windows_password)
+      allow(get_windows_password).to receive(:get_password)
+    end
+
+    subject { AwsHelpers::EC2.new.get_windows_password(instance_id, pem_path, options) }
+
+    it 'should create GetWindowsPassword' do
+      expect(GetWindowsPassword).to receive(:new).with(config, instance_id, pem_path, options).and_return(get_windows_password)
+      subject
+    end
+
+    it 'should call GetWindowsPassword get_password method' do
+      expect(get_windows_password).to receive(:get_password)
+      subject
+    end
+
+  end
+
   describe '#get_vpc_id_by_name' do
 
     let(:get_vpc_by_name) { instance_double(GetVpcIdByName) }
@@ -456,12 +483,12 @@ describe AwsHelpers::EC2 do
 
     subject { AwsHelpers::EC2.new.get_group_id_by_name(sg_name, options) }
 
-    it 'should create GetVpcIdByName' do
+    it 'should create GetSecurityGroupIdByName' do
       expect(GetSecurityGroupIdByName).to receive(:new).with(config, sg_name, options).and_return(get_group_by_name)
       subject
     end
 
-    it 'should call GetVpcIdByName get_id method' do
+    it 'should call GetSecurityGroupIdByName get_id method' do
       expect(get_group_by_name).to receive(:get_id)
       subject
     end
