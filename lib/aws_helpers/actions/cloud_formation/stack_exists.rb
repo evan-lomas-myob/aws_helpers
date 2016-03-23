@@ -1,4 +1,4 @@
-require 'aws-sdk-resources'
+require 'aws-sdk-core'
 
 module AwsHelpers
   module Actions
@@ -7,15 +7,13 @@ module AwsHelpers
       class StackExists
 
         def initialize(config, stack_name)
-          @config = config
+          @client = config.aws_cloud_formation_client
           @stack_name = stack_name
         end
 
         def execute
-          client = @config.aws_cloud_formation_client
-
           begin
-            client.describe_stacks(stack_name: @stack_name)
+            @client.describe_stacks(stack_name: @stack_name)
             true
           rescue Aws::CloudFormation::Errors::ValidationError => validation_error
             if validation_error.message == "Stack with id #{@stack_name} does not exist"
