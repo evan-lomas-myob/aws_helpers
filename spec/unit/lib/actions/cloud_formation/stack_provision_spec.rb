@@ -1,5 +1,4 @@
 require 'aws-sdk-core'
-require 'aws-sdk-resources'
 require 'aws_helpers/cloud_formation'
 require 'aws_helpers/actions/cloud_formation/stack_provision'
 require 'aws_helpers/actions/s3/upload_template'
@@ -34,32 +33,23 @@ describe StackProvision do
   let(:max_attempts) { 1 }
   let(:delay) { 1 }
 
-  let(:stack_create_polling) { {max_attempts: max_attempts, delay: delay} }
-  let(:stack_update_polling) { {max_attempts: max_attempts, delay: delay} }
+  let(:stack_create_polling) { { max_attempts: max_attempts, delay: delay } }
+  let(:stack_update_polling) { { max_attempts: max_attempts, delay: delay } }
 
-  let(:options) { {stdout: stdout, stack_create_polling: stack_create_polling, stack_update_polling: stack_update_polling} }
-  let(:stack_create_options) { {stdout: stdout, max_attempts: max_attempts, delay: delay} }
-  let(:stack_update_options) { {stdout: stdout, max_attempts: max_attempts, delay: delay} }
+  let(:options) { { stdout: stdout, stack_create_polling: stack_create_polling, stack_update_polling: stack_update_polling } }
+  let(:stack_create_options) { { stdout: stdout, max_attempts: max_attempts, delay: delay } }
+  let(:stack_update_options) { { stdout: stdout, max_attempts: max_attempts, delay: delay } }
 
   let(:stack_name) { 'my_stack_name' }
   let(:template_json) { 'json' }
   let(:capabilities) { ['CAPABILITY_IAM'] }
 
-  let(:stack_rollback_complete) { [
-      instance_double(Aws::CloudFormation::Stack, stack_name: stack_name, stack_status: 'ROLLBACK_COMPLETE')
-  ] }
-
-  let(:stack_rolledback) { instance_double(DescribeStacksOutput, stacks: stack_rollback_complete) }
-
-  let(:stack_create_complete) { [
-      instance_double(Aws::CloudFormation::Stack, stack_name: stack_name, stack_status: 'CREATE_COMPLETE')
-  ] }
-
-  let(:stack_created) { instance_double(DescribeStacksOutput, stacks: stack_create_complete) }
+  let(:stack_rolledback) { create_response(stack_name, 'ROLLBACK_COMPLETE') }
+  let(:stack_created) { create_response(stack_name, 'CREATE_COMPLETE') }
 
   let(:parameters) { [
-      Parameter.new(parameter_key: 'param_key_1', parameter_value: 'param_value_1'),
-      Parameter.new(parameter_key: 'param_key_2', parameter_value: 'param_value_1')
+    Parameter.new(parameter_key: 'param_key_1', parameter_value: 'param_value_1'),
+    Parameter.new(parameter_key: 'param_key_2', parameter_value: 'param_value_1')
   ] }
 
   let(:outputs) { Output.new(output_key: 'output_key', output_value: 'output_value', description: nil) }
@@ -68,16 +58,16 @@ describe StackProvision do
   let(:bucket_encrypt) { true }
   let(:url) { 'https://my-bucket-url' }
 
-  let(:request_with_url) { {stack_name: stack_name,
-                            template_url: url,
-                            parameters: parameters,
-                            capabilities: capabilities
-  } }
-
-  let(:request_with_body) { {stack_name: stack_name,
-                             template_body: template_json,
+  let(:request_with_url) { { stack_name: stack_name,
+                             template_url: url,
                              parameters: parameters,
                              capabilities: capabilities
+  } }
+
+  let(:request_with_body) { { stack_name: stack_name,
+                              template_body: template_json,
+                              parameters: parameters,
+                              capabilities: capabilities
   } }
 
   let(:stack_exists_true) { true }
@@ -158,4 +148,12 @@ describe StackProvision do
     end
 
   end
+
+  def create_response(name, status)
+  Aws::CloudFormation::Types::DescribeStacksOutput.new(
+    stacks: [
+      Aws::CloudFormation::Types::Stack.new(stack_name: name, stack_status: status)
+    ])
+  end
+
 end

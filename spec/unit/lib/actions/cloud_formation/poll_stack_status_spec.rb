@@ -1,5 +1,4 @@
 require 'aws-sdk-core'
-require 'aws-sdk-resources'
 require 'aws_helpers/config'
 require 'aws_helpers/utilities/target_stack_validate'
 require 'aws_helpers/actions/cloud_formation/poll_stack_status'

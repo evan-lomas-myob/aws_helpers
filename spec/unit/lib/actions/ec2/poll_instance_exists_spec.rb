@@ -10,26 +10,21 @@ describe PollInstanceExists do
   let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: aws_ec2_client) }
 
   let(:instance_id) { 'i-de42f500' }
-
-  let(:instance_noexists) { instance_double(Aws::EC2::Instance, exists?: false) }
-  let(:instance_exists) { instance_double(Aws::EC2::Instance, exists?: true) }
-
   let(:stdout) { instance_double(IO) }
   let(:max_attempts) { 2 }
-  let(:delay) { 0 }
 
-  let(:options) { {stdout: stdout, delay: delay, max_attempts: max_attempts} }
+  let(:options) { {stdout: stdout, delay: 0, max_attempts: max_attempts} }
 
   describe '#execute' do
 
     it 'should use the AwsHelpers::Utilities::Polling to poll until the image exists' do
-      expect(Aws::EC2::Instance).to receive(:new).and_return(instance_noexists, instance_exists)
-      PollInstanceExists.new(instance_id, options).execute
+      expect(aws_ec2_client).to receive(:describe_instances)
+      PollInstanceExists.new(config, instance_id, options).execute
     end
 
-    it 'should raise an exception is polling reaches max attempts' do
-      allow(Aws::EC2::Instance).to receive(:new).and_return(instance_noexists)
-      expect{ PollInstanceExists.new(instance_id, options).execute }.to raise_error("stopped waiting after #{max_attempts} attempts without success")
+    it 'should raise an exception is polling reaches max attempts and instance is not found' do
+      allow(aws_ec2_client).to receive(:describe_instances).and_raise(Aws::EC2::Errors::InvalidInstanceIDNotFound.new(nil,nil))
+      expect{ PollInstanceExists.new(config, instance_id, options).execute }.to raise_error("stopped waiting after #{max_attempts} attempts without success")
     end
 
   end

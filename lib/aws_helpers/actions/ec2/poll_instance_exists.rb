@@ -8,7 +8,8 @@ module AwsHelpers
 
         include AwsHelpers::Utilities::Polling
 
-        def initialize(instance_id, options = {})
+        def initialize(config, instance_id, options = {})
+          @client = config.aws_ec2_client
           @instance_id = instance_id
           @stdout = options[:stdout] || $stdout
           @delay = options[:delay] || 15
@@ -17,7 +18,12 @@ module AwsHelpers
 
         def execute
           poll(@delay, @max_attempts) {
-            Aws::EC2::Instance.new(@instance_id).exists?
+            begin
+              @client.describe_instances(instance_ids: [@instance_id])
+              true
+            rescue Aws::EC2::Errors::InvalidInstanceIDNotFound
+              false
+            end
           }
         end
 

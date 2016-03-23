@@ -1,4 +1,3 @@
-require 'aws-sdk-resources'
 require 'aws_helpers/actions/cloud_formation/stack_events_filter_failed'
 require_relative '../../../spec_helpers/create_event_helper'
 

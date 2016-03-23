@@ -1,5 +1,4 @@
 require 'aws-sdk-core'
-require 'aws-sdk-resources'
 
 module AwsHelpers
 

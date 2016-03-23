@@ -3,13 +3,13 @@ require 'aws_helpers/ec2'
 
 describe AwsHelpers::EC2 do
 
-  let(:config) { instance_double(AwsHelpers::Config, options: {retry_limit: 8}) }
+  let(:config) { instance_double(AwsHelpers::Config, options: { retry_limit: 8 }) }
   let(:image_name) { 'ec2_name' }
 
   describe '#initialize' do
 
     it 'should call AwsHelpers::Client initialize method' do
-      options = {endpoint: 'http://endpoint'}
+      options = { endpoint: 'http://endpoint' }
       expect(AwsHelpers::Client).to receive(:new).with(options)
       AwsHelpers::EC2.new(options)
     end
@@ -179,7 +179,7 @@ describe AwsHelpers::EC2 do
     let(:min_count) { 1 }
     let(:max_count) { 1 }
     let(:monitoring) { true }
-    let(:options) { {min_count: min_count, max_count: max_count, monitoring: monitoring} }
+    let(:options) { { min_count: min_count, max_count: max_count, monitoring: monitoring } }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
@@ -361,20 +361,21 @@ describe AwsHelpers::EC2 do
 
   describe '#poll_instance_stopped' do
 
-    let(:poll_inst_stopped) { instance_double(PollInstanceStopped) }
+    let(:poll_inst_stopped) { instance_double(PollInstanceState) }
     let(:image_id) { 'image_id' }
 
     let(:options) { {} } #just use defaults
 
     before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
       allow(poll_inst_stopped).to receive(:execute)
-      allow(PollInstanceStopped).to receive(:new).with(image_id, options).and_return(poll_inst_stopped)
+      allow(PollInstanceState).to receive(:new).with(config, image_id, 'stopped', options).and_return(poll_inst_stopped)
     end
 
     subject { AwsHelpers::EC2.new.poll_instance_stopped(image_id, options) }
 
     it 'should create PollInstanceStopped' do
-      expect(PollInstanceStopped).to receive(:new).with(image_id, options).and_return(poll_inst_stopped)
+      expect(PollInstanceState).to receive(:new).with(config, image_id, 'stopped', options).and_return(poll_inst_stopped)
       subject
     end
 
@@ -394,14 +395,15 @@ describe AwsHelpers::EC2 do
     let(:options) { {} } #just use defaults
 
     before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
       allow(poll_inst_state).to receive(:execute)
-      allow(PollInstanceState).to receive(:new).with(image_id, state, options).and_return(poll_inst_state)
+      allow(PollInstanceState).to receive(:new).with(config, image_id, state, options).and_return(poll_inst_state)
     end
 
     subject { AwsHelpers::EC2.new.poll_instance_state(image_id, state, options) }
 
     it 'should create PollInstanceState' do
-      expect(PollInstanceState).to receive(:new).with(image_id, state, options).and_return(poll_inst_state)
+      expect(PollInstanceState).to receive(:new).with(config, image_id, state, options).and_return(poll_inst_state)
       subject
     end
 

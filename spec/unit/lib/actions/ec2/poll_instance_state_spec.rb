@@ -36,7 +36,7 @@ describe PollInstanceState do
     end
 
     it 'should write the status to stdout' do
-      expect(stdout).to receive(:puts).with("Instance State is #{is_running}.")
+      expect(stdout).to receive(:puts).with("Instance State is #{is_stopped}.")
       allow(aws_ec2_client).to receive(:describe_instance_status).and_return(create_status_result(is_stopped))
       PollInstanceState.new(config, instance_id, is_stopped, options).execute
     end

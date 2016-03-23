@@ -228,7 +228,7 @@ module AwsHelpers
     #   }
     #   ```
     def poll_instance_stopped(instance_id, options)
-      PollInstanceStopped.new(instance_id, options).execute
+      poll_instance_state(instance_id, 'stopped', options)
     end
 
 
@@ -247,7 +247,7 @@ module AwsHelpers
     #   }
     #   ```
     def poll_instance_state(instance_id, state, options)
-      PollInstanceState.new(instance_id, state, options).execute
+      PollInstanceState.new(config, instance_id, state, options).execute
     end
 
     # Returns the decrypted Windows administrator password for a given instance.

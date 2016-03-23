@@ -1,5 +1,4 @@
 require 'aws-sdk-core'
-require 'aws-sdk-resources'
 require 'aws_helpers/cloud_formation'
 require 'aws_helpers/actions/cloud_formation/stack_create'
 

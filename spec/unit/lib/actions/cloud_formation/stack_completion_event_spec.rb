@@ -1,30 +1,31 @@
-require 'aws-sdk-resources'
+require 'aws-sdk-core'
 require 'aws_helpers/actions/cloud_formation/stack_completion_event'
 
-include AwsHelpers::Actions::CloudFormation
-
-describe StackCompletionEvent do
+describe AwsHelpers::Actions::CloudFormation::StackCompletionEvent do
 
   let(:stack_name) { 'my_stack_name' }
   let(:resource_type) { 'AWS::CloudFormation::Stack' }
   let(:resource_type_bad) { 'AWS::EC2::Instance' }
 
-  let(:complete_event) { instance_double(Aws::CloudFormation::Event,
-                                         stack_name: stack_name,
-                                         resource_status: 'DELETE_COMPLETE',
-                                         resource_type: resource_type)
+  let(:complete_event) {
+    Aws::CloudFormation::Types::StackEvent.new(
+      stack_name: stack_name,
+      resource_status: 'DELETE_COMPLETE',
+      resource_type: resource_type)
   }
 
-  let(:initiation_event) { instance_double(Aws::CloudFormation::Event,
-                                           stack_name: stack_name,
-                                           resource_status: 'CREATE_IN_PROGRESS',
-                                           resource_type: resource_type)
+  let(:initiation_event) {
+    Aws::CloudFormation::Types::StackEvent.new(
+      stack_name: stack_name,
+      resource_status: 'CREATE_IN_PROGRESS',
+      resource_type: resource_type)
   }
 
-  let(:initiation_event_with_bad_type) { instance_double(Aws::CloudFormation::Event,
-                                                         stack_name: stack_name,
-                                                         resource_status: 'CREATE_IN_PROGRESS',
-                                                         resource_type: resource_type_bad)
+  let(:initiation_event_with_bad_type) {
+    Aws::CloudFormation::Types::StackEvent.new(
+      stack_name: stack_name,
+      resource_status: 'CREATE_IN_PROGRESS',
+      resource_type: resource_type_bad)
   }
 
 

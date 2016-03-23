@@ -1,5 +1,4 @@
 require 'aws-sdk-core'
-require 'aws-sdk-resources'
 require 'aws_helpers'
 require 'aws_helpers/actions/ec2/poll_instance_healthy'
 

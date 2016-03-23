@@ -28,7 +28,7 @@ module AwsHelpers
 
         def execute
           instance_id = AwsHelpers::Actions::EC2::EC2InstanceRun.new(@config, @image_id, @min_count, @max_count, @monitoring, @instance_run_options).execute
-          AwsHelpers::Actions::EC2::PollInstanceExists.new(instance_id, @instance_exists_polling).execute
+          AwsHelpers::Actions::EC2::PollInstanceExists.new(@config, instance_id, @instance_exists_polling).execute
           AwsHelpers::Actions::EC2::EC2InstanceTag.new(@config, instance_id, @app_name, @build_number).execute
           AwsHelpers::Actions::EC2::PollInstanceHealthy.new(@config, instance_id, @instance_running_polling).execute
           instance_id
