@@ -1,5 +1,8 @@
 # AwsHelpers
 
+[![Build Status](https://travis-ci.org/MYOB-Technology/aws_helpers.png?branch=rewrite)](https://travis-ci.org/MYOB-Technology/aws_helpers)
+[![Coverage Status](https://coveralls.io/repos/MYOB-Technology/aws_helpers/badge.svg?branch=rewrite&service=github)](https://coveralls.io/github/MYOB-Technology/aws_helpers?branch=rewrite)
+
 The AWS Helpers gem provides a range of utility classes to manage resources within AWS.
 
 ## Installation
