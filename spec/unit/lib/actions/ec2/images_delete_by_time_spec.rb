@@ -36,7 +36,7 @@ describe AwsHelpers::Actions::EC2::ImagesDeleteByTime do
     end
 
     it 'should call ImagesFindByTags #new with correct parameters' do
-      expect(AwsHelpers::Actions::EC2::ImagesFindByTags).to receive(:new).with(config, [{ name: 'Name', value: name }])
+      expect(AwsHelpers::Actions::EC2::ImagesFindByTags).to receive(:new).with(config, { Name: name })
       AwsHelpers::Actions::EC2::ImagesDeleteByTime.new(config, name, now, stdout: stdout).execute
     end
 
