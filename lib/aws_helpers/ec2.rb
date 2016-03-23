@@ -87,8 +87,8 @@ module AwsHelpers
     # Delete images older than specified time
     # @param name [String] The value of the Name tag for the image
     # @param time [String] Oldest time string in EC2 instance tags to remove after
-    def images_delete_by_time(name, time)
-      ImagesDeleteByTime.new(config, name, time).execute
+    def images_delete_by_time(name, time, options = {})
+      ImagesDeleteByTime.new(config, name, time, options).execute
     end
 
     # Return a list of images that match a given list of tags

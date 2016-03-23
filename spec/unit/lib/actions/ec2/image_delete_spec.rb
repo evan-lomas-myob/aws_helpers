@@ -11,6 +11,7 @@ describe AwsHelpers::Actions::EC2::ImageDelete do
     let(:aws_ec2_client) { instance_double(Aws::EC2::Client) }
     let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: aws_ec2_client) }
     let(:stdout) { instance_double(IO) }
+    let(:max_attempts) { 10 }
     let(:image_id) { 'image_id' }
     let(:poll_image_deleted) { instance_double(AwsHelpers::Actions::EC2::PollImageDeleted) }
     let(:delete_snapshots) { instance_double(AwsHelpers::Actions::EC2::SnapshotsDelete) }
@@ -41,8 +42,8 @@ describe AwsHelpers::Actions::EC2::ImageDelete do
     end
 
     it 'should call AwsHelpers::Actions::EC2::PollImageDeleted #new with correct parameters' do
-      expect(AwsHelpers::Actions::EC2::PollImageDeleted).to receive(:new).with(config, image_id, stdout: stdout)
-      AwsHelpers::Actions::EC2::ImageDelete.new(config, image_id, stdout: stdout).execute
+      expect(AwsHelpers::Actions::EC2::PollImageDeleted).to receive(:new).with(config, image_id, stdout: stdout, max_attempts: max_attempts)
+      AwsHelpers::Actions::EC2::ImageDelete.new(config, image_id, stdout: stdout, max_attempts: max_attempts ).execute
     end
 
     it 'should call AwsHelpers::Actions::EC2::PollImageDeleted #execute' do

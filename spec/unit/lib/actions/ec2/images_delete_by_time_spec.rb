@@ -11,6 +11,7 @@ describe AwsHelpers::Actions::EC2::ImagesDeleteByTime do
     let(:aws_ec2_client) { instance_double(Aws::EC2::Client) }
     let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: aws_ec2_client) }
     let(:stdout) { instance_double(IO) }
+    let(:max_attempts) { 10 }
     let(:now) { Time.now }
     let(:name) { 'name' }
     let(:images_find_by_tags) { instance_double(AwsHelpers::Actions::EC2::ImagesFindByTags) }
@@ -46,8 +47,8 @@ describe AwsHelpers::Actions::EC2::ImagesDeleteByTime do
     end
 
     it 'should call ImageDelete #new with correct parameters' do
-      expect(AwsHelpers::Actions::EC2::ImageDelete).to receive(:new).with(config, image_id, stdout: stdout)
-      AwsHelpers::Actions::EC2::ImagesDeleteByTime.new(config, name, now, stdout: stdout).execute
+      expect(AwsHelpers::Actions::EC2::ImageDelete).to receive(:new).with(config, image_id, stdout: stdout, max_attempts: max_attempts)
+      AwsHelpers::Actions::EC2::ImagesDeleteByTime.new(config, name, now, stdout: stdout, max_attempts: max_attempts).execute
     end
 
     it 'should call ImageDelete #execute' do

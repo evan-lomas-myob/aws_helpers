@@ -12,6 +12,7 @@ module AwsHelpers
           @client = config.aws_ec2_client
           @image_id = image_id
           @stdout = options[:stdout] || $stdout
+          @max_attempts = options[:max_attempts]
         end
 
         def execute
@@ -19,7 +20,7 @@ module AwsHelpers
           response = @client.describe_images(image_ids: [@image_id])
           snapshot_ids = snapshot_ids(response.images.first)
           @client.deregister_image(image_id: @image_id)
-          PollImageDeleted.new(@config, @image_id, stdout: @stdout).execute
+          PollImageDeleted.new(@config, @image_id, stdout: @stdout, max_attempts: @max_attempts).execute
           SnapshotsDelete.new(@config, snapshot_ids, stdout: @stdout).execute
         end
 

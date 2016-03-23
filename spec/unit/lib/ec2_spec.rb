@@ -129,14 +129,14 @@ describe AwsHelpers::EC2 do
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(ImagesDeleteByTime).to receive(:new).with(anything, anything, anything).and_return(images_delete_by_time)
+      allow(ImagesDeleteByTime).to receive(:new).with(anything, anything, anything, anything).and_return(images_delete_by_time)
       allow(images_delete_by_time).to receive(:execute)
     end
 
     subject { AwsHelpers::EC2.new.images_delete_by_time(image_name, time) }
 
     it 'should create ImagesDeleteByTime with default parameters' do
-      expect(ImagesDeleteByTime).to receive(:new).with(config, image_name, time)
+      expect(ImagesDeleteByTime).to receive(:new).with(config, image_name, time, {})
       subject
     end
 
