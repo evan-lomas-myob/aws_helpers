@@ -1,5 +1,3 @@
-require 'aws-sdk-resources'
-
 module AwsHelpers
   module Actions
     module S3

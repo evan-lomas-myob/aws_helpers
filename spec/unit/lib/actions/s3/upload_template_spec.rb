@@ -37,14 +37,6 @@ describe S3UploadTemplate do
     S3UploadTemplate.new(config, stack_name, template_json, s3_bucket_name, bucket_encrypt, stdout).execute
   end
 
-  it 'should create a new bucket if the bucket does not exist' do
-    allow(AwsHelpers::Actions::S3::S3Exists).to receive(:new).with(config, s3_bucket_name).and_return(s3_exists)
-    allow(s3_exists).to receive(:execute).and_return(false)
-    allow(AwsHelpers::Actions::S3::S3Create).to receive(:new).with(config, s3_bucket_name, acl).and_return(s3_create)
-    expect(s3_create).to receive(:execute).and_return("Created S3 Bucket #{s3_bucket_name}")
-    S3UploadTemplate.new(config, stack_name, template_json, s3_bucket_name, bucket_encrypt, stdout).execute
-  end
-
   it 'should call put object to load the template to the bucket' do
     expect(aws_s3_client).to receive(:put_object).with(request)
     S3UploadTemplate.new(config, stack_name, template_json, s3_bucket_name, bucket_encrypt, stdout).execute

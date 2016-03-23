@@ -1,4 +1,4 @@
-require 'aws-sdk-resources'
+require 'aws-sdk-core'
 
 module AwsHelpers
   module Actions

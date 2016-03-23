@@ -10,6 +10,7 @@ module AwsHelpers
 
         def initialize(config, stack_name, template_json, s3_bucket_name, bucket_encrypt, stdout = $stdout)
           @config = config
+          @client = config.aws_s3_client
           @stack_name = stack_name
           @template_json = template_json
           @s3_bucket_name = s3_bucket_name
@@ -18,23 +19,18 @@ module AwsHelpers
         end
 
         def execute
-          s3_client = @config.aws_s3_client
 
           request = {
-              bucket: @s3_bucket_name,
-              key: @stack_name,
-              body: @template_json,
+            bucket: @s3_bucket_name,
+            key: @stack_name,
+            body: @template_json,
           }
           request.merge!(server_side_encryption: 'AES256') if @bucket_encrypt
 
           @stdout.puts "Uploading #{@stack_name} to S3 bucket #{@s3_bucket_name}"
 
-          AwsHelpers::Actions::S3::S3Create.new(@config, @s3_bucket_name, 'private').execute if ! AwsHelpers::Actions::S3::S3Exists.new(@config, @s3_bucket_name).execute
-
-          s3_client.put_object(
-              request
-          )
-
+          AwsHelpers::Actions::S3::S3Create.new(@config, @s3_bucket_name, 'private').execute unless AwsHelpers::Actions::S3::S3Exists.new(@config, @s3_bucket_name).execute
+          @client.put_object(request)
           AwsHelpers::Actions::S3::S3TemplateUrl.new(@config, @s3_bucket_name).execute
         end
 
