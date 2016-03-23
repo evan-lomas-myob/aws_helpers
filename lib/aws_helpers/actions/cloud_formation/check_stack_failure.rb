@@ -1,4 +1,3 @@
-require 'aws-sdk-resources'
 require 'aws_helpers/utilities/target_stack_validate'
 
 module AwsHelpers
