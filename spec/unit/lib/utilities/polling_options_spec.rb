@@ -4,13 +4,12 @@ require 'aws_helpers/utilities/polling_options'
 include AwsHelpers::Utilities::PollingOptions
 
 describe AwsHelpers::Utilities::PollingOptions do
-
   let(:stdout) { instance_double(IO) }
 
   let(:delay) { 0 }
   let(:max_attempts) { 1 }
 
-  let(:options) { {max_attempts: max_attempts, delay: delay} }
+  let(:options) { { max_attempts: max_attempts, delay: delay } }
 
   before(:each) do
     allow(stdout).to receive(:puts).with(anything)
@@ -21,11 +20,10 @@ describe AwsHelpers::Utilities::PollingOptions do
   end
 
   it 'should return stdout with an empty hash' do
-    expect(create_options(stdout, {})).to eq({stdout: stdout})
+    expect(create_options(stdout, {})).to eq(stdout: stdout)
   end
 
   it 'should create and options hash and return it' do
-    expect(create_options(stdout, options)).to eq({stdout: stdout, max_attempts: max_attempts, delay: delay})
+    expect(create_options(stdout, options)).to eq(stdout: stdout, max_attempts: max_attempts, delay: delay)
   end
-
 end

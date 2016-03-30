@@ -4,7 +4,6 @@ require 'aws_helpers/utilities/polling'
 include AwsHelpers::Utilities::Polling
 
 describe AwsHelpers::Utilities::Polling do
-
   Struct.new('PollingStatus', :status)
 
   let(:stdout) { instance_double(IO) }
@@ -27,15 +26,15 @@ describe AwsHelpers::Utilities::Polling do
   end
 
   it 'should exceed max_attempts and raise an exception' do
-    expect{ call_polling(delay, max_attempts, response_bad) }.to raise_error("stopped waiting after #{max_attempts} attempts without success")
+    error = "stopped waiting after #{max_attempts} attempts without success"
+    expect { call_polling(delay, max_attempts, response_bad) }.to raise_error(error)
   end
 
   def call_polling(delay, max_attempts, response)
-    poll(delay, max_attempts) {
+    poll(delay, max_attempts) do
       output = "Delay = #{delay}: Max Attempts = #{max_attempts}"
       stdout.puts(output)
       response.status == 'Good'
-    }
+    end
   end
-
 end
