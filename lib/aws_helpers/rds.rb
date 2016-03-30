@@ -44,7 +44,7 @@ module AwsHelpers
     #     :delay => 30 # seconds
     #   }
     #   ```
-    def snapshot_create(db_instance_id, options ={})
+    def snapshot_create(db_instance_id, options = {})
       SnapshotCreate.new(config, db_instance_id, options).execute
     end
 

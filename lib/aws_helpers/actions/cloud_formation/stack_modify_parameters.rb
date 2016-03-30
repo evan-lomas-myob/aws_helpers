@@ -27,13 +27,13 @@ module AwsHelpers
 
         private
 
-        def create_options(stdout, pooling)
+        def create_options(stdout, polling)
           options = {}
           options[:stack_name] = @stack_name
           options[:stdout] = stdout if stdout
-          if pooling
-            max_attempts = pooling[:max_attempts]
-            delay = pooling[:delay]
+          if polling
+            max_attempts = polling[:max_attempts]
+            delay = polling[:delay]
             options[:max_attempts] = max_attempts if max_attempts
             options[:delay] = delay if delay
           end

@@ -16,7 +16,7 @@ module AwsHelpers
     # Polls a load balancer until all instances have a status of InService
     # @param load_balancer_name [String] The load balancer to poll
     # @param [Hash] options Optional parameters that can be overridden.
-    # @option options [IO] :stdout Override $stdout when logging pooling output
+    # @option options [IO] :stdout Override $stdout when logging polling output
     # @option options [Integer] :max_attempts (20) Override number of attempts
     # @option options [Integer] :delay (15) Override the delay between attempts
     def poll_in_service_instances(load_balancer_name, options= {})
