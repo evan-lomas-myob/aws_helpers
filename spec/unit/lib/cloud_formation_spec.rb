@@ -1,23 +1,19 @@
 require 'aws_helpers/cloud_formation'
 
 describe AwsHelpers::CloudFormation do
-
   let(:options) { { stub_responses: true, endpoint: 'http://endpoint' } }
   let(:config) { instance_double(AwsHelpers::Config) }
   let(:stdout) { instance_double(IO) }
   let(:stack_name) { 'my_stack_name' }
 
   describe '#initialize' do
-
     it 'should call AwsHelpers::Client initialize method' do
       expect(AwsHelpers::Client).to receive(:new).with(options)
       AwsHelpers::CloudFormation.new(options)
     end
-
   end
 
   describe '#stack_provision' do
-
     let(:stack_provision) { instance_double(StackProvision) }
 
     let(:template) { '{"AWSTemplateFormatVersion" : "2010-09-09"}' }
@@ -72,11 +68,9 @@ describe AwsHelpers::CloudFormation do
       expect(stack_provision).to receive(:execute)
       AwsHelpers::CloudFormation.new(options).stack_provision(stack_name, template)
     end
-
   end
 
   describe '#stack_delete' do
-
     let(:stack_delete) { instance_double(StackDelete) }
 
     before(:each) do
@@ -91,7 +85,7 @@ describe AwsHelpers::CloudFormation do
     end
 
     it 'should create StackDelete with stack optional stdout' do
-      expect(StackDelete).to receive(:new).with(config, stack_name, { stdout: stdout })
+      expect(StackDelete).to receive(:new).with(config, stack_name, stdout: stdout)
       AwsHelpers::CloudFormation.new(options).stack_delete(stack_name, stdout: stdout)
     end
 
@@ -99,11 +93,9 @@ describe AwsHelpers::CloudFormation do
       expect(stack_delete).to receive(:execute)
       AwsHelpers::CloudFormation.new(options).stack_delete(stack_name)
     end
-
   end
 
   describe '#stack_exists' do
-
     let(:stack_exists) { instance_double(StackExists) }
 
     before(:each) do
@@ -123,11 +115,9 @@ describe AwsHelpers::CloudFormation do
     it 'should call StackExists execute method' do
       expect(stack_exists).to receive(:execute)
     end
-
   end
 
   describe '#stack_parameters' do
-
     let(:stack_information) { instance_double(StackInformation) }
 
     before(:each) do
@@ -140,11 +130,9 @@ describe AwsHelpers::CloudFormation do
       expect(StackInformation).to receive(:new).with(config, stack_name, 'parameters')
       AwsHelpers::CloudFormation.new(options).stack_parameters(stack_name)
     end
-
   end
 
   describe '#stack_outputs' do
-
     let(:stack_information) { instance_double(StackInformation) }
 
     before(:each) do
@@ -157,12 +145,9 @@ describe AwsHelpers::CloudFormation do
       expect(StackInformation).to receive(:new).with(config, stack_name, 'outputs')
       AwsHelpers::CloudFormation.new(options).stack_outputs(stack_name)
     end
-
   end
 
-
   describe '#stack_modify_parameters' do
-
     let(:stack_modify_parameters) { instance_double(StackModifyParameters) }
     let(:parameters) { [{ parameter_key: 'key', parameter_value: 'value' }] }
 
@@ -183,11 +168,9 @@ describe AwsHelpers::CloudFormation do
     it 'should call StackModifyParameters execute method' do
       expect(stack_modify_parameters).to receive(:execute)
     end
-
   end
 
   describe '#stack_resources' do
-
     let(:stack_resources) { instance_double(StackResources) }
     let(:stack_name) { 'my_stack_name' }
 
@@ -208,11 +191,9 @@ describe AwsHelpers::CloudFormation do
     it 'should call StackModifyParameters execute method' do
       expect(stack_resources).to receive(:execute)
     end
-
   end
 
   describe '#stack_named_resource' do
-
     let(:stack_named_resource) { instance_double(StackNamedResource) }
     let(:stack_name) { 'my_stack_name' }
     let(:logical_resource_id) { 'my_resource_id' }
@@ -234,7 +215,5 @@ describe AwsHelpers::CloudFormation do
     it 'should call StackModifyParameters execute method' do
       expect(stack_named_resource).to receive(:execute)
     end
-
   end
-
 end

@@ -2,22 +2,18 @@ require 'time'
 require 'aws_helpers/ec2'
 
 describe AwsHelpers::EC2 do
-
   let(:config) { instance_double(AwsHelpers::Config, options: { retry_limit: 8 }) }
   let(:image_name) { 'ec2_name' }
 
   describe '#initialize' do
-
     it 'should call AwsHelpers::Client initialize method' do
       options = { endpoint: 'http://endpoint' }
       expect(AwsHelpers::Client).to receive(:new).with(options)
       AwsHelpers::EC2.new(options)
     end
-
   end
 
   describe '#image_create' do
-
     let(:image_create) { instance_double(ImageCreate) }
 
     let(:image_id) { 'ami_id' }
@@ -38,11 +34,9 @@ describe AwsHelpers::EC2 do
       expect(image_create).to receive(:execute)
       AwsHelpers::EC2.new.image_create(image_name, image_id, tags)
     end
-
   end
 
   describe '#image_delete' do
-
     let(:image_delete) { instance_double(ImageDelete) }
     let(:image_id) { 'ami_id' }
     let(:options) {}
@@ -64,11 +58,9 @@ describe AwsHelpers::EC2 do
       expect(image_delete).to receive(:execute)
       subject
     end
-
   end
 
   describe '#images_delete' do
-
     let(:images_delete) { instance_double(ImagesDelete) }
 
     let(:hours) { 1 }
@@ -93,11 +85,9 @@ describe AwsHelpers::EC2 do
       expect(images_delete).to receive(:execute)
       subject
     end
-
   end
 
   describe '#image_add_user' do
-
     let(:image_add_user) { instance_double(ImageAddUser) }
 
     let(:image_id) { 'ami_id' }
@@ -118,11 +108,9 @@ describe AwsHelpers::EC2 do
       expect(image_add_user).to receive(:execute)
       AwsHelpers::EC2.new.image_add_user(image_id, user_id)
     end
-
   end
 
   describe '#images_delete_by_time' do
-
     let(:images_delete_by_time) { instance_double(ImagesDeleteByTime) }
 
     let(:time) { Time.parse('01-Jan-2015') }
@@ -144,11 +132,9 @@ describe AwsHelpers::EC2 do
       expect(images_delete_by_time).to receive(:execute)
       subject
     end
-
   end
 
   describe '#images_find_by_tags' do
-
     let(:images_find_by_tags) { instance_double(ImagesFindByTags) }
     let(:tags) { %w('tag1', 'tag2') }
 
@@ -169,11 +155,9 @@ describe AwsHelpers::EC2 do
       expect(images_find_by_tags).to receive(:execute)
       subject
     end
-
   end
 
   describe '#instance_create' do
-
     let(:instance_create) { instance_double(InstanceCreate) }
     let(:image_id) { 'image_id' }
     let(:min_count) { 1 }
@@ -198,15 +182,13 @@ describe AwsHelpers::EC2 do
       expect(instance_create).to receive(:execute)
       subject
     end
-
   end
 
   describe '#instance_start' do
-
     let(:instance_start) { instance_double(InstanceStart) }
     let(:image_id) { 'image_id' }
 
-    let(:options) { {} } #just use defaults
+    let(:options) { {} } # just use defaults
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
@@ -225,15 +207,13 @@ describe AwsHelpers::EC2 do
       expect(instance_start).to receive(:execute)
       subject
     end
-
   end
 
   describe '#instance_stop' do
-
     let(:instance_stop) { instance_double(InstanceStop) }
     let(:image_id) { 'image_id' }
 
-    let(:options) { {} } #just use defaults
+    let(:options) { {} } # just use defaults
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
@@ -252,11 +232,9 @@ describe AwsHelpers::EC2 do
       expect(instance_stop).to receive(:execute)
       subject
     end
-
   end
 
   describe '#instances_find_by_tags' do
-
     let(:instances_find_by_tags) { instance_double(InstancesFindByTags) }
     let(:tags) { %w('tag1', 'tag2') }
 
@@ -277,11 +255,9 @@ describe AwsHelpers::EC2 do
       expect(instances_find_by_tags).to receive(:execute)
       subject
     end
-
   end
 
   describe '#instances_find_by_ids' do
-
     let(:instances_find_by_ids) { instance_double(InstancesFindByIds) }
     let(:ids) { %w('id1', 'id2') }
 
@@ -302,15 +278,13 @@ describe AwsHelpers::EC2 do
       expect(instances_find_by_ids).to receive(:execute)
       subject
     end
-
   end
 
   describe '#instance_terminate' do
-
     let(:instance_terminate) { instance_double(InstanceTerminate) }
     let(:image_id) { 'image_id' }
 
-    let(:options) { {} } #just use defaults
+    let(:options) { {} } # just use defaults
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
@@ -329,15 +303,13 @@ describe AwsHelpers::EC2 do
       expect(instance_terminate).to receive(:execute)
       subject
     end
-
   end
 
   describe '#poll_instance_healthy' do
-
     let(:poll_inst_healthy) { instance_double(PollInstanceHealthy) }
     let(:image_id) { 'image_id' }
 
-    let(:options) { {} } #just use defaults
+    let(:options) { {} } # just use defaults
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
@@ -356,15 +328,13 @@ describe AwsHelpers::EC2 do
       expect(poll_inst_healthy).to receive(:execute)
       subject
     end
-
   end
 
   describe '#poll_instance_stopped' do
-
     let(:poll_inst_stopped) { instance_double(PollInstanceState) }
     let(:image_id) { 'image_id' }
 
-    let(:options) { {} } #just use defaults
+    let(:options) { {} } # just use defaults
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
@@ -383,16 +353,14 @@ describe AwsHelpers::EC2 do
       expect(poll_inst_stopped).to receive(:execute)
       subject
     end
-
   end
 
   describe '#poll_instance_state' do
-
     let(:poll_inst_state) { instance_double(PollInstanceState) }
     let(:state) { 'running' }
     let(:image_id) { 'image_id' }
 
-    let(:options) { {} } #just use defaults
+    let(:options) { {} } # just use defaults
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
@@ -411,11 +379,9 @@ describe AwsHelpers::EC2 do
       expect(poll_inst_state).to receive(:execute)
       subject
     end
-
   end
 
   describe '#get_windows_password' do
-
     let(:get_windows_password) { instance_double(GetWindowsPassword) }
     let(:instance_id) { 'ec2id' }
     let(:pem_path) { '/path/to/pem/file' }
@@ -438,16 +404,14 @@ describe AwsHelpers::EC2 do
       expect(get_windows_password).to receive(:get_password)
       subject
     end
-
   end
 
   describe '#get_vpc_id_by_name' do
-
     let(:get_vpc_by_name) { instance_double(GetVpcIdByName) }
     let(:vpc_name) { 'VPC Name' }
     let(:vpc_id) { 'VPC ID' }
 
-    let(:options) { {} } #just use defaults
+    let(:options) { {} } # just use defaults
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
@@ -466,16 +430,14 @@ describe AwsHelpers::EC2 do
       expect(get_vpc_by_name).to receive(:get_id)
       subject
     end
-
   end
 
   describe '#get_security_group_id_by_name' do
-
     let(:get_group_by_name) { instance_double(GetSecurityGroupIdByName) }
     let(:sg_name) { 'Group Name' }
     let(:sg_id) { 'Group ID' }
 
-    let(:options) { {} } #just use defaults
+    let(:options) { {} } # just use defaults
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
@@ -494,7 +456,5 @@ describe AwsHelpers::EC2 do
       expect(get_group_by_name).to receive(:get_id)
       subject
     end
-
   end
-
 end

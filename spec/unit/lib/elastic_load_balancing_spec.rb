@@ -1,21 +1,17 @@
 require 'aws_helpers/elastic_load_balancing'
 
 describe AwsHelpers::ElasticLoadBalancing do
-
-  let(:options) { {stub_responses: true, endpoint: 'http://endpoint'} }
+  let(:options) { { stub_responses: true, endpoint: 'http://endpoint' } }
   let(:config) { instance_double(AwsHelpers::Config) }
 
   describe '#initialize' do
-
     it 'should call AwsHelpers::Client initialize method' do
       expect(AwsHelpers::Client).to receive(:new).with(options)
       AwsHelpers::ElasticLoadBalancing.new(options)
     end
-
   end
 
   describe '#poll_healthy_instances' do
-
     let(:poll_healthy_instances) { double(PollInServiceInstances) }
 
     let(:load_balancer_name) { 'my_load_balancer' }
@@ -38,7 +34,5 @@ describe AwsHelpers::ElasticLoadBalancing do
       expect(poll_healthy_instances).to receive(:execute)
       subject
     end
-
   end
-
 end
