@@ -5,7 +5,6 @@ require 'aws_helpers/actions/s3/template_url'
 include AwsHelpers::Actions::S3
 
 describe S3UploadTemplate do
-
   let(:aws_s3_client) { instance_double(Aws::S3::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_s3_client: aws_s3_client) }
 
@@ -22,7 +21,7 @@ describe S3UploadTemplate do
   let(:acl) { 'private' }
   let(:bucket_encrypt) { true }
 
-  let(:request) { {bucket: s3_bucket_name, key: stack_name, body: 'json', server_side_encryption: 'AES256'} }
+  let(:request) { { bucket: s3_bucket_name, key: stack_name, body: 'json', server_side_encryption: 'AES256' } }
 
   before(:each) do
     allow(aws_s3_client).to receive(:head_bucket)
@@ -45,5 +44,4 @@ describe S3UploadTemplate do
   it 'should return the s3 bucket url' do
     expect(S3UploadTemplate.new(config, stack_name, template_json, s3_bucket_name, bucket_encrypt, stdout).execute).to eq(url)
   end
-
 end

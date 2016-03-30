@@ -4,7 +4,6 @@ require 'aws_helpers/actions/s3/template_url'
 include AwsHelpers::Actions::S3
 
 describe S3TemplateUrl do
-
   let(:aws_s3_client) { instance_double(Aws::S3::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_s3_client: aws_s3_client) }
   let(:s3_exists) { instance_double(AwsHelpers::Actions::S3::S3Exists) }
@@ -20,7 +19,6 @@ describe S3TemplateUrl do
   subject { AwsHelpers::Actions::S3::S3TemplateUrl.new(config, s3_bucket_name).execute }
 
   context 'bucket exists' do
-
     before(:each) do
       allow(s3_exists).to receive(:execute).and_return(true)
       allow(aws_s3_client).to receive(:get_bucket_location).and_return(
@@ -36,11 +34,9 @@ describe S3TemplateUrl do
     it 'should return the URL of the bucket' do
       expect(subject).to eq("https://#{s3_bucket_name}.#{location}.amazonaws.com")
     end
-
   end
 
   context 'bucket does not exist' do
-
     before(:each) do
       allow(s3_exists).to receive(:execute).and_return(false)
     end
@@ -48,8 +44,5 @@ describe S3TemplateUrl do
     it 'should return nil if the bucket does not exist' do
       expect(subject).to be_nil
     end
-
   end
-
-
 end

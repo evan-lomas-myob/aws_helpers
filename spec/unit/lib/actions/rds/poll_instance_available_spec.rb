@@ -3,17 +3,15 @@ require 'aws_helpers/config'
 require 'aws_helpers/actions/rds/poll_instance_available'
 
 describe AwsHelpers::Actions::RDS::PollInstanceAvailable do
-
   let(:rds_client) { instance_double(Aws::RDS::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_rds_client: rds_client) }
   let(:stdout) { instance_double(IO) }
   let(:db_instance_identifier) { 'instance_id' }
 
   describe '#execute' do
-
-    before(:each) {
+    before(:each) do
       allow(stdout).to receive(:puts)
-    }
+    end
 
     it 'should call Aws::RDS::Client #describe_db_instances with correct parameters' do
       allow_describe_db_instances(rds_client, db_instance_identifier, 'available')
@@ -35,11 +33,10 @@ describe AwsHelpers::Actions::RDS::PollInstanceAvailable do
 
     it 'should raise a Aws::Waiters::Errors::TooManyAttemptsError if the snapshot is not available within the number of attempts' do
       allow_describe_db_instances(rds_client, db_instance_identifier, 'creating')
-      expect {
+      expect do
         poll_instance_available(config, db_instance_identifier, stdout: stdout, max_attempts: 1, delay: 0)
-      }.to raise_error(Aws::Waiters::Errors::TooManyAttemptsError)
+      end.to raise_error(Aws::Waiters::Errors::TooManyAttemptsError)
     end
-
   end
 
   def poll_instance_available(config, db_instance_identifier, options)
@@ -48,23 +45,20 @@ describe AwsHelpers::Actions::RDS::PollInstanceAvailable do
 
   def allow_describe_db_instances(rds_client, db_instance_identifier, *responses)
     allow(rds_client)
-        .to receive(:describe_db_instances)
-                .and_return(
-                    *responses.map { |response| create_response(db_instance_identifier, response) }
-                )
+      .to receive(:describe_db_instances)
+      .and_return(
+        *responses.map { |response| create_response(db_instance_identifier, response) }
+      )
   end
 
   def create_response(db_instance_identifier, status)
     Aws::RDS::Types::DBInstanceMessage.new(
-        db_instances: [
-            Aws::RDS::Types::DBInstance.new(
-                db_instance_identifier: db_instance_identifier,
-                db_instance_status: status
-            )
-        ]
-
+      db_instances: [
+        Aws::RDS::Types::DBInstance.new(
+          db_instance_identifier: db_instance_identifier,
+          db_instance_status: status
+        )
+      ]
     )
   end
-
-
 end

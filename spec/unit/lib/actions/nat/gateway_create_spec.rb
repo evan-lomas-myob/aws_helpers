@@ -4,7 +4,6 @@ require 'aws_helpers/actions/nat/gateway_create'
 include AwsHelpers::Actions::NAT
 
 describe GatewayCreate do
-
   let(:aws_ec2_client) { instance_double(Aws::EC2::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: aws_ec2_client) }
   let(:stdout) { instance_double(IO) }
@@ -31,6 +30,4 @@ describe GatewayCreate do
   it 'should return the id of the created gateway' do
     expect(GatewayCreate.new(config, subnet_id, allocation_id).execute).to eq(gateway_id)
   end
-
-
 end

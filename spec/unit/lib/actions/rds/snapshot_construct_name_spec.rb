@@ -5,7 +5,6 @@ include AwsHelpers
 include AwsHelpers::Actions::RDS
 
 describe SnapshotConstructName do
-
   let(:rds_configuration) { double(:configuration, region: 'my_region') }
   let(:rds_client) { instance_double(Aws::RDS::Client) }
   let(:iam_client) { instance_double(Aws::IAM::Client) }
@@ -16,21 +15,21 @@ describe SnapshotConstructName do
   let(:db_instance_identifier) { 'db_instance_identifier' }
   let(:db_instance_name) { 'instance_name' }
   let(:resource_name) { "arn:aws:rds:#{rds_configuration.region}:#{iam_user_id}:db:#{db_instance_identifier}" }
-  let(:list_users_response) {
+  let(:list_users_response) do
     Aws::IAM::Types::ListUsersResponse.new(
-        users: [
-            Aws::IAM::Types::User.new(arn: iam_user_arn)
-        ]
+      users: [
+        Aws::IAM::Types::User.new(arn: iam_user_arn)
+      ]
     )
-  }
-  let(:tag_list_response) {
-    Aws::RDS::Types::TagListMessage.new(
-        tag_list: [
-            Aws::RDS::Types::Tag.new(key: 'Name', value: db_instance_name)
-        ]
+  end
 
+  let(:tag_list_response) do
+    Aws::RDS::Types::TagListMessage.new(
+      tag_list: [
+        Aws::RDS::Types::Tag.new(key: 'Name', value: db_instance_name)
+      ]
     )
-  }
+  end
 
   before(:each) do
     allow(iam_client).to receive(:config).and_return(rds_configuration)
@@ -39,14 +38,12 @@ describe SnapshotConstructName do
   end
 
   describe '#execute' do
-
     it 'should return the name consisting of instance identifier and date correctly' do
       expect(SnapshotConstructName.new(config, db_instance_identifier, now: Time.parse('1 Feb 2015 03:04:05')).execute)
-          .to eql("#{db_instance_identifier}-2015-02-01-03-04")
+        .to eql("#{db_instance_identifier}-2015-02-01-03-04")
     end
 
     context 'with optional parameter user_name: set to true' do
-
       it 'should return the region in the iam client' do
         expect(iam_client).to receive(:config)
         SnapshotConstructName.new(config, db_instance_identifier, use_name: true).execute
@@ -64,12 +61,8 @@ describe SnapshotConstructName do
 
       it 'should return the name consisting of instance name and date correctly' do
         expect(SnapshotConstructName.new(config, db_instance_identifier, use_name: true, now: Time.parse('1 Feb 2015 03:04:05')).execute)
-            .to eql("#{db_instance_name}-2015-02-01-03-04")
+          .to eql("#{db_instance_name}-2015-02-01-03-04")
       end
-
     end
-
   end
-
-
 end

@@ -4,7 +4,6 @@ require 'aws_helpers/actions/s3/create'
 include AwsHelpers::Actions::S3
 
 describe S3Create do
-
   let(:aws_s3_client) { instance_double(Aws::S3::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_s3_client: aws_s3_client) }
   let(:stdout) { instance_double(IO) }
@@ -37,5 +36,4 @@ describe S3Create do
       AwsHelpers::Actions::S3::S3Create.new(config, s3_bucket_name, acl, stdout).execute
     end
   end
-
 end

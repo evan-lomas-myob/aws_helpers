@@ -1,23 +1,19 @@
 require 'aws_helpers/auto_scaling'
 
 describe AwsHelpers::AutoScaling do
-
   let(:auto_scaling_group_name) { 'my_group_name' }
   let(:config) { instance_double(AwsHelpers::Config) }
   let(:desired_capacity) { 1 }
 
   describe '#initialize' do
-
     it 'should call AwsHelpers::Client initialize method' do
       options = { endpoint: 'http://endpoint' }
       expect(AwsHelpers::Client).to receive(:new).with(options)
       AwsHelpers::AutoScaling.new(options)
     end
-
   end
 
   describe '#retrieve_desired_capacity' do
-
     let(:retrieve_desired_capacity) { instance_double(RetrieveDesiredCapacity) }
 
     before(:each) do
@@ -41,11 +37,9 @@ describe AwsHelpers::AutoScaling do
     it 'should return the desired capacity value as an Integer' do
       expect(retrieve_desired_capacity.execute).to eq(1)
     end
-
   end
 
   describe '#update_desired_capacity' do
-
     let(:update_desired_capacity) { instance_double(UpdateDesiredCapacity) }
 
     before(:each) do
@@ -70,10 +64,10 @@ describe AwsHelpers::AutoScaling do
       }
       expect(UpdateDesiredCapacity)
         .to receive(:new).with(
-              config,
-              auto_scaling_group_name,
-              desired_capacity,
-              update_desired_capacity_options)
+          config,
+          auto_scaling_group_name,
+          desired_capacity,
+          update_desired_capacity_options)
       subject.update_desired_capacity(
         auto_scaling_group_name,
         desired_capacity,
@@ -97,7 +91,5 @@ describe AwsHelpers::AutoScaling do
         desired_capacity
       )
     end
-
   end
-
 end
