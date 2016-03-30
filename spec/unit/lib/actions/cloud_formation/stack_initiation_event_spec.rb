@@ -4,7 +4,6 @@ require_relative '../../../spec_helpers/create_event_helper'
 include AwsHelpers::Actions::CloudFormation
 
 describe StackInitiationEvent do
-
   let(:stack_name) { 'my_stack_name' }
   let(:resource_type) { 'AWS::CloudFormation::Stack' }
   let(:resource_type_bad) { 'AWS::EC2::Instance' }
@@ -16,7 +15,6 @@ describe StackInitiationEvent do
   let(:wrong_event) { CreateEventHelper.new(stack_name, 'DELETE_COMPLETE', resource_type).execute }
 
   describe '#execute' do
-
     it 'should return true because the event has a matching resource status' do
       expect(AwsHelpers::Actions::CloudFormation::StackInitiationEvent.new(create_in_progress_event).execute).to be(true)
     end
@@ -36,7 +34,5 @@ describe StackInitiationEvent do
     it 'should return false because the event has the right resource status but the wrong resource type' do
       expect(AwsHelpers::Actions::CloudFormation::StackInitiationEvent.new(create_in_progress_event_wrong_type).execute).to be(false)
     end
-
   end
-
 end

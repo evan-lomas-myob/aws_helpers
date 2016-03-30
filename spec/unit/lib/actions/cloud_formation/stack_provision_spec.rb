@@ -13,7 +13,6 @@ include AwsHelpers::Actions::CloudFormation
 include AwsHelpers::Actions::S3
 
 describe StackProvision do
-
   let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
   let(:aws_s3_client) { instance_double(Aws::S3::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client, aws_s3_client: aws_s3_client) }
@@ -47,10 +46,12 @@ describe StackProvision do
   let(:stack_rolledback) { create_response(stack_name, 'ROLLBACK_COMPLETE') }
   let(:stack_created) { create_response(stack_name, 'CREATE_COMPLETE') }
 
-  let(:parameters) { [
-    Parameter.new(parameter_key: 'param_key_1', parameter_value: 'param_value_1'),
-    Parameter.new(parameter_key: 'param_key_2', parameter_value: 'param_value_1')
-  ] }
+  let(:parameters) do
+    [
+      Parameter.new(parameter_key: 'param_key_1', parameter_value: 'param_value_1'),
+      Parameter.new(parameter_key: 'param_key_2', parameter_value: 'param_value_1')
+    ]
+  end
 
   let(:outputs) { Output.new(output_key: 'output_key', output_value: 'output_value', description: nil) }
 
@@ -58,23 +59,28 @@ describe StackProvision do
   let(:bucket_encrypt) { true }
   let(:url) { 'https://my-bucket-url' }
 
-  let(:request_with_url) { { stack_name: stack_name,
-                             template_url: url,
-                             parameters: parameters,
-                             capabilities: capabilities
-  } }
+  let(:request_with_url) do
+    {
+      stack_name: stack_name,
+      template_url: url,
+      parameters: parameters,
+      capabilities: capabilities
+    }
+  end
 
-  let(:request_with_body) { { stack_name: stack_name,
-                              template_body: template_json,
-                              parameters: parameters,
-                              capabilities: capabilities
-  } }
+  let(:request_with_body) do
+    {
+      stack_name: stack_name,
+      template_body: template_json,
+      parameters: parameters,
+      capabilities: capabilities
+    }
+  end
 
   let(:stack_exists_true) { true }
   let(:stack_exists_false) { false }
 
   context 'template upload required' do
-
     before(:each) do
       allow(S3UploadTemplate).to receive(:new).and_return(stack_upload_template)
       allow(stack_upload_template).to receive(:execute).and_return(url)
@@ -130,11 +136,9 @@ describe StackProvision do
     it 'should return the outputs' do
       expect(StackProvision.new(config, stack_name, template_json).execute).to eq(outputs)
     end
-
   end
 
   context 'no template upload required' do
-
     it 'should return a request template with template_body embedded' do
       allow(stdout).to receive(:puts)
       allow(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_return(stack_created)
@@ -146,14 +150,12 @@ describe StackProvision do
       allow(stack_information).to receive(:execute).and_return(outputs)
       StackProvision.new(config, stack_name, template_json).execute
     end
-
   end
 
   def create_response(name, status)
-  Aws::CloudFormation::Types::DescribeStacksOutput.new(
-    stacks: [
-      Aws::CloudFormation::Types::Stack.new(stack_name: name, stack_status: status)
-    ])
+    Aws::CloudFormation::Types::DescribeStacksOutput.new(
+      stacks: [
+        Aws::CloudFormation::Types::Stack.new(stack_name: name, stack_status: status)
+      ])
   end
-
 end

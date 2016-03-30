@@ -7,7 +7,6 @@ include AwsHelpers
 include AwsHelpers::Actions::CloudFormation
 
 describe StackRetrieveEvents do
-
   let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client) }
   let(:stack_resource) { instance_double(Aws::CloudFormation::Stack) }
@@ -15,7 +14,7 @@ describe StackRetrieveEvents do
   let(:stack_name) { 'my_stack_name' }
   let(:next_token) { nil }
 
-  let(:options) { {stack_name: stack_name} }
+  let(:options) { { stack_name: stack_name } }
 
   let(:resource_type) { 'AWS::CloudFormation::Stack' }
 
@@ -28,7 +27,6 @@ describe StackRetrieveEvents do
   let(:describe_stack_events_output) { instance_double(Aws::CloudFormation::Types::DescribeStackEventsOutput, stack_events: stack_events, next_token: next_token) }
 
   describe '#execute' do
-
     it 'should call describe_stack_events to get events' do
       expect(cloudformation_client).to receive(:describe_stack_events).with(stack_name: stack_name, next_token: next_token).and_return(describe_stack_events_output)
       AwsHelpers::Actions::CloudFormation::StackRetrieveEvents.new(config, options).execute
@@ -38,7 +36,5 @@ describe StackRetrieveEvents do
       allow(cloudformation_client).to receive(:describe_stack_events).with(stack_name: stack_name, next_token: next_token).and_return(describe_stack_events_output)
       expect(AwsHelpers::Actions::CloudFormation::StackRetrieveEvents.new(config, options).execute).to eq(stack_events)
     end
-
   end
-
 end

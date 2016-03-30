@@ -8,7 +8,6 @@ require 'aws_helpers/actions/cloud_formation/stack_events_filter_failed'
 include AwsHelpers::Actions::CloudFormation
 
 describe StackErrorEvents do
-
   let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client) }
   let(:stdout) { instance_double(IO) }
@@ -18,13 +17,12 @@ describe StackErrorEvents do
   let(:stack_events_filter_failed) { instance_double(AwsHelpers::Actions::CloudFormation::StackEventsFilterFailed) }
 
   let(:stack_name) { 'my_stack_name' }
-  let(:options) { {stack_name: stack_name, stdout: stdout} }
+  let(:options) { { stack_name: stack_name, stdout: stdout } }
   let(:resource_type) { 'AWS::CloudFormation::Stack' }
   let(:timestamp) { Time.parse('01-Jan-2015 00:00:00') }
   let(:logical_resource_id) { 'ResourceID' }
   let(:resource_status_reason) { 'Success/failure message' }
   let(:next_token) { nil }
-
 
   let(:initiation_event) { CreateEventHelper.new(stack_name, 'CREATE_IN_PROGRESS', resource_type).execute }
   let(:failed_event) { CreateEventHelper.new(stack_name, 'CREATE_FAILED', resource_type).execute }
@@ -64,5 +62,4 @@ describe StackErrorEvents do
   it 'should send event information to standard output' do
     expect(stdout).to receive(:puts).with("#{timestamp}, DELETE_COMPLETE, #{logical_resource_id}, #{resource_status_reason}")
   end
-
 end

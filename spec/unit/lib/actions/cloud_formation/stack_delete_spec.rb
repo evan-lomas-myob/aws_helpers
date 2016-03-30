@@ -8,7 +8,6 @@ include AwsHelpers::Actions::CloudFormation
 include Aws::CloudFormation::Types
 
 describe StackDelete do
-
   let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client) }
   let(:stack_progress) { instance_double(StackProgress) }
@@ -16,7 +15,7 @@ describe StackDelete do
   let(:stdout) { instance_double(IO) }
   let(:stack_name) { 'my_stack_name' }
   let(:stack_id) { "arn:aws:cloudformation:region:id:stack/#{stack_name}/stack_id_number" }
-  let(:options) { {stack_id: stack_id, stdout: stdout} }
+  let(:options) { { stack_id: stack_id, stdout: stdout } }
 
   let(:describe_stack) { [instance_double(Stack, stack_name: stack_name, stack_id: stack_id)] }
   let(:describe_stack_response) { instance_double(DescribeStacksOutput, stacks: describe_stack) }
@@ -46,5 +45,4 @@ describe StackDelete do
   it 'should get output stating the stack was deleted' do
     expect(stdout).to receive(:puts).with('Deleting my_stack_name')
   end
-
 end

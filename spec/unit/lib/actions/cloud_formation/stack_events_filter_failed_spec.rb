@@ -4,7 +4,6 @@ require_relative '../../../spec_helpers/create_event_helper'
 include AwsHelpers::Actions::CloudFormation
 
 describe StackEventsFilterFailed do
-
   let(:stack_name) { 'my_stack_name' }
   let(:resource_type) { 'AWS::CloudFormation::Stack' }
   let(:resource_type_bad) { 'AWS::EC2::Instance' }
@@ -21,7 +20,6 @@ describe StackEventsFilterFailed do
   let(:stack_events_bad_resource) { [create_failed_event, delete_failed_event, wrong_event, update_failed_event, rollback_failed_event, update_rollback_failed_event] }
 
   describe '#execute' do
-
     it 'should return the whole array stack because the events have matching resource status' do
       expect(AwsHelpers::Actions::CloudFormation::StackEventsFilterFailed.new(stack_events_good).execute).to eq(stack_events_good)
     end
@@ -29,7 +27,5 @@ describe StackEventsFilterFailed do
     it 'should drop the event from array stack because the event has the wrong resource status' do
       expect(AwsHelpers::Actions::CloudFormation::StackEventsFilterFailed.new(stack_events_bad_resource).execute).to eq(stack_events_good)
     end
-
   end
-
 end

@@ -4,7 +4,6 @@ require 'aws_helpers/actions/cloud_formation/check_stack_failure'
 require 'aws_helpers/utilities/target_stack_validate'
 
 describe AwsHelpers::Actions::CloudFormation::CheckStackFailure do
-
   let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client) }
   let(:target_stack_validate) { instance_double(AwsHelpers::Utilities::TargetStackValidate) }
@@ -36,18 +35,15 @@ describe AwsHelpers::Actions::CloudFormation::CheckStackFailure do
     subject
   end
 
-  %w(UPDATE_ROLLBACK_COMPLETE ROLLBACK_COMPLETE ROLLBACK_FAILED UPDATE_ROLLBACK_FAILED DELETE_FAILED).each { |failure|
-
+  %w(UPDATE_ROLLBACK_COMPLETE ROLLBACK_COMPLETE ROLLBACK_FAILED UPDATE_ROLLBACK_FAILED DELETE_FAILED).each do |failure|
     it "should raise when stack status is #{failure}" do
       allow(cloudformation_client).to receive(:describe_stacks).and_return(create_response(stack_name, failure))
       expect { subject }.to raise_error("Stack #{stack_name} Failed")
     end
-  }
-
-  def create_response(name, status)
-    Aws::CloudFormation::Types::DescribeStacksOutput.new(stacks: [
-      Aws::CloudFormation::Types::Stack.new(stack_name: name, stack_status: status)
-    ])
   end
 
+  def create_response(name, status)
+    stack = Aws::CloudFormation::Types::Stack.new(stack_name: name, stack_status: status)
+    Aws::CloudFormation::Types::DescribeStacksOutput.new(stacks: [stack])
+  end
 end

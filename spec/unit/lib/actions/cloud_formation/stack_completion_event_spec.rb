@@ -2,35 +2,32 @@ require 'aws-sdk-core'
 require 'aws_helpers/actions/cloud_formation/stack_completion_event'
 
 describe AwsHelpers::Actions::CloudFormation::StackCompletionEvent do
-
   let(:stack_name) { 'my_stack_name' }
   let(:resource_type) { 'AWS::CloudFormation::Stack' }
   let(:resource_type_bad) { 'AWS::EC2::Instance' }
 
-  let(:complete_event) {
+  let(:complete_event) do
     Aws::CloudFormation::Types::StackEvent.new(
       stack_name: stack_name,
       resource_status: 'DELETE_COMPLETE',
       resource_type: resource_type)
-  }
+  end
 
-  let(:initiation_event) {
+  let(:initiation_event) do
     Aws::CloudFormation::Types::StackEvent.new(
       stack_name: stack_name,
       resource_status: 'CREATE_IN_PROGRESS',
       resource_type: resource_type)
-  }
+  end
 
-  let(:initiation_event_with_bad_type) {
+  let(:initiation_event_with_bad_type) do
     Aws::CloudFormation::Types::StackEvent.new(
       stack_name: stack_name,
       resource_status: 'CREATE_IN_PROGRESS',
       resource_type: resource_type_bad)
-  }
-
+  end
 
   describe '#execute' do
-
     it 'should return true because the event has a matching resource status' do
       expect(AwsHelpers::Actions::CloudFormation::StackCompletionEvent.new(complete_event).execute).to be(true)
     end
@@ -42,7 +39,5 @@ describe AwsHelpers::Actions::CloudFormation::StackCompletionEvent do
     it 'should return false because the event has the right resource status but the wrong resource type' do
       expect(AwsHelpers::Actions::CloudFormation::StackCompletionEvent.new(initiation_event_with_bad_type).execute).to be(false)
     end
-
   end
-
 end

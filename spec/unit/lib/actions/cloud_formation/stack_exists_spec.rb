@@ -3,7 +3,6 @@ require 'aws_helpers/cloud_formation'
 require 'aws_helpers/actions/cloud_formation/stack_exists'
 
 describe AwsHelpers::Actions::CloudFormation::StackExists do
-
   let(:cloud_formation_client) { instance_double(Aws::CloudFormation::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloud_formation_client) }
 
@@ -27,5 +26,4 @@ describe AwsHelpers::Actions::CloudFormation::StackExists do
     allow(cloud_formation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_raise(validation_error_general)
     expect { subject }.to raise_error(validation_error_general)
   end
-
 end

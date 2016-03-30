@@ -9,7 +9,6 @@ include AwsHelpers
 include AwsHelpers::Actions::CloudFormation
 
 describe StackModifyParameters do
-
   let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client) }
   let(:stdout) { instance_double(IO) }
@@ -18,37 +17,45 @@ describe StackModifyParameters do
   let(:delay) { 1 }
 
   let(:stack_name) { 'my_stack_name' }
-  let(:stack_modify_parameters_polling) { {max_attempts: max_attempts, delay: delay} }
-  let(:stack_modify_parameters_options) { {stack_name: stack_name, stdout: stdout, max_attempts: max_attempts, delay: delay} }
+  let(:stack_modify_parameters_polling) { { max_attempts: max_attempts, delay: delay } }
+  let(:stack_modify_parameters_options) { { stack_name: stack_name, stdout: stdout, max_attempts: max_attempts, delay: delay } }
 
-  let(:options) { {stdout: stdout, polling: stack_modify_parameters_polling} }
+  let(:options) { { stdout: stdout, polling: stack_modify_parameters_polling } }
 
   let(:stack_information) { instance_double(StackInformation) }
   let(:stack_parameter_update_builder) { instance_double(StackParameterUpdateBuilder) }
   let(:poll_stack_update) { instance_double(PollStackStatus) }
 
-  let(:parameters_to_update) { [
-      {parameter_key: 'param_key_1', parameter_value: 'param_value_1'},
-      {parameter_key: 'param_key_2', parameter_value: 'new_param_value_2'}
-  ] }
+  let(:parameters_to_update) do
+    [
+      { parameter_key: 'param_key_1', parameter_value: 'param_value_1' },
+      { parameter_key: 'param_key_2', parameter_value: 'new_param_value_2' }
+    ]
+  end
 
-  let(:existing_parameters) { [
+  let(:existing_parameters) do
+    [
       Parameter.new(parameter_key: 'param_key_1', parameter_value: 'param_value_1', use_previous_value: true),
       Parameter.new(parameter_key: 'param_key_2', parameter_value: 'param_value_1', use_previous_value: true)
-  ] }
+    ]
+  end
 
-  let(:updated_parameters) { [
-      {parameter_key: 'param_key_1', use_previous_value: true},
-      {parameter_key: 'param_key_2', parameter_value: 'new_param_value_2'}
-  ] }
+  let(:updated_parameters) do
+    [
+      { parameter_key: 'param_key_1', use_previous_value: true },
+      { parameter_key: 'param_key_2', parameter_value: 'new_param_value_2' }
+    ]
+  end
 
-  let(:stack_existing) { [
+  let(:stack_existing) do
+    [
       Stack.new(stack_name: stack_name, parameters: existing_parameters, capabilities: ['CAPABILITY_IAM'])
-  ] }
+    ]
+  end
 
-  let(:stack_updated) {
-    {stack_name: stack_name, use_previous_template: true, parameters: updated_parameters, capabilities: ['CAPABILITY_IAM']}
-  }
+  let(:stack_updated) do
+    { stack_name: stack_name, use_previous_template: true, parameters: updated_parameters, capabilities: ['CAPABILITY_IAM'] }
+  end
 
   let(:stack_events) { [instance_double(StackEvent, resource_status: 'status')] }
   let(:stack_response) { instance_double(DescribeStacksOutput, stacks: stack_existing) }
@@ -85,5 +92,4 @@ describe StackModifyParameters do
   it 'should call update_stack using the request generated' do
     expect(poll_stack_update).to receive(:execute)
   end
-
 end

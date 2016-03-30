@@ -3,7 +3,6 @@ require 'aws_helpers/config'
 require 'aws_helpers/actions/cloud_formation/stack_rollback_complete'
 
 describe AwsHelpers::Actions::CloudFormation::StackRollbackComplete do
-
   let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client) }
 
@@ -24,10 +23,7 @@ describe AwsHelpers::Actions::CloudFormation::StackRollbackComplete do
   end
 
   def create_response(status)
-    Aws::CloudFormation::Types::DescribeStacksOutput.new(stacks:[
-      Aws::CloudFormation::Types::Stack.new(stack_status: status)
-    ])
+    stack = Aws::CloudFormation::Types::Stack.new(stack_status: status)
+    Aws::CloudFormation::Types::DescribeStacksOutput.new(stacks: [stack])
   end
-
-
 end

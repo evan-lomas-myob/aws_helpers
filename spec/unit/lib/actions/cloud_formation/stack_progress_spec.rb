@@ -7,7 +7,6 @@ include AwsHelpers
 include AwsHelpers::Actions::CloudFormation
 
 describe StackProgress do
-
   let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client) }
 
@@ -20,7 +19,7 @@ describe StackProgress do
   let(:max_attempts) { 10 }
   let(:delay) { 30 }
 
-  let(:options) { {stack_name: stack_name, stdout: stdout, delay: delay, max_attempts: max_attempts} }
+  let(:options) { { stack_name: stack_name, stdout: stdout, delay: delay, max_attempts: max_attempts } }
 
   before(:each) do
     allow(PollStackStatus).to receive(:new).with(config, options).and_return(poll_stack_status)
@@ -32,7 +31,7 @@ describe StackProgress do
   end
 
   after(:each) do
-    AwsHelpers::Actions::CloudFormation::StackProgress.new(config,options).execute
+    AwsHelpers::Actions::CloudFormation::StackProgress.new(config, options).execute
   end
 
   it 'should call PollStackStatus to check the stack action progress' do
@@ -46,5 +45,4 @@ describe StackProgress do
   it 'should call CheckStackFailure to check if a failure occurred' do
     expect(check_stack_failure).to receive(:execute)
   end
-
 end

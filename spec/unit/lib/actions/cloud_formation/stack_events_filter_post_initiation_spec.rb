@@ -4,7 +4,6 @@ require_relative '../../../spec_helpers/create_event_helper'
 include AwsHelpers::Actions::CloudFormation
 
 describe StackEventsFilterPostInitiation do
-
   let(:stack_name) { 'my_stack_name' }
   let(:resource_type) { 'AWS::CloudFormation::Stack' }
   let(:resource_type_bad) { 'AWS::EC2::Instance' }
@@ -21,7 +20,6 @@ describe StackEventsFilterPostInitiation do
   let(:stack_events_break_complete) { [create_failed_event, rollback_in_progress_event, complete_event, create_in_progress_event] }
 
   describe '#execute' do
-
     it 'should just return the complete array' do
       expect(AwsHelpers::Actions::CloudFormation::StackEventsFilterPostInitiation.new(stack_events_complete).execute).to eq(stack_events_complete)
     end
@@ -33,7 +31,5 @@ describe StackEventsFilterPostInitiation do
     it 'should drop the last event from array stack because the complete event was found' do
       expect(AwsHelpers::Actions::CloudFormation::StackEventsFilterPostInitiation.new(stack_events_break_complete).execute).to eq(stack_events_complete)
     end
-
   end
-
 end
