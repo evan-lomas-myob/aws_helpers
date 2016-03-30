@@ -7,7 +7,6 @@ include AwsHelpers
 include AwsHelpers::Actions::EC2
 
 describe InstanceStart do
-
   let(:aws_ec2_client) { instance_double(Aws::EC2::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: aws_ec2_client) }
   let(:poll_instance_healthy) { instance_double(PollInstanceHealthy) }
@@ -18,8 +17,8 @@ describe InstanceStart do
   let(:max_attempts) { 1 }
   let(:delay) { 0 }
 
-  let(:polling_options) { {stdout: stdout, max_attempts: max_attempts, delay: delay} }
-  let(:options) { {stdout: stdout, poll_running: {max_attempts: max_attempts, delay: delay}} }
+  let(:polling_options) { { stdout: stdout, max_attempts: max_attempts, delay: delay } }
+  let(:options) { {stdout: stdout, poll_running: {max_attempts: max_attempts, delay: delay } } }
 
   let(:starting_instances) { [instance_double(Aws::EC2::Types::InstanceStateChange, instance_id: instance_id)] }
   let(:starting_result) { instance_double(Aws::EC2::Types::StartInstancesResult, starting_instances: starting_instances) }
@@ -31,5 +30,4 @@ describe InstanceStart do
     expect(aws_ec2_client).to receive(:start_instances).with(instance_ids: [instance_id]).and_return(starting_result)
     InstanceStart.new(config, instance_id, options).execute
   end
-
 end

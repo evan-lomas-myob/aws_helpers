@@ -3,14 +3,12 @@ require 'aws_helpers/config'
 require 'aws_helpers/actions/elastic_load_balancing/poll_in_service_instances'
 
 describe AwsHelpers::Actions::ElasticLoadBalancing::PollInServiceInstances do
-
   let(:aws_elastic_load_balancing_client) { instance_double(Aws::ElasticLoadBalancing::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_elastic_load_balancing_client: aws_elastic_load_balancing_client) }
   let(:stdout) { instance_double(IO) }
   let(:load_balancer_name) { 'load_balancer' }
 
   describe '#execute' do
-
     before(:each) do
       allow(stdout).to receive(:puts)
     end
@@ -48,16 +46,13 @@ describe AwsHelpers::Actions::ElasticLoadBalancing::PollInServiceInstances do
       allow(aws_elastic_load_balancing_client).to receive(:describe_instance_health).and_return(first_response)
       expect { AwsHelpers::Actions::ElasticLoadBalancing::PollInServiceInstances.new(config, [load_balancer_name], stdout: stdout, max_attempts: 1, delay: 0).execute }.to raise_error(Aws::Waiters::Errors::TooManyAttemptsError)
     end
-
   end
 
   def create_response(*states)
     Aws::ElasticLoadBalancing::Types::DescribeEndPointStateOutput.new(
-        instance_states: states.map { |state|
-          Aws::ElasticLoadBalancing::Types::InstanceState.new(state: state)
-        }
+      instance_states: states.map { |state|
+        Aws::ElasticLoadBalancing::Types::InstanceState.new(state: state)
+      }
     )
   end
-
-
 end

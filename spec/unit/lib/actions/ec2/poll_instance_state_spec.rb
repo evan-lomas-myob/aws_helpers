@@ -5,7 +5,6 @@ require 'aws_helpers/actions/ec2/poll_instance_state'
 include AwsHelpers::Actions::EC2
 
 describe PollInstanceState do
-
   let(:aws_ec2_client) { instance_double(Aws::EC2::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: aws_ec2_client) }
 
@@ -18,10 +17,9 @@ describe PollInstanceState do
   let(:options) { { stdout: stdout, delay: 0, max_attempts: max_attempts } }
 
   describe '#execute' do
-
-    before(:each){
+    before(:each) do
       allow(stdout).to receive(:puts)
-    }
+    end
 
     it 'should use the AwsHelpers::Utilities::Polling to poll until the image is in the expect state' do
       expect(aws_ec2_client).to receive(:describe_instance_status).with(instance_ids: [instance_id]).and_return(
@@ -40,7 +38,6 @@ describe PollInstanceState do
       allow(aws_ec2_client).to receive(:describe_instance_status).and_return(create_status_result(is_stopped))
       PollInstanceState.new(config, instance_id, is_stopped, options).execute
     end
-
   end
 
   def create_status_result(status)
@@ -49,5 +46,4 @@ describe PollInstanceState do
         Aws::EC2::Types::InstanceStatus.new(instance_state: Aws::EC2::Types::InstanceState.new(name: status))
       ])
   end
-
 end

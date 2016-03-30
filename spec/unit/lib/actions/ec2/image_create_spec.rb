@@ -7,9 +7,7 @@ require 'aws_helpers/actions/ec2/poll_image_available'
 require 'aws_helpers/actions/ec2/image_delete'
 
 describe AwsHelpers::Actions::EC2::ImageCreate do
-
   describe '#execute' do
-
     let(:aws_ec2_client) { instance_double(Aws::EC2::Client) }
     let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: aws_ec2_client) }
     let(:stdout) { instance_double(IO) }
@@ -29,7 +27,6 @@ describe AwsHelpers::Actions::EC2::ImageCreate do
     end
 
     context 'without any exceptions from tagging or polling when the images are available' do
-
       before(:each) do
         allow(AwsHelpers::Actions::EC2::PollImageExists).to receive(:new).and_return(poll_image_exists)
         allow(poll_image_exists).to receive(:execute)
@@ -88,11 +85,9 @@ describe AwsHelpers::Actions::EC2::ImageCreate do
       it 'should return the image_id' do
         expect(AwsHelpers::Actions::EC2::ImageCreate.new(config, 'id', name, stdout: stdout).execute).to eql(image_id)
       end
-
     end
 
     context 'with an exception from AwsHelpers::Actions::EC2::PollImageExists #execute' do
-
       before(:each) do
         allow(AwsHelpers::Actions::EC2::PollImageExists).to receive(:new).and_return(poll_image_exists)
         allow(poll_image_exists).to receive(:execute).and_raise(StandardError.new('message'))
@@ -104,7 +99,7 @@ describe AwsHelpers::Actions::EC2::ImageCreate do
         expect(AwsHelpers::Actions::EC2::ImageDelete).to receive(:new).with(config, image_id, stdout: stdout)
         begin
           AwsHelpers::Actions::EC2::ImageCreate.new(config, 'id', name, stdout: stdout, now: now).execute
-        rescue
+        rescue # rubocop:disable Lint/HandleExceptions
           # ignored
         end
       end
@@ -113,21 +108,18 @@ describe AwsHelpers::Actions::EC2::ImageCreate do
         expect(image_delete).to receive(:execute)
         begin
           AwsHelpers::Actions::EC2::ImageCreate.new(config, 'id', name, stdout: stdout, now: now).execute
-        rescue
+        rescue # rubocop:disable Lint/HandleExceptions
           # ignored
         end
-
       end
 
       it 'should rethrow the Error' do
         expect { AwsHelpers::Actions::EC2::ImageCreate.new(config, 'id', name, stdout: stdout, now: now).execute }
           .to raise_error(StandardError, 'message')
       end
-
     end
 
     context 'with an exception from AwsHelpers::Actions::EC2::TagImage #execute' do
-
       before(:each) do
         allow(AwsHelpers::Actions::EC2::PollImageExists).to receive(:new).and_return(poll_image_exists)
         allow(poll_image_exists).to receive(:execute)
@@ -141,7 +133,7 @@ describe AwsHelpers::Actions::EC2::ImageCreate do
         expect(AwsHelpers::Actions::EC2::ImageDelete).to receive(:new).with(config, image_id, stdout: stdout)
         begin
           AwsHelpers::Actions::EC2::ImageCreate.new(config, 'id', name, stdout: stdout, now: now).execute
-        rescue
+        rescue # rubocop:disable Lint/HandleExceptions
           # ignored
         end
       end
@@ -150,21 +142,18 @@ describe AwsHelpers::Actions::EC2::ImageCreate do
         expect(image_delete).to receive(:execute)
         begin
           AwsHelpers::Actions::EC2::ImageCreate.new(config, 'id', name, stdout: stdout, now: now).execute
-        rescue
+        rescue # rubocop:disable Lint/HandleExceptions
           # ignored
         end
-
       end
 
       it 'should rethrow the Error' do
         expect { AwsHelpers::Actions::EC2::ImageCreate.new(config, 'id', name, stdout: stdout, now: now).execute }
           .to raise_error(StandardError, 'message')
       end
-
     end
 
     context 'with an exception from AwsHelpers::Actions::EC2::PollImageAvailable #execute' do
-
       before(:each) do
         allow(AwsHelpers::Actions::EC2::PollImageExists).to receive(:new).and_return(poll_image_exists)
         allow(poll_image_exists).to receive(:execute)
@@ -180,7 +169,7 @@ describe AwsHelpers::Actions::EC2::ImageCreate do
         expect(AwsHelpers::Actions::EC2::ImageDelete).to receive(:new).with(config, image_id, stdout: stdout)
         begin
           AwsHelpers::Actions::EC2::ImageCreate.new(config, 'id', name, stdout: stdout, now: now).execute
-        rescue
+        rescue # rubocop:disable Lint/HandleExceptions
           # ignored
         end
       end
@@ -189,19 +178,15 @@ describe AwsHelpers::Actions::EC2::ImageCreate do
         expect(image_delete).to receive(:execute)
         begin
           AwsHelpers::Actions::EC2::ImageCreate.new(config, 'id', name, stdout: stdout, now: now).execute
-        rescue
+        rescue # rubocop:disable Lint/HandleExceptions
           # ignored
         end
-
       end
 
       it 'should rethrow the Error' do
         expect { AwsHelpers::Actions::EC2::ImageCreate.new(config, 'id', name, stdout: stdout, now: now).execute }
           .to raise_error(StandardError, 'message')
       end
-
     end
-
   end
-
 end

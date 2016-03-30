@@ -4,20 +4,18 @@ require 'aws_helpers/config'
 require 'aws_helpers/actions/kms/arn_retrieve'
 
 describe AwsHelpers::Actions::KMS::ArnRetrieve do
-
   let(:kms_client) { instance_double(Aws::KMS::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_kms_client: kms_client) }
   let(:execute) { AwsHelpers::Actions::KMS::ArnRetrieve.new(config, 'first_name').execute }
   let(:list_aliases_response) { Aws::KMS::Types::ListAliasesResponse.new(aliases: []) }
   let(:describe_key_response) { Aws::KMS::Types::DescribeKeyResponse.new(key_metadata: nil) }
 
-  before(:each) {
+  before(:each) do
     allow(kms_client).to receive(:list_aliases).and_return(list_aliases_response)
     allow(kms_client).to receive(:describe_key).and_return(describe_key_response)
-  }
+  end
 
   describe '#execute' do
-
     it 'should call Aws::KMS::Client #list_aliases with empty parameters' do
       expect(kms_client).to receive(:list_aliases)
       arn_retrieve(config, 'first_name')
@@ -48,10 +46,9 @@ describe AwsHelpers::Actions::KMS::ArnRetrieve do
       list_aliases_response.aliases << create_alias_entry('second_arn', 'second_name', 'second_key_id')
       expect(arn_retrieve(config, 'first_name')).to be_nil
     end
-
   end
 
-  def arn_retrieve(config, alias_name, options={})
+  def arn_retrieve(config, alias_name, options = {})
     AwsHelpers::Actions::KMS::ArnRetrieve.new(config, alias_name, options).execute
   end
 
@@ -62,5 +59,4 @@ describe AwsHelpers::Actions::KMS::ArnRetrieve do
   def create_alias_entry(alias_arn, alias_name, target_key_id)
     Aws::KMS::Types::AliasListEntry.new(alias_arn: alias_arn, alias_name: "alias/#{alias_name}", target_key_id: target_key_id)
   end
-
 end

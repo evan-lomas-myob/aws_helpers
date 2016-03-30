@@ -5,9 +5,7 @@ require 'aws_helpers/actions/ec2/poll_image_deleted'
 require 'aws_helpers/actions/ec2/snapshots_delete'
 
 describe AwsHelpers::Actions::EC2::ImageDelete do
-
   describe '#execute' do
-
     let(:aws_ec2_client) { instance_double(Aws::EC2::Client) }
     let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: aws_ec2_client) }
     let(:stdout) { instance_double(IO) }
@@ -43,7 +41,7 @@ describe AwsHelpers::Actions::EC2::ImageDelete do
 
     it 'should call AwsHelpers::Actions::EC2::PollImageDeleted #new with correct parameters' do
       expect(AwsHelpers::Actions::EC2::PollImageDeleted).to receive(:new).with(config, image_id, stdout: stdout, max_attempts: max_attempts)
-      AwsHelpers::Actions::EC2::ImageDelete.new(config, image_id, stdout: stdout, max_attempts: max_attempts ).execute
+      AwsHelpers::Actions::EC2::ImageDelete.new(config, image_id, stdout: stdout, max_attempts: max_attempts).execute
     end
 
     it 'should call AwsHelpers::Actions::EC2::PollImageDeleted #execute' do
@@ -60,29 +58,12 @@ describe AwsHelpers::Actions::EC2::ImageDelete do
       expect(delete_snapshots).to receive(:execute)
       AwsHelpers::Actions::EC2::ImageDelete.new(config, image_id, stdout: stdout).execute
     end
-
-
   end
 
   def create_describe_image_result
-    instance_double(
-      Aws::EC2::Types::DescribeImagesResult,
-      images: [
-        instance_double(
-          Aws::EC2::Types::Image,
-          block_device_mappings: [
-            instance_double(
-              Aws::EC2::Types::BlockDeviceMapping,
-              ebs:
-                instance_double(
-                  Aws::EC2::Types::EbsBlockDevice,
-                  snapshot_id: 'snapshot_id'
-                )
-            )
-          ]
-        )
-      ]
-    )
+    ebs_double = instance_double(Aws::EC2::Types::EbsBlockDevice, snapshot_id: 'snapshot_id')
+    block_double = instance_double(Aws::EC2::Types::BlockDeviceMapping, ebs: ebs_double)
+    image_double = instance_double(Aws::EC2::Types::Image, block_device_mappings: [block_double])
+    instance_double(Aws::EC2::Types::DescribeImagesResult, images: [image_double])
   end
-
 end

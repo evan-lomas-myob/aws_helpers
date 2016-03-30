@@ -3,9 +3,7 @@ require 'aws_helpers/config'
 require 'aws_helpers/actions/ec2/poll_image_deleted'
 
 describe AwsHelpers::Actions::EC2::PollImageDeleted do
-
   describe '#execute' do
-
     let(:aws_ec2_client) { instance_double(Aws::EC2::Client) }
     let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: aws_ec2_client) }
     let(:stdout) { instance_double(IO) }
@@ -16,7 +14,6 @@ describe AwsHelpers::Actions::EC2::PollImageDeleted do
     end
 
     context 'when the image is not returned on the first attempt' do
-
       before(:each) do
         allow(aws_ec2_client).to receive(:describe_images).and_return(*create_describe_image_results(nil))
       end
@@ -48,22 +45,18 @@ describe AwsHelpers::Actions::EC2::PollImageDeleted do
         expect(poll_image_exists).to receive(:poll).with(1, 4)
         poll_image_exists.execute
       end
-
     end
 
     context 'when the image is returned in the first attempt' do
-
       before(:each) do
         allow(aws_ec2_client).to receive(:describe_images).and_return(*create_describe_image_results(create_image('available'), nil))
       end
 
       it 'should call stdout #puts with a description of the image being deleted and state when the image is still found' do
         expect(stdout).to receive(:puts).with("Deleting Image:#{image_id} State:available")
-        AwsHelpers::Actions::EC2::PollImageDeleted.new(config, image_id, delay:0, stdout: stdout).execute
+        AwsHelpers::Actions::EC2::PollImageDeleted.new(config, image_id, delay: 0, stdout: stdout).execute
       end
-
     end
-
   end
 
   def create_image(state)
@@ -74,12 +67,6 @@ describe AwsHelpers::Actions::EC2::PollImageDeleted do
   end
 
   def create_describe_image_results(*images)
-    images.map { |image|
-      instance_double(
-        Aws::EC2::Types::DescribeImagesResult,
-        images: [image].compact
-      )
-    }
+    images.map { |image| instance_double(Aws::EC2::Types::DescribeImagesResult, images: [image].compact) }
   end
-
 end

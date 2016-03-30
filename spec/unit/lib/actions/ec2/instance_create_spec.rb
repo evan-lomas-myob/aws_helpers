@@ -8,7 +8,6 @@ require 'aws_helpers/actions/ec2/poll_instance_healthy'
 include AwsHelpers::Actions::EC2
 
 describe InstanceCreate do
-
   let(:aws_ec2_client) { instance_double(Aws::EC2::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: aws_ec2_client) }
   let(:stdout) { instance_double(IO) }
@@ -34,7 +33,7 @@ describe InstanceCreate do
 
   let(:polling_request) { { max_attempts: max_attempts, delay: delay } }
 
-  let(:create_options) {
+  let(:create_options) do
     {
       min_count: min_count,
       max_count: max_count,
@@ -46,7 +45,7 @@ describe InstanceCreate do
       poll_exists: polling_request,
       poll_running: polling_request
     }
-  }
+  end
 
   let(:polling_options) { { stdout: stdout, max_attempts: max_attempts, delay: delay } }
   let(:instance_run_options) { { stdout: stdout, instance_type: nil } }
@@ -82,6 +81,4 @@ describe InstanceCreate do
   it 'should wait until the instance is running' do
     expect(poll_instance_healthy).to receive(:execute)
   end
-
-
 end

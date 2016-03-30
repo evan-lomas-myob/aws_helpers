@@ -4,9 +4,7 @@ require 'aws_helpers/actions/ec2/poll_image_available'
 require 'aws_helpers/actions/ec2/snapshots_describe'
 
 describe AwsHelpers::Actions::EC2::PollImageAvailable do
-
   describe '#execute' do
-
     let(:aws_ec2_client) { instance_double(Aws::EC2::Client) }
     let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: aws_ec2_client) }
     let(:stdout) { instance_double(IO) }
@@ -14,7 +12,6 @@ describe AwsHelpers::Actions::EC2::PollImageAvailable do
     let(:describe_snapshots) { instance_double(AwsHelpers::Actions::EC2::SnapshotsDescribe) }
 
     context 'image state available on first call to (Aws::EC2::Client #describe_images' do
-
       before(:each) do
         allow(aws_ec2_client).to receive(:describe_images).and_return(*create_describe_images_results('available'))
         allow(AwsHelpers::Actions::EC2::SnapshotsDescribe).to receive(:new).and_return(describe_snapshots)
@@ -59,19 +56,17 @@ describe AwsHelpers::Actions::EC2::PollImageAvailable do
         expect(describe_snapshots).to receive(:execute)
         AwsHelpers::Actions::EC2::PollImageAvailable.new(config, image_id, stdout: stdout).execute
       end
-
     end
 
     context 'image available after multiple calls to Aws::EC2::Client #describe_images' do
-
-      before(:each) {
+      before(:each) do
         allow(aws_ec2_client)
           .to receive(:describe_images)
-                .and_return(*create_describe_images_results('pending', 'pending', 'pending', 'available'))
+          .and_return(*create_describe_images_results('pending', 'pending', 'pending', 'available'))
         allow(AwsHelpers::Actions::EC2::SnapshotsDescribe).to receive(:new).and_return(describe_snapshots)
         allow(describe_snapshots).to receive(:execute)
         allow(stdout).to receive(:puts)
-      }
+      end
 
       it 'should call stdout #puts with a description of the image in the pending state' do
         expect(stdout).to receive(:puts).with("Waiting for Image:#{image_id} State:pending to become available 0.0 seconds").once
@@ -84,12 +79,9 @@ describe AwsHelpers::Actions::EC2::PollImageAvailable do
         expect(aws_ec2_client).to receive(:describe_images).exactly(4).times
         AwsHelpers::Actions::EC2::PollImageAvailable.new(config, image_id, stdout: stdout, delay: 0).execute
       end
-
-
     end
 
     context 'image still pending after calls to Aws::EC2::Client #describe_images exceeds retries' do
-
       before(:each) do
         allow(aws_ec2_client).to receive(:describe_images).and_return(*create_describe_images_results('pending'))
         allow(AwsHelpers::Actions::EC2::SnapshotsDescribe).to receive(:new).and_return(describe_snapshots)
@@ -98,59 +90,40 @@ describe AwsHelpers::Actions::EC2::PollImageAvailable do
       end
 
       it 'should call the Aws::EC2::Client #describe_images multiple times until the image is returned' do
-        expect {
-          AwsHelpers::Actions::EC2::PollImageAvailable.new(config, image_id, stdout: stdout, max_attempts: 1, delay: 0).execute
-        }.to raise_error(Aws::Waiters::Errors::TooManyAttemptsError)
+        poll = AwsHelpers::Actions::EC2::PollImageAvailable.new(config, image_id, stdout: stdout, max_attempts: 1, delay: 0)
+        expect { poll.execute }.to raise_error(Aws::Waiters::Errors::TooManyAttemptsError)
       end
 
       it 'should call AwsHelpers::Actions::EC2::DescribeSnapshots #new with correct parameters' do
         expect(AwsHelpers::Actions::EC2::SnapshotsDescribe).to receive(:new).with(config, ['snapshot_id'])
         begin
           AwsHelpers::Actions::EC2::PollImageAvailable.new(config, image_id, stdout: stdout, max_attempts: 1, delay: 0).execute
-        rescue
+        rescue # rubocop:disable Lint/HandleExceptions
           # ignored
         end
-
       end
-
     end
 
     context 'unexpected state after call to Aws::EC2::Client #describe_images' do
-
       it 'should raise an AwsHelpers::Utilities::FailedStateError error' do
         allow(aws_ec2_client).to receive(:describe_images).and_return(*create_describe_images_results('unexpected'))
         allow(stdout).to receive(:puts)
-        expect {
-          AwsHelpers::Actions::EC2::PollImageAvailable.new(config, image_id, stdout: stdout, max_attempts: 1, delay: 0).execute
-        }.to raise_error(AwsHelpers::Utilities::FailedStateError, "Image:#{image_id} State:unexpected")
+        poll = AwsHelpers::Actions::EC2::PollImageAvailable.new(config, image_id, stdout: stdout, max_attempts: 1, delay: 0)
+        expect { poll.execute }.to raise_error(AwsHelpers::Utilities::FailedStateError, "Image:#{image_id} State:unexpected")
       end
-
     end
-
   end
 
   def create_describe_images_results(*states)
-    states.map { |state|
+    ebs_double = instance_double(Aws::EC2::Types::EbsBlockDevice, snapshot_id: 'snapshot_id')
+    block_double = instance_double(Aws::EC2::Types::BlockDeviceMapping, ebs: ebs_double)
+    states.map do |state|
       instance_double(
         Aws::EC2::Types::DescribeImagesResult,
         images: [
-          instance_double(
-            Aws::EC2::Types::Image,
-            state: state,
-            block_device_mappings: [
-              instance_double(
-                Aws::EC2::Types::BlockDeviceMapping,
-                ebs:
-                  instance_double(
-                    Aws::EC2::Types::EbsBlockDevice,
-                    snapshot_id: 'snapshot_id'
-                  )
-              )
-            ]
-          )
+          instance_double(Aws::EC2::Types::Image, state: state, block_device_mappings: [block_double])
         ]
       )
-    }
+    end
   end
-
 end

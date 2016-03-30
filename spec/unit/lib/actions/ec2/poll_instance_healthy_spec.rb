@@ -5,7 +5,6 @@ require 'aws_helpers/actions/ec2/poll_instance_healthy'
 include AwsHelpers::Actions::EC2
 
 describe PollInstanceHealthy do
-
   let(:aws_ec2_client) { instance_double(Aws::EC2::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: aws_ec2_client) }
 
@@ -36,15 +35,13 @@ describe PollInstanceHealthy do
   let(:max_attempts) { 3 }
   let(:delay) { 0 }
 
-  let(:options) { {stdout: stdout, delay: delay, max_attempts: max_attempts} }
+  let(:options) { { stdout: stdout, delay: delay, max_attempts: max_attempts } }
 
   describe '#execute' do
-
     context 'Platform Not Windows' do
-
       it 'should use the AwsHelpers::Utilities::Polling to poll until the image exists' do
-        allow(stdout).to receive(:print).with("Instance State is pending.")
-        allow(stdout).to receive(:print).with("Instance State is running.")
+        allow(stdout).to receive(:print).with('Instance State is pending.')
+        allow(stdout).to receive(:print).with('Instance State is running.')
         allow(stdout).to receive(:print).with("\n")
         allow(aws_ec2_client).to receive(:describe_instances).and_return(not_windows_platform)
         expect(aws_ec2_client).to receive(:describe_instance_status).and_return(init_response, ok_response)
@@ -52,22 +49,20 @@ describe PollInstanceHealthy do
       end
 
       it 'should raise an exception is polling reaches max attempts' do
-        allow(stdout).to receive(:print).with("Instance State is pending.")
+        allow(stdout).to receive(:print).with('Instance State is pending.')
         allow(stdout).to receive(:print).with("\n")
         allow(aws_ec2_client).to receive(:describe_instance_status).with(instance_ids: [instance_id]).and_return(init_response)
         allow(aws_ec2_client).to receive(:describe_instances).and_return(not_windows_platform)
         expect { PollInstanceHealthy.new(config, instance_id, options).execute }.to raise_error("stopped waiting after #{max_attempts} attempts without success")
       end
-
     end
 
     context 'Platform Is Windows' do
-
       it 'should use the AwsHelpers::Utilities::Polling to poll until the image exists' do
-        allow(stdout).to receive(:print).with("Instance State is pending.")
-        allow(stdout).to receive(:print).with("Instance State is running.")
-        allow(stdout).to receive(:print).with(" Windows Status is initializing.")
-        allow(stdout).to receive(:print).with(" Windows Status is ok.")
+        allow(stdout).to receive(:print).with('Instance State is pending.')
+        allow(stdout).to receive(:print).with('Instance State is running.')
+        allow(stdout).to receive(:print).with(' Windows Status is initializing.')
+        allow(stdout).to receive(:print).with(' Windows Status is ok.')
         allow(stdout).to receive(:print).with("\n")
         allow(aws_ec2_client).to receive(:describe_instances).and_return(windows_platform)
         expect(aws_ec2_client).to receive(:describe_instance_status).and_return(init_response, ok_response)
@@ -75,15 +70,13 @@ describe PollInstanceHealthy do
       end
 
       it 'should raise an exception is polling reaches max attempts' do
-        allow(stdout).to receive(:print).with("Instance State is pending.")
-        allow(stdout).to receive(:print).with(" Windows Status is initializing.")
+        allow(stdout).to receive(:print).with('Instance State is pending.')
+        allow(stdout).to receive(:print).with(' Windows Status is initializing.')
         allow(stdout).to receive(:print).with("\n")
         allow(aws_ec2_client).to receive(:describe_instance_status).with(instance_ids: [instance_id]).and_return(init_response)
         allow(aws_ec2_client).to receive(:describe_instances).and_return(windows_platform)
         expect { PollInstanceHealthy.new(config, instance_id, options).execute }.to raise_error("stopped waiting after #{max_attempts} attempts without success")
       end
-
     end
-
   end
 end

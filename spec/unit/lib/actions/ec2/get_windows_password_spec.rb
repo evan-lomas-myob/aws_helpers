@@ -5,16 +5,16 @@ require 'aws_helpers/actions/ec2/get_windows_password'
 include AwsHelpers::Actions::EC2
 
 describe GetWindowsPassword do
-
   let(:aws_ec2_client) { instance_double(Aws::EC2::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: aws_ec2_client) }
   let(:stdout) { instance_double(IO) }
   let(:options) { { stdout: stdout } }
 
-  let(:instance_id) { 'my-instance_id'}
+  let(:instance_id) { 'my-instance_id' }
   let(:path_to_pem) { '/path_to_pem_file/pem.file' }
 
-  let(:pkcs8) { '-----BEGIN RSA PRIVATE KEY-----
+# rubocop:disable all
+  let(:pkcs8) { '-----BEGIN RSA PRIVATE KEY-----  
 MIIEowIBAAKCAQEA+WjRcGw+jQUv1zagH2Y2/0RS3mW20aegNSiWB+uPOkRQvL3U
 8ZSZU27QxIPIk+0bw3AZqEKGJ/BahbdCdfXELCwvPmWyWuJrvsYb+08RifAGz/V/
 Y+Uoy1xIG0kEks7rr4eQDBy8LvoKfJmAR9FcCbjTSeY3Ej+MrxKOGGPZPHUwxlk0
@@ -41,7 +41,7 @@ rDxQOQKBgHQ04dOCGZiEj7aFpJFnSoUpmFusVRJv+B00s6R51iW0j72wcW0rPFD+
 OC3W27eCucJTy5eTdNoevoq7xXh7gRr5fhwFrEadqeSPiULRdWrODkCqiqgiA4WR
 +t8YMPg3kx2JXe5cJZ5WP6zayKpOXrURuePb3srQRmCsgnLXXeOQ
 -----END RSA PRIVATE KEY-----
-' }
+' } 
 
   let(:password_data) { '9f6nkt7MdJvgfQt/+2+zhd7ZV86FYRtjSiP1yvpv7pEmCWoYVE6qbcKof81VY48W
 Rhcq5br0jqBv21u3JhprqDZulUkY6Jcq5N959lffRADhkOp4dKkjwpGn3HTEE2s7
@@ -49,9 +49,10 @@ Rhcq5br0jqBv21u3JhprqDZulUkY6Jcq5N959lffRADhkOp4dKkjwpGn3HTEE2s7
 tDvrRBe716vn+H2e/P5nSs1Q/V2H3ZdHtqbCN8SHm3PIX0q2fTmvXyKd9psNnfvK
 XipewzZEyjdrrYTOVZ0Dn7ZYjs4anmEsl2Uw/GZp5m92U350e+TLEfrqoreB7ax8
 cgjPr3q6+hb7avSNivEdgQ==' }
+# rubocop:enable all
 
-  let(:response) { instance_double(Aws::EC2::Types::GetPasswordDataResult, password_data: password_data)}
-  let(:error_response) { instance_double(Aws::EC2::Types::GetPasswordDataResult, password_data: 'BADPASSWORDDATA' )}
+  let(:response) { instance_double(Aws::EC2::Types::GetPasswordDataResult, password_data: password_data) }
+  let(:error_response) { instance_double(Aws::EC2::Types::GetPasswordDataResult, password_data: 'BADPASSWORDDATA' ) }
 
   let(:password) { "my-password\n" }
 
@@ -72,7 +73,6 @@ cgjPr3q6+hb7avSNivEdgQ==' }
     GetWindowsPassword.new(config, instance_id, path_to_pem, options).get_password
   end
 
-
   it 'should decrypt and return the correct password' do
     allow(File).to receive(:read).with(path_to_pem).and_return(pkcs8)
     allow(aws_ec2_client).to receive(:get_password_data).with(instance_id: instance_id).and_return(response)
@@ -84,5 +84,4 @@ cgjPr3q6+hb7avSNivEdgQ==' }
     allow(aws_ec2_client).to receive(:get_password_data).with(instance_id: instance_id).and_return(error_response)
     expect { GetWindowsPassword.new(config, instance_id, path_to_pem, options).get_password }.to raise_error(OpenSSL::PKey::RSAError)
   end
-
 end
