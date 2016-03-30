@@ -2,23 +2,18 @@ require 'aws-sdk-core'
 require 'aws_helpers/utilities/polling_failed'
 
 describe AwsHelpers::Utilities::PollingFailed do
-
   it 'should return and instance of StandardError' do
     expect(AwsHelpers::Utilities::PollingFailed.new).to be_a_kind_of(StandardError)
   end
-
 end
 
 describe AwsHelpers::Utilities::FailedStateError do
-
   it 'should return and instance of StandardError' do
     expect(AwsHelpers::Utilities::FailedStateError.new).to be_a_kind_of(StandardError)
   end
-
 end
 
 describe AwsHelpers::Utilities::FailedStateError do
-
   let(:attempts) { 5 }
 
   it 'should return and instance of PollingFailed' do
@@ -33,6 +28,4 @@ describe AwsHelpers::Utilities::FailedStateError do
   it 'should return the number of attempts' do
     expect(AwsHelpers::Utilities::TooManyAttemptsError.new(attempts).attempts).to eq(5)
   end
-
 end
-

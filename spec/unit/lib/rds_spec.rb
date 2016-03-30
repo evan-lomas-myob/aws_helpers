@@ -1,22 +1,18 @@
 require 'aws_helpers/rds'
 
 describe AwsHelpers::RDS do
-
   let(:config) { instance_double(AwsHelpers::Config) }
   let(:db_instance_id) { 'instance_id' }
 
   describe '#initialize' do
-
     it 'should call AwsHelpers::Client initialize method' do
       options = { endpoint: 'http://endpoint' }
       expect(AwsHelpers::Client).to receive(:new).with(options)
       AwsHelpers::RDS.new(options)
     end
-
   end
 
   describe '#snapshot_create' do
-
     let(:snapshot_create) { instance_double(SnapshotCreate) }
 
     before(:each) do
@@ -34,11 +30,9 @@ describe AwsHelpers::RDS do
       expect(snapshot_create).to receive(:execute)
       AwsHelpers::RDS.new.snapshot_create(db_instance_id)
     end
-
   end
 
   describe '#snapshots_delete' do
-
     let(:snapshots_delete) { instance_double(SnapshotsDelete) }
 
     let(:hours) { 1 }
@@ -81,11 +75,9 @@ describe AwsHelpers::RDS do
       expect(snapshots_delete).to receive(:execute)
       AwsHelpers::RDS.new.snapshots_delete(db_instance_id)
     end
-
   end
 
   describe '#latest_snapshot' do
-
     let(:snapshot_id) { 'snapshot_id' }
     let(:latest_snapshot) { instance_double(LatestSnapshot) }
 
@@ -110,7 +102,5 @@ describe AwsHelpers::RDS do
     it 'should return the latest snapshot id' do
       expect(subject).to be(snapshot_id)
     end
-
   end
-
 end

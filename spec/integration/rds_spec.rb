@@ -2,7 +2,6 @@ require 'aws-sdk-core'
 require 'aws_helpers'
 
 describe AwsHelpers::RDS do
-
   stack_name = 'rds-stack'
   db_instance_id = nil
 
@@ -16,33 +15,27 @@ describe AwsHelpers::RDS do
   }
 
   describe '#snapshot_create' do
-
     it 'should snapshot the database' do
       AwsHelpers::RDS.new.snapshot_create(db_instance_id)
     end
-
   end
 
   describe '#snapshot_delete' do
-
     it 'should delete all snapshots' do
       AwsHelpers::RDS.new.snapshot_create(db_instance_id)
       AwsHelpers::RDS.new.snapshots_delete(db_instance_id)
       snapshot_count = snapshot_count(db_instance_id)
       expect(snapshot_count).to eql(0)
     end
-
   end
 
   describe '#latest_snapshot' do
-
     it 'should get the latest snapshot identifier' do
       AwsHelpers::RDS.new.snapshot_create(db_instance_id)
       AwsHelpers::RDS.new.snapshot_create(db_instance_id)
       latest_snapshot_identifier = latest_snapshot_id(db_instance_id)
       expect(AwsHelpers::RDS.new.latest_snapshot(db_instance_id)).to eql(latest_snapshot_identifier)
     end
-
   end
 
   private
@@ -75,7 +68,5 @@ describe AwsHelpers::RDS do
     )
     client.wait_until(:stack_create_complete, stack_name: stack_name)
     client.describe_stacks(stack_name: stack_name).stacks.first.outputs.find { |output| output.output_key == 'DBInstanceId' }.output_value
-
   end
-
 end

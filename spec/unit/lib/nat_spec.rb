@@ -2,7 +2,6 @@ require 'time'
 require 'aws_helpers/nat'
 
 describe AwsHelpers::NAT do
-
   let(:subnet_id) { '1' }
   let(:allocation_id) { '1' }
   let(:config) { instance_double(AwsHelpers::Config) }
@@ -17,7 +16,6 @@ describe AwsHelpers::NAT do
   end
 
   describe '#gateway_create' do
-
     let(:gateway_create) { instance_double(GatewayCreate) }
 
     # let(:instance_id) { 'ec2_id' }
@@ -38,11 +36,9 @@ describe AwsHelpers::NAT do
       expect(gateway_create).to receive(:execute)
       AwsHelpers::NAT.new.gateway_create(subnet_id, allocation_id)
     end
-
   end
 
   describe '#gateway_delete' do
-
     let(:gateway_delete) { instance_double(GatewayDelete) }
     let(:gateway_id) { '1' }
 
@@ -63,7 +59,5 @@ describe AwsHelpers::NAT do
       expect(gateway_delete).to receive(:execute)
       subject
     end
-
   end
-
 end
