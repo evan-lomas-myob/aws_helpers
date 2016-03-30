@@ -52,7 +52,7 @@ cgjPr3q6+hb7avSNivEdgQ==' }
 # rubocop:enable all
 
   let(:response) { instance_double(Aws::EC2::Types::GetPasswordDataResult, password_data: password_data) }
-  let(:error_response) { instance_double(Aws::EC2::Types::GetPasswordDataResult, password_data: 'BADPASSWORDDATA' ) }
+  let(:error_response) { instance_double(Aws::EC2::Types::GetPasswordDataResult, password_data: 'BADPASSWORDDATA') }
 
   let(:password) { "my-password\n" }
 

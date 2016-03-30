@@ -9,7 +9,7 @@ describe InstancesFindByTags do
   let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: ec2_client) }
   let(:tags_string) { 'name: value' }
   let(:tags_array) { [{ name: 'Name', value: 'value' }] }
-  let(:tags_hash) { { 'Name' => 'value', 'Multi' => %w(a b)} }
+  let(:tags_hash) { { 'Name' => 'value', 'Multi' => %w(a b) } }
   let(:state) { instance_double(Aws::EC2::Types::InstanceState, name: 'running') }
   let(:instances) { [instance_double(Aws::EC2::Types::Instance, instance_id: 'i-12345678', state: state)] }
 
@@ -33,7 +33,7 @@ describe InstancesFindByTags do
   it 'should call Aws::EC2::Client #describe_instances with correct parameters when called with a hash' do
     expected_filters = [
       { name: 'tag:Name', values: ['value'] },
-      { name: 'tag:Multi', values: %w(a b) },
+      { name: 'tag:Multi', values: %w(a b) }
     ]
     expect(ec2_client).to receive(:describe_instances).with(filters: expected_filters)
     InstancesFindByTags.new(config, tags_hash).execute

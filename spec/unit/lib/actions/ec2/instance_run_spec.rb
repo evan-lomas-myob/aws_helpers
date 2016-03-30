@@ -46,7 +46,7 @@ describe EC2InstanceRun do
             min_count: min_count,
             max_count: max_count,
             instance_type: default_instance_type,
-            monitoring: {enabled: monitoring})
+            monitoring: { enabled: monitoring })
       .and_return(reservation)
     EC2InstanceRun.new(config, image_id, min_count, max_count, monitoring, options_with_stdout).execute
   end
@@ -72,9 +72,9 @@ describe EC2InstanceRun do
             min_count: min_count,
             max_count: max_count,
             instance_type: larger_instance_type,
-            monitoring: {enabled: monitoring},
+            monitoring: { enabled: monitoring },
             key_name: 'test-key'
-      )
+           )
       .and_return(reservation)
     EC2InstanceRun.new(config, image_id, min_count, max_count, monitoring, additional_opts).execute
   end

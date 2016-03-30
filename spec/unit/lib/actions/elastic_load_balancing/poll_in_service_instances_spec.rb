@@ -50,9 +50,7 @@ describe AwsHelpers::Actions::ElasticLoadBalancing::PollInServiceInstances do
 
   def create_response(*states)
     Aws::ElasticLoadBalancing::Types::DescribeEndPointStateOutput.new(
-      instance_states: states.map { |state|
-        Aws::ElasticLoadBalancing::Types::InstanceState.new(state: state)
-      }
+      instance_states: states.map { |state| Aws::ElasticLoadBalancing::Types::InstanceState.new(state: state) }
     )
   end
 end

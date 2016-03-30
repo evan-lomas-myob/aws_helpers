@@ -12,10 +12,10 @@ describe GetSecurityGroupIdByName do
   let(:sg_id) { 'GROUP_ID' }
   let(:sgs) { [instance_double(Aws::EC2::Types::SecurityGroup, group_id: sg_id)] }
 
-  let(:filter_tags) { [{name: 'group-name', values: [sg_name] }] }
+  let(:filter_tags) { [{ name: 'group-name', values: [sg_name] }] }
 
   let(:options) { {} }
-  let(:stdout_options) { {stdout: 'file_handle' } }
+  let(:stdout_options) { { stdout: 'file_handle' } }
 
   context 'Security Group Name is found' do
     before(:each) do
