@@ -37,12 +37,12 @@ module AwsHelpers
           options
         end
 
-        def create_polling_options(stdout, pooling)
+        def create_polling_options(stdout, polling)
           options = {}
           options[:stdout] = stdout if stdout
-          if pooling
-            max_attempts = pooling[:max_attempts]
-            delay = pooling[:delay]
+          if polling
+            max_attempts = polling[:max_attempts]
+            delay = polling[:delay]
             options[:max_attempts] = max_attempts if max_attempts
             options[:delay] = delay if delay
           end

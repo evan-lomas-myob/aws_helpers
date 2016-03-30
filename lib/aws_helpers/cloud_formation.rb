@@ -27,7 +27,7 @@ module AwsHelpers
     # @option options [String] :bucket_name Upload to an S3 bucket before provisioning
     # @option options [Boolean] :bucket_encrypt server side encryption on the upload bucket, 'AES256'
     # @option options [IO] :stdout Override $stdout when logging output
-    # @option options [Hash{Symbol => Integer}] :polling stack pooling attempts and delay
+    # @option options [Hash{Symbol => Integer}] :polling stack polling attempts and delay
     #
     #   defaults:
     #

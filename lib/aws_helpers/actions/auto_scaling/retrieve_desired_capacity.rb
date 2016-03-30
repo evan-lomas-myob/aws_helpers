@@ -14,7 +14,7 @@ module AwsHelpers
           response = client.describe_auto_scaling_groups(auto_scaling_group_names: [@auto_scaling_group_name])
           response.auto_scaling_groups.find { |auto_scaling_group|
             auto_scaling_group.auto_scaling_group_name == @auto_scaling_group_name
-          }.desired_capacity
+          }.desired_capacity unless response.auto_scaling_groups.empty?
         end
 
       end

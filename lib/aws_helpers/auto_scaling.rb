@@ -9,13 +9,18 @@ module AwsHelpers
   class AutoScaling < AwsHelpers::Client
 
     # AutoScaling utilities for retrieving and updating
+    # @example Initialise AutoScaling Client
+    #    client = AwsHelpers::AutoScaling.new
     # @param options [Hash] Optional Arguments to include when calling the AWS SDK
     def initialize(options = {})
       super(options)
     end
 
+    # Return the desired capacity for an AutoScaling Group
+    # @example Retrieve the desired capacity
+    #    desired_capacity = AwsHelpers::AutoScaling.new.retrieve_desired_capacity("Auto-Scaling-Group")
     # @param auto_scaling_group_name [String] The group name of the Auto scaling client
-    # @return [Integer] The desired capacity of an auto scaling group
+    # @return [Integer, nil] The desired capacity of an auto scaling group
     def retrieve_desired_capacity(auto_scaling_group_name)
       RetrieveDesiredCapacity.new(config, auto_scaling_group_name).execute
     end
@@ -24,6 +29,8 @@ module AwsHelpers
     #
     # - Once changed will poll the group until the all servers reach an InService lifecycle status.
     # - If load balancers are attached to the group, will also poll them until they have a status of InService
+    # @example Change the desired capacity
+    #   AwsHelpers::AutoScaling.new.update_desired_capacity("Auto-Scaling-Group",2)
     # @param auto_scaling_group_name [String] The group name of the Auto scaling client
     # @param desired_capacity [Integer] The capacity level of the auto scaling group
     # @param [Hash] options Optional parameters that can be overridden.
@@ -48,6 +55,7 @@ module AwsHelpers
     #     :delay => 15 # seconds
     #   }
     #   ```
+    # @return [Array] Load Balancers configured for this Auto Scaling Group
     def update_desired_capacity(auto_scaling_group_name, desired_capacity, options = {})
       UpdateDesiredCapacity.new(config, auto_scaling_group_name, desired_capacity, options).execute
     end
