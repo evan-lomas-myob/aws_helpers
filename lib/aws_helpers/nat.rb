@@ -17,7 +17,6 @@ module AwsHelpers
     # Create a NAT gateway
     # @param subnet_id [String] Id of the subnet to associate this gateway with
     # @param allocation_id [String] ID of the allocation associated with an Elastic IP address
-    # @param [Hash] options Optional parameters that can be overridden.
     # @return [String] the gateway id
     def gateway_create(subnet_id, allocation_id)
       GatewayCreate.new(config, subnet_id, allocation_id).execute
