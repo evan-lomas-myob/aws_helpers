@@ -5,10 +5,8 @@ require 'aws_helpers/actions/rds/poll_snapshot_available'
 module AwsHelpers
   module Actions
     module RDS
-
       class SnapshotCreate
-
-        def initialize(config, db_instance_identifier, options={})
+        def initialize(config, db_instance_identifier, options = {})
           @config = config
           @db_instance_identifier = db_instance_identifier
           stdout = options[:stdout]
@@ -48,9 +46,7 @@ module AwsHelpers
           end
           options
         end
-
       end
-
     end
   end
 end

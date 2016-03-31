@@ -1,9 +1,7 @@
 module AwsHelpers
   module Actions
     module RDS
-
       class SnapshotConstructName
-
         def initialize(config, db_instance_id, options = {})
           @config = config
           @db_instance_id = db_instance_id
@@ -11,7 +9,7 @@ module AwsHelpers
           @now = options[:now] || Time.now
         end
 
-        def execute
+        def execute # rubocop:disable Metrics/AbcSize
           now_formatted = @now.strftime('%Y-%m-%d-%H-%M')
           return "#{@db_instance_id}-#{now_formatted}" unless @use_name
           iam_client = @config.aws_iam_client
@@ -23,9 +21,7 @@ module AwsHelpers
           name_tag = response.tag_list.detect { |tag| tag.key == 'Name' }
           "#{name_tag.value}-#{now_formatted}"
         end
-
       end
-
     end
   end
 end
