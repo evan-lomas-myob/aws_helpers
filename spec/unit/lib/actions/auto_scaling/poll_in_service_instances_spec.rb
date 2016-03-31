@@ -4,18 +4,16 @@ require 'aws_helpers/config'
 require 'aws_helpers/actions/auto_scaling/poll_in_service_instances'
 
 describe AwsHelpers::Actions::AutoScaling::PollInServiceInstances do
-
   let(:stdout) { instance_double(IO) }
   let(:auto_scaling_client) { instance_double(Aws::AutoScaling::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_auto_scaling_client: auto_scaling_client) }
   let(:auto_scaling_group_name) { 'name' }
 
-  before(:each) {
+  before(:each) do
     allow(stdout).to receive(:puts)
-  }
+  end
 
   describe '#execute' do
-
     it 'should call the Aws::AutoScaling::Client #describe_auto_scaling_instances with correct parameters' do
       response = create_response(auto_scaling_group_name, 'InService')
       expect(auto_scaling_client).to receive(:describe_auto_scaling_groups).with(auto_scaling_group_names: [auto_scaling_group_name]).and_return(response)
@@ -28,7 +26,6 @@ describe AwsHelpers::Actions::AutoScaling::PollInServiceInstances do
       expect(stdout).to receive(:puts).with("Auto Scaling Group=#{auto_scaling_group_name}. Desired Capacity=0")
       poll_in_service_instances(config, auto_scaling_group_name, stdout: stdout, max_attempts: 1, delay: 0)
     end
-
 
     it 'should output the instance status' do
       response = create_response(auto_scaling_group_name, 'InService')
@@ -51,7 +48,6 @@ describe AwsHelpers::Actions::AutoScaling::PollInServiceInstances do
       allow(auto_scaling_client).to receive(:describe_auto_scaling_groups).and_return(response)
       expect { poll_in_service_instances(config, auto_scaling_group_name, stdout: stdout, max_attempts: 1, delay: 0) }.to raise_error(Aws::Waiters::Errors::TooManyAttemptsError)
     end
-
   end
 
   def poll_in_service_instances(config, auto_scaling_group_name, options)
@@ -60,13 +56,12 @@ describe AwsHelpers::Actions::AutoScaling::PollInServiceInstances do
 
   def create_response(auto_scaling_group_name, *lifecycle_states)
     Aws::AutoScaling::Types::AutoScalingGroupsType.new(
-        auto_scaling_groups: [
-            Aws::AutoScaling::Types::AutoScalingGroup.new(
-                desired_capacity: lifecycle_states.size,
-                auto_scaling_group_name: auto_scaling_group_name,
-                instances: lifecycle_states.map { |lifecycle_state| Aws::AutoScaling::Types::Instance.new(lifecycle_state: lifecycle_state) }
-            )
-        ])
+      auto_scaling_groups: [
+        Aws::AutoScaling::Types::AutoScalingGroup.new(
+          desired_capacity: lifecycle_states.size,
+          auto_scaling_group_name: auto_scaling_group_name,
+          instances: lifecycle_states.map { |lifecycle_state| Aws::AutoScaling::Types::Instance.new(lifecycle_state: lifecycle_state) }
+        )
+      ])
   end
-
 end

@@ -4,9 +4,7 @@ require 'aws_helpers/config'
 require 'aws_helpers/actions/auto_scaling/retrieve_desired_capacity'
 
 describe AwsHelpers::Actions::AutoScaling::RetrieveDesiredCapacity do
-
   describe '#execute' do
-
     let(:auto_scaling_client) { instance_double(Aws::AutoScaling::Client) }
     let(:config) { instance_double(AwsHelpers::Config, aws_auto_scaling_client: auto_scaling_client) }
 
@@ -30,7 +28,5 @@ describe AwsHelpers::Actions::AutoScaling::RetrieveDesiredCapacity do
     it 'should return the desired capacity' do
       expect(subject).to be(desired_capacity)
     end
-
   end
-
 end
