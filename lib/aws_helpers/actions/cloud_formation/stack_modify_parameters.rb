@@ -19,13 +19,14 @@ module AwsHelpers
           client = @config.aws_cloud_formation_client
           response = client.describe_stacks(stack_name: @stack_name).stacks.first
           request = AwsHelpers::Actions::CloudFormation::StackParameterUpdateBuilder.new(@stack_name, response, @parameters).execute
+
           unless request.nil?
             @stdout.puts "Updating #{@stack_name}"
             client = @config.aws_cloud_formation_client
             client.update_stack(request)
             AwsHelpers::Actions::CloudFormation::StackProgress.new(@config, @options).execute
           else
-            puts 'No matching parameter(s) found'
+            @stdout.puts 'No matching parameter(s) found'
           end
         end
 
