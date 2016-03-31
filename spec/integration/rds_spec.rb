@@ -5,14 +5,14 @@ describe AwsHelpers::RDS do
   stack_name = 'rds-stack'
   db_instance_id = nil
 
-  after(:all) {
+  after(:all) do
     AwsHelpers::RDS.new.snapshots_delete(db_instance_id)
     delete_stack(stack_name)
-  }
+  end
 
-  before(:all) {
+  before(:all) do
     db_instance_id = create_stack(stack_name, 'rds.template.json')
-  }
+  end
 
   describe '#snapshot_create' do
     it 'should snapshot the database' do
@@ -41,7 +41,7 @@ describe AwsHelpers::RDS do
   private
 
   def latest_snapshot_id(db_instance_identifier)
-    describe_snapshots(db_instance_identifier).db_snapshots.sort_by { |db_snapshot| db_snapshot.snapshot_create_time }.last.db_snapshot_identifier
+    describe_snapshots(db_instance_identifier).db_snapshots.sort_by(&:snapshot_create_time).last.db_snapshot_identifier
   end
 
   def snapshot_count(db_instance_identifier)
@@ -49,7 +49,7 @@ describe AwsHelpers::RDS do
   end
 
   def describe_snapshots(db_instance_identifier)
-    Aws::RDS::Client.new.describe_db_snapshots({ db_instance_identifier: db_instance_identifier, snapshot_type: 'manual' })
+    Aws::RDS::Client.new.describe_db_snapshots(db_instance_identifier: db_instance_identifier, snapshot_type: 'manual')
   end
 
   def delete_stack(stack_name)
@@ -61,10 +61,8 @@ describe AwsHelpers::RDS do
   def create_stack(stack_name, fixture)
     client = Aws::CloudFormation::Client.new
     client.create_stack(
-      {
-        stack_name: stack_name,
-        template_body: IO.read(File.join(File.dirname(__FILE__), 'fixtures', fixture)),
-      }
+      stack_name: stack_name,
+      template_body: IO.read(File.join(File.dirname(__FILE__), 'fixtures', fixture))
     )
     client.wait_until(:stack_create_complete, stack_name: stack_name)
     client.describe_stacks(stack_name: stack_name).stacks.first.outputs.find { |output| output.output_key == 'DBInstanceId' }.output_value

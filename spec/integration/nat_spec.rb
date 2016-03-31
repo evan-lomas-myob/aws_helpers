@@ -2,7 +2,6 @@ require 'aws_helpers/nat'
 require 'aws_helpers/cloud_formation'
 
 describe AwsHelpers::NAT do
-
   before(:all) do
     template_json = IO.read(File.join(File.dirname(__FILE__), 'fixtures', 'nat.template.json'))
     AwsHelpers::CloudFormation.new.stack_provision('test-stack', template_json)
@@ -16,19 +15,16 @@ describe AwsHelpers::NAT do
   end
 
   describe '#gateway_create' do
-
     after(:each) do
       AwsHelpers::NAT.new.gateway_delete(@gateway_id) if @gateway_id
     end
 
     it 'should create an gateway based on the instance' do
-     @gateway_id = AwsHelpers::NAT.new.gateway_create(@subnet_id, @allocation_id)
+      @gateway_id = AwsHelpers::NAT.new.gateway_create(@subnet_id, @allocation_id)
     end
-
   end
 
   describe '#gateway_delete' do
-
     before(:each) do
       @gateway_id = AwsHelpers::NAT.new.gateway_create(@subnet_id, @allocation_id)
     end
@@ -36,7 +32,5 @@ describe AwsHelpers::NAT do
     it 'should delete an gateway based on an gateway_id' do
       AwsHelpers::NAT.new.gateway_delete(@gateway_id)
     end
-
   end
-
 end
