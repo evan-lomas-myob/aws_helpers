@@ -17,10 +17,10 @@ describe StackModifyParameters do
   let(:delay) { 1 }
 
   let(:stack_name) { 'my_stack_name' }
-  let(:stack_modify_parameters_polling) { {max_attempts: max_attempts, delay: delay} }
-  let(:stack_modify_parameters_options) { {stack_name: stack_name, stdout: stdout, max_attempts: max_attempts, delay: delay} }
+  let(:stack_modify_parameters_polling) { { max_attempts: max_attempts, delay: delay } }
+  let(:stack_modify_parameters_options) { { stack_name: stack_name, stdout: stdout, max_attempts: max_attempts, delay: delay } }
 
-  let(:options) { {stdout: stdout, polling: stack_modify_parameters_polling} }
+  let(:options) { { stdout: stdout, polling: stack_modify_parameters_polling } }
 
   let(:stack_information) { instance_double(StackInformation) }
   let(:stack_parameter_update_builder) { instance_double(StackParameterUpdateBuilder) }
@@ -28,33 +28,33 @@ describe StackModifyParameters do
 
   let(:parameters_to_update) do
     [
-        {parameter_key: 'param_key_1', parameter_value: 'param_value_1'},
-        {parameter_key: 'param_key_2', parameter_value: 'new_param_value_2'}
+      { parameter_key: 'param_key_1', parameter_value: 'param_value_1' },
+      { parameter_key: 'param_key_2', parameter_value: 'new_param_value_2' }
     ]
   end
 
   let(:existing_parameters) do
     [
-        Parameter.new(parameter_key: 'param_key_1', parameter_value: 'param_value_1', use_previous_value: true),
-        Parameter.new(parameter_key: 'param_key_2', parameter_value: 'param_value_1', use_previous_value: true)
+      Parameter.new(parameter_key: 'param_key_1', parameter_value: 'param_value_1', use_previous_value: true),
+      Parameter.new(parameter_key: 'param_key_2', parameter_value: 'param_value_1', use_previous_value: true)
     ]
   end
 
   let(:updated_parameters) do
     [
-        {parameter_key: 'param_key_1', use_previous_value: true},
-        {parameter_key: 'param_key_2', parameter_value: 'new_param_value_2'}
+      { parameter_key: 'param_key_1', use_previous_value: true },
+      { parameter_key: 'param_key_2', parameter_value: 'new_param_value_2' }
     ]
   end
 
   let(:stack_existing) do
     [
-        Stack.new(stack_name: stack_name, parameters: existing_parameters, capabilities: ['CAPABILITY_IAM'])
+      Stack.new(stack_name: stack_name, parameters: existing_parameters, capabilities: ['CAPABILITY_IAM'])
     ]
   end
 
   let(:stack_updated) do
-    {stack_name: stack_name, use_previous_template: true, parameters: updated_parameters, capabilities: ['CAPABILITY_IAM']}
+    { stack_name: stack_name, use_previous_template: true, parameters: updated_parameters, capabilities: ['CAPABILITY_IAM'] }
   end
 
   let(:stack_events) { [instance_double(StackEvent, resource_status: 'status')] }
@@ -72,7 +72,6 @@ describe StackModifyParameters do
     allow(PollStackStatus).to receive(:new).with(config, stack_modify_parameters_options).and_return(poll_stack_update)
     allow(poll_stack_update).to receive(:execute)
   end
-
 
   after(:each) do
     StackModifyParameters.new(config, stack_name, parameters_to_update, options).execute
@@ -99,5 +98,4 @@ describe StackModifyParameters do
     allow(stack_parameter_update_builder).to receive(:execute).and_return(nil)
     expect(stdout).to receive(:puts).with('No matching parameter(s) found')
   end
-
 end
