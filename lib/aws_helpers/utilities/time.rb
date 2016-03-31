@@ -1,7 +1,6 @@
 class Time
-
   def prev_hour(hours)
-    with_datetime(hours) { |datetime| datetime - (hours/24.0) }
+    with_datetime(hours) { |datetime| datetime - (hours / 24.0) }
   end
 
   def prev_day(days)
@@ -18,11 +17,9 @@ class Time
 
   private
 
-  def with_datetime(period, &block)
+  def with_datetime(period)
     return self unless period
-    date_time = DateTime.parse(self.to_s)
-    Time.parse(block.call(date_time).to_s)
+    date_time = DateTime.parse(to_s)
+    Time.parse(yield(date_time).to_s)
   end
-
 end
-

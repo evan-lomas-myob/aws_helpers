@@ -1,8 +1,6 @@
 module AwsHelpers
   module Utilities
-
     module PollingOptions
-
       def create_options(stdout, polling_options)
         options = {}
         options[:stdout] = stdout if stdout
@@ -14,7 +12,6 @@ module AwsHelpers
         end
         options
       end
-
     end
   end
 end
