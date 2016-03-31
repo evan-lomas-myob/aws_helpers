@@ -8,9 +8,7 @@ require_relative 'actions/cloud_formation/stack_resources'
 require_relative 'actions/cloud_formation/stack_named_resource'
 
 module AwsHelpers
-
   class CloudFormation < AwsHelpers::Client
-
     # CloudFormation utilities for creating, deleting and modifying templates
     #
     # @param options [Hash] Optional Arguments to include when calling the AWS SDK
@@ -185,8 +183,5 @@ module AwsHelpers
     def stack_named_resource(stack_name, resource_id)
       AwsHelpers::Actions::CloudFormation::StackNamedResource.new(config, stack_name, resource_id).execute
     end
-
   end
-
 end
-

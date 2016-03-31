@@ -18,9 +18,7 @@ require_relative 'actions/ec2/get_security_group_id_by_name'
 include AwsHelpers::Actions::EC2
 
 module AwsHelpers
-
   class EC2 < AwsHelpers::Client
-
     # Utilities for EC2 creation, deletion and search of Ec2 images
     # @param options [Hash] Optional Arguments to include when calling the AWS SDK
     def initialize(options = {})
@@ -51,7 +49,7 @@ module AwsHelpers
     #   }
     #   ```
     # @return [String] the image id
-    def image_create(instance_id, name, options= {})
+    def image_create(instance_id, name, options = {})
       ImageCreate.new(config, instance_id, name, options).execute
     end
 
@@ -59,7 +57,7 @@ module AwsHelpers
     # @param image_id [String] the id of the AMI
     # @param [Hash] options Optional parameters that can be overridden.
     # @option options [IO] :stdout ($stdout) override $stdout when logging output
-    def image_delete(image_id, options={})
+    def image_delete(image_id, options = {})
       ImageDelete.new(config, image_id, options).execute
     end
 
@@ -68,10 +66,9 @@ module AwsHelpers
     # @param user_id [String] the id of the User to share the image with
     # @param [Hash] options Optional parameters that can be overridden.
     # @option options [IO] :stdout ($stdout) override $stdout when logging output
-    def image_add_user(image_id, user_id, options={})
+    def image_add_user(image_id, user_id, options = {})
       ImageAddUser.new(config, image_id, user_id, options).execute
     end
-
 
     # De-register AMI images older than now
     # @param name [String] The value of the Name tag for the image
@@ -231,7 +228,6 @@ module AwsHelpers
       poll_instance_state(instance_id, 'stopped', options)
     end
 
-
     # Polls a given instance until it is stopped
     # @param instance_id [String] Instance Unique ID
     # @param state [String] Instance State to Poll for
@@ -281,10 +277,5 @@ module AwsHelpers
     def get_group_id_by_name(security_group_name, options)
       GetSecurityGroupIdByName.new(config, security_group_name, options).get_id
     end
-
-
   end
-
 end
-
-

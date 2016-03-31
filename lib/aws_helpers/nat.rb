@@ -5,9 +5,7 @@ require_relative 'actions/nat/gateway_delete'
 include AwsHelpers::Actions::NAT
 
 module AwsHelpers
-
   class NAT < AwsHelpers::Client
-
     # Utilities for creation and deletion of NAT gateways
     # @param options [Hash] Optional Arguments to include when calling the AWS SDK
     def initialize(options = {})
@@ -28,7 +26,4 @@ module AwsHelpers
       GatewayDelete.new(config, gateway_id).execute
     end
   end
-
 end
-
-

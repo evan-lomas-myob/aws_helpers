@@ -1,9 +1,7 @@
 require_relative 'config'
 
 module AwsHelpers
-
   class Client
-
     attr_reader :config
 
     def initialize(options)
@@ -14,7 +12,5 @@ module AwsHelpers
     def configure
       yield config if block_given?
     end
-
   end
-
 end

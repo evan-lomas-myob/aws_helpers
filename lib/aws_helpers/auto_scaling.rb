@@ -5,9 +5,7 @@ require_relative 'actions/auto_scaling/update_desired_capacity'
 include AwsHelpers::Actions::AutoScaling
 
 module AwsHelpers
-
   class AutoScaling < AwsHelpers::Client
-
     # AutoScaling utilities for retrieving and updating
     #
     # @param options [Hash] Optional Arguments to include when calling the AWS SDK
@@ -72,10 +70,5 @@ module AwsHelpers
     def update_desired_capacity(auto_scaling_group_name, desired_capacity, options = {})
       UpdateDesiredCapacity.new(config, auto_scaling_group_name, desired_capacity, options).execute
     end
-
   end
-
 end
-
-
-

@@ -1,9 +1,7 @@
 require 'aws-sdk-core'
 
 module AwsHelpers
-
   class Config
-
     attr_reader :options
 
     attr_accessor :aws_auto_scaling_client
@@ -18,7 +16,7 @@ module AwsHelpers
 
     # @param options [Hash] Optional arguments to pass to the AWS Ruby SDK
     def initialize(options)
-      @options = {retry_limit: 8}.merge(options)
+      @options = { retry_limit: 8 }.merge(options)
     end
 
     # @return [Aws::AutoScaling::Client]
@@ -64,7 +62,5 @@ module AwsHelpers
     def aws_kms_client
       @aws_kms_client = Aws::KMS::Client.new(options)
     end
-
   end
-
 end

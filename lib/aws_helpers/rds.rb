@@ -7,9 +7,7 @@ include AwsHelpers
 include AwsHelpers::Actions::RDS
 
 module AwsHelpers
-
   class RDS < AwsHelpers::Client
-
     # Utilities for manipulating RDS instances
     # @param options [Hash] Optional Arguments to include when calling the AWS SDK
     def initialize(options = {})
@@ -65,8 +63,5 @@ module AwsHelpers
     def latest_snapshot(db_instance_id)
       LatestSnapshot.new(config, db_instance_id).execute
     end
-
   end
-
 end
-
