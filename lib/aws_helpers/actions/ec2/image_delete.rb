@@ -4,10 +4,8 @@ require 'aws_helpers/actions/ec2/snapshots_delete'
 module AwsHelpers
   module Actions
     module EC2
-
       class ImageDelete
-
-        def initialize(config, image_id, options={})
+        def initialize(config, image_id, options = {})
           @config = config
           @client = config.aws_ec2_client
           @image_id = image_id
@@ -28,15 +26,13 @@ module AwsHelpers
 
         def snapshot_ids(image)
           snapshot_ids = []
-          image.block_device_mappings.each { |device_mapping|
+          image.block_device_mappings.each do |device_mapping|
             ebs = device_mapping.ebs
             snapshot_ids << ebs.snapshot_id if ebs && !ebs.snapshot_id.to_s.empty?
-          }
+          end
           snapshot_ids
         end
-
       end
-
     end
   end
 end

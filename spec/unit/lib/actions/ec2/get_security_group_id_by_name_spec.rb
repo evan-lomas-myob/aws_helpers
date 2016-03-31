@@ -31,18 +31,18 @@ describe GetSecurityGroupIdByName do
 
     it 'should call Aws::EC2::Client #describe_security_groups with filter' do
       expect(ec2_client).to receive(:describe_security_groups).with(filters: filter_tags)
-      GetSecurityGroupIdByName.new(config, sg_name, options).get_id
+      GetSecurityGroupIdByName.new(config, sg_name, options).id
     end
 
     it 'should return vpc id matching a name' do
-      expect(GetSecurityGroupIdByName.new(config, sg_name, options).get_id).to eql(sg_id)
+      expect(GetSecurityGroupIdByName.new(config, sg_name, options).id).to eql(sg_id)
     end
   end
 
   context 'No matching VPC Name is found' do
     it 'should return nil if no matching ID is found' do
       allow(ec2_client).to receive(:describe_security_groups).and_return(instance_double(Aws::EC2::Types::DescribeSecurityGroupsResult, security_groups: []))
-      expect(GetSecurityGroupIdByName.new(config, sg_name, options).get_id).to eql(nil)
+      expect(GetSecurityGroupIdByName.new(config, sg_name, options).id).to eql(nil)
     end
   end
 end

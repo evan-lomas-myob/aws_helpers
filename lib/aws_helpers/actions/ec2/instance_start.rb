@@ -3,9 +3,7 @@ require 'aws_helpers/actions/ec2/poll_instance_healthy'
 module AwsHelpers
   module Actions
     module EC2
-
       class InstanceStart
-
         def initialize(config, instance_id, options)
           @config = config
           @instance_id = instance_id
@@ -31,7 +29,6 @@ module AwsHelpers
           end
           options
         end
-
       end
     end
   end

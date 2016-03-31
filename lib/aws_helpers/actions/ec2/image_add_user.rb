@@ -3,9 +3,7 @@ require 'aws_helpers/actions/ec2/poll_image_available'
 module AwsHelpers
   module Actions
     module EC2
-
       class ImageAddUser
-
         def initialize(config, image_id, user_id, options = {})
           @config = config
           @client = @config.aws_ec2_client
@@ -24,14 +22,13 @@ module AwsHelpers
 
         def create_launch_permission(user_id)
           {
-              add: [
-                  {
-                      user_id: user_id
-                  },
-              ]
+            add: [
+              {
+                user_id: user_id
+              }
+            ]
           }
         end
-
       end
     end
   end

@@ -4,11 +4,10 @@ require 'aws_helpers/utilities/polling'
 module AwsHelpers
   module Actions
     module EC2
-
       class PollImageExists
         include AwsHelpers::Utilities::Polling
 
-        def initialize(config, image_id, options={})
+        def initialize(config, image_id, options = {})
           @client = config.aws_ec2_client
           @image_id = image_id
           @stdout = options[:stdout] || $stdout
@@ -17,7 +16,7 @@ module AwsHelpers
         end
 
         def execute
-          poll(@delay, @max_attempts) {
+          poll(@delay, @max_attempts) do
             @stdout.puts "Waiting for Image:#{@image_id} to be created"
             begin
               response = @client.describe_images(image_ids: [@image_id])
@@ -25,9 +24,8 @@ module AwsHelpers
             rescue Aws::EC2::Errors::InvalidAMIIDNotFound
               false
             end
-          }
+          end
         end
-
       end
     end
   end

@@ -3,8 +3,11 @@ AllCops:
     - Gemfile
     - Rakefile
 
-LineLength:
+Metrics/LineLength:
   Enabled: false
+
+Metrics/MethodLength:
+  Max: 15
 
 Documentation:
   Enabled: false

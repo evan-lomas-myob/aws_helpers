@@ -261,21 +261,21 @@ module AwsHelpers
     #   }
     #   ```
     def get_windows_password(instance_id, pem_path, options)
-      GetWindowsPassword.new(config, instance_id, pem_path, options).get_password
+      GetWindowsPassword.new(config, instance_id, pem_path, options).password
     end
 
     # Returns the VPC ID for a given VPC Name.
     # @param vpc_name [String] VPC Unique Name Tag
     # @option options [IO] :stdout ($stdout) Override $stdout when logging output
     def get_vpc_id_by_name(vpc_name, options)
-      GetVpcIdByName.new(config, vpc_name, options).get_id
+      GetVpcIdByName.new(config, vpc_name, options).id
     end
 
     # Returns the Group ID for a given Security Group Name.
     # @param security_group_name [String] Security Group Name to Find
     # @option options [IO] :stdout ($stdout) Override $stdout when logging output
     def get_group_id_by_name(security_group_name, options)
-      GetSecurityGroupIdByName.new(config, security_group_name, options).get_id
+      GetSecurityGroupIdByName.new(config, security_group_name, options).id
     end
   end
 end

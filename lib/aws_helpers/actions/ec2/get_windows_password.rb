@@ -4,7 +4,6 @@ require 'aws_helpers/utilities/polling'
 module AwsHelpers
   module Actions
     module EC2
-
       class GetWindowsPassword
         include AwsHelpers::Utilities::Polling
 
@@ -17,26 +16,24 @@ module AwsHelpers
           @max_attempts = options[:max_attempts] || 6
         end
 
-        def get_password
-          client = @config ? @config.aws_ec2_client : Aws::EC2::Client.new()
+        def password
+          client = @config ? @config.aws_ec2_client : Aws::EC2::Client.new
           encrypted_password = ''
-          poll(@delay, @max_attempts) {
+          poll(@delay, @max_attempts) do
             encrypted_password = client.get_password_data(instance_id: @instance_id).password_data
             !encrypted_password.empty?
-          }
+          end
           private_key = OpenSSL::PKey::RSA.new(File.read(@pem_path))
           decoded = Base64.decode64(encrypted_password)
           begin
             private_key.private_decrypt(decoded)
           rescue OpenSSL::PKey::RSAError => error
-            @stdout.puts 'Hint: Check you are using the correct pem.file vs aws-access-key-id combination'
+            s = 'Hint: Check you are using the correct pem.file vs aws-access-key-id combination'
+            @stdout.puts s
             raise error
           end
-
         end
-
       end
-
     end
   end
 end

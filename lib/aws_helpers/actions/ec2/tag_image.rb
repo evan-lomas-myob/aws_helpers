@@ -3,10 +3,8 @@ require 'aws_helpers/actions/ec2/tag_resource'
 module AwsHelpers
   module Actions
     module EC2
-
       class TagImage
-
-        def initialize(config, image_id, name, time, options={})
+        def initialize(config, image_id, name, time, options = {})
           @config = config
           @image_id = image_id
           @name = name
@@ -23,7 +21,6 @@ module AwsHelpers
           ] + @additional_tags
           TagResource.new(@config, @image_id, tags).execute
         end
-
       end
     end
   end

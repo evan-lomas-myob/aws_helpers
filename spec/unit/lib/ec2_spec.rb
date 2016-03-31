@@ -390,7 +390,7 @@ describe AwsHelpers::EC2 do
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
       allow(GetWindowsPassword).to receive(:new).and_return(get_windows_password)
-      allow(get_windows_password).to receive(:get_password)
+      allow(get_windows_password).to receive(:password)
     end
 
     subject { AwsHelpers::EC2.new.get_windows_password(instance_id, pem_path, options) }
@@ -400,8 +400,8 @@ describe AwsHelpers::EC2 do
       subject
     end
 
-    it 'should call GetWindowsPassword get_password method' do
-      expect(get_windows_password).to receive(:get_password)
+    it 'should call GetWindowsPassword password method' do
+      expect(get_windows_password).to receive(:password)
       subject
     end
   end
@@ -416,7 +416,7 @@ describe AwsHelpers::EC2 do
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
       allow(GetVpcIdByName).to receive(:new).and_return(get_vpc_by_name)
-      allow(get_vpc_by_name).to receive(:get_id)
+      allow(get_vpc_by_name).to receive(:id)
     end
 
     subject { AwsHelpers::EC2.new.get_vpc_id_by_name(vpc_name, options) }
@@ -426,8 +426,8 @@ describe AwsHelpers::EC2 do
       subject
     end
 
-    it 'should call GetVpcIdByName get_id method' do
-      expect(get_vpc_by_name).to receive(:get_id)
+    it 'should call GetVpcIdByName id method' do
+      expect(get_vpc_by_name).to receive(:id)
       subject
     end
   end
@@ -442,7 +442,7 @@ describe AwsHelpers::EC2 do
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
       allow(GetSecurityGroupIdByName).to receive(:new).and_return(get_group_by_name)
-      allow(get_group_by_name).to receive(:get_id)
+      allow(get_group_by_name).to receive(:id)
     end
 
     subject { AwsHelpers::EC2.new.get_group_id_by_name(sg_name, options) }
@@ -452,8 +452,8 @@ describe AwsHelpers::EC2 do
       subject
     end
 
-    it 'should call GetSecurityGroupIdByName get_id method' do
-      expect(get_group_by_name).to receive(:get_id)
+    it 'should call GetSecurityGroupIdByName id method' do
+      expect(get_group_by_name).to receive(:id)
       subject
     end
   end

@@ -7,9 +7,7 @@ require 'aws_helpers/utilities/polling_options'
 module AwsHelpers
   module Actions
     module EC2
-
       class ImageCreate
-
         include AwsHelpers::Utilities::PollingOptions
 
         def initialize(config, instance_id, name, options = {})
@@ -38,7 +36,6 @@ module AwsHelpers
             raise
           end
         end
-
       end
     end
   end
