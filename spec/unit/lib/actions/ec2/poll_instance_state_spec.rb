@@ -14,7 +14,7 @@ describe PollInstanceState do
 
   let(:stdout) { instance_double(IO) }
   let(:max_attempts) { 2 }
-  let(:options) { { stdout: stdout, delay: 0, max_attempts: max_attempts } }
+  let(:options) { {stdout: stdout, delay: 0, max_attempts: max_attempts} }
 
   describe '#execute' do
     before(:each) do
@@ -22,28 +22,30 @@ describe PollInstanceState do
     end
 
     it 'should use the AwsHelpers::Utilities::Polling to poll until the image is in the expect state' do
-      expect(aws_ec2_client).to receive(:describe_instance_status).with(instance_ids: [instance_id]).and_return(
-        create_status_result(is_running), create_status_result(is_stopped)
+      expect(aws_ec2_client).to receive(:describe_instances).with(instance_ids: [instance_id]).and_return(
+          create_status_result(is_running), create_status_result(is_stopped)
       )
       PollInstanceState.new(config, instance_id, is_stopped, options).execute
     end
 
     it 'should raise an exception is polling reaches max attempts' do
-      allow(aws_ec2_client).to receive(:describe_instance_status).and_return(create_status_result(is_running))
+      allow(aws_ec2_client).to receive(:describe_instances).and_return(create_status_result(is_running))
       expect { PollInstanceState.new(config, instance_id, is_stopped, options).execute }.to raise_error("stopped waiting after #{max_attempts} attempts without success")
     end
 
     it 'should write the status to stdout' do
       expect(stdout).to receive(:puts).with("Instance State is #{is_stopped}.")
-      allow(aws_ec2_client).to receive(:describe_instance_status).and_return(create_status_result(is_stopped))
+      allow(aws_ec2_client).to receive(:describe_instances).and_return(create_status_result(is_stopped))
       PollInstanceState.new(config, instance_id, is_stopped, options).execute
     end
   end
 
   def create_status_result(status)
-    Aws::EC2::Types::DescribeInstanceStatusResult.new(
-      instance_statuses: [
-        Aws::EC2::Types::InstanceStatus.new(instance_state: Aws::EC2::Types::InstanceState.new(name: status))
-      ])
+    state = Aws::EC2::Types::InstanceState.new(name: status)
+    instance = Aws::EC2::Types::Instance.new(state: state)
+    Aws::EC2::Types::DescribeInstancesResult.new(
+        reservations: [
+            Aws::EC2::Types::Reservation.new(instances: [instance])
+        ])
   end
 end
