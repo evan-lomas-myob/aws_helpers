@@ -34,6 +34,7 @@ module AwsHelpers
       @aws_ec2_client ||= Aws::EC2::Client.new(@options)
     end
 
+    # @return [Aws::ElasticBeanstalk::Client]
     def aws_elastic_beanstalk_client
       @aws_elastic_beanstalk_client ||= Aws::ElasticBeanstalk::Client.new(@options)
     end
