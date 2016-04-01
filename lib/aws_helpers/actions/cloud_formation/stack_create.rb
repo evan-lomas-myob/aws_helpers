@@ -3,9 +3,7 @@ require_relative 'stack_progress'
 module AwsHelpers
   module Actions
     module CloudFormation
-
       class StackCreate
-
         def initialize(config, stack_name, request, options = {})
           @config = config
           @stack_name = stack_name
@@ -21,7 +19,6 @@ module AwsHelpers
           client.create_stack(@request)
           AwsHelpers::Actions::CloudFormation::StackProgress.new(@config, @options).execute
         end
-
       end
     end
   end

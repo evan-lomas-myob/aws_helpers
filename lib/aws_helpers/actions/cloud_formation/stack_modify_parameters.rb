@@ -4,9 +4,7 @@ require_relative 'stack_progress'
 module AwsHelpers
   module Actions
     module CloudFormation
-
       class StackModifyParameters
-
         def initialize(config, stack_name, parameters, options = {})
           @config = config
           @stack_name = stack_name
@@ -20,13 +18,13 @@ module AwsHelpers
           response = client.describe_stacks(stack_name: @stack_name).stacks.first
           request = AwsHelpers::Actions::CloudFormation::StackParameterUpdateBuilder.new(@stack_name, response, @parameters).execute
 
-          unless request.nil?
+          if request.nil?
+            @stdout.puts 'No matching parameter(s) found'
+          else
             @stdout.puts "Updating #{@stack_name}"
             client = @config.aws_cloud_formation_client
             client.update_stack(request)
             AwsHelpers::Actions::CloudFormation::StackProgress.new(@config, @options).execute
-          else
-            @stdout.puts 'No matching parameter(s) found'
           end
         end
 
@@ -44,9 +42,7 @@ module AwsHelpers
           end
           options
         end
-
       end
-
     end
   end
 end

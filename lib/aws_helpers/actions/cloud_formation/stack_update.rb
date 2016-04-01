@@ -3,9 +3,7 @@ require_relative 'stack_progress'
 module AwsHelpers
   module Actions
     module CloudFormation
-
       class StackUpdate
-
         def initialize(config, stack_name, request, options = {})
           @config = config
           @stack_name = stack_name
@@ -29,9 +27,7 @@ module AwsHelpers
               raise validation_error
             end
           end
-
         end
-
       end
     end
   end

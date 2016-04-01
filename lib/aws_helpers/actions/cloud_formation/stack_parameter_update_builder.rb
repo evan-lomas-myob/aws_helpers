@@ -1,9 +1,7 @@
 module AwsHelpers
   module Actions
     module CloudFormation
-
       class StackParameterUpdateBuilder
-
         def initialize(stack_name, existing_describe_stacks_output, updated_parameters)
           @stack_name = stack_name
           @existing_stack = existing_describe_stacks_output
@@ -11,12 +9,11 @@ module AwsHelpers
         end
 
         def execute
-
           capabilities = @existing_stack.capabilities
-          parameters = @existing_stack.parameters.map { |existing_parameter|
-
-            update_parameter = @updated_parameters.detect { |updated_parameter|
-              updated_parameter[:parameter_key] == existing_parameter.parameter_key }
+          parameters = @existing_stack.parameters.map do |existing_parameter|
+            update_parameter = @updated_parameters.detect do |updated_parameter|
+              updated_parameter[:parameter_key] == existing_parameter.parameter_key
+            end
 
             unless update_parameter.nil?
               parameter_hash = existing_parameter.to_hash
@@ -30,20 +27,16 @@ module AwsHelpers
               end
               parameter_hash
             end
-          }
+          end
 
-          parameters.all? {|x| x.nil?} ? nil : {
-              stack_name: @stack_name,
-              use_previous_template: true,
-              parameters: parameters,
-              capabilities: capabilities
+          parameters.all?(&:nil?) ? nil : {
+            stack_name: @stack_name,
+            use_previous_template: true,
+            parameters: parameters,
+            capabilities: capabilities
           }
-
         end
-
-
       end
-
     end
   end
 end

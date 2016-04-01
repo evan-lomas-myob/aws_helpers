@@ -4,9 +4,7 @@ require 'aws_helpers/actions/auto_scaling/poll_load_balancers_in_service_instanc
 module AwsHelpers
   module Actions
     module AutoScaling
-
       class UpdateDesiredCapacity
-
         def initialize(config, auto_scaling_group_name, desired_capacity, options = {})
           @config = config
           @auto_scaling_group_name = auto_scaling_group_name
@@ -36,9 +34,7 @@ module AwsHelpers
           end
           options
         end
-
       end
-
     end
   end
 end

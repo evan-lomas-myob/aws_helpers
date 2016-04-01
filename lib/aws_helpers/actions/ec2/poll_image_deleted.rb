@@ -3,7 +3,6 @@ require 'aws_helpers/utilities/polling'
 module AwsHelpers
   module Actions
     module EC2
-
       class PollImageDeleted
         include AwsHelpers::Utilities::Polling
 
@@ -16,16 +15,15 @@ module AwsHelpers
         end
 
         def execute
-          poll(@delay, @max_attempts) {
+          poll(@delay, @max_attempts) do
             response = @client.describe_images(image_ids: [@image_id])
             image = response.images.first
             message = "Deleting Image:#{@image_id}"
             message << " State:#{image.state}" if image
             @stdout.puts message
             image.nil?
-          }
+          end
         end
-
       end
     end
   end

@@ -13,9 +13,7 @@ include AwsHelpers::Utilities::PollingOptions
 module AwsHelpers
   module Actions
     module CloudFormation
-
       class StackProvision
-
         def initialize(config, stack_name, template_json, options = {})
           @config = config
           @stack_name = stack_name
@@ -47,9 +45,7 @@ module AwsHelpers
         def create(request)
           StackCreate.new(@config, @stack_name, request, @polling).execute
         end
-
       end
-
     end
   end
 end

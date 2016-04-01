@@ -1,9 +1,7 @@
 module AwsHelpers
   module Actions
     module CloudFormation
-
       class StackRollbackComplete
-
         def initialize(config, stack_name)
           @config = config
           @stack_name = stack_name
@@ -15,9 +13,7 @@ module AwsHelpers
           stack = client.describe_stacks(stack_name: @stack_name).stacks.first
           rollback_complete.include?(stack.stack_status) ? true : false
         end
-
       end
-
     end
   end
 end

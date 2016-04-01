@@ -3,9 +3,7 @@ require 'aws_helpers/utilities/target_stack_validate'
 module AwsHelpers
   module Actions
     module CloudFormation
-
       class CheckStackFailure
-
         def initialize(config, options)
           @config = config
           @target_stack = AwsHelpers::Utilities::TargetStackValidate.new.execute(options)
@@ -17,9 +15,7 @@ module AwsHelpers
           stack = client.describe_stacks(stack_name: @target_stack).stacks.first
           raise "Stack #{stack.stack_name} Failed" if failures.include?(stack.stack_status)
         end
-
       end
-
     end
   end
 end

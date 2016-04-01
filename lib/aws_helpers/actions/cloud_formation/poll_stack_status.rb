@@ -4,9 +4,7 @@ require 'aws_helpers/utilities/target_stack_validate'
 module AwsHelpers
   module Actions
     module CloudFormation
-
       class PollStackStatus
-
         include AwsHelpers::Utilities::Polling
 
         def initialize(config, options = {})
@@ -28,11 +26,7 @@ module AwsHelpers
             states.include?(response.stack_status)
           end
         end
-
       end
-
     end
-
   end
-
 end

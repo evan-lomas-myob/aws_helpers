@@ -4,9 +4,7 @@ require 'aws_helpers/utilities/target_stack_validate'
 module AwsHelpers
   module Actions
     module CloudFormation
-
       class StackRetrieveEvents
-
         def initialize(config, options)
           @config = config
           @target_stack = AwsHelpers::Utilities::TargetStackValidate.new.execute(options)
@@ -25,7 +23,6 @@ module AwsHelpers
           end
           events
         end
-
       end
     end
   end

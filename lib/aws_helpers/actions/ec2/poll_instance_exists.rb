@@ -3,9 +3,7 @@ require 'aws_helpers/utilities/polling'
 module AwsHelpers
   module Actions
     module EC2
-
       class PollInstanceExists
-
         include AwsHelpers::Utilities::Polling
 
         def initialize(config, instance_id, options = {})
@@ -17,18 +15,16 @@ module AwsHelpers
         end
 
         def execute
-          poll(@delay, @max_attempts) {
+          poll(@delay, @max_attempts) do
             begin
               @client.describe_instances(instance_ids: [@instance_id])
               true
             rescue Aws::EC2::Errors::InvalidInstanceIDNotFound
               false
             end
-          }
+          end
         end
-
       end
     end
   end
 end
-
