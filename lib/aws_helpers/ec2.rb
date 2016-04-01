@@ -23,7 +23,7 @@ module AwsHelpers
     #
     # @param options [Hash] Optional Arguments to include when calling the AWS SDK
     #
-    # @return [Aws::EC2::Client]
+    # @return [AwsHelpers::EC2]
     #
     def initialize(options = {})
       super(options)

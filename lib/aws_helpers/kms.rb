@@ -10,7 +10,7 @@ module AwsHelpers
     # @example Create a KMS Client
     #   AwsHelpers.KMS.new
     #
-    # @return [Aws::KMS::Client]
+    # @return [AwsHelpers::KMS]
     #
     def initialize(options = {})
       super(options)

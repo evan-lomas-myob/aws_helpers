@@ -13,7 +13,7 @@ module AwsHelpers
     # @example Initialise AutoScaling Client
     #    client = AwsHelpers::AutoScaling.new
     #
-    # @return [Aws::AutoScaling::Client]
+    # @return [AwsHelpers::AutoScaling]
     #
     def initialize(options = {})
       super(options)

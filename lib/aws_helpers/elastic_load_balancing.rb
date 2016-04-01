@@ -12,7 +12,7 @@ module AwsHelpers
     # @example Initialise ElasticLoadBalancing Client
     #    client = AwsHelpers::ElasticLoadBalancing.new
     #
-    # @return [Aws::ElasticLoadBalancing::Client]
+    # @return [AwsHelpers::ElasticLoadBalancing]
     #
     def initialize(options = {})
       super(options)

@@ -19,7 +19,7 @@ module AwsHelpers
     # @example Initialise CloudFormation Client
     #    client = AwsHelpers::CloudFormation.new
     #
-    # @return [Aws::CloudFormation::Client]
+    # @return [AwsHelpers::CloudFormation]
     #
     def initialize(options = {})
       super(options)
