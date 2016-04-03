@@ -24,7 +24,7 @@ module AwsHelpers
     # @param auto_scaling_group_name [String] The group name of the Auto scaling client
     #
     # @example Retrieve the desired capacity
-    #    desired_capacity = AwsHelpers::AutoScaling.new.retrieve_desired_capacity("Auto-Scaling-Group")
+    #    desired_capacity = AwsHelpers::AutoScaling.new.retrieve_desired_capacity('Auto-Scaling-Group')
     #
     # @return [Integer, nil] The desired capacity of an auto scaling group
     #
@@ -63,7 +63,7 @@ module AwsHelpers
     #   ```
     #
     # @example Change the desired capacity
-    #   AwsHelpers::AutoScaling.new.update_desired_capacity("Auto-Scaling-Group",2)
+    #   AwsHelpers::AutoScaling.new.update_desired_capacity('Auto-Scaling-Group',2)
     #
     # @return [Array] Load Balancers configured for this Auto Scaling Group
     #

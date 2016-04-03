@@ -54,7 +54,7 @@ module AwsHelpers
     #   }
     #   ```
     # @example Create an Image
-    #   AwsHelpers::EC2.new.image_create("i-12345678", "New Image Name")
+    #   AwsHelpers::EC2.new.image_create('i-12345678','New Image Name')
     #
     # @return [String] the image id
     #
@@ -69,7 +69,7 @@ module AwsHelpers
     # @option options [IO] :stdout ($stdout) override $stdout when logging output
     #
     # @example De-register an Image
-    #   AwsHelpers::EC2.new.image_delete("ami-12345678")
+    #   AwsHelpers::EC2.new.image_delete('ami-12345678')
     #
     # @return [Seahorse::Client::Response] An empty response
     #
@@ -85,7 +85,7 @@ module AwsHelpers
     # @option options [IO] :stdout ($stdout) override $stdout when logging output
     #
     # @example Add remote user id launch permission
-    #   AwsHelpers::EC2.new.image_add_user("ami-12345678","123456789012")
+    #   AwsHelpers::EC2.new.image_add_user('ami-12345678','123456789012')
     #
     # @return [Seahorse::Client::Response] An empty response
     #
@@ -103,7 +103,7 @@ module AwsHelpers
     # @option options [Integer] :years Years to keep images
     #
     # @example Delete an image older than 1 day
-    #   AwsHelpers::EC2.new.images_delete("Test Image Name",{days: 1})
+    #   AwsHelpers::EC2.new.images_delete('Test Image Name',{days: 1})
     #
     # @return [Seahorse::Client::Response] An empty response
     #
@@ -127,7 +127,7 @@ module AwsHelpers
     #   }
     #   ```
     # @example Remove AMI's older than 1 hour
-    #  AwsHelpers::EC2.new.images_delete_by_time("Test Image Name",Time.now-3600)
+    #  AwsHelpers::EC2.new.images_delete_by_time('Test Image Name',Time.now-3600)
     #
     # @return [Seahorse::Client::Response] An empty response
     #
@@ -182,11 +182,11 @@ module AwsHelpers
     #   }
     #   ```
     # @example Create a basic EC2 image with defaults
-    #   AwsHelpers::EC2.new.instance_create("ami-12345678",{})
+    #   AwsHelpers::EC2.new.instance_create('ami-12345678')
     #
     # @return [String] Instance ID
     #
-    def instance_create(image_id, options)
+    def instance_create(image_id, options = {})
       InstanceCreate.new(config, image_id, options).execute
     end
 
@@ -206,11 +206,11 @@ module AwsHelpers
     #   ```
     #
     # @example Start the instance with known instance id
-    #   AwsHelpers::EC2.new.instance_start("i-12345678",{})
+    #   AwsHelpers::EC2.new.instance_start('i-12345678')
     #
     # @return [nil]
     #
-    def instance_start(instance_id, options)
+    def instance_start(instance_id, options = {})
       InstanceStart.new(config, instance_id, options).execute
     end
 
@@ -229,11 +229,11 @@ module AwsHelpers
     #   ```
     #
     # @example Stop the instance with known instance id
-    #   AwsHelpers::EC2.new.instance_stop("i-12345678",{})
+    #   AwsHelpers::EC2.new.instance_stop('i-12345678')
     #
     # @return [nil]
     #
-    def instance_stop(instance_id, options)
+    def instance_stop(instance_id, options = {})
       InstanceStop.new(config, instance_id, options).execute
     end
 
@@ -302,7 +302,7 @@ module AwsHelpers
     # @return [nil]
     #
 
-    def poll_instance_healthy(instance_id, options)
+    def poll_instance_healthy(instance_id, options = {})
       PollInstanceHealthy.new(config, instance_id, options).execute
     end
 
@@ -322,11 +322,11 @@ module AwsHelpers
     #   ```
     #
     # @example Poll instance health
-    #   AwsHelpers::EC2.new.poll_instance_stopped('i-12345678',{})
+    #   AwsHelpers::EC2.new.poll_instance_stopped('i-12345678')
     #
     # @return [nil]
     #
-    def poll_instance_stopped(instance_id, options)
+    def poll_instance_stopped(instance_id, options = {})
       poll_instance_state(instance_id, 'stopped', options)
     end
 
@@ -346,12 +346,12 @@ module AwsHelpers
     #   ```
     #
     # @example Poll instance health
-    #   AwsHelpers::EC2.new.poll_instance_state('i-12345678','running',{})
+    #   AwsHelpers::EC2.new.poll_instance_state('i-12345678','running')
     #
     # @return [nil]
     #
 
-    def poll_instance_state(instance_id, state, options)
+    def poll_instance_state(instance_id, state, options = {})
       PollInstanceState.new(config, instance_id, state, options).execute
     end
 
@@ -371,12 +371,12 @@ module AwsHelpers
     #   }
     #   ```
     # @example Get the windows administrator password
-    #   AwsHelpers::EC2.new.get_windows_password('i-12345678','/tmp/file.pem',{})
+    #   AwsHelpers::EC2.new.get_windows_password('i-12345678','/tmp/file.pem')
     #
     # @return [String] The Administrator password
     #
 
-    def get_windows_password(instance_id, pem_path, options)
+    def get_windows_password(instance_id, pem_path, options = {})
       GetWindowsPassword.new(config, instance_id, pem_path, options).get_password
     end
 
@@ -386,12 +386,12 @@ module AwsHelpers
     # @option options [IO] :stdout ($stdout) Override $stdout when logging output
     #
     # @example Get the VPC ID
-    #   AwsHelpers::EC2.new.get_vpc_id_by_name('vpc-name',{})
+    #   AwsHelpers::EC2.new.get_vpc_id_by_name('vpc-name')
     #
     # @return [String,nil] The VPC ID
     #
 
-    def get_vpc_id_by_name(vpc_name, options)
+    def get_vpc_id_by_name(vpc_name, options = {})
       GetVpcIdByName.new(config, vpc_name, options).get_id
     end
 
@@ -401,12 +401,12 @@ module AwsHelpers
     # @option options [IO] :stdout ($stdout) Override $stdout when logging output
     #
     # @example Get the Security Group ID
-    #   AwsHelpers::EC2.new.get_group_id_by_name('Name-SecurityGroup-ABCDEF1ABC11',{})
+    #   AwsHelpers::EC2.new.get_group_id_by_name('Name-SecurityGroup-ABCDEF1ABC11')
     #
     # @return [String,nil] The Security Group ID
     #
 
-    def get_group_id_by_name(security_group_name, options)
+    def get_group_id_by_name(security_group_name, options = {})
       GetSecurityGroupIdByName.new(config, security_group_name, options).get_id
     end
   end
