@@ -20,6 +20,8 @@ describe AwsHelpers::Actions::AutoScaling::RetrieveCurrentInstances do
     let(:describe_instance_response) { Aws::EC2::Types::DescribeInstancesResult.new(reservations: [reservation]) }
     let(:auto_scaling_group_types_response) { Aws::AutoScaling::Types::AutoScalingGroupsType.new(auto_scaling_groups: [auto_scaling_group]) }
 
+    let(:empty_auto_scaling_group_types_response) { Aws::AutoScaling::Types::AutoScalingGroupsType.new(auto_scaling_groups: nil) }
+
     subject { AwsHelpers::Actions::AutoScaling::RetrieveCurrentInstances.new(config, auto_scaling_group_name).execute }
 
     before(:each) do
@@ -36,5 +38,12 @@ describe AwsHelpers::Actions::AutoScaling::RetrieveCurrentInstances do
       expect(ec2_client).to receive(:describe_instances).with(instance_ids: [instance_id])
       subject
     end
+
+    it 'should return an empty array if response is nil' do
+      allow(auto_scaling_client).to receive(:describe_auto_scaling_groups).and_return([empty_auto_scaling_group_types_response])
+      expect(subject).to eq([])
+    end
+
+
   end
 end
