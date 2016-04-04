@@ -19,6 +19,8 @@ module AwsHelpers
     # @example Initialise CloudFormation Client
     #    client = AwsHelpers::CloudFormation.new
     #
+    # @return [AwsHelpers::CloudFormation]
+    #
     def initialize(options = {})
       super(options)
     end
@@ -47,7 +49,7 @@ module AwsHelpers
     #
     # @example Create a basic cloudformation stack with a single instance
     #   AwsHelpers::CloudFormation.new.stack_provision(
-    #     "TestStackName",'{
+    #     'TestStackName','{
     #       "Resources": {
     #         "TestInstance": {
     #           "Type" : "AWS::EC2::Instance",
@@ -84,7 +86,7 @@ module AwsHelpers
     # @option options [IO] :stdout Override $stdout when logging output
     #
     # @example Remove the names stack from AWS
-    #   AwsHelpers::CloudFormation.new.stack_delete("TestStackName")
+    #   AwsHelpers::CloudFormation.new.stack_delete('TestStackName')
     #
     # @return [nil]
     #
@@ -111,7 +113,7 @@ module AwsHelpers
     #
     # @example
     #   AwsHelpers::CloudFormation.new.stack_modify_parameters(
-    #     "TestStackName",
+    #     'TestStackName',
     #     [ { parameter_key: 'InstanceImageId', parameter_value: 'ami-123ab123' }]
     #   )
     #
@@ -126,7 +128,7 @@ module AwsHelpers
     # @param stack_name [String] Name given to the Stack
     #
     # @example Return the stack parameters
-    #  AwsHelpers::CloudFormation.new.stack_parameters("TestStackName")
+    #  AwsHelpers::CloudFormation.new.stack_parameters('TestStackName')
     #
     # @return [Array<struct Aws::CloudFormation::Types::Parameter>] The list of parameters defined for the Stack
     #
@@ -139,7 +141,7 @@ module AwsHelpers
     # @param stack_name [String] Name given to the Stack
     #
     # @example Return the stack outputs
-    #  AwsHelpers::CloudFormation.new.stack_outputs("TestStackName")
+    #  AwsHelpers::CloudFormation.new.stack_outputs('TestStackName')
     #
     # @return [Array<struct Aws::CloudFormation::Types::Output>] The list of outputs defined for the Stack
     #
@@ -152,7 +154,7 @@ module AwsHelpers
     # @param stack_name [String] Name of the stack to check
     #
     # @example Checks if the stack exists
-    #  AwsHelpers::CloudFormation.new.stack_exists?("TestStackName")
+    #  AwsHelpers::CloudFormation.new.stack_exists?('TestStackName')
     #
     # @return [Boolean] True if the stack exists and false if it does not
     #
@@ -165,7 +167,7 @@ module AwsHelpers
     # @param stack_name [String] Name given to the Stack
     #
     # @example Return a list of resources (for a stack to be created, there must at least be 1)
-    #  AwsHelpers::CloudFormation.new.stack_resources("TestStackName")
+    #  AwsHelpers::CloudFormation.new.stack_resources('TestStackName')
     #
     # @return [Array<struct Aws::CloudFormation::Types::StackResource>] The list of resources defined for the Stack
     #
@@ -179,7 +181,7 @@ module AwsHelpers
     # @param resource_id [String] The Logical Resource Identifier
     #
     # @example Return a name resource
-    #  AwsHelpers::CloudFormation.new.stack_named_resource("TestStackName", "TestInstance")
+    #  AwsHelpers::CloudFormation.new.stack_named_resource('TestStackName','TestInstance')
     #
     # @return [struct Aws::CloudFormation::Types::StackResourceDetail] The named resource
     #
@@ -194,7 +196,7 @@ module AwsHelpers
     # @param template_json [JSON] New Stack Template to compare
     #
     # @example Return a name resource
-    #   AwsHelpers::CloudFormation.new.stack_create_change_set("TestStackName","TestChangeSet",'
+    #   AwsHelpers::CloudFormation.new.stack_create_change_set('TestStackName','TestChangeSet','
     #     {
     #       "Resources": {
     #          "TestInstance": {
@@ -232,11 +234,11 @@ module AwsHelpers
     # @option options [IO] :stdout Override $stdout when logging output
     #
     # @example Return the change set details
-    #  AwsHelpers::CloudFormation.new.stack_describe_change_set("TestStackName", "TestChangeSet")
+    #  AwsHelpers::CloudFormation.new.stack_describe_change_set('TestStackName','TestChangeSet')
     #
     # @return [struct Aws::CloudFormation::Types::DescribeChangeSetOutput] The change set details
     #
-    def stack_describe_change_set(stack_name, change_set_name, options)
+    def stack_describe_change_set(stack_name, change_set_name, options = {})
       AwsHelpers::Actions::CloudFormation::StackDescribeChangeSet.new(config, stack_name, change_set_name, options).execute
     end
 
@@ -247,11 +249,11 @@ module AwsHelpers
     # @option options [IO] :stdout Override $stdout when logging output
     #
     # @example Remove a change set
-    #  AwsHelpers::CloudFormation.new.stack_delete_change_set("TestStackName", "TestChangeSet")
+    #  AwsHelpers::CloudFormation.new.stack_delete_change_set('TestStackName','TestChangeSet')
     #
     # @return [struct Seahorse::Client::Response] An empty response
     #
-    def stack_delete_change_set(stack_name, change_set_name, options)
+    def stack_delete_change_set(stack_name, change_set_name, options = {})
       AwsHelpers::Actions::CloudFormation::StackDeleteChangeSet.new(config, stack_name, change_set_name, options).execute
     end
   end
