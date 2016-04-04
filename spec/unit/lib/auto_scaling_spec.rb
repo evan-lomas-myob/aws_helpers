@@ -92,4 +92,31 @@ describe AwsHelpers::AutoScaling do
       )
     end
   end
+
+  describe '#retrieve_current_instances' do
+    let(:retrieve_current_instances) { instance_double(RetrieveCurrentInstances) }
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(RetrieveCurrentInstances).to receive(:new).and_return(retrieve_current_instances)
+      allow(retrieve_current_instances).to receive(:execute)
+    end
+
+    subject { AwsHelpers::AutoScaling.new.retrieve_current_instances(auto_scaling_group_name) }
+
+    it 'should create RetrieveCurrentInstances with correct parameters' do
+      expect(RetrieveCurrentInstances).to receive(:new).with(config, auto_scaling_group_name)
+      subject
+    end
+
+    it 'should call RetrieveCurrentInstances execute method' do
+      expect(retrieve_current_instances).to receive(:execute)
+      subject
+    end
+
+    it 'should return nil' do
+      expect(retrieve_current_instances.execute).to eq(nil)
+    end
+  end
+
 end
