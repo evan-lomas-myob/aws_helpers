@@ -20,16 +20,16 @@ describe StackDescribeChangeSet do
 
   let(:request) do
     {
-        stack_name: stack_name,
-        change_set_name: change_set_name
+      stack_name: stack_name,
+      change_set_name: change_set_name
     }
   end
 
-  let(:options) { {stdout: stdout} }
+  let(:options) { { stdout: stdout } }
 
-  let(:output) {
+  let(:output) do
     "Action: action\nResource: logical resource id\nReplacement: true\n\tAttribute: attribute\n\tName: attribute name\n"
-  }
+  end
 
   after(:each) do
     AwsHelpers::Actions::CloudFormation::StackDescribeChangeSet.new(config, stack_name, change_set_name, options).execute
@@ -64,5 +64,4 @@ describe StackDescribeChangeSet do
       expect(stdout).to receive(:puts).with(output)
     end
   end
-
 end
