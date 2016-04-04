@@ -43,7 +43,5 @@ describe AwsHelpers::Actions::AutoScaling::RetrieveCurrentInstances do
       allow(auto_scaling_client).to receive(:describe_auto_scaling_groups).and_return([empty_auto_scaling_group_types_response])
       expect(subject).to eq([])
     end
-
-
   end
 end

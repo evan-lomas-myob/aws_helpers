@@ -14,7 +14,7 @@ describe PollInstanceState do
 
   let(:stdout) { instance_double(IO) }
   let(:max_attempts) { 2 }
-  let(:options) { {stdout: stdout, delay: 0, max_attempts: max_attempts} }
+  let(:options) { { stdout: stdout, delay: 0, max_attempts: max_attempts } }
 
   describe '#execute' do
     before(:each) do
@@ -23,7 +23,7 @@ describe PollInstanceState do
 
     it 'should use the AwsHelpers::Utilities::Polling to poll until the image is in the expect state' do
       expect(aws_ec2_client).to receive(:describe_instances).with(instance_ids: [instance_id]).and_return(
-          create_status_result(is_running), create_status_result(is_stopped)
+        create_status_result(is_running), create_status_result(is_stopped)
       )
       PollInstanceState.new(config, instance_id, is_stopped, options).execute
     end
@@ -44,8 +44,8 @@ describe PollInstanceState do
     state = Aws::EC2::Types::InstanceState.new(name: status)
     instance = Aws::EC2::Types::Instance.new(state: state)
     Aws::EC2::Types::DescribeInstancesResult.new(
-        reservations: [
-            Aws::EC2::Types::Reservation.new(instances: [instance])
-        ])
+      reservations: [
+        Aws::EC2::Types::Reservation.new(instances: [instance])
+      ])
   end
 end

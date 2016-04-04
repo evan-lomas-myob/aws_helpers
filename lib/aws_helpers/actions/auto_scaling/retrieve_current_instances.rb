@@ -10,11 +10,11 @@ module AwsHelpers
         def execute
           client = @config.aws_auto_scaling_client
           response = client.describe_auto_scaling_groups(auto_scaling_group_names: [@auto_scaling_group_name])
-          unless response[0][0].nil?
-            instance_ids = response[0][0].instances.map(&:instance_id)
-            @config.aws_ec2_client.describe_instances({instance_ids: instance_ids}).reservations[0].instances
-          else
+          if response[0][0].nil?
             []
+          else
+            instance_ids = response[0][0].instances.map(&:instance_id)
+            @config.aws_ec2_client.describe_instances(instance_ids: instance_ids).reservations[0].instances
           end
         end
       end

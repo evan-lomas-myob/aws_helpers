@@ -118,5 +118,4 @@ describe AwsHelpers::AutoScaling do
       expect(retrieve_current_instances.execute).to eq(nil)
     end
   end
-
 end

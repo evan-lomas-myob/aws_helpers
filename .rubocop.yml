@@ -2,6 +2,7 @@ AllCops:
   Include:
     - Gemfile
     - Rakefile
+  TargetRubyVersion: 2.2
 
 Metrics/LineLength:
   Enabled: false

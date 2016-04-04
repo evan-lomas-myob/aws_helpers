@@ -84,6 +84,5 @@ module AwsHelpers
     def retrieve_current_instances(auto_scaling_group_name)
       RetrieveCurrentInstances.new(config, auto_scaling_group_name).execute
     end
-
   end
 end

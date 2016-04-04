@@ -12,26 +12,26 @@ describe StackCreateChangeSet do
 
   let(:template_json) do
     {
-        "Resources": {
-            "TestInstance": {
-                "Type": "AWS::EC2::Instance",
-                "Properties": {
-                    "ImageId": "ami-f5210196"
-                }
-            }
+      'Resources': {
+        'TestInstance': {
+          'Type': 'AWS::EC2::Instance',
+          'Properties': {
+            'ImageId': 'ami-f5210196'
+          }
         }
+      }
     }
   end
 
   let(:request) do
     {
-        stack_name: stack_name,
-        template_body: "#{template_json}",
-        change_set_name: change_set_name
+      stack_name: stack_name,
+      template_body: template_json.to_s,
+      change_set_name: change_set_name
     }
   end
 
-  let(:options) { {stdout: stdout} }
+  let(:options) { { stdout: stdout } }
 
   before(:each) do
     allow(stdout).to receive(:puts).with("Creating Change Set #{change_set_name}")

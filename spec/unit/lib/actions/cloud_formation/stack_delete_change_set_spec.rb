@@ -12,12 +12,12 @@ describe StackDeleteChangeSet do
 
   let(:request) do
     {
-        stack_name: stack_name,
-        change_set_name: change_set_name
+      stack_name: stack_name,
+      change_set_name: change_set_name
     }
   end
 
-  let(:options) { {stdout: stdout} }
+  let(:options) { { stdout: stdout } }
 
   before(:each) do
     allow(stdout).to receive(:puts).with("Deleting Change Set #{change_set_name}")

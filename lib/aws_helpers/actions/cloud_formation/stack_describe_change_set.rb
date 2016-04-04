@@ -1,9 +1,7 @@
 module AwsHelpers
   module Actions
     module CloudFormation
-
       class StackDescribeChangeSet
-
         def initialize(config, stack_name, change_set_name, options = {})
           @config = config
           @stack_name = stack_name
@@ -15,13 +13,13 @@ module AwsHelpers
         def execute
           client = @config.aws_cloud_formation_client
           response = client.describe_change_set(
-              {
-                  stack_name: @stack_name,
-                  change_set_name: @change_set_name
-              }
+            stack_name: @stack_name,
+            change_set_name: @change_set_name
           ).changes
 
-          unless response.empty?
+          if response.empty?
+            @stdout.puts("No changes found in Change Set #{@change_set_name}")
+          else
             output = ''
             response.each do |change|
               output << "Action: #{change.resource_change.action}\n"
@@ -33,12 +31,8 @@ module AwsHelpers
               end
             end
             @stdout.puts(output)
-          else
-            @stdout.puts("No changes found in Change Set #{@change_set_name}")
           end
-
         end
-
       end
     end
   end
