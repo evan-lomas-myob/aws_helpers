@@ -42,13 +42,12 @@ describe PollStackStatus do
   describe '#execute' do
     before(:each) do
       allow(AwsHelpers::Utilities::TargetStackValidate).to receive(:new).and_return(target_stack_validate)
-      allow(target_stack_validate).to receive(:execute).with(stack_name_options).and_return(stack_name)
+      allow(target_stack_validate).to receive(:execute).and_return(stack_name)
     end
 
     context 'Polling Completes Successfully' do
       it 'should poll for create stack completed' do
-        allow(stdout).to receive(:puts).with(create_progress_output)
-        allow(stdout).to receive(:puts).with(create_complete_output)
+        allow(stdout).to receive(:puts)
         expect(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_return(describe_stack_progress, describe_stack_complete)
         PollStackStatus.new(config, stack_name_options).execute
       end

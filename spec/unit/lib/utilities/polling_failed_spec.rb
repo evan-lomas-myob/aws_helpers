@@ -21,7 +21,7 @@ describe AwsHelpers::Utilities::FailedStateError do
   end
 
   it 'should return a PollingFailed with message' do
-    allow(AwsHelpers::Utilities::PollingFailed).to receive(:new).with(5)
+    allow(AwsHelpers::Utilities::PollingFailed).to receive(:new)
     expect(AwsHelpers::Utilities::TooManyAttemptsError.new(attempts)).to eq(nil)
   end
 

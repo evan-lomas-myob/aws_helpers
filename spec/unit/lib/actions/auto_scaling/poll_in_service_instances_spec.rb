@@ -38,7 +38,6 @@ describe AwsHelpers::Actions::AutoScaling::PollInServiceInstances do
       first_response = create_response(auto_scaling_group_name, 'InService', 'Pending')
       second_response = create_response(auto_scaling_group_name, 'InService', 'InService')
       allow(auto_scaling_client).to receive(:describe_auto_scaling_groups).and_return(first_response, second_response)
-      allow(stdout).to receive(:puts).with("Auto Scaling Group=#{auto_scaling_group_name}. Desired Capacity=2, InService=1, Pending=1")
       expect(stdout).to receive(:puts).with("Auto Scaling Group=#{auto_scaling_group_name}. Desired Capacity=2, InService=2")
       poll_in_service_instances(config, auto_scaling_group_name, stdout: stdout, max_attempts: 2, delay: 0)
     end

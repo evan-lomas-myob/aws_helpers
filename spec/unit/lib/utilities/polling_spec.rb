@@ -17,7 +17,7 @@ describe AwsHelpers::Utilities::Polling do
   let(:response_bad) { Struct::PollingStatus.new('Bad') }
 
   before(:each) do
-    allow(stdout).to receive(:puts).with(anything)
+    allow(stdout).to receive(:puts)
   end
 
   it 'should return some output on the current status and stop' do

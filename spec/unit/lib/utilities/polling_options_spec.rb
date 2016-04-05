@@ -12,7 +12,7 @@ describe AwsHelpers::Utilities::PollingOptions do
   let(:options) { { max_attempts: max_attempts, delay: delay } }
 
   before(:each) do
-    allow(stdout).to receive(:puts).with(anything)
+    allow(stdout).to receive(:puts)
   end
 
   it 'should return an empty hash' do
