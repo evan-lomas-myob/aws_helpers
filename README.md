@@ -7,7 +7,7 @@ The AWS Helpers gem provides a range of utility classes to manage resources with
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Adds this line to your application's Gemfile:
 
 ```ruby
 gem 'aws_helpers'
@@ -24,6 +24,29 @@ Or install it yourself as:
 ## Usage
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake rspec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+
+## Available Helpers
+
+### {AutoScaling}
+List instances, query desired capacity or update the desired capacity for a particular AutoScaling group
+
+### {CloudFormation}
+Create, modify or deploy CloudFormation stacks, including ChangeSets
+
+### {EC2}
+Create and delete EC2 AMIs and instances, as well as utilities to poll for a particular instance state.
+
+### {ElasticLoadBalancing}
+Query the current number of instances that are 'In Service' for a particular ELB
+
+### {KMS}
+Retrieve ARN information about keys using their alias
+
+### {NAT}
+Create and delete NAT gateways
+
+### {RDS}
+Create and delete RDS snapshots
 
 ## Development
 

@@ -19,10 +19,11 @@ include AwsHelpers::Actions::EC2
 
 module AwsHelpers
   class EC2 < AwsHelpers::Client
-    # Utilities for EC2 creation, deletion and search of Ec2 images
+    # Utilities for EC2 creation, deletion and search of EC2 images
     #
-    # @param options [Hash] Optional Arguments to include when calling the AWS SDK
-    #
+    # @param options [Hash] Optional arguments to include when calling the AWS SDK. These arguments will
+    #   affect all clients used by this helper. See the {http://docs.aws.amazon.com/sdkforruby/api/Aws/EC2/Client.html#initialize-instance_method AWS documentation}
+    #   for a list of EC2-specific client options.
     # @return [AwsHelpers::EC2]
     #
     def initialize(options = {})

@@ -7,7 +7,9 @@ module AwsHelpers
   class ElasticLoadBalancing < AwsHelpers::Client
     # Utilities for ElasticLoadBalancing maintenance
     #
-    # @param options [Hash] Optional Arguments to include when calling the AWS SDK
+    # @param options [Hash] Optional arguments to include when calling the AWS SDK. These arguments will
+    #   affect all clients used by this helper. See the {http://docs.aws.amazon.com/sdkforruby/api/Aws/ElasticLoadBalancing/Client.html#initialize-instance_method AWS documentation}
+    #   for a list of ELB client options.
     #
     # @example Initialise ElasticLoadBalancing Client
     #    client = AwsHelpers::ElasticLoadBalancing.new
@@ -31,7 +33,6 @@ module AwsHelpers
     #
     # @return [Array<String>]
     #
-
     def poll_in_service_instances(load_balancer_name, options = {})
       PollInServiceInstances.new(config, [load_balancer_name], options).execute
     end

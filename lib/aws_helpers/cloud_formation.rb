@@ -14,7 +14,9 @@ module AwsHelpers
   class CloudFormation < AwsHelpers::Client
     # CloudFormation utilities for creating, deleting and modifying templates
     #
-    # @param options [Hash] Optional Arguments to include when calling the AWS SDK
+    # @param options [Hash] Optional arguments to include when calling the AWS SDK. These arguments will
+    #   affect all clients used by this helper. See the {http://docs.aws.amazon.com/sdkforruby/api/Aws/CloudFormation/Client.html#initialize-instance_method AWS documentation}
+    #   for a list of AutoScaling-specific client options.
     #
     # @example Initialise CloudFormation Client
     #    client = AwsHelpers::CloudFormation.new

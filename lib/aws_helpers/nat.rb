@@ -8,7 +8,9 @@ module AwsHelpers
   class NAT < AwsHelpers::Client
     # Utilities for creation and deletion of NAT gateways
     #
-    # @param options [Hash] Optional Arguments to include when calling the AWS SDK
+    # @param options [Hash] Optional arguments to include when calling the AWS SDK. These arguments will
+    #   affect all clients used by this helper. See the {http://docs.aws.amazon.com/sdkforruby/api/Aws/EC2/Client.html#initialize-instance_method AWS documentation}
+    #   for a list of EC2 client options.
     #
     # @example Create a NAT Client
     #   AwsHelpers.NAT.new

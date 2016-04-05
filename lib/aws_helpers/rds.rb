@@ -10,10 +10,14 @@ module AwsHelpers
   class RDS < AwsHelpers::Client
     # Utilities for manipulating RDS instances
     #
-    # @param options [Hash] Optional Arguments to include when calling the AWS SDK
+    # @param options [Hash] Optional arguments to include when calling the AWS SDK. These arguments will
+    #   affect all clients used by this helper. See the {http://docs.aws.amazon.com/sdkforruby/api/Aws/RDS/Client.html#initialize-instance_method AWS documentation}
+    #   for a list of RDS client options.
     #
     # @example Create a RDS Client
     #   AwsHelpers.RDS.new
+    # @example Create a RDS Client with a custom retry limit
+    #   AwsHelpers.RDS.new(retry_limit: 8)
     #
     # @return [AwsHelpers::RDS]
     #

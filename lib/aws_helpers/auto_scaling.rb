@@ -9,7 +9,9 @@ module AwsHelpers
   class AutoScaling < AwsHelpers::Client
     # AutoScaling utilities for retrieving and updating
     #
-    # @param options [Hash] Optional Arguments to include when calling the AWS SDK
+    # @param options [Hash] Optional arguments to include when calling the AWS SDK. These arguments will
+    #   affect all clients used by this helper. See the {http://docs.aws.amazon.com/sdkforruby/api/Aws/AutoScaling/Client.html#initialize-instance_method AWS documentation}
+    #   for a list of AutoScaling-specific client options.
     #
     # @example Initialise AutoScaling Client
     #    client = AwsHelpers::AutoScaling.new

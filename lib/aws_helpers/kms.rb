@@ -5,7 +5,9 @@ module AwsHelpers
   class KMS < AwsHelpers::Client
     # Utilities for KMS
     #
-    # @param options [Hash] Optional Arguments to include when calling the AWS SDK
+    # @param options [Hash] Optional arguments to include when calling the AWS SDK. These arguments will
+    #   affect all clients used by this helper. See the {http://docs.aws.amazon.com/sdkforruby/api/Aws/KMS/Client.html#initialize-instance_method AWS documentation}
+    #   for a list of KMS client options.
     #
     # @example Create a KMS Client
     #   AwsHelpers.KMS.new
