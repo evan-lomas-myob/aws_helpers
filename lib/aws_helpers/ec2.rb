@@ -24,6 +24,7 @@ module AwsHelpers
     # @param options [Hash] Optional arguments to include when calling the AWS SDK. These arguments will
     #   affect all clients used by this helper. See the {http://docs.aws.amazon.com/sdkforruby/api/Aws/EC2/Client.html#initialize-instance_method AWS documentation}
     #   for a list of EC2-specific client options.
+    # @example aws = AwsHelpers::EC2.new
     # @return [AwsHelpers::EC2]
     #
     def initialize(options = {})
@@ -358,6 +359,7 @@ module AwsHelpers
 
     # Returns the decrypted Windows administrator password for a given instance.
     #
+    # @example AwsHelpers::EC2.new.get_windows_password('i-12345678', '~/.ssh/secret.pem')
     # @param instance_id [String] Instance Unique ID
     # @param pem_path [String] Path to PEM-encoded private key file
     # @option options [IO] :stdout ($stdout) Override $stdout when logging output
@@ -378,6 +380,7 @@ module AwsHelpers
     # Returns the VPC ID for a given VPC Name.
     #
     # @param vpc_name [String] VPC Unique Name Tag
+    # @example AwsHelpers::EC2.new.get_windows_password('MyVPC')
     # @option options [IO] :stdout ($stdout) Override $stdout when logging output
     def get_vpc_id_by_name(vpc_name, options = {})
       GetVpcIdByName.new(config, vpc_name, options).id
@@ -385,6 +388,7 @@ module AwsHelpers
 
     # Returns the Group ID for a given Security Group Name.
     #
+    # @example AwsHelpers::EC2.new.get_windows_password('MySecurityGroup')
     # @param security_group_name [String] Security Group Name to Find
     # @option options [IO] :stdout ($stdout) Override $stdout when logging output
     def get_group_id_by_name(security_group_name, options = {})

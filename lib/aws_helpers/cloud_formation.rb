@@ -18,8 +18,7 @@ module AwsHelpers
     #   affect all clients used by this helper. See the {http://docs.aws.amazon.com/sdkforruby/api/Aws/CloudFormation/Client.html#initialize-instance_method AWS documentation}
     #   for a list of AutoScaling-specific client options.
     #
-    # @example Initialise CloudFormation Client
-    #    client = AwsHelpers::CloudFormation.new
+    # @example aws = AwsHelpers::CloudFormation.new
     #
     # @return [AwsHelpers::CloudFormation]
     #
