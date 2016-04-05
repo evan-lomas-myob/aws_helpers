@@ -19,7 +19,7 @@ module AwsHelpers
     #   for a list of AutoScaling-specific client options.
     #
     # @example Initialise CloudFormation Client
-    #    client = AwsHelpers::CloudFormation.new
+    #    aws = AwsHelpers::CloudFormation.new
     #
     # @return [AwsHelpers::CloudFormation]
     #
