@@ -48,6 +48,46 @@ Create and delete NAT gateways
 ### {RDS}
 Create and delete RDS snapshots
 
+## Example
+
+```
+aws = AwsHelpers::EC2.new
+
+# get the id of a named AMI
+ami = aws.images_find_by_tags(Name: 'My AMI').first
+
+# create an instance and wait for it to come online
+instance = aws.instance_create(ami.id)
+aws.instance_start(instance.id)
+aws.poll_instance_healthy(instance.id)
+puts "Instance #{instance.id} is running!"
+
+# stop the instance, wait for it to stop cleanly, and then destroy it
+aws.instance_stop(instance.id)
+aws.poll_instance_stopped(instance.id)
+aws.instance_delete(instance.id)
+```
+
+## Advanced
+
+You can pass options to the helper initialization method to set global options that
+will be used for all internal clients, such as `:retry_attempts`
+
+```
+# set the retry attempts to a ridiculously high number for ALL clients used by this helper (e.g. EC2, S3, RDS etc.)
+aws = AwsHelpers::EC2.new(retry_attempts: 99)
+```
+
+You can also pass custom implementations of individual AWS Clients. These will override the default
+clients used by the helper
+
+```
+aws = AwsHelpers::EC2.new
+aws.configure do |config|
+  config.aws_ec2_client = MyAWSClients::EC2.new
+end
+```
+
 ## Development
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
