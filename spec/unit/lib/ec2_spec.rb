@@ -2,7 +2,7 @@ require 'time'
 require 'aws_helpers/ec2'
 
 describe AwsHelpers::EC2 do
-  let(:config) { instance_double(AwsHelpers::Config, options: { retry_limit: 8 }) }
+  let(:config) { instance_double(AwsHelpers::Config) }
   let(:image_name) { 'ec2_name' }
 
   describe '#initialize' do
@@ -115,7 +115,7 @@ describe AwsHelpers::EC2 do
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(ImagesDeleteByTime).to receive(:new).with(anything, anything, anything, anything).and_return(images_delete_by_time)
+      allow(ImagesDeleteByTime).to receive(:new).and_return(images_delete_by_time)
       allow(images_delete_by_time).to receive(:execute)
     end
 
@@ -138,7 +138,7 @@ describe AwsHelpers::EC2 do
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(ImagesFindByTags).to receive(:new).with(anything, anything).and_return(images_find_by_tags)
+      allow(ImagesFindByTags).to receive(:new).and_return(images_find_by_tags)
       allow(images_find_by_tags).to receive(:execute)
     end
 
@@ -190,13 +190,13 @@ describe AwsHelpers::EC2 do
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
       allow(instance_start).to receive(:execute)
-      allow(InstanceStart).to receive(:new).with(config, image_id, options).and_return(instance_start)
+      allow(InstanceStart).to receive(:new).and_return(instance_start)
     end
 
     subject { AwsHelpers::EC2.new.instance_start(image_id, options) }
 
     it 'should create InstanceStart' do
-      expect(InstanceStart).to receive(:new).with(config, image_id, options).and_return(instance_start)
+      expect(InstanceStart).to receive(:new).and_return(instance_start)
       subject
     end
 
@@ -214,13 +214,13 @@ describe AwsHelpers::EC2 do
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
       allow(instance_stop).to receive(:execute)
-      allow(InstanceStop).to receive(:new).with(config, image_id, options).and_return(instance_stop)
+      allow(InstanceStop).to receive(:new).and_return(instance_stop)
     end
 
     subject { AwsHelpers::EC2.new.instance_stop(image_id, options) }
 
     it 'should create InstanceStop' do
-      expect(InstanceStop).to receive(:new).with(config, image_id, options).and_return(instance_stop)
+      expect(InstanceStop).to receive(:new).and_return(instance_stop)
       subject
     end
 
@@ -236,7 +236,7 @@ describe AwsHelpers::EC2 do
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(InstancesFindByTags).to receive(:new).with(anything, anything).and_return(instances_find_by_tags)
+      allow(InstancesFindByTags).to receive(:new).and_return(instances_find_by_tags)
       allow(instances_find_by_tags).to receive(:execute)
     end
 
@@ -259,7 +259,7 @@ describe AwsHelpers::EC2 do
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(InstancesFindByIds).to receive(:new).with(anything, anything).and_return(instances_find_by_ids)
+      allow(InstancesFindByIds).to receive(:new).and_return(instances_find_by_ids)
       allow(instances_find_by_ids).to receive(:execute)
     end
 
@@ -284,7 +284,7 @@ describe AwsHelpers::EC2 do
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
       allow(instance_terminate).to receive(:execute)
-      allow(InstanceTerminate).to receive(:new).with(config, image_id).and_return(instance_terminate)
+      allow(InstanceTerminate).to receive(:new).and_return(instance_terminate)
     end
 
     subject { AwsHelpers::EC2.new.instance_terminate(image_id) }
