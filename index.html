@@ -1,48 +1,47 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <title>Aws helpers by MYOB-Technology</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <title>Aws helpers by MYOB-Technology</title>
   </head>
-
   <body>
-    <div id="container">
-      <div class="inner">
+    <div class="wrapper">
+      <header>
+        <h1>Aws helpers</h1>
+        <p>AWS Helper utilities</p>
 
-        <header>
-          <h1>Aws helpers</h1>
-          <h2>AWS Helper utilities</h2>
-        </header>
+        <p class="view"><a href="https://github.com/MYOB-Technology/aws_helpers">View the Project on GitHub <small>MYOB-Technology/aws_helpers</small></a></p>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/MYOB-Technology/aws_helpers/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/MYOB-Technology/aws_helpers/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/MYOB-Technology/aws_helpers" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
 
-        <hr>
-
-        <section id="main_content">
-          <h1>
+        <ul>
+          <li><a href="https://github.com/MYOB-Technology/aws_helpers/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/MYOB-Technology/aws_helpers/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/MYOB-Technology/aws_helpers">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
 <a id="awshelpers" class="anchor" href="#awshelpers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>AwsHelpers</h1>
+
+<p><a href="https://travis-ci.org/MYOB-Technology/aws_helpers"><img src="https://travis-ci.org/MYOB-Technology/aws_helpers.png?branch=rewrite" alt="Build Status"></a>
+<a href="https://coveralls.io/github/MYOB-Technology/aws_helpers?branch=rewrite"><img src="https://coveralls.io/repos/MYOB-Technology/aws_helpers/badge.svg?branch=rewrite&amp;service=github" alt="Coverage Status"></a></p>
 
 <p>The AWS Helpers gem provides a range of utility classes to manage resources within AWS.</p>
 
 <h2>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
 
-<p>Add this line to your application's Gemfile:</p>
+<p>Adds this line to your application's Gemfile:</p>
 
-<pre><code>gem 'aws_helpers'
-</code></pre>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">gem</span> <span class="pl-s"><span class="pl-pds">'</span>aws_helpers<span class="pl-pds">'</span></span></pre></div>
 
 <p>And then execute:</p>
 
@@ -60,6 +59,83 @@
 <p>After checking out the repo, run <code>bin/setup</code> to install dependencies. Then, run <code>rake rspec</code> to run the tests. You can also run <code>bin/console</code> for an interactive prompt that will allow you to experiment.</p>
 
 <h2>
+<a id="available-helpers" class="anchor" href="#available-helpers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Available Helpers</h2>
+
+<h3>
+<a id="autoscaling" class="anchor" href="#autoscaling" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>{AutoScaling}</h3>
+
+<p>List instances, query desired capacity or update the desired capacity for a particular AutoScaling group</p>
+
+<h3>
+<a id="cloudformation" class="anchor" href="#cloudformation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>{CloudFormation}</h3>
+
+<p>Create, modify or deploy CloudFormation stacks, including ChangeSets</p>
+
+<h3>
+<a id="ec2" class="anchor" href="#ec2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>{EC2}</h3>
+
+<p>Create and delete EC2 AMIs and instances, as well as utilities to poll for a particular instance state.</p>
+
+<h3>
+<a id="elasticloadbalancing" class="anchor" href="#elasticloadbalancing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>{ElasticLoadBalancing}</h3>
+
+<p>Query the current number of instances that are 'In Service' for a particular ELB</p>
+
+<h3>
+<a id="kms" class="anchor" href="#kms" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>{KMS}</h3>
+
+<p>Retrieve ARN information about keys using their alias</p>
+
+<h3>
+<a id="nat" class="anchor" href="#nat" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>{NAT}</h3>
+
+<p>Create and delete NAT gateways</p>
+
+<h3>
+<a id="rds" class="anchor" href="#rds" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>{RDS}</h3>
+
+<p>Create and delete RDS snapshots</p>
+
+<h2>
+<a id="example" class="anchor" href="#example" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Example</h2>
+
+<pre><code>aws = AwsHelpers::EC2.new
+
+# get the id of a named AMI
+ami = aws.images_find_by_tags(Name: 'My AMI').first
+
+# create an instance and wait for it to come online
+instance = aws.instance_create(ami.id)
+aws.instance_start(instance.id)
+aws.poll_instance_healthy(instance.id)
+puts "Instance #{instance.id} is running!"
+
+# stop the instance, wait for it to stop cleanly, and then destroy it
+aws.instance_stop(instance.id)
+aws.poll_instance_stopped(instance.id)
+aws.instance_delete(instance.id)
+</code></pre>
+
+<h2>
+<a id="advanced" class="anchor" href="#advanced" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Advanced</h2>
+
+<p>You can pass options to the helper initialization method to set global options that
+will be used for all internal clients, such as <code>:retry_attempts</code></p>
+
+<pre><code># set the retry attempts to a ridiculously high number for ALL clients used by this helper (e.g. EC2, S3, RDS etc.)
+aws = AwsHelpers::EC2.new(retry_attempts: 99)
+</code></pre>
+
+<p>You can also pass custom implementations of individual AWS Clients. These will override the default
+clients used by the helper</p>
+
+<pre><code>aws = AwsHelpers::EC2.new
+aws.configure do |config|
+  config.aws_ec2_client = MyAWSClients::EC2.new
+end
+</code></pre>
+
+<h2>
 <a id="development" class="anchor" href="#development" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Development</h2>
 
 <p>To install this gem onto your local machine, run <code>bundle exec rake install</code>. To release a new version, update the version number in <code>version.rb</code>, and then run <code>bundle exec rake release</code>, which will create a git tag for the version, push git commits and tags, and push the <code>.gem</code> file to <a href="https://rubygems.org">rubygems.org</a>.</p>
@@ -68,15 +144,18 @@
 <a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributing</h2>
 
 <p>Bug reports and pull requests are welcome on GitHub at <a href="https://github.com/MYOB-Technology/aws_helpers">https://github.com/MYOB-Technology/aws_helpers</a>. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the <a href="http://contributor-covenant.org">Contributor Covenant</a> code of conduct.</p>
-        </section>
 
-        <footer>
-          Aws helpers is maintained by <a href="https://github.com/MYOB-Technology">MYOB-Technology</a><br>
-          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
 
-        
-      </div>
+<p>The gem is available as open source under the terms of the <a href="http://opensource.org/licenses/MIT">MIT License</a>.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/MYOB-Technology">MYOB-Technology</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
     </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
   </body>
 </html>
