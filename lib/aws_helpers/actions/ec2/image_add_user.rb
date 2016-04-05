@@ -6,7 +6,7 @@ module AwsHelpers
       class ImageAddUser
         def initialize(config, image_id, user_id, options = {})
           @config = config
-          @client = @config.aws_ec2_client
+          @client = config.aws_ec2_client
           @image_id = image_id
           @user_id = user_id
           @stdout = options[:stdout] || $stdout

@@ -1,7 +1,7 @@
 require 'aws_helpers/client'
 
 describe AwsHelpers::Client do
-  let(:options) { { stub_responses: true, endpoint: 'http://endpoint' } }
+  let(:options) { { endpoint: 'http://endpoint' } }
 
   it '#initialize' do
     expect(AwsHelpers::Client).to receive(:new).with(options)

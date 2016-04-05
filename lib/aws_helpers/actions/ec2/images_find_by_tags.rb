@@ -3,13 +3,12 @@ module AwsHelpers
     module EC2
       class ImagesFindByTags
         def initialize(config, tags)
-          @config = config
+          @client = config.aws_ec2_client
           @tags = tags
         end
 
         def execute
-          client = @config.aws_ec2_client
-          client.describe_images(filters: tag_filters).images
+          @client.describe_images(filters: tag_filters).images
         end
 
         private

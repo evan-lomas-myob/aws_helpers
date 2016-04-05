@@ -8,7 +8,7 @@ module AwsHelpers
         include AwsHelpers::Utilities::Polling
 
         def initialize(config, instance_id, pem_path, options)
-          @config = config
+          @client = config.aws_ec2_client
           @instance_id = instance_id
           @pem_path = pem_path
           @stdout = options[:stdout] || $stdout
@@ -17,10 +17,9 @@ module AwsHelpers
         end
 
         def password
-          client = @config ? @config.aws_ec2_client : Aws::EC2::Client.new
           encrypted_password = ''
           poll(@delay, @max_attempts) do
-            encrypted_password = client.get_password_data(instance_id: @instance_id).password_data
+            encrypted_password = @client.get_password_data(instance_id: @instance_id).password_data
             !encrypted_password.empty?
           end
           private_key = OpenSSL::PKey::RSA.new(File.read(@pem_path))

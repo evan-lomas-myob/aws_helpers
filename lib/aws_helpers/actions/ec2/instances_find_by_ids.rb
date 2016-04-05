@@ -3,20 +3,13 @@ module AwsHelpers
     module EC2
       class InstancesFindByIds
         def initialize(config, ids)
-          @config = config
+          @client = config.aws_ec2_client
           @ids = ids
         end
 
         def execute
-          client = @config.aws_ec2_client
-          response = client.describe_instances(instance_ids: @ids).reservations[0].instances
-
-          instances = []
-          response.each do |instance|
-            instances << instance if instance.state.name == 'running'
-          end
-
-          instances
+          response = @client.describe_instances(instance_ids: @ids).reservations[0].instances
+          response.select{|instance| instance.state.name == 'running'}
         end
       end
     end

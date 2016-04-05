@@ -18,9 +18,6 @@ describe AwsHelpers::NAT do
   describe '#gateway_create' do
     let(:gateway_create) { instance_double(GatewayCreate) }
 
-    # let(:instance_id) { 'ec2_id' }
-    # let(:tags) { %w('tag1', 'tag2') }
-
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
       allow(GatewayCreate).to receive(:new).and_return(gateway_create)

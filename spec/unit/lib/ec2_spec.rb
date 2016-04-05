@@ -89,7 +89,6 @@ describe AwsHelpers::EC2 do
 
   describe '#image_add_user' do
     let(:image_add_user) { instance_double(ImageAddUser) }
-
     let(:image_id) { 'ami_id' }
     let(:user_id) { 'aws_user' }
 
@@ -112,7 +111,6 @@ describe AwsHelpers::EC2 do
 
   describe '#images_delete_by_time' do
     let(:images_delete_by_time) { instance_double(ImagesDeleteByTime) }
-
     let(:time) { Time.parse('01-Jan-2015') }
 
     before(:each) do
@@ -187,7 +185,6 @@ describe AwsHelpers::EC2 do
   describe '#instance_start' do
     let(:instance_start) { instance_double(InstanceStart) }
     let(:image_id) { 'image_id' }
-
     let(:options) { {} } # just use defaults
 
     before(:each) do
@@ -212,7 +209,6 @@ describe AwsHelpers::EC2 do
   describe '#instance_stop' do
     let(:instance_stop) { instance_double(InstanceStop) }
     let(:image_id) { 'image_id' }
-
     let(:options) { {} } # just use defaults
 
     before(:each) do
@@ -283,7 +279,6 @@ describe AwsHelpers::EC2 do
   describe '#instance_terminate' do
     let(:instance_terminate) { instance_double(InstanceTerminate) }
     let(:image_id) { 'image_id' }
-
     let(:options) { {} } # just use defaults
 
     before(:each) do
@@ -308,7 +303,6 @@ describe AwsHelpers::EC2 do
   describe '#poll_instance_healthy' do
     let(:poll_inst_healthy) { instance_double(PollInstanceHealthy) }
     let(:image_id) { 'image_id' }
-
     let(:options) { {} } # just use defaults
 
     before(:each) do
@@ -333,7 +327,6 @@ describe AwsHelpers::EC2 do
   describe '#poll_instance_stopped' do
     let(:poll_inst_stopped) { instance_double(PollInstanceState) }
     let(:image_id) { 'image_id' }
-
     let(:options) { {} } # just use defaults
 
     before(:each) do
@@ -359,7 +352,6 @@ describe AwsHelpers::EC2 do
     let(:poll_inst_state) { instance_double(PollInstanceState) }
     let(:state) { 'running' }
     let(:image_id) { 'image_id' }
-
     let(:options) { {} } # just use defaults
 
     before(:each) do
@@ -410,7 +402,6 @@ describe AwsHelpers::EC2 do
     let(:get_vpc_by_name) { instance_double(GetVpcIdByName) }
     let(:vpc_name) { 'VPC Name' }
     let(:vpc_id) { 'VPC ID' }
-
     let(:options) { {} } # just use defaults
 
     before(:each) do
@@ -436,7 +427,6 @@ describe AwsHelpers::EC2 do
     let(:get_group_by_name) { instance_double(GetSecurityGroupIdByName) }
     let(:sg_name) { 'Group Name' }
     let(:sg_id) { 'Group ID' }
-
     let(:options) { {} } # just use defaults
 
     before(:each) do

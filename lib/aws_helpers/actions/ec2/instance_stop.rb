@@ -6,6 +6,7 @@ module AwsHelpers
       class InstanceStop
         def initialize(config, instance_id, options)
           @config = config
+          @client = config.aws_ec2_client
           @instance_id = instance_id
           @stdout = options[:stdout] || $stdout
           @instance_stopped_options = create_instance_stopped_options(@stdout, options[:poll_stopped])
@@ -13,8 +14,7 @@ module AwsHelpers
 
         def execute
           @stdout.puts("Stopping #{@instance_id}")
-          client = @config.aws_ec2_client
-          client.stop_instances(instance_ids: [@instance_id])
+          @client.stop_instances(instance_ids: [@instance_id])
           AwsHelpers::Actions::EC2::PollInstanceState.new(@config, @instance_id, 'stopped', @instance_stopped_options).execute
         end
 

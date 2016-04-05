@@ -6,6 +6,7 @@ module AwsHelpers
       class InstanceStart
         def initialize(config, instance_id, options)
           @config = config
+          @client = config.aws_ec2_client
           @instance_id = instance_id
           @stdout = options[:stdout] || $stdout
           @instance_healthy_options = instance_healthy_options(@stdout, options[:poll_running])
@@ -13,8 +14,7 @@ module AwsHelpers
 
         def execute
           @stdout.puts("Starting #{@instance_id}")
-          client = @config.aws_ec2_client
-          client.start_instances(instance_ids: [@instance_id])
+          @client.start_instances(instance_ids: [@instance_id])
           AwsHelpers::Actions::EC2::PollInstanceHealthy.new(@config, @instance_id, @instance_healthy_options).execute
         end
 
