@@ -5,14 +5,13 @@ module AwsHelpers
     module EC2
       class GetVpcIdByName
         def initialize(config, vpc_name, options)
-          @config = config
+          @client = config.aws_ec2_client
           @vpc_name = vpc_name
           @stdout = options[:stdout] || $stdout
         end
 
         def id
-          client = @config ? @config.aws_ec2_client : Aws::EC2::Client.new
-          response = client.describe_vpcs(
+          response = @client.describe_vpcs(
             filters: [
               { name: 'tag:Name', values: [@vpc_name] }
             ])

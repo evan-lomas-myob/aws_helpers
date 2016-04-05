@@ -5,14 +5,13 @@ module AwsHelpers
     module EC2
       class GetSecurityGroupIdByName
         def initialize(config, security_group_name, options)
-          @config = config
+          @client = config.aws_ec2_client
           @security_group_name = security_group_name
           @stdout = options[:stdout] || $stdout
         end
 
         def id
-          client = @config ? @config.aws_ec2_client : Aws::EC2::Client.new
-          response = client.describe_security_groups(
+          response = @client.describe_security_groups(
             filters:
               [
                 { name: 'group-name', values: [@security_group_name] }

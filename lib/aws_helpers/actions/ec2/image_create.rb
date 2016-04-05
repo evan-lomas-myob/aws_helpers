@@ -12,7 +12,7 @@ module AwsHelpers
 
         def initialize(config, instance_id, name, options = {})
           @config = config
-          @client = @config.aws_ec2_client
+          @client = config.aws_ec2_client
           @instance_id = instance_id
           @name = name
           @now = options[:now] || Time.now

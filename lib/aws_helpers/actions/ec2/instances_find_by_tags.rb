@@ -3,21 +3,13 @@ module AwsHelpers
     module EC2
       class InstancesFindByTags
         def initialize(config, tags)
-          @config = config
+          @client = config.aws_ec2_client
           @tags = tags
         end
 
         def execute
-          client = @config.aws_ec2_client
-
-          response = client.describe_instances(filters: tag_filters).reservations[0].instances
-
-          instances = []
-          response.each do |instance|
-            instances << instance if instance.state.name == 'running'
-          end
-
-          instances
+          response = @client.describe_instances(filters: tag_filters).reservations[0].instances
+          response.select { |instance| instance.state.name == 'running' }
         end
 
         private
