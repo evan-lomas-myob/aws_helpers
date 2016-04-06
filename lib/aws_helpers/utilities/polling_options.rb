@@ -1,6 +1,9 @@
 module AwsHelpers
   module Utilities
     module PollingOptions
+
+      private
+
       def create_options(stdout, polling_options)
         {}.tap { |options|
           options[:stdout] = stdout if stdout

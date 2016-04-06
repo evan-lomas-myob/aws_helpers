@@ -1,18 +1,21 @@
 require 'aws_helpers/actions/rds/poll_instance_available'
 require 'aws_helpers/actions/rds/snapshot_construct_name'
 require 'aws_helpers/actions/rds/poll_snapshot_available'
+require 'aws_helpers/utilities/polling_options'
 
 module AwsHelpers
   module Actions
     module RDS
       class SnapshotCreate
+        include AwsHelpers::Utilities::PollingOptions
+
         def initialize(config, db_instance_identifier, options = {})
           @config = config
           @db_instance_identifier = db_instance_identifier
           stdout = options[:stdout]
           @construct_name_options = create_construct_name_options(options[:use_name])
-          @poll_instance_options = create_polling_options(stdout, options[:instance_polling])
-          @poll_snapshot_options = create_polling_options(stdout, options[:snapshot_polling])
+          @poll_instance_options = create_options(stdout, options[:instance_polling])
+          @poll_snapshot_options = create_options(stdout, options[:snapshot_polling])
         end
 
         def execute
@@ -35,17 +38,6 @@ module AwsHelpers
           options
         end
 
-        def create_polling_options(stdout, polling)
-          options = {}
-          options[:stdout] = stdout if stdout
-          if polling
-            max_attempts = polling[:max_attempts]
-            delay = polling[:delay]
-            options[:max_attempts] = max_attempts if max_attempts
-            options[:delay] = delay if delay
-          end
-          options
-        end
       end
     end
   end
