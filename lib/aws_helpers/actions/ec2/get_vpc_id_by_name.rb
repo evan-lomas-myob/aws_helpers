@@ -4,7 +4,7 @@ module AwsHelpers
   module Actions
     module EC2
       class GetVpcIdByName
-        def initialize(config, vpc_name, options)
+        def initialize(config, vpc_name, options = {})
           @client = config.aws_ec2_client
           @vpc_name = vpc_name
           @stdout = options[:stdout] || $stdout
