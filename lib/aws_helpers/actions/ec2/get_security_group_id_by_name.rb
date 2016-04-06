@@ -4,7 +4,7 @@ module AwsHelpers
   module Actions
     module EC2
       class GetSecurityGroupIdByName
-        def initialize(config, security_group_name, options)
+        def initialize(config, security_group_name, options = {})
           @client = config.aws_ec2_client
           @security_group_name = security_group_name
           @stdout = options[:stdout] || $stdout
