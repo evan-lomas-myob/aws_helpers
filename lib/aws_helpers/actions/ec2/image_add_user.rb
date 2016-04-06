@@ -22,11 +22,7 @@ module AwsHelpers
 
         def create_launch_permission(user_id)
           {
-            add: [
-              {
-                user_id: user_id
-              }
-            ]
+            add: [{ user_id: user_id }]
           }
         end
       end
