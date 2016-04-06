@@ -7,9 +7,19 @@ module AwsHelpers
         end
 
         def execute
-          event_list = %w( DELETE_COMPLETE )
-          event_list.include?(@event.resource_status) && @event.resource_type == 'AWS::CloudFormation::Stack'
+          delete_complete? && stack_resource?
         end
+
+        private
+
+        def delete_complete?
+          ['DELETE_COMPLETE'].include?(@event.resource_status)
+        end
+
+        def stack_resource?
+          @event.resource_type == 'AWS::CloudFormation::Stack'
+        end
+
       end
     end
   end

@@ -11,6 +11,7 @@ describe AwsHelpers::Actions::CloudFormation::PollStackStatus do
   let(:target_stack_validate) { instance_double(AwsHelpers::Utilities::TargetStackValidate) }
 
   describe '#execute' do
+
     before(:each) do
       allow(AwsHelpers::Utilities::TargetStackValidate).to receive(:new).and_return(target_stack_validate)
       allow(stdout).to receive(:puts)
@@ -61,9 +62,8 @@ describe AwsHelpers::Actions::CloudFormation::PollStackStatus do
       end
 
       it 'should write to stdout the status of the stack' do
-        status = 'CREATE_COMPLETE'
-        allow(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_return(create_stack_ouput(stack_name, status))
-        expect(stdout).to receive(:puts).with("Stack - #{stack_name} status #{status}")
+         allow(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_return(create_stack_ouput(stack_name, 'CREATE_COMPLETE'))
+        expect(stdout).to receive(:puts).with("Stack - #{stack_name} status CREATE_COMPLETE")
         subject
       end
 
