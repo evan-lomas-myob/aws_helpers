@@ -16,7 +16,7 @@ describe AwsHelpers::Actions::EC2::SnapshotsDelete do
 
     it 'should call Aws::EC2::Client #delete_snapshot with the correct parameters' do
       expect(aws_ec2_client).to receive(:delete_snapshot).with(snapshot_id: snapshot_id)
-      AwsHelpers::Actions::EC2::SnapshotsDelete.new(config, [snapshot_id], stdout: stdout).execute
+      AwsHelpers::Actions::EC2::SnapshotsDelete.new(config, [snapshot_id]).execute
     end
 
     it 'should call stdout #puts with a description of the snapshot being deleted' do
