@@ -16,7 +16,7 @@ module AwsHelpers
     #
     # @param options [Hash] Optional arguments to include when calling the AWS SDK. These arguments will
     #   affect all clients used by this helper. See the {http://docs.aws.amazon.com/sdkforruby/api/Aws/CloudFormation/Client.html#initialize-instance_method AWS documentation}
-    #   for a list of AutoScaling-specific client options.
+    #   for a list of CloudFormation-specific client options.
     #
     # @example Initialise CloudFormation Client
     #    aws = AwsHelpers::CloudFormation.new
@@ -35,8 +35,9 @@ module AwsHelpers
     # @param [Hash] options Optional parameters that can be overridden.
     # @option options [Array] :parameters Parameters to include in template e.g. [{ parameter_key: 'key', parameter_value: 'value' }]
     # @option options [Array] :capabilities Capabilities required when provisioning the stack e.g ['CAPABILITY_IAM']
-    # @option options [String] :bucket_name Upload to an S3 bucket before provisioning
-    # @option options [Boolean] :bucket_encrypt server side encryption on the upload bucket, 'AES256'
+    # @option options [String] :bucket_name If the template body exceeds 51200 bytes in size,
+    #   you must specify an S3 bucket to upload the template to first
+    # @option options [Boolean] :bucket_encrypt Encryption type to use on the upload bucket; defaults to 'AES256'
     # @option options [IO] :stdout Override $stdout when logging output
     # @option options [Hash{Symbol => Integer}] :polling stack polling attempts and delay
     #
@@ -132,7 +133,7 @@ module AwsHelpers
     # @example Return the stack parameters
     #  AwsHelpers::CloudFormation.new.stack_parameters('TestStackName')
     #
-    # @return [Array<struct Aws::CloudFormation::Types::Parameter>] The list of parameters defined for the Stack
+    # @return [Array[struct]] Array[{http://docs.aws.amazon.com/sdkforruby/api/Aws/CloudFormation/Types/Parameter.html Parameter}]
     #
     def stack_parameters(stack_name)
       AwsHelpers::Actions::CloudFormation::StackInformation.new(config, stack_name, 'parameters').execute
@@ -145,7 +146,7 @@ module AwsHelpers
     # @example Return the stack outputs
     #  AwsHelpers::CloudFormation.new.stack_outputs('TestStackName')
     #
-    # @return [Array<struct Aws::CloudFormation::Types::Output>] The list of outputs defined for the Stack
+    # @return [Array[struct]] Array[{http://docs.aws.amazon.com/sdkforruby/api/Aws/CloudFormation/Types/Output.html Output}]
     #
     def stack_outputs(stack_name)
       AwsHelpers::Actions::CloudFormation::StackInformation.new(config, stack_name, 'outputs').execute
@@ -168,24 +169,24 @@ module AwsHelpers
     #
     # @param stack_name [String] Name given to the Stack
     #
-    # @example Return a list of resources (for a stack to be created, there must at least be 1)
+    # @example Return an array of resources (for a stack to be created, there must at least be 1)
     #  AwsHelpers::CloudFormation.new.stack_resources('TestStackName')
     #
-    # @return [Array<struct Aws::CloudFormation::Types::StackResource>] The list of resources defined for the Stack
+    # @return [Array[struct]] Array[{http://docs.aws.amazon.com/sdkforruby/api/Aws/CloudFormation/Types/StackResource.html StackResource}]
     #
     def stack_resources(stack_name)
       AwsHelpers::Actions::CloudFormation::StackResources.new(config, stack_name).execute
     end
 
-    # Return a matching resource associated with the stack
+    # Return a resource associated with the stack identified by name
     #
-    # @param stack_name [String] Name given to the Stack
-    # @param resource_id [String] The Logical Resource Identifier
+    # @param stack_name [String] Name of the stack
+    # @param resource_id [String] The logical name of the resource as specified in the stack template.
     #
-    # @example Return a name resource
+    # @example Return a named resource
     #  AwsHelpers::CloudFormation.new.stack_named_resource('TestStackName','TestInstance')
     #
-    # @return [struct Aws::CloudFormation::Types::StackResourceDetail] The named resource
+    # @return [struct] Struct of type {http://docs.aws.amazon.com/sdkforruby/api/Aws/CloudFormation/Types/StackResourceDetail.html StackResourceDetail}
     #
     def stack_named_resource(stack_name, resource_id)
       AwsHelpers::Actions::CloudFormation::StackNamedResource.new(config, stack_name, resource_id).execute
@@ -223,7 +224,7 @@ module AwsHelpers
     #     }'
     #   )
     #
-    # @return [struct Aws::CloudFormation::Types::CreateChangeSetOutput] The named resource
+    # @return [struct] Struct of type {http://docs.aws.amazon.com/sdkforruby/api/Aws/CloudFormation/Types/CreateChangeSetOutput.html CreateChangeSetOutput}
     #
     def stack_create_change_set(stack_name, change_set_name, template_json)
       AwsHelpers::Actions::CloudFormation::StackCreateChangeSet.new(config, stack_name, change_set_name, template_json).execute
@@ -238,7 +239,7 @@ module AwsHelpers
     # @example Return the change set details
     #  AwsHelpers::CloudFormation.new.stack_describe_change_set('TestStackName','TestChangeSet')
     #
-    # @return [struct Aws::CloudFormation::Types::DescribeChangeSetOutput] The change set details
+    # @return [struct] Struct of type {http://docs.aws.amazon.com/sdkforruby/api/Aws/CloudFormation/Types/DescribeChangeSetOutput.html DescribeChangeSetOutput}
     #
     def stack_describe_change_set(stack_name, change_set_name, options = {})
       AwsHelpers::Actions::CloudFormation::StackDescribeChangeSet.new(config, stack_name, change_set_name, options).execute

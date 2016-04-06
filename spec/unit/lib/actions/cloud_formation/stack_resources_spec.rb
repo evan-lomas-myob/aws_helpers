@@ -26,6 +26,6 @@ describe StackResources do
 
   it 'should return stack resources' do
     allow(cloudformation_client).to receive(:describe_stack_resources).with(stack_name: stack_name).and_return(response)
-    expect(StackResources.new(config, stack_name).execute).to eq(stack_resources)
+    expect(StackResources.new(config, stack_name).execute).to eq([stack_resources])
   end
 end

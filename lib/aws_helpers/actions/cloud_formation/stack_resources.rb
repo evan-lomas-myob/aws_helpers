@@ -9,7 +9,7 @@ module AwsHelpers
 
         def execute
           client = @config.aws_cloud_formation_client
-          client.describe_stack_resources(stack_name: @stack_name).stack_resources.first
+          client.describe_stack_resources(stack_name: @stack_name).stack_resources
         end
       end
     end

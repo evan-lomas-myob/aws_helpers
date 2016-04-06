@@ -80,7 +80,7 @@ module AwsHelpers
       ImageDelete.new(config, image_id, options).execute
     end
 
-    # Modifies the launch_permission of the specified AMI to add a user id
+    # Share an AMI with a User ID
     #
     # @param image_id [String] the id of the AMI
     # @param user_id [String] the id of the User to share the image with
@@ -158,9 +158,9 @@ module AwsHelpers
     # @param image_id [String] Name of the AMI to use
     # @param [Hash] options Optional parameters that can be overridden.
     # @option options [String] :instance_type (t2.micro) override the type of instance to create
-    # @option options [Integer] :min_count minimum number of instances to create
-    # @option options [Integer] :max_count maximum number of instance to create
-    # @option options [Boolean] :monitoring detailed monitoring enabled
+    # @option options [Integer] :min_count (1) minimum number of instances to create
+    # @option options [Integer] :max_count (1) maximum number of instance to create
+    # @option options [Boolean] :monitoring (false) detailed monitoring enabled
     # @option options [String] :app_name (no-name-supplied) tag Name of the instance
     # @option options [String] :build_number (nil) build number associated with the instance
     # @option options [IO] :stdout ($stdout) override $stdout when logging output

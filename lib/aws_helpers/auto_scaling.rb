@@ -24,12 +24,12 @@ module AwsHelpers
 
     # Return the desired capacity for an AutoScaling Group
     #
-    # @param auto_scaling_group_name [String] The group name of the Auto scaling client
+    # @param auto_scaling_group_name [String] The AutoScaling group name
     #
     # @example Retrieve the desired capacity
-    #    desired_capacity = AwsHelpers::AutoScaling.new.retrieve_desired_capacity('Auto-Scaling-Group')
+    #    desired_capacity = AwsHelpers::AutoScaling.new.retrieve_desired_capacity('MyASG')
     #
-    # @return [Integer, nil] The desired capacity of an auto scaling group
+    # @return [Integer] The desired capacity of the auto scaling group
     #
     def retrieve_desired_capacity(auto_scaling_group_name)
       RetrieveDesiredCapacity.new(config, auto_scaling_group_name).execute
@@ -76,12 +76,12 @@ module AwsHelpers
 
     # Gets the instances belonging to an auto scaling group.
     #
-    # @param auto_scaling_group_name [String] The group name of the Auto scaling client
+    # @param auto_scaling_group_name [String] The AutoScaling group name
     #
-    # @example Change the desired capacity
-    #   AwsHelpers::AutoScaling.new.retrieve_current_instances('Auto-Scaling-Group')
+    # @example List the instances associated with an ASG
+    #   AwsHelpers::AutoScaling.new.retrieve_current_instances('MyASG')
     #
-    # @return [Array<Aws::EC2::Types::Instance>] Load Balancers configured for this Auto Scaling Group
+    # @return [Array<Aws::EC2::Types::Instance>] Array of {http://docs.aws.amazon.com/sdkforruby/api/Aws/EC2/Instance.html Instance}
     #
     def retrieve_current_instances(auto_scaling_group_name)
       RetrieveCurrentInstances.new(config, auto_scaling_group_name).execute
