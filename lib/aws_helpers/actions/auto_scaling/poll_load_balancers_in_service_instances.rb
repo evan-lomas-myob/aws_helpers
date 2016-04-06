@@ -1,5 +1,3 @@
-require 'aws-sdk-core'
-
 require 'aws_helpers/actions/elastic_load_balancing/poll_in_service_instances'
 
 module AwsHelpers

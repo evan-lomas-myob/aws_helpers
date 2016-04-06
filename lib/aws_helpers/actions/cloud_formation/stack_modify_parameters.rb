@@ -1,16 +1,20 @@
 require_relative 'stack_parameter_update_builder'
 require_relative 'stack_progress'
+require 'aws_helpers/utilities/polling_options'
+
 
 module AwsHelpers
   module Actions
     module CloudFormation
       class StackModifyParameters
+        include AwsHelpers::Utilities::PollingOptions
+
         def initialize(config, stack_name, parameters, options = {})
           @config = config
           @stack_name = stack_name
           @parameters = parameters
           @stdout = options[:stdout] || $stdout
-          @options = create_options(@stdout, options[:polling])
+          @options = create_stack_options(@stdout, options[:polling])
         end
 
         def execute
@@ -30,17 +34,9 @@ module AwsHelpers
 
         private
 
-        def create_options(stdout, polling)
-          options = {}
-          options[:stack_name] = @stack_name
-          options[:stdout] = stdout if stdout
-          if polling
-            max_attempts = polling[:max_attempts]
-            delay = polling[:delay]
-            options[:max_attempts] = max_attempts if max_attempts
-            options[:delay] = delay if delay
-          end
-          options
+        def create_stack_options(stdout, polling)
+            options = create_options(stdout, polling)
+            options.tap{|options| options[:stack_name] = @stack_name}
         end
       end
     end

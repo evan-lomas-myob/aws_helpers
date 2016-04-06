@@ -27,8 +27,8 @@ module AwsHelpers
           begin
             private_key.private_decrypt(decoded)
           rescue OpenSSL::PKey::RSAError => error
-            s = 'Hint: Check you are using the correct pem.file vs aws-access-key-id combination'
-            @stdout.puts s
+            hint = 'Hint: Check you are using the correct pem.file vs aws-access-key-id combination'
+            @stdout.puts hint
             raise error
           end
         end

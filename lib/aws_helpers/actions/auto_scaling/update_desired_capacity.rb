@@ -1,10 +1,14 @@
 require 'aws_helpers/actions/auto_scaling/poll_in_service_instances'
 require 'aws_helpers/actions/auto_scaling/poll_load_balancers_in_service_instances'
+require 'aws_helpers/utilities/polling_options'
+
 
 module AwsHelpers
   module Actions
     module AutoScaling
       class UpdateDesiredCapacity
+        include AwsHelpers::Utilities::PollingOptions
+
         def initialize(config, auto_scaling_group_name, desired_capacity, options = {})
           @config = config
           @auto_scaling_group_name = auto_scaling_group_name
@@ -21,19 +25,6 @@ module AwsHelpers
           AwsHelpers::Actions::AutoScaling::PollLoadBalancersInServiceInstances.new(@config, @auto_scaling_group_name, @poll_load_balancers_in_service_instances_options).execute
         end
 
-        private
-
-        def create_options(stdout, polling)
-          options = {}
-          options[:stdout] = stdout if stdout
-          if polling
-            max_attempts = polling[:max_attempts]
-            delay = polling[:delay]
-            options[:max_attempts] = max_attempts if max_attempts
-            options[:delay] = delay if delay
-          end
-          options
-        end
       end
     end
   end
