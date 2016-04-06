@@ -7,10 +7,11 @@ Gem::Specification.new do |spec|
   spec.name          = 'aws_helpers'
   spec.version       = AwsHelpers::VERSION
   spec.authors       = ['gstib']
+  spec.email         = ['aws.helpers@gmail.com']
 
-  spec.summary       = %q{AWS Helpers to perform common functionality.}
-  spec.description   = %q{AWS Helpers to perform common functionality}
-  spec.homepage      = %q{https://github.com/MYOB-Technology/aws_helpers}
+  spec.summary       = 'AWS Helpers to perform common functionality.'
+  spec.description   = 'AWS Helpers to perform common functionality'
+  spec.homepage      = 'https://github.com/MYOB-Technology/aws_helpers'
   spec.license       = 'MIT'
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
