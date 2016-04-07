@@ -6,9 +6,6 @@ require_relative 'actions/cloud_formation/stack_information'
 require_relative 'actions/cloud_formation/stack_exists'
 require_relative 'actions/cloud_formation/stack_resources'
 require_relative 'actions/cloud_formation/stack_named_resource'
-require_relative 'actions/cloud_formation/stack_create_change_set'
-require_relative 'actions/cloud_formation/stack_describe_change_set'
-require_relative 'actions/cloud_formation/stack_delete_change_set'
 
 module AwsHelpers
   class CloudFormation < AwsHelpers::Client
@@ -190,74 +187,6 @@ module AwsHelpers
     #
     def stack_named_resource(stack_name, resource_id)
       AwsHelpers::Actions::CloudFormation::StackNamedResource.new(config, stack_name, resource_id).execute
-    end
-
-    # Create a new stack change set
-    #
-    # @param stack_name [String] Name given to the Stack
-    # @param change_set_name [String] Name given to the Change Set
-    # @param template_json [JSON] New Stack Template to compare
-    #
-    # @example Return a name resource
-    #   AwsHelpers::CloudFormation.new.stack_create_change_set('TestStackName','TestChangeSet','
-    #     {
-    #       "Resources": {
-    #          "TestInstance": {
-    #              "Type" : "AWS::EC2::Instance",
-    #              "Properties": {
-    #              "ImageId": "ami-f5210196"
-    #              }
-    #            }
-    #          },
-    #          "Parameters" : {
-    #              "ImageId": {
-    #              "Type" : "AWS::EC2::Image::Id",
-    #              "Default" : "ami-f5210196"
-    #            }
-    #          },
-    #          "Outputs": {
-    #           "InstanceId" : {
-    #           "Description" : "InstanceId of the newly created EC2 instance",
-    #           "Value" : { "Ref" : "TestInstance" }
-    #          }
-    #       }
-    #     }'
-    #   )
-    #
-    # @return [struct] Struct of type {http://docs.aws.amazon.com/sdkforruby/api/Aws/CloudFormation/Types/CreateChangeSetOutput.html CreateChangeSetOutput}
-    #
-    def stack_create_change_set(stack_name, change_set_name, template_json)
-      AwsHelpers::Actions::CloudFormation::StackCreateChangeSet.new(config, stack_name, change_set_name, template_json).execute
-    end
-
-    # Describe a change set
-    #
-    # @param stack_name [String] Name given to the Stack
-    # @param change_set_name [String] Name given to the Change Set
-    # @option options [IO] :stdout Override $stdout when logging output
-    #
-    # @example Return the change set details
-    #  AwsHelpers::CloudFormation.new.stack_describe_change_set('TestStackName','TestChangeSet')
-    #
-    # @return [struct] Struct of type {http://docs.aws.amazon.com/sdkforruby/api/Aws/CloudFormation/Types/DescribeChangeSetOutput.html DescribeChangeSetOutput}
-    #
-    def stack_describe_change_set(stack_name, change_set_name, options = {})
-      AwsHelpers::Actions::CloudFormation::StackDescribeChangeSet.new(config, stack_name, change_set_name, options).execute
-    end
-
-    # Delete a change set
-    #
-    # @param stack_name [String] Name given to the Stack
-    # @param change_set_name [String] Name given to the Change Set
-    # @option options [IO] :stdout Override $stdout when logging output
-    #
-    # @example Remove a change set
-    #  AwsHelpers::CloudFormation.new.stack_delete_change_set('TestStackName','TestChangeSet')
-    #
-    # @return [struct Seahorse::Client::Response] An empty response
-    #
-    def stack_delete_change_set(stack_name, change_set_name, options = {})
-      AwsHelpers::Actions::CloudFormation::StackDeleteChangeSet.new(config, stack_name, change_set_name, options).execute
     end
   end
 end
