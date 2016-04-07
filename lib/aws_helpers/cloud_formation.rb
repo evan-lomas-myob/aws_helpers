@@ -28,7 +28,7 @@ module AwsHelpers
     # Template reference: http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-reference.html
     #
     # @param stack_name [String] Name given to the Stack
-    # @param template [JSON] The cloud formation json template
+    # @param template [String] The cloud formation json template
     # @param [Hash] options Optional parameters that can be overridden.
     # @option options [Array] :parameters Parameters to include in template e.g. [{ parameter_key: 'key', parameter_value: 'value' }]
     # @option options [Array] :capabilities Capabilities required when provisioning the stack e.g ['CAPABILITY_IAM']
