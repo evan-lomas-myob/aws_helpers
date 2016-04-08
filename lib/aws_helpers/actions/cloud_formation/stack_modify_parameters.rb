@@ -2,7 +2,6 @@ require_relative 'stack_parameter_update_builder'
 require_relative 'stack_progress'
 require 'aws_helpers/utilities/polling_options'
 
-
 module AwsHelpers
   module Actions
     module CloudFormation
@@ -35,8 +34,8 @@ module AwsHelpers
         private
 
         def create_stack_options(stdout, polling)
-            options = create_options(stdout, polling)
-            options.tap{|options| options[:stack_name] = @stack_name}
+          options = create_options(stdout, polling)
+          options.tap{|options| options[:stack_name] = @stack_name}
         end
       end
     end

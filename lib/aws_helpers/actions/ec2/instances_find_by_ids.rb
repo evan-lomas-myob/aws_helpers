@@ -9,7 +9,7 @@ module AwsHelpers
 
         def execute
           response = @client.describe_instances(instance_ids: @ids).reservations[0].instances
-          response.select{|instance| instance.state.name == 'running'}
+          response.select{ |instance| instance.state.name == 'running' }
         end
       end
     end

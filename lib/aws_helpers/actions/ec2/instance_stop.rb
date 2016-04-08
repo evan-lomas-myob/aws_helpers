@@ -20,7 +20,6 @@ module AwsHelpers
           @client.stop_instances(instance_ids: [@instance_id])
           AwsHelpers::Actions::EC2::PollInstanceState.new(@config, @instance_id, 'stopped', @instance_stopped_options).execute
         end
-
       end
     end
   end

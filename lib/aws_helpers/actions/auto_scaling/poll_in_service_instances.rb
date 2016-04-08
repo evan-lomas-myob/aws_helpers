@@ -42,7 +42,7 @@ module AwsHelpers
         end
 
         def count_lifecycle_states(instances)
-          instances.inject(Hash.new(0)) { |hash, instance| hash[instance.lifecycle_state] += 1; hash }
+          instances.each_with_object(Hash.new(0)) { |instance, hash| hash[instance.lifecycle_state] += 1 }
         end
       end
     end

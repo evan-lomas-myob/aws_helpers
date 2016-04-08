@@ -4,7 +4,6 @@ require 'aws_helpers/utilities/target_stack_validate'
 require 'aws_helpers/actions/cloud_formation/poll_stack_status'
 
 describe AwsHelpers::Actions::CloudFormation::PollStackStatus do
-
   let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client) }
   let(:stdout) { instance_double(IO) }
@@ -18,7 +17,6 @@ describe AwsHelpers::Actions::CloudFormation::PollStackStatus do
     end
 
     context 'with stack_id as a parameter' do
-
       let(:stack_id) { 'id' }
 
       before(:each) do
@@ -32,11 +30,9 @@ describe AwsHelpers::Actions::CloudFormation::PollStackStatus do
         expect(target_stack_validate).to receive(:execute).with(hash_including(stack_id: stack_id))
         subject
       end
-
     end
 
     context 'with stack_name as a parameter' do
-
       let(:stack_name) { 'name' }
 
       before(:each) do
@@ -53,12 +49,10 @@ describe AwsHelpers::Actions::CloudFormation::PollStackStatus do
 
       finished_states = %w(CREATE_COMPLETE DELETE_COMPLETE ROLLBACK_COMPLETE UPDATE_COMPLETE UPDATE_ROLLBACK_COMPLETE ROLLBACK_FAILED UPDATE_ROLLBACK_FAILED DELETE_FAILED)
       finished_states.each do |state|
-
         it "should poll until #{state}" do
           expect(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_return(create_stack_ouput(stack_name, state))
           subject
         end
-
       end
 
       it 'should write to stdout the status of the stack' do
@@ -71,16 +65,13 @@ describe AwsHelpers::Actions::CloudFormation::PollStackStatus do
         allow(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_return(create_stack_ouput(stack_name, 'OTHER_STATE'))
         expect { subject }.to raise_error(Aws::Waiters::Errors::TooManyAttemptsError)
       end
-
     end
-
   end
 
   def create_stack_ouput(stack_name, status)
     Aws::CloudFormation::Types::DescribeStacksOutput.new(
-        stacks: [
-            Aws::CloudFormation::Types::Stack.new(stack_name: stack_name, stack_status: status)
-        ])
+      stacks: [
+        Aws::CloudFormation::Types::Stack.new(stack_name: stack_name, stack_status: status)
+      ])
   end
-
 end

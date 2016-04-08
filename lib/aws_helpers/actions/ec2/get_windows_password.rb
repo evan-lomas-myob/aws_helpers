@@ -7,7 +7,7 @@ module AwsHelpers
       class GetWindowsPassword
         include AwsHelpers::Utilities::Polling
 
-        def initialize(config, instance_id, pem_path, options)
+        def initialize(config, instance_id, pem_path, options = {})
           @client = config.aws_ec2_client
           @instance_id = instance_id
           @pem_path = pem_path

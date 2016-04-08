@@ -13,7 +13,7 @@ module AwsHelpers
 
         def execute
           @delete_time = @date_time_builder.build(@options)
-          AwsHelpers::Actions::EC2::ImagesDeleteByTime.new(@config, @name, @delete_time).execute
+          AwsHelpers::Actions::EC2::ImagesDeleteByTime.new(@config, @name, @delete_time, @options).execute
         end
       end
     end

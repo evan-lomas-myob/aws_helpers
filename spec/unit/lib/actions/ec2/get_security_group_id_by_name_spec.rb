@@ -10,39 +10,33 @@ describe GetSecurityGroupIdByName do
 
   let(:sg_name) { 'GROUP_NAME' }
   let(:sg_id) { 'GROUP_ID' }
-  let(:sgs) { [instance_double(Aws::EC2::Types::SecurityGroup, group_id: sg_id)] }
 
   let(:filter_tags) { [{ name: 'group-name', values: [sg_name] }] }
 
-  let(:options) { {} }
-  let(:stdout_options) { { stdout: 'file_handle' } }
+  before(:each) do
+    allow(ec2_client)
+      .to receive(:describe_security_groups)
+      .and_return(Aws::EC2::Types::DescribeSecurityGroupsResult.new(security_groups: returned_groups))
+  end
 
-  context 'Security Group Name is found' do
-    before(:each) do
-      allow(ec2_client)
-        .to receive(:describe_security_groups)
-        .and_return(
-          instance_double(
-            Aws::EC2::Types::DescribeSecurityGroupsResult,
-            security_groups: sgs
-          )
-        )
-    end
+  context 'Security Group exists' do
+    let(:returned_groups) { [Aws::EC2::Types::SecurityGroup.new(group_id: sg_id)] }
 
     it 'should call Aws::EC2::Client #describe_security_groups with filter' do
       expect(ec2_client).to receive(:describe_security_groups).with(filters: filter_tags)
-      GetSecurityGroupIdByName.new(config, sg_name, options).id
+      GetSecurityGroupIdByName.new(config, sg_name).id
     end
 
     it 'should return vpc id matching a name' do
-      expect(GetSecurityGroupIdByName.new(config, sg_name, options).id).to eql(sg_id)
+      expect(GetSecurityGroupIdByName.new(config, sg_name).id).to eql(sg_id)
     end
   end
 
-  context 'No matching VPC Name is found' do
-    it 'should return nil if no matching ID is found' do
-      allow(ec2_client).to receive(:describe_security_groups).and_return(instance_double(Aws::EC2::Types::DescribeSecurityGroupsResult, security_groups: []))
-      expect(GetSecurityGroupIdByName.new(config, sg_name, options).id).to eql(nil)
+  context 'Security Group does not exist' do
+    let(:returned_groups) { [] }
+
+    it 'should return nil' do
+      expect(GetSecurityGroupIdByName.new(config, sg_name).id).to eql(nil)
     end
   end
 end
