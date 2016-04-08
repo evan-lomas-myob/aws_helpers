@@ -37,7 +37,6 @@ module AwsHelpers
           options[:use_name] = use_name if use_name
           options
         end
-
       end
     end
   end

@@ -7,9 +7,7 @@ describe AwsHelpers::Actions::EC2::SnapshotsDelete do
     let(:aws_ec2_client) { instance_double(Aws::EC2::Client) }
     let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: aws_ec2_client) }
     let(:stdout) { instance_double(IO) }
-
-
-    let(:options) { {stdout: stdout} }
+    let(:options) { { stdout: stdout } }
     let(:snapshot_id) { 'snapshot_id' }
 
     before(:each) do

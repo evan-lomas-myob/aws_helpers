@@ -1,7 +1,6 @@
 require 'aws_helpers/cloud_formation'
 
 describe AwsHelpers::CloudFormation do
-
   let(:config) { instance_double(AwsHelpers::Config) }
   let(:stdout) { instance_double(IO) }
   let(:stack_name) { 'my_stack_name' }

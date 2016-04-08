@@ -2,7 +2,6 @@ require 'aws_helpers/actions/auto_scaling/poll_in_service_instances'
 require 'aws_helpers/actions/auto_scaling/poll_load_balancers_in_service_instances'
 require 'aws_helpers/utilities/polling_options'
 
-
 module AwsHelpers
   module Actions
     module AutoScaling
@@ -24,7 +23,6 @@ module AwsHelpers
           AwsHelpers::Actions::AutoScaling::PollInServiceInstances.new(@config, @auto_scaling_group_name, @poll_in_service_instances_options).execute
           AwsHelpers::Actions::AutoScaling::PollLoadBalancersInServiceInstances.new(@config, @auto_scaling_group_name, @poll_load_balancers_in_service_instances_options).execute
         end
-
       end
     end
   end

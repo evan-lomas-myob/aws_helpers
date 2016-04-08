@@ -21,7 +21,6 @@ describe AwsHelpers::Actions::EC2::ImagesDelete do
     let(:options) { {hours: hours, days: days, months: months, years: years, stdout: stdout} }
     let(:delete_time) { Time.new }
 
-
     before(:each) do
       allow(AwsHelpers::Utilities::DeleteTimeBuilder).to receive(:new).and_return(delete_time_builder)
       allow(delete_time_builder).to receive(:build).and_return(delete_time)

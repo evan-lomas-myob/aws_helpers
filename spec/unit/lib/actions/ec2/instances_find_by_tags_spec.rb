@@ -12,18 +12,10 @@ describe InstancesFindByTags do
   let(:tags_hash) { { 'Name' => 'value', 'Multi' => %w(a b) } }
   let(:state) { instance_double(Aws::EC2::Types::InstanceState, name: 'running') }
   let(:instances) { [instance_double(Aws::EC2::Types::Instance, instance_id: 'i-12345678', state: state)] }
-
   let(:reservation) { [instance_double(Aws::EC2::Types::Reservation, instances: instances)] }
 
   before(:each) do
-    allow(ec2_client)
-      .to receive(:describe_instances).with(anything)
-      .and_return(
-        instance_double(
-          Aws::EC2::Types::DescribeInstancesResult,
-          reservations: reservation
-        )
-      )
+    allow(ec2_client).to receive(:describe_instances).with(anything).and_return(instance_double(Aws::EC2::Types::DescribeInstancesResult, reservations:reservation))
   end
 
   it 'should display a deprecation warning when called with an array' do
@@ -31,10 +23,7 @@ describe InstancesFindByTags do
   end
 
   it 'should call Aws::EC2::Client #describe_instances with correct parameters when called with a hash' do
-    expected_filters = [
-      { name: 'tag:Name', values: ['value'] },
-      { name: 'tag:Multi', values: %w(a b) }
-    ]
+    expected_filters = [{ name: 'tag:Name', values: ['value'] }, { name: 'tag:Multi', values: %w(a b) }]
     expect(ec2_client).to receive(:describe_instances).with(filters: expected_filters)
     InstancesFindByTags.new(config, tags_hash).execute
   end

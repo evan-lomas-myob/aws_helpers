@@ -9,7 +9,7 @@ describe AwsHelpers::Actions::EC2::SnapshotsDescribe do
     let(:stdout) { instance_double(IO) }
     let(:snapshot_ids) { ['snapshot_id'] }
 
-    let(:options) { {stdout: stdout}}
+    let(:options) { { stdout: stdout } }
     let(:response) do
       Aws::EC2::Types::DescribeSnapshotsResult.new(
         snapshots: [
