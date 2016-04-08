@@ -1,4 +1,3 @@
-require 'aws_helpers/ec2_commands/commands/poll_instance_available_command'
 require 'aws_helpers/ec2_commands/commands/image_construct_name_command'
 require 'aws_helpers/ec2_commands/commands/image_create_command'
 require 'aws_helpers/ec2_commands/commands/poll_image_available_command'
