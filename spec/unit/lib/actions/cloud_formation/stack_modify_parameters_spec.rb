@@ -1,101 +1,84 @@
-require 'aws_helpers/cloud_formation'
-require 'aws_helpers/actions/cloud_formation/stack_information'
-require 'aws_helpers/actions/cloud_formation/stack_parameter_update_builder'
-require 'aws_helpers/actions/cloud_formation/stack_modify_parameters'
-require 'aws_helpers/actions/cloud_formation/poll_stack_status'
+require 'aws_helpers'
 
-include Aws::CloudFormation::Types
-include AwsHelpers
-include AwsHelpers::Actions::CloudFormation
+describe AwsHelpers::Actions::CloudFormation::StackModifyParameters do
 
-describe StackModifyParameters do
-  let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
-  let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client) }
-  let(:stdout) { instance_double(IO) }
+  describe '#execute' do
 
-  let(:max_attempts) { 1 }
-  let(:delay) { 1 }
+    let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
+    let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client) }
+    let(:stdout) { instance_double(IO) }
+    let(:stack_parameter_update_builder) { instance_double(AwsHelpers::Actions::CloudFormation::StackParameterUpdateBuilder) }
+    let(:stack_progress) { instance_double(AwsHelpers::Actions::CloudFormation::StackProgress) }
 
-  let(:stack_name) { 'my_stack_name' }
-  let(:stack_modify_parameters_polling) { { max_attempts: max_attempts, delay: delay } }
-  let(:stack_modify_parameters_options) { { stack_name: stack_name, stdout: stdout, max_attempts: max_attempts, delay: delay } }
+    let(:stack_name) { 'name' }
+    let(:options) { {stdout: stdout, polling: {max_attempts: 1, delay: 2}} }
+    let(:existing_parameters) { [Aws::CloudFormation::Types::Parameter.new(parameter_key: 'param_key', parameter_value: 'param_value')] }
+    let(:update_parameters) { [Aws::CloudFormation::Types::Parameter.new(parameter_key: 'param_key', parameter_value: 'param_value2')] }
+    let(:stack_response) {
+      Aws::CloudFormation::Types::DescribeStacksOutput.new(
+          stacks: [
+              Aws::CloudFormation::Types::Stack.new(
+                  stack_name: stack_name,
+                  parameters: existing_parameters)
+          ])
+    }
 
-  let(:options) { { stdout: stdout, polling: stack_modify_parameters_polling } }
+    before(:each) do
+      allow(cloudformation_client).to receive(:describe_stacks).and_return(stack_response)
+      allow(AwsHelpers::Actions::CloudFormation::StackParameterUpdateBuilder).to receive(:new).and_return(stack_parameter_update_builder)
+      allow(stdout).to receive(:puts)
+    end
 
-  let(:stack_information) { instance_double(StackInformation) }
-  let(:stack_parameter_update_builder) { instance_double(StackParameterUpdateBuilder) }
-  let(:poll_stack_update) { instance_double(PollStackStatus) }
+    after(:each) do
+      AwsHelpers::Actions::CloudFormation::StackModifyParameters.new(config, stack_name, update_parameters, options).execute
+    end
 
-  let(:parameters_to_update) do
-    [
-      { parameter_key: 'param_key_1', parameter_value: 'param_value_1' },
-      { parameter_key: 'param_key_2', parameter_value: 'new_param_value_2' }
-    ]
-  end
+    context 'AwsHelpers::Actions::CloudFormation::StackParameterUpdateBuilder #execute returns nil' do
 
-  let(:existing_parameters) do
-    [
-      Parameter.new(parameter_key: 'param_key_1', parameter_value: 'param_value_1', use_previous_value: true),
-      Parameter.new(parameter_key: 'param_key_2', parameter_value: 'param_value_1', use_previous_value: true)
-    ]
-  end
+      before(:each) do
+        allow(stack_parameter_update_builder).to receive(:execute).and_return(nil)
+      end
 
-  let(:updated_parameters) do
-    [
-      { parameter_key: 'param_key_1', use_previous_value: true },
-      { parameter_key: 'param_key_2', parameter_value: 'new_param_value_2' }
-    ]
-  end
+      it 'should call Aws::CloudFormation::Client #describe_stacks with stack_name' do
+        expect(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name)
+      end
 
-  let(:stack_existing) do
-    [
-      Stack.new(stack_name: stack_name, parameters: existing_parameters, capabilities: ['CAPABILITY_IAM'])
-    ]
-  end
+      it 'should return a no matching parameters message' do
+        expect(stdout).to receive(:puts).with('No matching parameter(s) found')
+      end
 
-  let(:stack_updated) do
-    { stack_name: stack_name, use_previous_template: true, parameters: updated_parameters, capabilities: ['CAPABILITY_IAM'] }
-  end
+    end
 
-  let(:stack_events) { [instance_double(StackEvent, resource_status: 'status')] }
-  let(:stack_response) { instance_double(DescribeStacksOutput, stacks: stack_existing) }
-  let(:stack_events_response) { instance_double(DescribeStackEventsOutput, stack_events: stack_events, next_token: nil) }
+    context 'AwsHelpers::Actions::CloudFormation::StackParameterUpdateBuilder #execute returns parameters to update' do
 
-  let(:max_attempts) { 10 }
-  let(:delay) { 5 }
+      let(:stack_parameter_update_builder_response) {
+        {stack_name: stack_name, use_previous_template: true, parameters: update_parameters, capabilities: nil}
+      }
 
-  before(:each) do
-    allow(stdout).to receive(:puts).with(anything)
-    allow(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_return(stack_response)
-    allow(cloudformation_client).to receive(:describe_stack_events).with(stack_name: stack_name, next_token: nil).and_return(stack_events_response)
-    allow(cloudformation_client).to receive(:update_stack).with(stack_updated)
-    allow(PollStackStatus).to receive(:new).with(config, stack_modify_parameters_options).and_return(poll_stack_update)
-    allow(poll_stack_update).to receive(:execute)
-  end
+      before(:each) do
+        allow(stack_parameter_update_builder).to receive(:execute).and_return(stack_parameter_update_builder_response)
+        allow(cloudformation_client).to receive(:update_stack)
+        allow(AwsHelpers::Actions::CloudFormation::StackProgress).to receive(:new).and_return(stack_progress)
+        allow(stack_progress).to receive(:execute)
+      end
 
-  after(:each) do
-    StackModifyParameters.new(config, stack_name, parameters_to_update, options).execute
-  end
+      it 'should call stdout puts that the stack is to be updated' do
+        expect(stdout).to receive(:puts).with("Updating #{stack_name}")
+      end
 
-  it 'should call describe stack to get the current stack parameters' do
-    expect(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_return(stack_response)
-  end
+      it 'should call Aws::CloudFormation::Client #update_stack with correct parameters' do
+        expect(cloudformation_client).to receive(:update_stack).with(stack_parameter_update_builder_response)
+      end
 
-  it 'should build the request for the stack update' do
-    expect(StackParameterUpdateBuilder.new(stack_name, stack_existing[0], parameters_to_update).execute).to eq(stack_updated)
-  end
+      it 'should call AwsHelpers::Actions::CloudFormation::StackProgress #new with correct parameters' do
+        expect(AwsHelpers::Actions::CloudFormation::StackProgress).to receive(:new).with(
+            config, stack_name: stack_name, stdout: stdout, max_attempts: 1, delay: 2)
+      end
 
-  it 'should call the update_stack method to start the stack update process' do
-    expect(cloudformation_client).to receive(:update_stack).with(stack_updated)
-  end
+      it 'should call AwsHelpers::Actions::CloudFormation::StackProgress #new with correct parameters' do
+        expect(stack_progress).to receive(:execute)
+      end
 
-  it 'should call update_stack using the request generated' do
-    expect(poll_stack_update).to receive(:execute)
-  end
-
-  it 'should return a message if a matching parameter is not found' do
-    allow(StackParameterUpdateBuilder).to receive(:new).and_return(stack_parameter_update_builder)
-    allow(stack_parameter_update_builder).to receive(:execute).and_return(nil)
-    expect(stdout).to receive(:puts).with('No matching parameter(s) found')
+    end
   end
 end
