@@ -1,48 +1,83 @@
 require 'aws-sdk-core'
-require 'aws_helpers/cloud_formation'
-require 'aws_helpers/actions/cloud_formation/stack_exists'
-require 'aws_helpers/actions/cloud_formation/stack_delete'
+require 'aws_helpers'
 
-include AwsHelpers
-include AwsHelpers::Actions::CloudFormation
-include Aws::CloudFormation::Types
-
-describe StackDelete do
+describe AwsHelpers::Actions::CloudFormation::StackDelete do
   let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client) }
-  let(:stack_progress) { instance_double(StackProgress) }
-  let(:stack_exists) { instance_double(StackExists) }
+  let(:stack_progress) { instance_double(AwsHelpers::Actions::CloudFormation::StackProgress) }
+  let(:stack_exists) { instance_double(AwsHelpers::Actions::CloudFormation::StackExists) }
   let(:stdout) { instance_double(IO) }
-  let(:stack_name) { 'my_stack_name' }
-  let(:stack_id) { "arn:aws:cloudformation:region:id:stack/#{stack_name}/stack_id_number" }
-  let(:options) { { stack_id: stack_id, stdout: stdout } }
 
-  let(:describe_stack) { [instance_double(Stack, stack_name: stack_name, stack_id: stack_id)] }
-  let(:describe_stack_response) { instance_double(DescribeStacksOutput, stacks: describe_stack) }
+  let(:stack_name) { 'name' }
+  let(:polling) { {max_attempts: 1, delay: 2} }
 
   before(:each) do
-    allow(cloudformation_client).to receive(:delete_stack)
-    allow(StackProgress).to receive(:new).with(config, options).and_return(stack_progress)
-    allow(stack_progress).to receive(:execute)
-    allow(StackExists).to receive(:new).with(config, stack_name).and_return(stack_exists)
-    allow(stack_exists).to receive(:execute).and_return(true)
-    allow(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_return(describe_stack_response)
-    allow(stdout).to receive(:puts).with(anything)
+    allow(stdout).to receive(:puts)
+    allow(AwsHelpers::Actions::CloudFormation::StackExists).to receive(:new).and_return(stack_exists)
+    allow(stack_exists).to receive(:execute)
   end
 
   after(:each) do
-    AwsHelpers::Actions::CloudFormation::StackDelete.new(config, stack_name, stdout: stdout).execute
+    described_class.new(config, stack_name, stdout: stdout, polling: polling).execute
   end
 
-  it 'should call delete_stack to remove the stack' do
-    expect(cloudformation_client).to receive(:delete_stack).with(stack_name: stack_name)
+  it 'should call stdout #put with deletion details' do
+    expect(stdout).to receive(:puts).with("Deleting #{stack_name}")
   end
 
-  it 'should poll for stack delete completion' do
-    expect(stack_progress).to receive(:execute)
+  it 'should call AwsHelpers::Actions::CloudFormation::StackExists #new with stack_name' do
+    expect(AwsHelpers::Actions::CloudFormation::StackExists).to receive(:new).with(config, stack_name)
   end
 
-  it 'should get output stating the stack was deleted' do
-    expect(stdout).to receive(:puts).with('Deleting my_stack_name')
+  it 'should call AwsHelpers::Actions::CloudFormation::StackExists #execute' do
+    expect(stack_exists).to receive(:execute)
   end
+
+  context 'stack does not exists' do
+
+    before(:each) do
+      allow(stack_exists).to receive(:execute).and_return(false)
+    end
+
+    it 'should not call Aws::CloudFormation::Client #delete_stack' do
+      expect(cloudformation_client).to_not receive(:delete_stack)
+    end
+
+  end
+
+  context 'stack exists' do
+
+    let(:stack_id) { "arn:aws:cloudformation:region:id:stack/#{stack_name}/stack_id_number" }
+    let(:describe_stack_response) {
+      Aws::CloudFormation::Types::DescribeStacksOutput.new(
+          stacks: [Aws::CloudFormation::Types::Stack.new(stack_name: stack_name, stack_id: stack_id)])
+    }
+
+    before(:each) do
+      allow(stack_exists).to receive(:execute).and_return(true)
+      allow(cloudformation_client).to receive(:describe_stacks).and_return(describe_stack_response)
+      allow(cloudformation_client).to receive(:delete_stack)
+      allow(AwsHelpers::Actions::CloudFormation::StackProgress).to receive(:new).and_return(stack_progress)
+      allow(stack_progress).to receive(:execute)
+    end
+
+    it 'should call Aws::CloudFormation::Client #describe_stack with stack_name' do
+      expect(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name)
+    end
+
+    it 'should call Aws::CloudFormation::Client #delete_stack with correct parameters' do
+      expect(cloudformation_client).to receive(:delete_stack).with(stack_name: stack_name)
+    end
+
+    it 'should call AwsHelpers::Actions::CloudFormation::StackProgress #new with correct parameters' do
+      expect(AwsHelpers::Actions::CloudFormation::StackProgress).to receive(:new).with(config, stack_id: stack_id, stdout: stdout, polling: polling)
+    end
+
+    it 'should call AwsHelpers::Actions::CloudFormation::StackProgress #execute' do
+      expect(stack_progress).to receive(:execute)
+    end
+
+  end
+
+
 end

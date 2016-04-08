@@ -9,7 +9,6 @@ module AwsHelpers
         def initialize(config, options = {})
           @config = config
           @options = options
-          @options[:stdout] ||= $stdout
         end
 
         def execute

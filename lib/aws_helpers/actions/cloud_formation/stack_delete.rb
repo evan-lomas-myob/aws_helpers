@@ -7,6 +7,7 @@ module AwsHelpers
       class StackDelete
         def initialize(config, stack_name, options = {})
           @config = config
+          @cloud_formation_client = @config.aws_cloud_formation_client
           @stack_name = stack_name
           @options = options
           @stdout = options[:stdout] || $stdout
@@ -14,12 +15,11 @@ module AwsHelpers
         end
 
         def execute
-          client = @config.aws_cloud_formation_client
           @stdout.puts "Deleting #{@stack_name}"
           return unless @stack_exists.execute
-          response = client.describe_stacks(stack_name: @stack_name).stacks.first
+          response = @cloud_formation_client.describe_stacks(stack_name: @stack_name).stacks.first
           @options[:stack_id] = response.stack_id
-          client.delete_stack(stack_name: @stack_name)
+          @cloud_formation_client.delete_stack(stack_name: @stack_name)
           AwsHelpers::Actions::CloudFormation::StackProgress.new(@config, @options).execute
         end
       end

@@ -84,6 +84,17 @@ module AwsHelpers
     # @param stack_name [String] Name given to the Stack
     # @param [Hash] options Optional parameters that can be overridden.
     # @option options [IO] :stdout Override $stdout when logging output
+    # @option options [Hash{Symbol => Integer}] :polling Override update stack polling
+    #
+    #   defaults:
+    #
+    #   ```
+    #   {
+    #     :max_attempts => 40,
+    #     :delay => 30 # seconds
+    #   }
+    #   ```
+    #
     #
     # @example Remove the names stack from AWS
     #   AwsHelpers::CloudFormation.new.stack_delete('TestStackName')
