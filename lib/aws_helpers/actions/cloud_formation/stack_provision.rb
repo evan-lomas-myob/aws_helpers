@@ -43,7 +43,7 @@ module AwsHelpers
         end
 
         def create(request)
-          StackCreate.new(@config, @stack_name, request, @polling).execute
+          StackCreate.new(@config, request, @polling).execute
         end
       end
     end

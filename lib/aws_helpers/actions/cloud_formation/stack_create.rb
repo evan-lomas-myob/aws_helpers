@@ -4,20 +4,18 @@ module AwsHelpers
   module Actions
     module CloudFormation
       class StackCreate
-        def initialize(config, stack_name, request, options = {})
+        def initialize(config, request, options = {})
           @config = config
-          @stack_name = stack_name
+          @cloud_formation_client = @config.aws_cloud_formation_client
           @request = request
-          @options = options
+          @stack_name = request[:stack_name]
           @stdout = options[:stdout] || $stdout
-          @options[:stack_name] = @stack_name
         end
 
         def execute
-          client = @config.aws_cloud_formation_client
           @stdout.puts "Creating #{@stack_name}"
-          client.create_stack(@request)
-          AwsHelpers::Actions::CloudFormation::StackProgress.new(@config, @options).execute
+          @cloud_formation_client.create_stack(@request)
+          AwsHelpers::Actions::CloudFormation::StackProgress.new(@config, stack_name: @stack_name, stdout: @stdout).execute
         end
       end
     end
