@@ -1,6 +1,5 @@
 require 'aws-sdk-core'
-require 'aws_helpers/cloud_formation'
-require 'aws_helpers/actions/cloud_formation/stack_exists'
+require 'aws_helpers'
 
 describe AwsHelpers::Actions::CloudFormation::StackExists do
   let(:cloud_formation_client) { instance_double(Aws::CloudFormation::Client) }
@@ -10,7 +9,7 @@ describe AwsHelpers::Actions::CloudFormation::StackExists do
   let(:validation_error_stack_not_exists) { Aws::CloudFormation::Errors::ValidationError.new(nil, "Stack with id #{stack_name} does not exist") }
   let(:validation_error_general) { Aws::CloudFormation::Errors::ValidationError.new(nil, 'Error') }
 
-  subject { AwsHelpers::Actions::CloudFormation::StackExists.new(config, stack_name).execute }
+  subject { described_class.new(config, stack_name).execute }
 
   it 'should create a CloudFormation::Stack resource' do
     allow(cloud_formation_client).to receive(:describe_stacks).with(stack_name: stack_name)

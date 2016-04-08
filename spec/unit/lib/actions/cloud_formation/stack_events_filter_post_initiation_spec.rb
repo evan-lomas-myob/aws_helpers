@@ -1,9 +1,7 @@
-require 'aws_helpers/actions/cloud_formation/stack_events_filter_post_initiation'
+require 'aws_helpers'
 require_relative '../../../spec_helpers/create_event_helper'
 
-include AwsHelpers::Actions::CloudFormation
-
-describe StackEventsFilterPostInitiation do
+describe AwsHelpers::Actions::CloudFormation::StackEventsFilterPostInitiation do
   let(:stack_id) { 'id' }
   let(:stack_name) { 'my_stack_name' }
   let(:resource_type) { 'AWS::CloudFormation::Stack' }
@@ -22,15 +20,16 @@ describe StackEventsFilterPostInitiation do
 
   describe '#execute' do
     it 'should just return the complete array' do
-      expect(AwsHelpers::Actions::CloudFormation::StackEventsFilterPostInitiation.new(stack_events_complete).execute).to eq(stack_events_complete)
+      expect(described_class.new(stack_events_complete).execute).to eq(stack_events_complete)
     end
 
     it 'should drop the last event from array stack because the initiate event was found' do
-      expect(AwsHelpers::Actions::CloudFormation::StackEventsFilterPostInitiation.new(stack_events_break_initiate).execute).to eq(stack_events_initiate)
+      expect(described_class.new(stack_events_break_initiate).execute).to eq(stack_events_initiate)
     end
 
     it 'should drop the last event from array stack because the complete event was found' do
-      expect(AwsHelpers::Actions::CloudFormation::StackEventsFilterPostInitiation.new(stack_events_break_complete).execute).to eq(stack_events_complete)
+      expect(described_class.new(stack_events_break_complete).execute).to eq(stack_events_complete)
     end
   end
+
 end

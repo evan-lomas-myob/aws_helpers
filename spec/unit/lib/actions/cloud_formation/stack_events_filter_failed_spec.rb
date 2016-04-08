@@ -10,7 +10,7 @@ describe AwsHelpers::Actions::CloudFormation::StackEventsFilterFailed do
       %w(CREATE_FAILED DELETE_FAILED UPDATE_FAILED ROLLBACK_FAILED UPDATE_ROLLBACK_FAILED).each { |status|
         events = [CreateEventHelper.new('name', 'id', status, 'AWS::CloudFormation::Stack').execute]
         it "should return the #{status} event" do
-          expect(AwsHelpers::Actions::CloudFormation::StackEventsFilterFailed.new(events).execute).to eql(events)
+          expect(described_class.new(events).execute).to eql(events)
         end
       }
 
@@ -21,7 +21,7 @@ describe AwsHelpers::Actions::CloudFormation::StackEventsFilterFailed do
       %w(OTHER).each { |status|
         events = [CreateEventHelper.new('name', 'id', status, 'AWS::CloudFormation::Stack').execute]
         it 'should return an empty array' do
-          expect(AwsHelpers::Actions::CloudFormation::StackEventsFilterFailed.new(events).execute).to eql([])
+          expect(described_class.new(events).execute).to eql([])
         end
       }
 
