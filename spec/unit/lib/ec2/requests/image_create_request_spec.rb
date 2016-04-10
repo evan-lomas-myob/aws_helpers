@@ -5,7 +5,6 @@ describe AwsHelpers::EC2Commands::Requests::ImageCreateRequest do
 
   it 'contains the correct attributes' do
     keys = [
-      :std_out,
       :instance_id,
       :image_id,
       :image_name,

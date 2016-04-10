@@ -2,7 +2,6 @@ module AwsHelpers
   module EC2Commands
     module Requests
       ImageCreateRequest = Struct.new(
-        :std_out,
         :instance_id,
         :image_id,
         :image_name,
