@@ -15,13 +15,7 @@ module AwsHelpers
           max_attempts = @request.image_polling[:max_attempts] || 60
           delay = @request.image_polling[:delay] || 30
           poll(delay, max_attempts) do
-            response = @ec2_client.describe_images(filters:
-              [
-                {
-                  name: 'image-id',
-                  values: [@request.image_id]
-                }
-              ])
+            response = @ec2_client.describe_images(image_ids: [@request.image_id])
             image = response.images.first
             status = image.state
             @request.stdout.puts "EC2 Image #{@request.image_name} #{status}"

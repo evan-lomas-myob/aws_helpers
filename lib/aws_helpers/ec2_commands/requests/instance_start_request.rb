@@ -1,8 +1,7 @@
 module AwsHelpers
   module EC2Commands
     module Requests
-      InstanceCreateRequest = Struct.new(
-        :image_id,
+      InstanceStartRequest = Struct.new(
         :instance_id,
         :stdout) do
           def initialize(*args)

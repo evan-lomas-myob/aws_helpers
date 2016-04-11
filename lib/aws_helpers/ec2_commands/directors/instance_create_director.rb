@@ -18,7 +18,9 @@ module AwsHelpers
           @request = request
           @commands = [
             AwsHelpers::EC2Commands::Commands::InstanceCreateCommand.new(@config, request),
-            AwsHelpers::EC2Commands::Commands::PollImageAvailableCommand.new(@config, request)
+            AwsHelpers::EC2Commands::Commands::PollInstanceAvailableCommand.new(@config, request),
+            AwsHelpers::EC2Commands::Commands::InstanceTagCommand.new(@config, request),
+            AwsHelpers::EC2Commands::Commands::PollInstanceHealthyCommand.new(@config, request)
           ]
           execute_commands
         end
