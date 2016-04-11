@@ -7,8 +7,9 @@ describe AwsHelpers::EC2Commands::Requests::InstanceCreateRequest do
     keys = [
       :image_id,
       :instance_id,
-      :stdout
+      :stdout,
+      :instance_polling
     ]
-    expect(request.members).to eq(keys)
+    expect(request.members).to match_array(keys)
   end
 end

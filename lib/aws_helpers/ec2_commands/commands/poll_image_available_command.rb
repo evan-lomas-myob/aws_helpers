@@ -12,9 +12,7 @@ module AwsHelpers
         end
 
         def execute
-          max_attempts = @request.image_polling[:max_attempts] || 60
-          delay = @request.image_polling[:delay] || 30
-          poll(delay, max_attempts) do
+          poll(@request.image_polling[:delay], @request.image_polling[:max_attempts]) do
             response = @ec2_client.describe_images(image_ids: [@request.image_id])
             image = response.images.first
             status = image.state
