@@ -15,10 +15,12 @@ module AwsHelpers
 
         def execute
           poll(@delay, @max_attempts) do
-            @ec2_client.describe_images(image_ids: [@request.image_id])
+            response = @ec2_client.describe_images(image_ids: [@request.image_id])
             image = response.images.first
-            status = image.state
-            @request.stdout.puts "EC2 Image #{@request.image_name} #{status}"
+            if image
+              status = image.state
+              @request.stdout.puts "EC2 Image #{@request.image_id} #{status}"
+            end
             image.nil?
           end
         end
