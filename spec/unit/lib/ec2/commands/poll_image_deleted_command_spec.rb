@@ -29,7 +29,7 @@ describe AwsHelpers::EC2Commands::Commands::PollImageDeletedCommand do
     let(:images) { [Aws::EC2::Types::Image.new] }
     it 'errors after the maximum retries' do
       expect(ec2_client).to receive(:describe_images).twice
-      expect { @command.execute }.to raise_error
+      expect { @command.execute }.to raise_error(Aws::Waiters::Errors::TooManyAttemptsError)
     end
   end
 end
