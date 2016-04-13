@@ -16,7 +16,7 @@ describe StackProvision do
   let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
   let(:aws_s3_client) { instance_double(Aws::S3::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client, aws_s3_client: aws_s3_client) }
-  let(:stack_upload_template) { instance_double(S3UploadTemplate) }
+  let(:stack_upload_template) { instance_double(UploadTemplate) }
   let(:stack_rollback_complete) { instance_double(StackRollbackComplete) }
   let(:stack_delete) { instance_double(StackDelete) }
   let(:stack_request_url) { instance_double(StackCreateRequestBuilder) }
@@ -82,7 +82,7 @@ describe StackProvision do
 
   context 'template upload required' do
     before(:each) do
-      allow(S3UploadTemplate).to receive(:new).and_return(stack_upload_template)
+      allow(UploadTemplate).to receive(:new).and_return(stack_upload_template)
       allow(stack_upload_template).to receive(:execute).and_return(url)
       allow(cloudformation_client).to receive(:describe_stacks).and_return(stack_rolledback)
       allow(StackDelete).to receive(:new).and_return(stack_delete)

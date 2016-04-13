@@ -4,10 +4,10 @@ require 'aws_helpers/actions/s3/exists'
 
 include AwsHelpers::Actions::S3
 
-describe S3Create do
+describe Create do
   let(:aws_s3_client) { instance_double(Aws::S3::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_s3_client: aws_s3_client) }
-  let(:s3_exists) { instance_double(S3Exists) }
+  let(:s3_exists) { instance_double(Exists) }
 
   let(:s3_bucket_name) { 'my-bucket' }
 
@@ -16,33 +16,25 @@ describe S3Create do
 
   let(:options) { {acl: acl, stdout: stdout} }
 
-  let(:location) { 'Sydney' }
-  let(:bucket_location) { instance_double(Aws::S3::Types::CreateBucketOutput, location: location) }
-
-
   before(:each) do
-    allow(S3Exists).to receive(:new).and_return(s3_exists)
+    allow(Exists).to receive(:new).and_return(s3_exists)
     allow(stdout).to receive(:puts).with(anything)
   end
 
   after(:each) {
-    AwsHelpers::Actions::S3::S3Create.new(config, s3_bucket_name, options).execute
+    AwsHelpers::Actions::S3::Create.new(config, s3_bucket_name, options).execute
   }
 
   context 'Bucket does not exist' do
 
     before(:each) do
-      allow(aws_s3_client).to receive(:create_bucket).with(acl: anything, bucket: s3_bucket_name).and_return(bucket_location)
+      allow(aws_s3_client).to receive(:create_bucket).with(acl: anything, bucket: s3_bucket_name)
       allow(s3_exists).to receive(:execute).and_return(false)
       allow(aws_s3_client).to receive(:wait_until)
     end
 
     it 'should create the new bucket' do
-      expect(aws_s3_client).to receive(:create_bucket).with(acl: 'public-read', bucket: s3_bucket_name).and_return(bucket_location)
-    end
-
-    it 'should wait until the bucket is created' do
-      expect(aws_s3_client).to receive(:wait_until).with(:bucket_exists, bucket: s3_bucket_name)
+      expect(aws_s3_client).to receive(:create_bucket).with(acl: 'public-read', bucket: s3_bucket_name)
     end
 
     it 'should receive a message saying the bucket was created' do

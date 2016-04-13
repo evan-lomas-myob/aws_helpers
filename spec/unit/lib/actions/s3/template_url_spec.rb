@@ -3,20 +3,20 @@ require 'aws_helpers/actions/s3/template_url'
 
 include AwsHelpers::Actions::S3
 
-describe S3TemplateUrl do
+describe TemplateUrl do
   let(:aws_s3_client) { instance_double(Aws::S3::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_s3_client: aws_s3_client) }
-  let(:s3_exists) { instance_double(AwsHelpers::Actions::S3::S3Exists) }
+  let(:s3_exists) { instance_double(AwsHelpers::Actions::S3::Exists) }
 
   let(:location) { 'eu-west-1' }
   let(:s3_bucket_name) { 'my-bucket' }
 
   before(:each) do
-    allow(AwsHelpers::Actions::S3::S3Exists).to receive(:new).and_return(s3_exists)
+    allow(AwsHelpers::Actions::S3::Exists).to receive(:new).and_return(s3_exists)
     allow(s3_exists).to receive(:execute)
   end
 
-  subject { AwsHelpers::Actions::S3::S3TemplateUrl.new(config, s3_bucket_name).execute }
+  subject { AwsHelpers::Actions::S3::TemplateUrl.new(config, s3_bucket_name).execute }
 
   context 'bucket exists' do
     before(:each) do

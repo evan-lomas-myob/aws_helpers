@@ -29,7 +29,7 @@ module AwsHelpers
         def execute
           options = {stdout: @stdout}
           options.merge!({server_side_encryption: 'AES256'}) if @bucket_encrypt
-          template_url = S3UploadTemplate.new(@config, @stack_name, @template_json, @s3_bucket_name, options).execute if @s3_bucket_name
+          template_url = UploadTemplate.new(@config, @stack_name, @template_json, @s3_bucket_name, options).execute if @s3_bucket_name
 
           if StackExists.new(@config, @stack_name).execute && StackRollbackComplete.new(@config, @stack_name).execute
             StackDelete.new(@config, @stack_name, stdout: @stdout).execute
