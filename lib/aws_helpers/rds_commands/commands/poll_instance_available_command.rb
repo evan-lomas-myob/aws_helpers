@@ -1,11 +1,11 @@
 require 'aws_helpers/actions/rds/instance_state'
 require 'aws_helpers/utilities/polling'
-require 'aws_helpers/rds/commands/command'
+require 'aws_helpers/rds_commands/commands/command'
 
 module AwsHelpers
-  module RDS
+  module RDSCommands
     module Commands
-      class PollInstanceAvailableCommand < AwsHelpers::RDS::Commands::Command
+      class PollInstanceAvailableCommand < AwsHelpers::RDSCommands::Commands::Command
         include AwsHelpers::Utilities::Polling
 
         def initialize(config, request)
@@ -18,8 +18,7 @@ module AwsHelpers
 
         def execute
           poll(@delay, @max_attempts) do
-            response = @rds_client.describe_db_instances(db_instance_identifier: @db_instance_identifier)
-            instance = response.db_instances.find { |i| i.db_instance_identifier = @db_instance_identifier }
+            instance = @rds_client.describe_db_instances(db_instance_identifier: @db_instance_identifier).first
             status = instance.db_instance_status
             stdout.puts "RDS Instance=#{@db_instance_identifier}, Status=#{status}"
             status == InstanceState::AVAILABLE

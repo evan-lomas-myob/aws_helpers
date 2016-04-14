@@ -1,11 +1,11 @@
 require 'aws_helpers/actions/rds/snapshot_status'
 require 'aws_helpers/utilities/polling'
-require 'aws_helpers/rds/commands/command'
+require 'aws_helpers/rds_commands/commands/command'
 
 module AwsHelpers
-  module RDS
+  module RDSCommands
     module Commands
-      class PollSnapshotAvailableCommand < AwsHelpers::RDS::Commands::Command
+      class PollSnapshotAvailableCommand < AwsHelpers::RDSCommands::Commands::Command
         include AwsHelpers::Utilities::Polling
 
         def initialize(config, request)

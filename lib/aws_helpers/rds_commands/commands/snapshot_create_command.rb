@@ -1,9 +1,9 @@
-require 'aws_helpers/rds/commands/command'
+require 'aws_helpers/rds_commands/commands/command'
 
 module AwsHelpers
-  module RDS
+  module RDSCommands
     module Commands
-      class SnapshotCreateCommand < AwsHelpers::RDS::Commands::Command
+      class SnapshotCreateCommand < AwsHelpers::RDSCommands::Commands::Command
 
         def initialize(config, request)
           @rds_client = config.aws_rds_client

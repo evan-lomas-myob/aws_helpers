@@ -13,7 +13,6 @@ module AwsHelpers
         end
 
         def create(request)
-          # update_request(instance_identifier, options)
           @request = request
           @commands = [
             AwsHelpers::EC2Commands::Commands::PollImageAvailableCommand.new(@config, request),

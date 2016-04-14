@@ -10,9 +10,8 @@ module AwsHelpers
         end
 
         def execute
-          @use_name = @request.use_name
           now_formatted = Time.now.strftime('%Y-%m-%d-%H-%M')
-          @request.image_name = "#{@use_name ? name_tag_value : @request.instance_id}-#{now_formatted}"
+          @request.image_name = "#{@request.use_name ? name_tag_value : @request.instance_id}-#{now_formatted}"
         end
 
         private
@@ -22,10 +21,9 @@ module AwsHelpers
               [
                 {
                   name: 'resource-id',
-                  values: [@instance_id]
+                  values: [@request.instance_id]
                 }
               ])
-          # resource_name: "arn:aws:ec2:#{region}:#{iam_user_arn}:instance:#{@instance_id}")
           name_tag = response.tags.detect { |tag| tag.key == 'Name' }
           name_tag.value
         end

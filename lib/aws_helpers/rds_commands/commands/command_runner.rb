@@ -1,5 +1,5 @@
 module AwsHelpers
-  module RDS
+  module RDSCommands
     module Commands
       module CommandRunner
         private
