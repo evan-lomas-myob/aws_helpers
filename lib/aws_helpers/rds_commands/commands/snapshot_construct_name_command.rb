@@ -6,14 +6,14 @@ module AwsHelpers
       class SnapshotConstructNameCommand < AwsHelpers::RDSCommands::Commands::Command
 
         def initialize(config, request)
-          @ec2_client = config.aws_ec2_client
+          @rds_client = config.aws_rds_client
           @iam_client = config.aws_iam_client
           @request = request
         end
 
         def execute
           now_formatted = Time.now.strftime('%Y-%m-%d-%H-%M')
-          @request.image_name = "#{@request.use_name ? name_tag_value : @request.instance_id}-#{now_formatted}"
+          @request.image_name = "#{@request.use_name ? name_tag_value : @request.db_instance_id}-#{now_formatted}"
         end
 
         private
@@ -27,7 +27,8 @@ module AwsHelpers
         end
 
         def name_tag_value
-          response = @rds_client.list_tags_for_resource(resource_name: "arn:aws:rds:#{region}:#{iam_user_arn}:db:#{@db_instance_id}")
+          puts iam_user_arn
+          response = @rds_client.list_tags_for_resource(resource_name: "arn:aws:rds:#{region}:#{iam_user_arn}:db:#{@request.db_instance_id}")
           name_tag = response.tag_list.detect { |tag| tag.key == 'Name' }
           name_tag.value
         end

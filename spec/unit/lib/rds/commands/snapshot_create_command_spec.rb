@@ -13,8 +13,8 @@ describe AwsHelpers::RDSCommands::Commands::SnapshotCreateCommand do
   before do
     request.image_id = image_id
     @command = AwsHelpers::RDSCommands::Commands::SnapshotCreateCommand.new(config, request)
-    allow(ec2_client)
-      .to receive(:run_instances)
+    allow(rds_client)
+      .to receive(:create_snapshot)
       .and_return(result)
   end
 

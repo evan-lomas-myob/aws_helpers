@@ -2,7 +2,7 @@ require 'aws_helpers/rds_commands/commands/poll_instance_available_command'
 require 'aws_helpers/rds_commands/requests/poll_instance_available_request'
 
 describe AwsHelpers::RDSCommands::Commands::PollInstanceAvailableCommand do
-  let(:image) { Aws::RDS::Types::Instance.new }
+  let(:image) { Aws::RDS::Types::DBInstance.new }
   let(:result) { Aws::RDS::Types::DBInstanceMessage.new(images: [image]) }
   let(:rds_client) { instance_double(Aws::RDS::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_rds_client: rds_client) }
