@@ -8,7 +8,7 @@ module AwsHelpers
         end
 
         def execute
-          response = @client.describe_instances(instance_ids: @ids).reservations[0].instances
+          response = @client.describe_instances(instance_ids: @ids).reservations.map{ |r| r.instances }.flatten
           response.select{ |instance| instance.state.name == 'running' }
         end
       end

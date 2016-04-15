@@ -19,7 +19,7 @@ module AwsHelpers
 
         def execute
           poll(@delay, @max_attempts) do
-            current_state = @client.describe_instances(instance_ids: [@instance_id]).reservations.first.instances.first.state.name
+            current_state = @client.describe_instances(instance_ids: [@instance_id]).reservations.map{ |r| r.instances }.flatten.first.state.name
             @stdout.puts "Instance State is #{current_state}."
             current_state == @state
           end
