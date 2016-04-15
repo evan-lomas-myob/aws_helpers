@@ -7,15 +7,14 @@ module AwsHelpers
 
         def initialize(config, request)
           @rds_client = config.aws_rds_client
-          @db_instance_identifier = request.db_instance_identifier
-          @snapshot_name = request.snapshot_name
+          @request = request
         end
 
         def execute
-          @rds_client.create_db_snapshot(
-              db_instance_identifier: @db_instance_identifier,
-              db_snapshot_identifier: @snapshot_name
-          )
+          @request.db_snapshot_identifier = @rds_client.create_db_snapshot(
+              db_instance_identifier: @request.db_instance_identifier,
+              db_snapshot_identifier: @request.snapshot_name
+          ).db_snapshot.db_snapshot_identifier
         end
 
       end

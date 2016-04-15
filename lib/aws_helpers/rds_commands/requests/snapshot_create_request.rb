@@ -3,7 +3,7 @@ module AwsHelpers
     module Requests
       SnapshotCreateRequest = Struct.new(
           :std_out,
-          :image_id,
+          :db_snapshot_identifier,
           :snapshot_name,
           :db_instance_identifier,
           :instance_polling,
