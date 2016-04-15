@@ -1,7 +1,6 @@
 require 'aws_helpers/cloud_formation'
 
 describe AwsHelpers::CloudFormation do
-
   let(:config) { instance_double(AwsHelpers::Config) }
   let(:stdout) { instance_double(IO) }
   let(:stack_name) { 'my_stack_name' }
@@ -217,77 +216,4 @@ describe AwsHelpers::CloudFormation do
     end
   end
 
-  describe '#stack_create_change_set' do
-    let(:stack_create_change_set) { instance_double(StackCreateChangeSet) }
-    let(:stack_name) { 'my_stack_name' }
-    let(:change_set_name) { 'my_change_set_name' }
-    let(:template_json) { '{ "CloudformationTemplate": "values"}' }
-
-    before(:each) do
-      allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(StackCreateChangeSet).to receive(:new).and_return(stack_create_change_set)
-      allow(stack_create_change_set).to receive(:execute)
-    end
-
-    after(:each) do
-      AwsHelpers::CloudFormation.new.stack_create_change_set(stack_name, change_set_name, template_json)
-    end
-
-    it 'should create StackCreateChangeSet' do
-      expect(StackCreateChangeSet).to receive(:new).with(config, stack_name, change_set_name, template_json)
-    end
-
-    it 'should call StackCreateChangeSet execute method' do
-      expect(stack_create_change_set).to receive(:execute)
-    end
-  end
-
-  describe '#stack_describe_change_set' do
-    let(:stack_describe_change_set) { instance_double(StackDescribeChangeSet) }
-    let(:stack_name) { 'my_stack_name' }
-    let(:change_set_name) { 'my_change_set_name' }
-    let(:options) { {} }
-
-    before(:each) do
-      allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(StackDescribeChangeSet).to receive(:new).and_return(stack_describe_change_set)
-      allow(stack_describe_change_set).to receive(:execute)
-    end
-
-    after(:each) do
-      AwsHelpers::CloudFormation.new(options).stack_describe_change_set(stack_name, change_set_name, options)
-    end
-
-    it 'should create StackDescribeChangeSet' do
-      expect(StackDescribeChangeSet).to receive(:new).with(config, stack_name, change_set_name, options)
-    end
-
-    it 'should call StackDescribeChangeSet execute method' do
-      expect(stack_describe_change_set).to receive(:execute)
-    end
-  end
-
-  describe '#stack_delete_change_set' do
-    let(:stack_delete_change_set) { instance_double(StackDeleteChangeSet) }
-    let(:stack_name) { 'my_stack_name' }
-    let(:change_set_name) { 'my_change_set_name' }
-
-    before(:each) do
-      allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(StackDeleteChangeSet).to receive(:new).and_return(stack_delete_change_set)
-      allow(stack_delete_change_set).to receive(:execute)
-    end
-
-    after(:each) do
-      AwsHelpers::CloudFormation.new.stack_delete_change_set(stack_name, change_set_name, {})
-    end
-
-    it 'should create StackCreateChangeSet' do
-      expect(StackDeleteChangeSet).to receive(:new).with(config, stack_name, change_set_name, {})
-    end
-
-    it 'should call StackCreateChangeSet execute method' do
-      expect(stack_delete_change_set).to receive(:execute)
-    end
-  end
 end

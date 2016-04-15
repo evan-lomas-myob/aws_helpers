@@ -1,7 +1,6 @@
 require 'aws_helpers/elastic_load_balancing'
 
 describe AwsHelpers::ElasticLoadBalancing do
-
   let(:config) { instance_double(AwsHelpers::Config) }
 
   describe '#initialize' do

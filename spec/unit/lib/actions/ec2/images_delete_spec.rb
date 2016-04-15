@@ -6,6 +6,7 @@ require 'aws_helpers/actions/ec2/images_delete_by_time'
 describe AwsHelpers::Actions::EC2::ImagesDelete do
   describe '#execute' do
     let(:aws_ec2_client) { instance_double(Aws::EC2::Client) }
+    let(:stdout) { instance_double(IO) }
     let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: aws_ec2_client) }
     let(:tag_name_value) { 'AppName' }
 
@@ -16,7 +17,9 @@ describe AwsHelpers::Actions::EC2::ImagesDelete do
     let(:days) { 2 }
     let(:months) { 3 }
     let(:years) { 5 }
-    let(:delete_time) { Time.parse('01-Jan-2015') }
+
+    let(:options) { {hours: hours, days: days, months: months, years: years, stdout: stdout} }
+    let(:delete_time) { Time.new }
 
     before(:each) do
       allow(AwsHelpers::Utilities::DeleteTimeBuilder).to receive(:new).and_return(delete_time_builder)
@@ -26,15 +29,15 @@ describe AwsHelpers::Actions::EC2::ImagesDelete do
     end
 
     after(:each) do
-      AwsHelpers::Actions::EC2::ImagesDelete.new(config, tag_name_value, hours: hours, days: days, months: months, years: years).execute
+      AwsHelpers::Actions::EC2::ImagesDelete.new(config, tag_name_value, options).execute
     end
 
     it 'should call DeleteTimeBuilder #build with the correct parameters' do
-      expect(delete_time_builder).to receive(:build).with(hours: hours, days: days, months: months, years: years).and_return(delete_time)
+      expect(delete_time_builder).to receive(:build).with(options).and_return(delete_time)
     end
 
     it 'should create a new DeleteByTime with the correct parameters' do
-      expect(AwsHelpers::Actions::EC2::ImagesDeleteByTime).to receive(:new).with(config, tag_name_value, delete_time).and_return(images_delete_by_time)
+      expect(AwsHelpers::Actions::EC2::ImagesDeleteByTime).to receive(:new).with(config, tag_name_value, delete_time, options)
     end
 
     it 'should call execute on DeleteByTime' do

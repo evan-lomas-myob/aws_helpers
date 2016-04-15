@@ -7,6 +7,9 @@ include AwsHelpers::Actions::EC2
 describe GetWindowsPassword do
   let(:aws_ec2_client) { instance_double(Aws::EC2::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: aws_ec2_client) }
+  let(:stdout) { instance_double(IO) }
+
+  let(:options) { { stdout: stdout } }
 
   let(:instance_id) { 'my-instance_id' }
   let(:path_to_pem) { '/path_to_pem_file/pem.file' }
@@ -54,6 +57,7 @@ cgjPr3q6+hb7avSNivEdgQ==' }
   before(:each) do
     allow(File).to receive(:read).with(path_to_pem).and_return(pkcs8)
     expect(aws_ec2_client).to receive(:get_password_data).with(instance_id: instance_id).and_return(response)
+    allow(stdout).to receive(:puts)
   end
 
   context 'valid password' do
@@ -62,12 +66,12 @@ cgjPr3q6+hb7avSNivEdgQ==' }
     it 'should read the pem file' do
       expect(File).to receive(:read).with(path_to_pem).and_return(pkcs8)
       allow(aws_ec2_client).to receive(:get_password_data).with(instance_id: instance_id).and_return(response)
-      GetWindowsPassword.new(config, instance_id, path_to_pem).password
+      GetWindowsPassword.new(config, instance_id, path_to_pem, options).password
     end
 
     it 'should decrypt and return the correct password' do
       allow(aws_ec2_client).to receive(:get_password_data).with(instance_id: instance_id).and_return(response)
-      expect(GetWindowsPassword.new(config, instance_id, path_to_pem).password).to eq(password)
+      expect(GetWindowsPassword.new(config, instance_id, path_to_pem, options).password).to eq(password)
     end
   end
 
@@ -75,7 +79,7 @@ cgjPr3q6+hb7avSNivEdgQ==' }
     let(:response) { Aws::EC2::Types::GetPasswordDataResult.new(password_data: 'BADPASSWORDDATA') }
     it 'should throw and error' do
       allow(aws_ec2_client).to receive(:get_password_data).with(instance_id: instance_id).and_return(response)
-      expect { GetWindowsPassword.new(config, instance_id, path_to_pem).password }.to raise_error(OpenSSL::PKey::RSAError)
+      expect { GetWindowsPassword.new(config, instance_id, path_to_pem, options).password }.to raise_error(OpenSSL::PKey::RSAError)
     end
   end
 end

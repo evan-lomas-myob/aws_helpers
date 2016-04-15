@@ -1,58 +1,46 @@
 require 'aws-sdk-core'
-require 'aws_helpers/cloud_formation'
 require 'aws_helpers/actions/cloud_formation/stack_create'
 
-include Aws::CloudFormation::Types
-include AwsHelpers
-include AwsHelpers::Actions::CloudFormation
-
-describe StackCreate do
-  let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
-  let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client) }
-  let(:stack_progress) { instance_double(StackProgress) }
+describe AwsHelpers::Actions::CloudFormation::StackCreate do
+  let(:cloud_formation_client) { instance_double(Aws::CloudFormation::Client) }
+  let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloud_formation_client) }
+  let(:stack_progress) { instance_double(AwsHelpers::Actions::CloudFormation::StackProgress) }
   let(:stdout) { instance_double(IO) }
-  let(:stack_name) { 'my_stack_name' }
 
-  let(:options) { { stack_name: stack_name, stdout: stdout } }
-  let(:url) { 'https://my-bucket-url' }
-  let(:parameters) do
-    [
-      Parameter.new(parameter_key: 'param_key_1', parameter_value: 'param_value_1'),
-      Parameter.new(parameter_key: 'param_key_2', parameter_value: 'param_value_1')
-    ]
-  end
-  let(:capabilities) { ['CAPABILITY_IAM'] }
-
+  let(:stack_name) { 'name' }
   let(:request) do
     {
-      stack_name: stack_name,
-      s3_template_url: url,
-      parameters: parameters,
-      capabilities: capabilities
+        stack_name: stack_name,
+        s3_template_url: 'https://my-bucket-url',
+        parameters: [{parameter_key: 'param_key_1', parameter_value: 'param_value_1'}],
+        capabilities: ['CAPABILITY_IAM']
     }
   end
 
-  let(:max_attempts) { 10 }
-  let(:delay) { 30 }
-
   before(:each) do
-    allow(cloudformation_client).to receive(:create_stack).with(request)
-    allow(cloudformation_client).to receive(:describe_stacks).with(stack_name)
-    allow(StackProgress).to receive(:new).with(config, options).and_return(stack_progress)
+    allow(stdout).to receive(:puts)
+    allow(cloud_formation_client).to receive(:create_stack)
+    allow(AwsHelpers::Actions::CloudFormation::StackProgress).to receive(:new).and_return(stack_progress)
     allow(stack_progress).to receive(:execute)
-    allow(stdout).to receive(:puts).and_return(anything)
-    AwsHelpers::Actions::CloudFormation::StackCreate.new(config, stack_name, request, options).execute
   end
 
   after(:each) do
-    AwsHelpers::Actions::CloudFormation::StackCreate.new(config, stack_name, request, options).execute
+    described_class.new(config, request, stdout: stdout).execute
   end
 
-  it 'should call create_stack to update the stack' do
-    expect(cloudformation_client).to receive(:create_stack).with(request)
+  it 'should call stdout #puts with stack creation details' do
+    expect(stdout).to receive(:puts).with("Creating #{stack_name}")
   end
 
-  it 'should poll for stack update completion' do
+  it 'should call Aws::CloudFormation::Client #create_stack with correct parameters' do
+    expect(cloud_formation_client).to receive(:create_stack).with(request)
+  end
+
+  it 'should call AwsHelpers::Actions::CloudFormation::StackProgress #new with correct parameters' do
+    expect(AwsHelpers::Actions::CloudFormation::StackProgress).to receive(:new).with(config, stack_name: stack_name, stdout: stdout)
+  end
+
+  it 'should call AwsHelpers::Actions::CloudFormation::StackProgress #execute' do
     expect(stack_progress).to receive(:execute)
   end
 end

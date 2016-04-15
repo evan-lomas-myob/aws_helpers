@@ -14,7 +14,7 @@ module AwsHelpers
             []
           else
             instance_ids = response[0][0].instances.map(&:instance_id)
-            @config.aws_ec2_client.describe_instances(instance_ids: instance_ids).reservations[0].instances
+            @config.aws_ec2_client.describe_instances(instance_ids: instance_ids).reservations.map{ |r| r.instances }.flatten
           end
         end
       end

@@ -12,15 +12,16 @@ describe StackRetrieveEvents do
   let(:stack_resource) { instance_double(Aws::CloudFormation::Stack) }
 
   let(:stack_name) { 'my_stack_name' }
+  let(:stack_id) { 'id' }
   let(:next_token) { nil }
 
   let(:options) { { stack_name: stack_name } }
 
   let(:resource_type) { 'AWS::CloudFormation::Stack' }
 
-  let(:initiation_event) { CreateEventHelper.new(stack_name, 'CREATE_IN_PROGRESS', resource_type).execute }
-  let(:failed_event) { CreateEventHelper.new(stack_name, 'CREATE_FAILED', resource_type).execute }
-  let(:complete_event) { CreateEventHelper.new(stack_name, 'DELETE_COMPLETE', resource_type).execute }
+  let(:initiation_event) { CreateEventHelper.new(stack_name, stack_id, 'CREATE_IN_PROGRESS', resource_type).execute }
+  let(:failed_event) { CreateEventHelper.new(stack_name, stack_id, 'CREATE_FAILED', resource_type).execute }
+  let(:complete_event) { CreateEventHelper.new(stack_name, stack_id, 'DELETE_COMPLETE', resource_type).execute }
 
   let(:stack_events) { [initiation_event, failed_event, complete_event] }
 

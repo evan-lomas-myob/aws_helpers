@@ -8,8 +8,7 @@ module AwsHelpers
         include AwsHelpers::Utilities::Polling
 
         def initialize(config, options = {})
-           @client = config.aws_cloud_formation_client
-
+          @client = config.aws_cloud_formation_client
           @stdout = options[:stdout] || $stdout
           @delay = options[:delay] || 30
           @max_attempts = options[:max_attempts] || 40

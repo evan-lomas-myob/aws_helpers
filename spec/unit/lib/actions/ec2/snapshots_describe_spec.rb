@@ -8,6 +8,8 @@ describe AwsHelpers::Actions::EC2::SnapshotsDescribe do
     let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: aws_ec2_client) }
     let(:stdout) { instance_double(IO) }
     let(:snapshot_ids) { ['snapshot_id'] }
+
+    let(:options) { { stdout: stdout } }
     let(:response) do
       Aws::EC2::Types::DescribeSnapshotsResult.new(
         snapshots: [
@@ -21,14 +23,16 @@ describe AwsHelpers::Actions::EC2::SnapshotsDescribe do
       allow(stdout).to receive(:puts)
     end
 
+    after(:each) do
+      AwsHelpers::Actions::EC2::SnapshotsDescribe.new(config, snapshot_ids, options).execute
+    end
+
     it 'should call Aws::EC2::Client #describe_snapshots with correct parameters' do
       expect(aws_ec2_client).to receive(:describe_snapshots).with(snapshot_ids: snapshot_ids)
-      AwsHelpers::Actions::EC2::SnapshotsDescribe.new(config, snapshot_ids).execute
     end
 
     it 'should call stdout #puts with the snapshot details' do
       expect(stdout).to receive(:puts).with('Snapshot:snapshot_id State:state Progress:50')
-      AwsHelpers::Actions::EC2::SnapshotsDescribe.new(config, snapshot_ids, stdout: stdout).execute
     end
   end
 end
