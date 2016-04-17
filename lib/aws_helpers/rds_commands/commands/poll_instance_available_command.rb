@@ -18,10 +18,10 @@ module AwsHelpers
 
         def execute
           poll(@delay, @max_attempts) do
-            instance = @rds_client.describe_db_instances(db_instance_identifier: @db_instance_identifier).first
+            instance = @rds_client.describe_db_instances(db_instance_identifier: @db_instance_identifier).db_instances.first
             status = instance.db_instance_status
-            stdout.puts "RDS Instance=#{@db_instance_identifier}, Status=#{status}"
-            status == InstanceState::AVAILABLE
+            std_out.puts "RDS Instance=#{@db_instance_identifier}, Status=#{status}"
+            status == 'available'
           end
         end
 
