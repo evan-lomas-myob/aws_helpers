@@ -32,4 +32,10 @@ describe AwsHelpers::RDSCommands::Commands::PollSnapshotAvailableCommand do
     request.snapshot_name = 'Batman'
     expect { @command.execute }.to raise_error(RuntimeError)
   end
+
+  it 'times out if the snapshot status is anything else' do
+    snapshot.status = 'partying'
+    expect(rds_client).to receive(:describe_db_snapshots).twice
+    expect { @command.execute }.to raise_error(Aws::Waiters::Errors::TooManyAttemptsError)
+  end
 end

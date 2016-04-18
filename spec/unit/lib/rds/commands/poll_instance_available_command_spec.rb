@@ -29,6 +29,7 @@ describe AwsHelpers::RDSCommands::Commands::PollInstanceAvailableCommand do
 
   it 'times out if the instance status is anything else' do
     instance.db_instance_status = 'failed'
+    expect(rds_client).to receive(:describe_db_instances).twice
     expect { @command.execute }.to raise_error(Aws::Waiters::Errors::TooManyAttemptsError)
   end
 end

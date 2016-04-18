@@ -24,7 +24,6 @@ module AwsHelpers
             status == 'available'
           end
         end
-
       end
     end
   end
