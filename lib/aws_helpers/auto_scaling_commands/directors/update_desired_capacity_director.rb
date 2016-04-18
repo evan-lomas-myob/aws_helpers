@@ -4,7 +4,7 @@ require 'aws_helpers/auto_scaling_commands/commands/command_runner'
 module AwsHelpers
   module AutoScalingCommands
     module Directors
-      class GetDesiredCapacityDirector
+      class UpdateDesiredCapacityDirector
         include AwsHelpers::EC2Commands::Commands::CommandRunner
 
         def initialize(config)
@@ -14,7 +14,7 @@ module AwsHelpers
         def create(request)
           @request = request
           @commands = [
-            AwsHelpers::AutoscalingCommands::Commands::GetDesiredCapacityCommand.new(@config, request)
+            AwsHelpers::AutoscalingCommands::Commands::UpdateDesiredCapacityCommand.new(@config, request)
           ]
           execute_commands
         end

@@ -1,10 +1,10 @@
-require 'aws_helpers/auto_scaling_commands/commands/get_desired_capacity_command'
+require 'aws_helpers/auto_scaling_commands/commands/get_current_instances_command'
 require 'aws_helpers/auto_scaling_commands/commands/command_runner'
 
 module AwsHelpers
   module AutoScalingCommands
     module Directors
-      class GetDesiredCapacityDirector
+      class GetCurrentInstancesDirector
         include AwsHelpers::EC2Commands::Commands::CommandRunner
 
         def initialize(config)
@@ -14,7 +14,7 @@ module AwsHelpers
         def create(request)
           @request = request
           @commands = [
-            AwsHelpers::AutoscalingCommands::Commands::GetDesiredCapacityCommand.new(@config, request)
+            AwsHelpers::AutoScalingCommands::Commands::GetCurrentInstanceCommand.new(@config, request)
           ]
           execute_commands
         end
