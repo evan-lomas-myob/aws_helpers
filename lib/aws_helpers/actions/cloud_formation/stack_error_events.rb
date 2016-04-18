@@ -7,14 +7,14 @@ module AwsHelpers
   module Actions
     module CloudFormation
       class StackErrorEvents
-        def initialize(config, options)
+        def initialize(config, stack_id, options)
           @config = config
-          @options = options
+          @stack_id = stack_id
           @stdout = options[:stdout] || $stdout
         end
 
         def execute
-          events = AwsHelpers::Actions::CloudFormation::StackRetrieveEvents.new(@config, @options).execute
+          events = AwsHelpers::Actions::CloudFormation::StackRetrieveEvents.new(@config, @stack_id).execute
           events = AwsHelpers::Actions::CloudFormation::StackEventsFilterPostInitiation.new(events).execute
           events = AwsHelpers::Actions::CloudFormation::StackEventsFilterFailed.new(events).execute
           events.each do |event|

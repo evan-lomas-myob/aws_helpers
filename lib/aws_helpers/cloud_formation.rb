@@ -102,6 +102,7 @@ module AwsHelpers
     # @return [nil]
     #
     def stack_delete(stack_name, options = {})
+      #TODO: Fix pooling options
       AwsHelpers::Actions::CloudFormation::StackDelete.new(config, stack_name, options).execute
     end
 
@@ -131,6 +132,7 @@ module AwsHelpers
     # @return
     #
     def stack_modify_parameters(stack_name, parameters, options = {})
+      #TODO: Fix polling options
       AwsHelpers::Actions::CloudFormation::StackModifyParameters.new(config, stack_name, parameters, options).execute
     end
 

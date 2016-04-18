@@ -12,7 +12,8 @@ describe AwsHelpers::Actions::CloudFormation::StackProgress do
     let(:check_stack_failure) { instance_double(AwsHelpers::Actions::CloudFormation::CheckStackFailure) }
 
     let(:stdout) { instance_double(IO) }
-    let(:options) { {stack_name: 'name', stdout: stdout, delay: 1, max_attempts: 2} }
+    let(:stack_id) { 'id' }
+    let(:options) { {stdout: stdout, delay: 1, max_attempts: 2} }
 
     before(:each) do
       allow(AwsHelpers::Actions::CloudFormation::PollStackStatus).to receive(:new).and_return(poll_stack_status)
@@ -24,19 +25,19 @@ describe AwsHelpers::Actions::CloudFormation::StackProgress do
     end
 
     after(:each) do
-      described_class.new(config, options).execute
+      described_class.new(config, stack_id, options).execute
     end
 
     it 'should call PollStackStatus #new with correct parameters' do
-      expect(AwsHelpers::Actions::CloudFormation::PollStackStatus).to receive(:new).with(config, options)
+      expect(AwsHelpers::Actions::CloudFormation::PollStackStatus).to receive(:new).with(config, stack_id, options)
     end
 
     it 'should call StackErrorEvents #new with correct parameters' do
-      expect(AwsHelpers::Actions::CloudFormation::StackErrorEvents).to receive(:new).with(config, options)
+      expect(AwsHelpers::Actions::CloudFormation::StackErrorEvents).to receive(:new).with(config, stack_id, stdout: stdout)
     end
 
     it 'should call CheckStackFailure #new with correct parameters' do
-      expect(AwsHelpers::Actions::CloudFormation::CheckStackFailure).to receive(:new).with(config, options)
+      expect(AwsHelpers::Actions::CloudFormation::CheckStackFailure).to receive(:new).with(config, stack_id)
     end
 
     it 'should call #execute on PollStackStatus, StackErrorEvents and CheckStackFailure in hte correct order' do

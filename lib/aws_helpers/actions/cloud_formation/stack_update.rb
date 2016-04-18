@@ -4,13 +4,12 @@ module AwsHelpers
   module Actions
     module CloudFormation
       class StackUpdate
-        def initialize(config, stack_name, request, options = {})
+        def initialize(config, request, options = {})
           @config = config
-          @stack_name = stack_name
+          @stack_name = request[:stack_name]
           @request = request
           @options = options
           @stdout = options[:stdout] || $stdout
-          @options[:stack_name] = @stack_name
         end
 
         def execute
@@ -18,8 +17,9 @@ module AwsHelpers
 
           begin
             @stdout.puts "Updating #{@stack_name}"
-            client.update_stack(@request)
-            AwsHelpers::Actions::CloudFormation::StackProgress.new(@config, @options).execute
+            response = client.update_stack(@request)
+            AwsHelpers::Actions::CloudFormation::StackProgress.new(
+                @config, response.stack_id, stdout: @stdout, delay:@options[:delay], max_attempts:@options[:max_attempts]).execute
           rescue Aws::CloudFormation::Errors::ValidationError => validation_error
             if validation_error.message == 'No updates are to be performed.'
               @stdout.puts "No updates to perform for #{@stack_name}."

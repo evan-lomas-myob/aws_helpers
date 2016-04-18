@@ -12,8 +12,8 @@ module AwsHelpers
           @config = config
           @stack_name = stack_name
           @parameters = parameters
+          @options = options
           @stdout = options[:stdout] || $stdout
-          @options = create_stack_options(@stdout, options[:polling])
         end
 
         def execute
@@ -26,17 +26,12 @@ module AwsHelpers
           else
             @stdout.puts "Updating #{@stack_name}"
             client = @config.aws_cloud_formation_client
-            client.update_stack(request)
-            AwsHelpers::Actions::CloudFormation::StackProgress.new(@config, @options).execute
+            response = client.update_stack(request)
+            AwsHelpers::Actions::CloudFormation::StackProgress.new(
+                @config, response.stack_id, stdout: @options[:stdout], delay: @options[:delay], max_attempts: @options[:max_attempts]).execute
           end
         end
 
-        private
-
-        def create_stack_options(stdout, polling)
-          options = create_options(stdout, polling)
-          options.tap{|options| options[:stack_name] = @stack_name}
-        end
       end
     end
   end

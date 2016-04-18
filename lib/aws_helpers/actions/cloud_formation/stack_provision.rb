@@ -27,12 +27,11 @@ module AwsHelpers
         end
 
         def execute
-          options = {stdout: @stdout}
-          options.merge!({server_side_encryption: 'AES256'}) if @bucket_encrypt
-          template_url = UploadTemplate.new(@config, @stack_name, @template_json, @s3_bucket_name, options).execute if @s3_bucket_name
+          #TODO Polling Options
+          template_url = UploadTemplate.new(@config, @stack_name, @template_json, @s3_bucket_name, stdout: @stdout, bucket_encrypt: @bucket_encrypt).execute if @s3_bucket_name
 
           if StackExists.new(@config, @stack_name).execute && StackRollbackComplete.new(@config, @stack_name).execute
-            StackDelete.new(@config, @stack_name, stdout: @stdout).execute
+            StackDelete.new(@config, @stack_name, @polling).execute
           end
 
           request = StackCreateRequestBuilder.new(@stack_name, template_url, @template_json, @parameters, @capabilities).execute
@@ -41,7 +40,7 @@ module AwsHelpers
         end
 
         def update(request)
-          StackUpdate.new(@config, @stack_name, request, @polling).execute
+          StackUpdate.new(@config, request, @polling).execute
         end
 
         def create(request)
