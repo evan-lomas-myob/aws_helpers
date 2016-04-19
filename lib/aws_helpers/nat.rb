@@ -1,8 +1,12 @@
 require_relative 'client'
-require_relative 'actions/nat/gateway_create'
-require_relative 'actions/nat/gateway_delete'
+require_relative 'nat_commands/requests/gateway_delete_request'
+require_relative 'nat_commands/requests/gateway_create_request'
+require_relative 'nat_commands/directors/gateway_create_director'
+require_relative 'nat_commands/directors/gateway_delete_director'
 
-include AwsHelpers::Actions::NAT
+include AwsHelpers::NATCommands::Directors
+include AwsHelpers::NATCommands::Requests
+# include AwsHelpers::Actions::NAT
 
 module AwsHelpers
   class NAT < AwsHelpers::Client
@@ -33,7 +37,8 @@ module AwsHelpers
     # @return [String] the gateway id
     #
     def gateway_create(subnet_id, allocation_id)
-      GatewayCreate.new(config, subnet_id, allocation_id).execute
+      request = GatewayCreateRequest.new(subnet_id: subnet_id, allocation_id: allocation_id)
+      GatewayCreateDirector.new(config).create(request)
     end
 
     # Delete a NAT gateway
@@ -46,7 +51,8 @@ module AwsHelpers
     # @return [struct Aws::EC2::Types::DeleteNatGatewayResult] contains the gateway id
     #
     def gateway_delete(gateway_id)
-      GatewayDelete.new(config, gateway_id).execute
+      request = GatewayDeleteRequest.new(gateway_id: gateway_id)
+      GatewayDeleteDirector.new(config).delete(request)
     end
   end
 end

@@ -2,10 +2,26 @@ require 'time'
 require 'aws_helpers/nat'
 
 describe AwsHelpers::NAT do
-  let(:subnet_id) { '1' }
-  let(:allocation_id) { '1' }
-  let(:config) { instance_double(AwsHelpers::Config) }
+  let(:subnet_id) { '13' }
+  let(:allocation_id) { '42' }
+  let(:gateway_id) { '99' }
+  let(:create_request) { GatewayCreateRequest.new(subnet_id: subnet_id, allocation_id: allocation_id) }
+  let(:delete_request) { GatewayDeleteRequest.new(gateway_id: gateway_id) }
+  let(:create_director) { instance_double(GatewayCreateDirector) }
+  let(:delete_director) { instance_double(GatewayDeleteDirector) }
+  let(:ec2_client) { instance_double(Aws::EC2::Client) }
+  let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: ec2_client) }
   let(:image_name) { 'ec2_name' }
+
+  before(:each) do
+    allow(AwsHelpers::Config).to receive(:new).and_return(config)
+    allow(GatewayCreateRequest).to receive(:new).and_return(create_request)
+    allow(GatewayCreateDirector).to receive(:new).and_return(create_director)
+    allow(GatewayDeleteRequest).to receive(:new).and_return(delete_request)
+    allow(GatewayDeleteDirector).to receive(:new).and_return(delete_director)
+    allow(create_director).to receive(:create)
+    allow(delete_director).to receive(:delete)
+  end
 
   describe '#initialize' do
     it 'should call AwsHelpers::Client initialize method' do
@@ -16,45 +32,48 @@ describe AwsHelpers::NAT do
   end
 
   describe '#gateway_create' do
-    let(:gateway_create) { instance_double(GatewayCreate) }
-
-    before(:each) do
-      allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(GatewayCreate).to receive(:new).and_return(gateway_create)
-      allow(gateway_create).to receive(:execute)
-    end
-
-    it 'should create GatewayCreate with default parameters' do
-      expect(GatewayCreate).to receive(:new).with(config, subnet_id, allocation_id)
+    it 'should create a GatewayCreateRequest with the correct parameters' do
+      expect(GatewayCreateRequest)
+        .to receive(:new)
+        .with(subnet_id: subnet_id, allocation_id: allocation_id)
       AwsHelpers::NAT.new.gateway_create(subnet_id, allocation_id)
     end
 
-    it 'should call GatewayCreate execute method' do
-      expect(gateway_create).to receive(:execute)
+    it 'should create a GatewayCreateDirector with the config' do
+      expect(GatewayCreateDirector)
+        .to receive(:new)
+        .with(config)
+      AwsHelpers::NAT.new.gateway_create(subnet_id, allocation_id)
+    end
+
+    it 'should call create on the GatewayCreateDirector' do
+      expect(create_director)
+        .to receive(:create)
+        .with(create_request)
       AwsHelpers::NAT.new.gateway_create(subnet_id, allocation_id)
     end
   end
 
   describe '#gateway_delete' do
-    let(:gateway_delete) { instance_double(GatewayDelete) }
-    let(:gateway_id) { '1' }
-
-    before(:each) do
-      allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(GatewayDelete).to receive(:new).and_return(gateway_delete)
-      allow(gateway_delete).to receive(:execute)
+    it 'should create a GatewayDeleteRequest with the correct parameters' do
+      expect(GatewayDeleteRequest)
+        .to receive(:new)
+        .with(gateway_id: gateway_id)
+      AwsHelpers::NAT.new.gateway_delete(gateway_id)
     end
 
-    subject { AwsHelpers::NAT.new.gateway_delete(gateway_id) }
-
-    it 'should create GatewayDelete with parameters' do
-      expect(GatewayDelete).to receive(:new).with(config, gateway_id)
-      subject
+    it 'should delete a GatewayDeleteDirector with the config' do
+      expect(GatewayDeleteDirector)
+        .to receive(:new)
+        .with(config)
+      AwsHelpers::NAT.new.gateway_delete(gateway_id)
     end
 
-    it 'should call GatewayDelete execute method' do
-      expect(gateway_delete).to receive(:execute)
-      subject
+    it 'should call delete on the GatewayDeleteDirector' do
+      expect(delete_director)
+        .to receive(:delete)
+        .with(delete_request)
+      AwsHelpers::NAT.new.gateway_delete(gateway_id)
     end
   end
 end

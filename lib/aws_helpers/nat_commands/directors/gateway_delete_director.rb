@@ -1,20 +1,20 @@
-require 'aws_helpers/nat_commands/commands/gateway_create_command'
+require 'aws_helpers/nat_commands/commands/gateway_delete_command'
 require 'aws_helpers/nat_commands/commands/command_runner'
 
 module AwsHelpers
   module NATCommands
     module Directors
-      class GatewayCreateDirector
+      class GatewayDeleteDirector
         include AwsHelpers::NATCommands::Commands::CommandRunner
 
         def initialize(config)
           @config = config
         end
 
-        def create(request)
+        def delete(request)
           @request = request
           @commands = [
-            AwsHelpers::NATCommands::Commands::GatewayCreateCommand.new(@config, request)
+            AwsHelpers::EC2Commands::Commands::GatewayCreateCommand.new(@config, request)
           ]
           execute_commands
         end
