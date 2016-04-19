@@ -2,7 +2,18 @@ require 'aws_helpers/kms'
 require 'aws_helpers/actions/kms/arn_retrieve'
 
 describe AwsHelpers::KMS do
-  let(:config) { instance_double(AwsHelpers::Config) }
+  let(:alias_name) { 'Batman' }
+  let(:key_arn) { '123' }
+  let(:request) { GatewayDeleteRequest.new(alias_name: alias_name) }
+  let(:director) { instance_double(GetKeyArnDirector) }
+  let(:kms_client) { instance_double(Aws::KMS::Client) }
+  let(:config) { instance_double(AwsHelpers::Config, aws_kms_client: kms_client) }
+
+  before do
+    allow(GetKeyArnRequest).to receive(:new).and_return(request)
+    allow(GetKeyArnDirector).to receive(:new).and_return(director)
+    allow(director).to receive(:get).and_return(key_arn)
+  end
 
   describe '#initialize' do
     it 'should call AwsHelpers::Client initialize method' do
@@ -12,7 +23,7 @@ describe AwsHelpers::KMS do
     end
   end
 
-  describe '#kms_arn' do
+  describe '#key_arn' do
     let(:kms_arn_retrieve) { instance_double(AwsHelpers::Actions::KMS::ArnRetrieve) }
     let(:alias_name) { 'alias' }
 
@@ -22,21 +33,30 @@ describe AwsHelpers::KMS do
       allow(kms_arn_retrieve).to receive(:execute)
     end
 
-    it 'should create KmsArnRetrieve #new with correct parameters' do
-      expect(AwsHelpers::Actions::KMS::ArnRetrieve).to receive(:new)
-        .with(config, alias_name, {})
+    it 'should create a GetKeyArnRequest' do
+      expect(GetKeyArnRequest)
+        .to receive(:new)
+        .with(alias_name: alias_name)
       AwsHelpers::KMS.new.key_arn(alias_name)
     end
 
-    it 'should create KmsArnRetrieve #new passing optional parameters' do
-      expect(AwsHelpers::Actions::KMS::ArnRetrieve).to receive(:new)
-        .with(config, alias_name, use_key_metadata_arn: true)
-      AwsHelpers::KMS.new.key_arn(alias_name, use_key_metadata_arn: true)
+    it 'should create a GetKeyArnDirector' do
+      expect(GetKeyArnDirector)
+        .to receive(:new)
+        .with(config)
+      AwsHelpers::KMS.new.key_arn(alias_name)
     end
 
-    it 'should call KmsArnRetrieve #new execute method' do
-      expect(kms_arn_retrieve).to receive(:execute)
+    it 'should call get on the the director' do
+      expect(director)
+        .to receive(:get)
+        .with(request)
       AwsHelpers::KMS.new.key_arn(alias_name)
+    end
+
+    it 'should return the key arn' do
+      arn = AwsHelpers::KMS.new.key_arn(alias_name)
+      expect(arn).to eq(key_arn)
     end
   end
 end

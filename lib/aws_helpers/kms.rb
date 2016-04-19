@@ -1,5 +1,11 @@
 require_relative 'client'
-require_relative 'actions/kms/arn_retrieve'
+
+require_relative 'kms_commands/requests/get_key_arn_request'
+require_relative 'kms_commands/directors/get_key_arn_director'
+
+
+include AwsHelpers::KMSCommands::Directors
+include AwsHelpers::KMSCommands::Requests
 
 module AwsHelpers
   class KMS < AwsHelpers::Client
@@ -27,8 +33,9 @@ module AwsHelpers
     #
     # @return [String,nil] the kms arn
     #
-    def key_arn(alias_name, options = {})
-      AwsHelpers::Actions::KMS::ArnRetrieve.new(config, alias_name, options).execute
+    def key_arn(alias_name)
+      request = GetKeyArnRequest.new(alias_name: alias_name)
+      GetKeyArnDirector.new(config).get(request)
     end
   end
 end
