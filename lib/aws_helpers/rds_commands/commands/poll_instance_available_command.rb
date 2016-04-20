@@ -1,11 +1,11 @@
 require 'aws_helpers/actions/rds/instance_state'
 require 'aws_helpers/utilities/polling'
-require 'aws_helpers/rds_commands/commands/command'
+require 'aws_helpers/command'
 
 module AwsHelpers
   module RDSCommands
     module Commands
-      class PollInstanceAvailableCommand < AwsHelpers::RDSCommands::Commands::Command
+      class PollInstanceAvailableCommand < AwsHelpers::Command
         include AwsHelpers::Utilities::Polling
 
         def initialize(config, request)

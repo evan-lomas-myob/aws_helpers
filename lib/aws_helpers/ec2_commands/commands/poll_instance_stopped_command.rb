@@ -1,9 +1,9 @@
-require 'aws_helpers/ec2_commands/commands/command'
+require 'aws_helpers/command'
 
 module AwsHelpers
   module EC2Commands
     module Commands
-      class PollInstanceStoppedCommand < AwsHelpers::EC2Commands::Commands::Command
+      class PollInstanceStoppedCommand < AwsHelpers::Command
         include AwsHelpers::Utilities::Polling
 
         def initialize(config, request)

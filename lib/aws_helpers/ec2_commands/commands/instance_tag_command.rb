@@ -1,9 +1,9 @@
-require 'aws_helpers/ec2_commands/commands/command'
+require 'aws_helpers/command'
 
 module AwsHelpers
   module EC2Commands
     module Commands
-      class InstanceTagCommand < AwsHelpers::EC2Commands::Commands::Command
+      class InstanceTagCommand < AwsHelpers::Command
         def initialize(config, request)
           @client = config.aws_ec2_client
           @request = request

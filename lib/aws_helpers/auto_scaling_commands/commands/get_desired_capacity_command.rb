@@ -1,9 +1,9 @@
-require 'aws_helpers/auto_scaling_commands/commands/command'
+require 'aws_helpers/command'
 
 module AwsHelpers
   module AutoScalingCommands
     module Commands
-      class GetDesiredCapacityCommand < AwsHelpers::AutoScalingCommands::Commands::Command
+      class GetDesiredCapacityCommand < AwsHelpers::Command
         def initialize(config, request)
           @client = config.aws_auto_scaling_client
           @request = request

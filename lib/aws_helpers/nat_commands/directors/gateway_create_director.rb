@@ -1,11 +1,11 @@
 require 'aws_helpers/nat_commands/commands/gateway_create_command'
-require 'aws_helpers/nat_commands/commands/command_runner'
+require 'aws_helpers/command_runner'
 
 module AwsHelpers
   module NATCommands
     module Directors
       class GatewayCreateDirector
-        include AwsHelpers::NATCommands::Commands::CommandRunner
+        include AwsHelpers::CommandRunner
 
         def initialize(config)
           @config = config

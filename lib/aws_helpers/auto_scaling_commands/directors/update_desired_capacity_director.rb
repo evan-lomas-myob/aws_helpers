@@ -1,11 +1,11 @@
 require 'aws_helpers/auto_scaling_commands/commands/get_desired_capacity_command'
-require 'aws_helpers/auto_scaling_commands/commands/command_runner'
+require 'aws_helpers/command_runner'
 
 module AwsHelpers
   module AutoScalingCommands
     module Directors
       class UpdateDesiredCapacityDirector
-        include AwsHelpers::EC2Commands::Commands::CommandRunner
+        include AwsHelpers::CommandRunner
 
         def initialize(config)
           @config = config
