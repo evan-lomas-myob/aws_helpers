@@ -21,15 +21,15 @@ module AwsHelpers
           @s3_bucket_name = options[:s3_bucket_name]
           @bucket_encrypt = options[:bucket_encrypt]
           @stdout = options[:stdout]
-          @polling = create_options(@stdout, options[:polling])
+          @bucket_options = create_options(@stdout, options[:bucket_polling]).tap { |tap| tap[:bucket_encrypt] = @bucket_encrypt }
+          @stack_options = create_options(@stdout, options[:stack_polling])
         end
 
         def execute
-          #TODO Polling Options
-          template_url = UploadTemplate.new(@config, @stack_name, @template_json, @s3_bucket_name, stdout: @stdout, bucket_encrypt: @bucket_encrypt).execute if @s3_bucket_name
+          template_url = UploadTemplate.new(@config, @stack_name, @template_json, @s3_bucket_name, @bucket_options).execute if @s3_bucket_name
 
           if StackExists.new(@config, @stack_name).execute && StackRollbackComplete.new(@config, @stack_name).execute
-            StackDelete.new(@config, @stack_name, @polling).execute
+            StackDelete.new(@config, @stack_name, @stack_options).execute
           end
 
           request = StackCreateRequestBuilder.new(@stack_name, template_url, @template_json, @parameters, @capabilities).execute
@@ -38,11 +38,11 @@ module AwsHelpers
         end
 
         def update(request)
-          StackUpdate.new(@config, request, @polling).execute
+          StackUpdate.new(@config, request, @stack_options).execute
         end
 
         def create(request)
-          StackCreate.new(@config, request, @polling).execute
+          StackCreate.new(@config, request, @stack_options).execute
         end
       end
     end

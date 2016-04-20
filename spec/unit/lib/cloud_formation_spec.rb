@@ -7,7 +7,7 @@ describe AwsHelpers::CloudFormation do
 
   describe '#initialize' do
     it 'should call AwsHelpers::Client initialize method' do
-      options = { endpoint: 'http://endpoint' }
+      options = {endpoint: 'http://endpoint'}
       expect(AwsHelpers::Client).to receive(:new).with(options)
       AwsHelpers::CloudFormation.new(options)
     end
@@ -16,11 +16,11 @@ describe AwsHelpers::CloudFormation do
   describe '#stack_provision' do
     let(:stack_provision) { instance_double(AwsHelpers::Actions::CloudFormation::StackProvision) }
     let(:template) { '{"AWSTemplateFormatVersion" : "2010-09-09"}' }
-    let(:parameters) { [{ parameter_key: 'key', parameter_value: 'value' }] }
+    let(:parameters) { [{parameter_key: 'key', parameter_value: 'value'}] }
     let(:capabilities) { ['CAPABILITY_IAM'] }
     let(:bucket_name) { 'my_bucket_name' }
     let(:bucket_encrypt) { true }
-    let(:polling) { { max_attempts: 5, delay: 1 } }
+    let(:polling) { {max_attempts: 5, delay: 1} }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
@@ -58,9 +58,14 @@ describe AwsHelpers::CloudFormation do
       AwsHelpers::CloudFormation.new.stack_provision(stack_name, template, stdout: stdout)
     end
 
+    it 'should create StackProvision with optional :bucket_polling' do
+      expect(AwsHelpers::Actions::CloudFormation::StackProvision).to receive(:new).with(config, stack_name, template, bucket_polling: polling)
+      AwsHelpers::CloudFormation.new.stack_provision(stack_name, template, bucket_polling: polling)
+    end
+
     it 'should create StackProvision with optional :stack_polling' do
-      expect(AwsHelpers::Actions::CloudFormation::StackProvision).to receive(:new).with(config, stack_name, template, polling: polling)
-      AwsHelpers::CloudFormation.new.stack_provision(stack_name, template, polling: polling)
+      expect(AwsHelpers::Actions::CloudFormation::StackProvision).to receive(:new).with(config, stack_name, template, stack_polling: polling)
+      AwsHelpers::CloudFormation.new.stack_provision(stack_name, template, stack_polling: polling)
     end
 
     it 'should call StackProvision execute method' do
@@ -71,6 +76,7 @@ describe AwsHelpers::CloudFormation do
 
   describe '#stack_delete' do
     let(:stack_delete) { instance_double(AwsHelpers::Actions::CloudFormation::StackDelete) }
+    let(:options) { {stdout: stdout, stack_polling: {delay: 1, max_attempts: 2}} }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
@@ -83,9 +89,9 @@ describe AwsHelpers::CloudFormation do
       AwsHelpers::CloudFormation.new.stack_delete(stack_name)
     end
 
-    it 'should create StackDelete with stack optional stdout' do
-      expect(AwsHelpers::Actions::CloudFormation::StackDelete).to receive(:new).with(config, stack_name, stdout: stdout)
-      AwsHelpers::CloudFormation.new.stack_delete(stack_name, stdout: stdout)
+    it 'should create StackDelete with stack options' do
+      expect(AwsHelpers::Actions::CloudFormation::StackDelete).to receive(:new).with(config, stack_name, stdout: stdout, delay: 1, max_attempts: 2)
+      AwsHelpers::CloudFormation.new.stack_delete(stack_name, options)
     end
 
     it 'should call StackDelete execute method' do
@@ -148,7 +154,8 @@ describe AwsHelpers::CloudFormation do
 
   describe '#stack_modify_parameters' do
     let(:stack_modify_parameters) { instance_double(AwsHelpers::Actions::CloudFormation::StackModifyParameters) }
-    let(:parameters) { [{ parameter_key: 'key', parameter_value: 'value' }] }
+    let(:parameters) { [{parameter_key: 'key', parameter_value: 'value'}] }
+    let(:options) { {stdout: stdout, stack_polling: {delay: 1, max_attempts: 2}} }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
@@ -162,11 +169,19 @@ describe AwsHelpers::CloudFormation do
 
     it 'should create StackModifyParameters' do
       expect(AwsHelpers::Actions::CloudFormation::StackModifyParameters).to receive(:new).with(config, stack_name, parameters, {})
+      AwsHelpers::CloudFormation.new.stack_modify_parameters(stack_name, parameters)
     end
 
     it 'should call StackModifyParameters execute method' do
       expect(stack_modify_parameters).to receive(:execute)
+      AwsHelpers::CloudFormation.new.stack_modify_parameters(stack_name, parameters)
     end
+
+    it 'should create StackModifyParameters with stack options' do
+      expect(AwsHelpers::Actions::CloudFormation::StackModifyParameters).to receive(:new).with(config, stack_name, parameters, stdout: stdout, delay: 1, max_attempts: 2)
+      AwsHelpers::CloudFormation.new.stack_modify_parameters(stack_name, parameters, options)
+    end
+
   end
 
   describe '#stack_resources' do

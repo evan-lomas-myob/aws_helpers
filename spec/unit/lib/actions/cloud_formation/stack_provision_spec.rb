@@ -39,7 +39,7 @@ describe AwsHelpers::Actions::CloudFormation::StackProvision do
     context 's3_bucket_name option not provided' do
 
       after(:each) do
-        described_class.new(config, stack_name, template_json, stdout: stdout, polling: polling).execute
+        described_class.new(config, stack_name, template_json, stdout: stdout, stack_polling: polling).execute
       end
 
       context 'the stack does not exist' do
@@ -159,6 +159,22 @@ describe AwsHelpers::Actions::CloudFormation::StackProvision do
 
       before(:each) do
         allow(stack_exists).to receive(:execute).and_return(false)
+      end
+
+      context 'bucket_polling provided' do
+
+        after(:each) do
+          described_class.new(config, stack_name, template_json, s3_bucket_name: s3_bucket_name, stdout: stdout, bucket_polling: polling).execute
+        end
+
+        it 'should call AwsHelpers::Actions::S3::UploadTemplate #new with correct parameters' do
+          expect(AwsHelpers::Actions::S3::UploadTemplate).to receive(:new).with(config, stack_name, template_json, s3_bucket_name, stdout: stdout, bucket_encrypt: nil, delay: 1, max_attempts: 2)
+        end
+
+        it 'should call AwsHelpers::Actions::S3::UploadTemplate #execute' do
+          expect(stack_upload_template).to receive(:execute)
+        end
+
       end
 
       context 'bucket_encrypt option not provided' do
