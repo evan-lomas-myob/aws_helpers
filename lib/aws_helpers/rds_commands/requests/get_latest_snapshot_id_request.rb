@@ -5,7 +5,7 @@ module AwsHelpers
           :std_out,
           :snapshot_id,
           :snapshot_name,
-          :db_instance_identifier,
+          :db_instance_id,
           :instance_polling,
           :snapshot_polling)
     end
