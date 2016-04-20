@@ -1,10 +1,19 @@
 require_relative 'client'
-require_relative 'actions/rds/snapshot_create'
-require_relative 'actions/rds/snapshots_delete'
-require_relative 'actions/rds/latest_snapshot'
+# require_relative 'actions/rds/snapshot_create'
+# require_relative 'actions/rds/snapshots_delete'
+# require_relative 'actions/rds/latest_snapshot'
+# require_relative 'client'
+require_relative 'rds_commands/requests/snapshot_create_request'
+require_relative 'rds_commands/requests/snapshot_delete_request'
+require_relative 'rds_commands/directors/snapshot_create_director'
+require_relative 'rds_commands/directors/snapshot_delete_director'
+require_relative 'rds_commands/requests/get_latest_snapshot_id_request'
+require_relative 'rds_commands/directors/get_latest_snapshot_id_director'
 
-include AwsHelpers
-include AwsHelpers::Actions::RDS
+
+include AwsHelpers::RDSCommands::Directors
+include AwsHelpers::RDSCommands::Requests
+# include AwsHelpers::Actions::RDS
 
 module AwsHelpers
   class RDS < AwsHelpers::Client
@@ -61,7 +70,8 @@ module AwsHelpers
     #
 
     def snapshot_create(db_instance_id, options = {})
-      SnapshotCreate.new(config, db_instance_id, options).execute
+      request = SnapshotCreateRequest.new(db_instance_id: db_instance_id)
+      SnapshotCreateDirector.new(config).create(request)
     end
 
     # Deletes manual snapshots that were made for the RDS instance from now. Optionally keep snapshots for hours, days, months and years
@@ -79,7 +89,9 @@ module AwsHelpers
     # @return [struct Aws::RDS::Types::DBSnapshot]
 
     def snapshots_delete(db_instance_id, options = {})
-      SnapshotsDelete.new(config, db_instance_id, options).execute
+      request = SnapshotDeleteRequest.new(db_instance_id: db_instance_id)
+      SnapshotDeleteDirector.new(config).delete(request)
+      # SnapshotsDelete.new(config, db_instance_id, options).execute
     end
 
     # Gets the latest snapshot that was made for the RDS instance
@@ -92,7 +104,9 @@ module AwsHelpers
     # @return [String] The latest snapshot id for the instance
     #
     def latest_snapshot(db_instance_id)
-      LatestSnapshot.new(config, db_instance_id).execute
+      request = GetLatestSnapshotIdRequest.new(db_instance_id: db_instance_id)
+      GetLatestSnapshotIdDirector.new(config).get(request)
+      # LatestSnapshot.new(config, db_instance_id).execute
     end
   end
 end

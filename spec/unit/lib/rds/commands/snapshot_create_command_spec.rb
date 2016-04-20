@@ -29,6 +29,6 @@ describe AwsHelpers::RDSCommands::Commands::SnapshotCreateCommand do
 
   it 'adds the db_instance_id to the request' do
     @command.execute
-    expect(request.db_snapshot_identifier).to eq(db_snapshot_identifier)
+    expect(request.snapshot_id).to eq(db_snapshot_identifier)
   end
 end

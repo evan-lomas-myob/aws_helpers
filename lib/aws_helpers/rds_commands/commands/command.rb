@@ -1,6 +1,3 @@
-require 'aws_helpers/actions/rds/instance_state'
-require 'aws_helpers/utilities/polling'
-
 module AwsHelpers
   module RDSCommands
     module Commands

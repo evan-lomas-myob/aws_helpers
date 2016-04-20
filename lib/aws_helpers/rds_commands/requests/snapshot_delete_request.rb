@@ -1,9 +1,9 @@
 module AwsHelpers
   module RDSCommands
     module Requests
-      SnapshotCreateRequest = Struct.new(
+      SnapshotDeleteRequest = Struct.new(
           :std_out,
-          :snapshot_id,
+          :db_snapshot_identifier,
           :snapshot_name,
           :db_instance_identifier,
           :instance_polling,
