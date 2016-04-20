@@ -10,8 +10,9 @@ describe AwsHelpers::Actions::CloudFormation::StackModifyParameters do
     let(:stack_parameter_update_builder) { instance_double(AwsHelpers::Actions::CloudFormation::StackParameterUpdateBuilder) }
     let(:stack_progress) { instance_double(AwsHelpers::Actions::CloudFormation::StackProgress) }
 
+    let(:stack_id) { 'id' }
     let(:stack_name) { 'name' }
-    let(:options) { {stdout: stdout, polling: {max_attempts: 1, delay: 2}} }
+    let(:options) { {stdout: stdout, max_attempts: 1, delay: 2} }
     let(:existing_parameters) { [Aws::CloudFormation::Types::Parameter.new(parameter_key: 'param_key', parameter_value: 'param_value')] }
     let(:update_parameters) { [Aws::CloudFormation::Types::Parameter.new(parameter_key: 'param_key', parameter_value: 'param_value2')] }
     let(:stack_response) {
@@ -57,7 +58,7 @@ describe AwsHelpers::Actions::CloudFormation::StackModifyParameters do
 
       before(:each) do
         allow(stack_parameter_update_builder).to receive(:execute).and_return(stack_parameter_update_builder_response)
-        allow(cloudformation_client).to receive(:update_stack)
+        allow(cloudformation_client).to receive(:update_stack).and_return(Aws::CloudFormation::Types::UpdateStackOutput.new(stack_id: stack_id))
         allow(AwsHelpers::Actions::CloudFormation::StackProgress).to receive(:new).and_return(stack_progress)
         allow(stack_progress).to receive(:execute)
       end
@@ -71,8 +72,7 @@ describe AwsHelpers::Actions::CloudFormation::StackModifyParameters do
       end
 
       it 'should call AwsHelpers::Actions::CloudFormation::StackProgress #new with correct parameters' do
-        expect(AwsHelpers::Actions::CloudFormation::StackProgress).to receive(:new).with(
-            config, stack_name: stack_name, stdout: stdout, max_attempts: 1, delay: 2)
+        expect(AwsHelpers::Actions::CloudFormation::StackProgress).to receive(:new).with(config, stack_id, options)
       end
 
       it 'should call AwsHelpers::Actions::CloudFormation::StackProgress #new with correct parameters' do

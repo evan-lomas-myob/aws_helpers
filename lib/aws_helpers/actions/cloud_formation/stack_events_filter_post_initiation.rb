@@ -13,8 +13,7 @@ module AwsHelpers
           results = []
           @events.each do |event|
             results << event
-            break if AwsHelpers::Actions::CloudFormation::StackInitiationEvent.new(event).execute ||
-                     AwsHelpers::Actions::CloudFormation::StackCompletionEvent.new(event).execute
+            break if StackInitiationEvent.new(event).execute || StackCompletionEvent.new(event).execute
           end
           results
         end

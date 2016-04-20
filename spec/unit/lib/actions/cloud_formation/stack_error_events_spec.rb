@@ -2,59 +2,43 @@ require_relative '../../../spec_helpers/create_event_helper'
 require 'aws_helpers'
 
 describe AwsHelpers::Actions::CloudFormation::StackErrorEvents do
-  let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
-  let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client) }
-  let(:stdout) { instance_double(IO) }
-  let(:stack_retrieve_events) { instance_double(AwsHelpers::Actions::CloudFormation::StackRetrieveEvents) }
-  let(:stack_events_filter_post_initiation) { instance_double(AwsHelpers::Actions::CloudFormation::StackEventsFilterPostInitiation) }
-  let(:stack_events_filter_failed) { instance_double(AwsHelpers::Actions::CloudFormation::StackEventsFilterFailed) }
 
-  let(:stack_id) { 'id' }
-  let(:stack_name) { 'name' }
+  describe '#execute' do
 
-  let(:stack_events) { [CreateEventHelper.new(stack_id, stack_name, 'DELETE_COMPLETE', 'AWS::CloudFormation::Stack').execute] }
-  let(:describe_stack_events_output) {
-    Aws::CloudFormation::Types::DescribeStackEventsOutput.new(
-        stack_events: stack_events,
-        next_token: nil)
-  }
+    let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
+    let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client) }
+    let(:stdout) { instance_double(IO) }
+    let(:stack_retrieve_events) { instance_double(AwsHelpers::Actions::CloudFormation::StackRetrieveEvents) }
+    let(:stack_events_filter_post_initiation) { instance_double(AwsHelpers::Actions::CloudFormation::StackEventsFilterPostInitiation) }
+    let(:stack_events_filter_failed) { instance_double(AwsHelpers::Actions::CloudFormation::StackEventsFilterFailed) }
 
-  before(:each) do
-    allow(cloudformation_client).to receive(:describe_stack_events).and_return(describe_stack_events_output)
-    allow(AwsHelpers::Actions::CloudFormation::StackRetrieveEvents).to receive(:new).and_return(stack_retrieve_events)
-    allow(stack_retrieve_events).to receive(:execute).and_return(stack_events)
-    allow(AwsHelpers::Actions::CloudFormation::StackEventsFilterPostInitiation).to receive(:new).and_return(stack_events_filter_post_initiation)
-    allow(stack_events_filter_post_initiation).to receive(:execute).and_return(stack_events)
-    allow(AwsHelpers::Actions::CloudFormation::StackEventsFilterFailed).to receive(:new).and_return(stack_events_filter_failed)
-    allow(stack_events_filter_failed).to receive(:execute).and_return(stack_events)
-    allow(stdout).to receive(:puts)
-  end
+    let(:stack_id) { 'id' }
+    let(:options) { {stdout: stdout, delay: 1, max_retries: 2} }
 
-  context 'with stack_id' do
+    let(:stack_events) { [CreateEventHelper.new(stack_id, 'name', 'DELETE_COMPLETE', 'AWS::CloudFormation::Stack').execute] }
+    let(:describe_stack_events_output) {
+      Aws::CloudFormation::Types::DescribeStackEventsOutput.new(
+          stack_events: stack_events,
+          next_token: nil)
+    }
 
-
-    let(:options) { {stack_id: stack_id, stdout: stdout} }
+    before(:each) do
+      allow(cloudformation_client).to receive(:describe_stack_events).and_return(describe_stack_events_output)
+      allow(AwsHelpers::Actions::CloudFormation::StackRetrieveEvents).to receive(:new).and_return(stack_retrieve_events)
+      allow(stack_retrieve_events).to receive(:execute).and_return(stack_events)
+      allow(AwsHelpers::Actions::CloudFormation::StackEventsFilterPostInitiation).to receive(:new).and_return(stack_events_filter_post_initiation)
+      allow(stack_events_filter_post_initiation).to receive(:execute).and_return(stack_events)
+      allow(AwsHelpers::Actions::CloudFormation::StackEventsFilterFailed).to receive(:new).and_return(stack_events_filter_failed)
+      allow(stack_events_filter_failed).to receive(:execute).and_return(stack_events)
+      allow(stdout).to receive(:puts)
+    end
 
     after(:each) do
-      described_class.new(config, options).execute
+      described_class.new(config, stack_id, options).execute
     end
 
     it 'should call AwsHelpers::Actions::CloudFormation::StackRetrieveEvents #new with correct parameters' do
-      expect(AwsHelpers::Actions::CloudFormation::StackRetrieveEvents).to receive(:new).with(config, options)
-    end
-
-  end
-
-  context 'with stack_name' do
-
-    let(:options) { {stack_name: stack_name, stdout: stdout} }
-
-    after(:each) do
-      described_class.new(config, options).execute
-    end
-
-    it 'should call AwsHelpers::Actions::CloudFormation::StackRetrieveEvents #new with correct parameters' do
-      expect(AwsHelpers::Actions::CloudFormation::StackRetrieveEvents).to receive(:new).with(config, options)
+      expect(AwsHelpers::Actions::CloudFormation::StackRetrieveEvents).to receive(:new).with(config, stack_id)
     end
 
     it 'should call AwsHelpers::Actions::CloudFormation::StackRetrieveEvents #execute' do
@@ -82,5 +66,4 @@ describe AwsHelpers::Actions::CloudFormation::StackErrorEvents do
     end
 
   end
-
 end

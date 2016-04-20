@@ -6,9 +6,12 @@ require_relative 'actions/cloud_formation/stack_information'
 require_relative 'actions/cloud_formation/stack_exists'
 require_relative 'actions/cloud_formation/stack_resources'
 require_relative 'actions/cloud_formation/stack_named_resource'
+require_relative 'utilities/polling_options'
 
 module AwsHelpers
   class CloudFormation < AwsHelpers::Client
+    include AwsHelpers::Utilities::PollingOptions
+
     # CloudFormation utilities for creating, deleting and modifying templates
     #
     # @param options [Hash] Optional arguments to include when calling the AWS SDK. These arguments will
@@ -36,14 +39,25 @@ module AwsHelpers
     #   you must specify an S3 bucket to upload the template to first
     # @option options [Boolean] :bucket_encrypt Encryption type to use on the upload bucket; defaults to 'AES256'
     # @option options [IO] :stdout Override $stdout when logging output
-    # @option options [Hash{Symbol => Integer}] :polling stack polling attempts and delay
+    # @option options [Hash{Symbol => Integer}] :bucket_polling stack polling attempts and delay
+    #
+    #   defaults:
+    #
+    #   ```
+    #   {
+    #     :max_attempts => 3,
+    #     :delay => 5 # seconds
+    #   }
+    #   ```
+    #
+    # @option options [Hash{Symbol => Integer}] :stack_polling stack polling attempts and delay
     #
     #   defaults:
     #
     #   ```
     #   {
     #     :max_attempts => 40,
-    #     :delay => 15 # seconds
+    #     :delay => 30 # seconds
     #   }
     #   ```
     #
@@ -84,7 +98,7 @@ module AwsHelpers
     # @param stack_name [String] Name given to the Stack
     # @param [Hash] options Optional parameters that can be overridden.
     # @option options [IO] :stdout Override $stdout when logging output
-    # @option options [Hash{Symbol => Integer}] :polling Override update stack polling
+    # @option options [Hash{Symbol => Integer}] :stack_polling Override update stack polling
     #
     #   defaults:
     #
@@ -102,7 +116,7 @@ module AwsHelpers
     # @return [nil]
     #
     def stack_delete(stack_name, options = {})
-      AwsHelpers::Actions::CloudFormation::StackDelete.new(config, stack_name, options).execute
+      AwsHelpers::Actions::CloudFormation::StackDelete.new(config, stack_name, create_options(options[:stdout], options[:stack_polling])).execute
     end
 
     # Modify the parameters of an existing stack.
@@ -111,14 +125,14 @@ module AwsHelpers
     # @param parameters [Array] List of parameters to modify in stack e.g. [{ parameter_key: 'key', parameter_value: 'value' }]
     # @param [Hash] options Optional parameters that can be overridden.
     # @option options [IO] :stdout Override $stdout when logging output
-    # @option options [Hash{Symbol => Integer}] :polling Override update stack polling
+    # @option options [Hash{Symbol => Integer}] :stack_polling Override update stack polling
     #
     #   defaults:
     #
     #   ```
     #   {
     #     :max_attempts => 40,
-    #     :delay => 15 # seconds
+    #     :delay => 30 # seconds
     #   }
     #   ```
     #
@@ -131,7 +145,7 @@ module AwsHelpers
     # @return
     #
     def stack_modify_parameters(stack_name, parameters, options = {})
-      AwsHelpers::Actions::CloudFormation::StackModifyParameters.new(config, stack_name, parameters, options).execute
+      AwsHelpers::Actions::CloudFormation::StackModifyParameters.new(config, stack_name, parameters, create_options(options[:stdout], options[:stack_polling])).execute
     end
 
     # Return the parameters of a cloudformation stack

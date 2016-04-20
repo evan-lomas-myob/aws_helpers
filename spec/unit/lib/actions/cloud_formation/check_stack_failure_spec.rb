@@ -1,32 +1,16 @@
-require 'aws-sdk-core'
-require 'aws_helpers/config'
-require 'aws_helpers/actions/cloud_formation/check_stack_failure'
-require 'aws_helpers/utilities/target_stack_validate'
+require 'aws_helpers'
 
 describe AwsHelpers::Actions::CloudFormation::CheckStackFailure do
   let(:cloudformation_client) { instance_double(Aws::CloudFormation::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_cloud_formation_client: cloudformation_client) }
-  let(:target_stack_validate) { instance_double(AwsHelpers::Utilities::TargetStackValidate) }
 
-  let(:stack_name) { 'name' }
-  let(:options) { { stack_name: stack_name } }
-  let(:create_complete) { create_response(stack_name, 'CREATE_COMPLETE') }
+  let(:stack_id) { 'name' }
+  let(:create_complete) { create_response(stack_id, 'CREATE_COMPLETE') }
 
-  subject { AwsHelpers::Actions::CloudFormation::CheckStackFailure.new(config, options).execute }
-
-  before(:each) do
-    allow(AwsHelpers::Utilities::TargetStackValidate).to receive(:new).and_return(target_stack_validate)
-    allow(target_stack_validate).to receive(:execute).and_return(stack_name)
-  end
-
-  it 'should validate options' do
-    allow(cloudformation_client).to receive(:describe_stacks).and_return(create_complete)
-    expect(target_stack_validate).to receive(:execute).with(options)
-    subject
-  end
+  subject { described_class.new(config, stack_id).execute }
 
   it 'should call the cloud formation clients #describe_stacks with correct parameters' do
-    expect(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_name).and_return(create_complete)
+    expect(cloudformation_client).to receive(:describe_stacks).with(stack_name: stack_id).and_return(create_complete)
     subject
   end
 
@@ -37,13 +21,13 @@ describe AwsHelpers::Actions::CloudFormation::CheckStackFailure do
 
   %w(UPDATE_ROLLBACK_COMPLETE ROLLBACK_COMPLETE ROLLBACK_FAILED UPDATE_ROLLBACK_FAILED DELETE_FAILED).each do |failure|
     it "should raise when stack status is #{failure}" do
-      allow(cloudformation_client).to receive(:describe_stacks).and_return(create_response(stack_name, failure))
-      expect { subject }.to raise_error("Stack #{stack_name} Failed")
+      allow(cloudformation_client).to receive(:describe_stacks).and_return(create_response(stack_id, failure))
+      expect { subject }.to raise_error('Stack name Failed')
     end
   end
 
-  def create_response(name, status)
-    stack = Aws::CloudFormation::Types::Stack.new(stack_name: name, stack_status: status)
+  def create_response(id, status)
+    stack = Aws::CloudFormation::Types::Stack.new(stack_name: 'name', stack_id: id,  stack_status: status)
     Aws::CloudFormation::Types::DescribeStacksOutput.new(stacks: [stack])
   end
 end
