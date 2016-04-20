@@ -1,7 +1,18 @@
 require 'aws_helpers/elastic_load_balancing'
 
 describe AwsHelpers::ElasticLoadBalancing do
-  let(:config) { instance_double(AwsHelpers::Config) }
+  let(:load_balancer_name) { 'Batman' }
+  let(:request) { PollInServiceInstancesRequest.new(load_balancer_name: load_balancer_name) }
+  let(:director) { instance_double(PollInServiceInstancesDirector) }
+  let(:elb_client) { instance_double(Aws::ElasticLoadBalancing::Client) }
+  let(:config) { instance_double(AwsHelpers::Config, aws_elastic_load_balancing_client: elb_client) }
+
+  before do
+    allow(AwsHelpers::Config).to receive(:new).and_return(config)
+    allow(PollInServiceInstancesRequest).to receive(:new).and_return(request)
+    allow(PollInServiceInstancesDirector).to receive(:new).and_return(director)
+    allow(director).to receive(:execute)
+  end
 
   describe '#initialize' do
     it 'should call AwsHelpers::Client initialize method' do
@@ -12,26 +23,25 @@ describe AwsHelpers::ElasticLoadBalancing do
   end
 
   describe '#poll_healthy_instances' do
-    let(:poll_healthy_instances) { instance_double(PollInServiceInstances) }
-    let(:load_balancer_name) { 'my_load_balancer' }
-    let(:required_instances) { 1 }
-
-    before(:each) do
-      allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(PollInServiceInstances).to receive(:new).and_return(poll_healthy_instances)
-      allow(poll_healthy_instances).to receive(:execute)
+    it 'should create a PollInServiceInstancesRequest' do
+      expect(PollInServiceInstancesRequest)
+        .to receive(:new)
+        .with(load_balancer_name: load_balancer_name)
+      AwsHelpers::ElasticLoadBalancing.new.poll_in_service_instances(load_balancer_name)
     end
 
-    subject { AwsHelpers::ElasticLoadBalancing.new.poll_in_service_instances(load_balancer_name) }
-
-    it 'should create PollHealthyInstances with correct parameters' do
-      expect(PollInServiceInstances).to receive(:new).with(config, [load_balancer_name], {})
-      subject
+    it 'should create a PollInServiceInstancesDirector' do
+      expect(PollInServiceInstancesDirector)
+        .to receive(:new)
+        .with(config)
+      AwsHelpers::ElasticLoadBalancing.new.poll_in_service_instances(load_balancer_name)
     end
 
-    it 'should call PollHealthyInstances #execute method' do
-      expect(poll_healthy_instances).to receive(:execute)
-      subject
+    it 'should call execute on the director' do
+      expect(director)
+        .to receive(:execute)
+        .with(request)
+      AwsHelpers::ElasticLoadBalancing.new.poll_in_service_instances(load_balancer_name)
     end
   end
 end

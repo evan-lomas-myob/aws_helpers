@@ -2,7 +2,7 @@ module AwsHelpers
   module ELBCommands
     module Requests
       PollInServiceInstancesRequest = Struct.new(
-        :load_balancer_names,
+        :load_balancer_name,
         :instance_polling) do
           def initialize(*args)
             super(*args)

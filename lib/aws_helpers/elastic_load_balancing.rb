@@ -1,5 +1,9 @@
 require_relative 'client'
-require_relative 'actions/elastic_load_balancing/poll_in_service_instances'
+require_relative 'elb_commands/requests/poll_in_service_instances_request'
+require_relative 'elb_commands/directors/poll_in_service_instances_director'
+
+include AwsHelpers::ELBCommands::Directors
+include AwsHelpers::ELBCommands::Requests
 
 include AwsHelpers::Actions::ElasticLoadBalancing
 
@@ -33,8 +37,10 @@ module AwsHelpers
     #
     # @return [Array<String>]
     #
-    def poll_in_service_instances(load_balancer_name, options = {})
-      PollInServiceInstances.new(config, [load_balancer_name], options).execute
+    def poll_in_service_instances(load_balancer_name)
+      request = PollInServiceInstancesRequest.new(load_balancer_name: load_balancer_name)
+      PollInServiceInstancesDirector.new(config).execute(request)
+      # PollInServiceInstances.new(config, [load_balancer_name], options).execute
     end
   end
 end

@@ -11,7 +11,7 @@ describe AwsHelpers::ELBCommands::Commands::PollInServiceInstancesCommand do
 
   before do
     request.instance_polling = { max_attempts: 2, delay: 0 }
-    request.load_balancer_names = ['Jake', 'Elwood']
+    request.load_balancer_name = 'Batman'
     @command = AwsHelpers::ELBCommands::Commands::PollInServiceInstancesCommand.new(config, request)
     allow(elb_client)
       .to receive(:describe_instance_health)
@@ -19,7 +19,7 @@ describe AwsHelpers::ELBCommands::Commands::PollInServiceInstancesCommand do
   end
 
   it 'polls' do
-    expect(@command).to receive(:poll).twice
+    expect(@command).to receive(:poll)
     @command.execute
   end
 

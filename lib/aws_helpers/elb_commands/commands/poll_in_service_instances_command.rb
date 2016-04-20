@@ -14,13 +14,11 @@ module AwsHelpers
         end
 
         def execute
-          @request.load_balancer_names.each do |load_balancer_name|
-            poll(@request.instance_polling[:delay], @request.instance_polling[:max_attempts]) do
-              instance_states = @elb_client.describe_instance_health(load_balancer_name: load_balancer_name).instance_states
-              state_count = count_states(instance_states)
-              std_out.puts("Load Balancer Name=#{load_balancer_name}#{create_state_output(state_count)}")
-              instance_states.select { |s| s.state == 'InService' }.count == instance_states.size
-            end
+          poll(@request.instance_polling[:delay], @request.instance_polling[:max_attempts]) do
+            instance_states = @elb_client.describe_instance_health(load_balancer_name: @request.load_balancer_name).instance_states
+            state_count = count_states(instance_states)
+            std_out.puts("Load Balancer Name=#{@request.load_balancer_name}#{create_state_output(state_count)}")
+            instance_states.select { |s| s.state == 'InService' }.count == instance_states.size
           end
         end
 
