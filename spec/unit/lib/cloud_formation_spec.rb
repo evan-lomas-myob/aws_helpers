@@ -1,4 +1,4 @@
-require 'aws_helpers/cloud_formation'
+require 'aws_helpers'
 
 describe AwsHelpers::CloudFormation do
   let(:config) { instance_double(AwsHelpers::Config) }
@@ -14,7 +14,7 @@ describe AwsHelpers::CloudFormation do
   end
 
   describe '#stack_provision' do
-    let(:stack_provision) { instance_double(StackProvision) }
+    let(:stack_provision) { instance_double(AwsHelpers::Actions::CloudFormation::StackProvision) }
     let(:template) { '{"AWSTemplateFormatVersion" : "2010-09-09"}' }
     let(:parameters) { [{ parameter_key: 'key', parameter_value: 'value' }] }
     let(:capabilities) { ['CAPABILITY_IAM'] }
@@ -24,42 +24,42 @@ describe AwsHelpers::CloudFormation do
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(StackProvision).to receive(:new).and_return(stack_provision)
+      allow(AwsHelpers::Actions::CloudFormation::StackProvision).to receive(:new).and_return(stack_provision)
       allow(stack_provision).to receive(:execute)
     end
 
     it 'should create StackProvision with default parameters' do
-      expect(StackProvision).to receive(:new).with(config, stack_name, template, {})
+      expect(AwsHelpers::Actions::CloudFormation::StackProvision).to receive(:new).with(config, stack_name, template, {})
       AwsHelpers::CloudFormation.new.stack_provision(stack_name, template)
     end
 
     it 'should create StackProvision with optional :parameters' do
-      expect(StackProvision).to receive(:new).with(config, stack_name, template, parameters: parameters)
+      expect(AwsHelpers::Actions::CloudFormation::StackProvision).to receive(:new).with(config, stack_name, template, parameters: parameters)
       AwsHelpers::CloudFormation.new.stack_provision(stack_name, template, parameters: parameters)
     end
 
     it 'should create StackProvision with optional :capabilities' do
-      expect(StackProvision).to receive(:new).with(config, stack_name, template, capabilities: capabilities)
+      expect(AwsHelpers::Actions::CloudFormation::StackProvision).to receive(:new).with(config, stack_name, template, capabilities: capabilities)
       AwsHelpers::CloudFormation.new.stack_provision(stack_name, template, capabilities: capabilities)
     end
 
     it 'should create StackProvision with optional :bucket_name' do
-      expect(StackProvision).to receive(:new).with(config, stack_name, template, bucket_name: bucket_name)
+      expect(AwsHelpers::Actions::CloudFormation::StackProvision).to receive(:new).with(config, stack_name, template, bucket_name: bucket_name)
       AwsHelpers::CloudFormation.new.stack_provision(stack_name, template, bucket_name: bucket_name)
     end
 
     it 'should create StackProvision with optional :bucket_encrypt' do
-      expect(StackProvision).to receive(:new).with(config, stack_name, template, bucket_encrypt: bucket_encrypt)
+      expect(AwsHelpers::Actions::CloudFormation::StackProvision).to receive(:new).with(config, stack_name, template, bucket_encrypt: bucket_encrypt)
       AwsHelpers::CloudFormation.new.stack_provision(stack_name, template, bucket_encrypt: bucket_encrypt)
     end
 
     it 'should create StackProvision with optional :stdout' do
-      expect(StackProvision).to receive(:new).with(config, stack_name, template, stdout: stdout)
+      expect(AwsHelpers::Actions::CloudFormation::StackProvision).to receive(:new).with(config, stack_name, template, stdout: stdout)
       AwsHelpers::CloudFormation.new.stack_provision(stack_name, template, stdout: stdout)
     end
 
     it 'should create StackProvision with optional :stack_polling' do
-      expect(StackProvision).to receive(:new).with(config, stack_name, template, polling: polling)
+      expect(AwsHelpers::Actions::CloudFormation::StackProvision).to receive(:new).with(config, stack_name, template, polling: polling)
       AwsHelpers::CloudFormation.new.stack_provision(stack_name, template, polling: polling)
     end
 
@@ -70,21 +70,21 @@ describe AwsHelpers::CloudFormation do
   end
 
   describe '#stack_delete' do
-    let(:stack_delete) { instance_double(StackDelete) }
+    let(:stack_delete) { instance_double(AwsHelpers::Actions::CloudFormation::StackDelete) }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(StackDelete).to receive(:new).and_return(stack_delete)
+      allow(AwsHelpers::Actions::CloudFormation::StackDelete).to receive(:new).and_return(stack_delete)
       allow(stack_delete).to receive(:execute)
     end
 
     it 'should create StackDelete with stack name as argument' do
-      expect(StackDelete).to receive(:new).with(config, stack_name, {})
+      expect(AwsHelpers::Actions::CloudFormation::StackDelete).to receive(:new).with(config, stack_name, {})
       AwsHelpers::CloudFormation.new.stack_delete(stack_name)
     end
 
     it 'should create StackDelete with stack optional stdout' do
-      expect(StackDelete).to receive(:new).with(config, stack_name, stdout: stdout)
+      expect(AwsHelpers::Actions::CloudFormation::StackDelete).to receive(:new).with(config, stack_name, stdout: stdout)
       AwsHelpers::CloudFormation.new.stack_delete(stack_name, stdout: stdout)
     end
 
@@ -95,11 +95,11 @@ describe AwsHelpers::CloudFormation do
   end
 
   describe '#stack_exists' do
-    let(:stack_exists) { instance_double(StackExists) }
+    let(:stack_exists) { instance_double(AwsHelpers::Actions::CloudFormation::StackExists) }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(StackExists).to receive(:new).and_return(stack_exists)
+      allow(AwsHelpers::Actions::CloudFormation::StackExists).to receive(:new).and_return(stack_exists)
       allow(stack_exists).to receive(:execute)
     end
 
@@ -108,7 +108,7 @@ describe AwsHelpers::CloudFormation do
     end
 
     it 'should create StackExists with correct parameters ' do
-      expect(StackExists).to receive(:new).with(config, stack_name)
+      expect(AwsHelpers::Actions::CloudFormation::StackExists).to receive(:new).with(config, stack_name)
     end
 
     it 'should call StackExists execute method' do
@@ -117,42 +117,42 @@ describe AwsHelpers::CloudFormation do
   end
 
   describe '#stack_parameters' do
-    let(:stack_information) { instance_double(StackInformation) }
+    let(:stack_information) { instance_double(AwsHelpers::Actions::CloudFormation::StackInformation) }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(StackInformation).to receive(:new).and_return(stack_information)
+      allow(AwsHelpers::Actions::CloudFormation::StackInformation).to receive(:new).and_return(stack_information)
       allow(stack_information).to receive(:execute)
     end
 
     it 'should create StackInformation using parameters info_field' do
-      expect(StackInformation).to receive(:new).with(config, stack_name, 'parameters')
+      expect(AwsHelpers::Actions::CloudFormation::StackInformation).to receive(:new).with(config, stack_name, 'parameters')
       AwsHelpers::CloudFormation.new.stack_parameters(stack_name)
     end
   end
 
   describe '#stack_outputs' do
-    let(:stack_information) { instance_double(StackInformation) }
+    let(:stack_information) { instance_double(AwsHelpers::Actions::CloudFormation::StackInformation) }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(StackInformation).to receive(:new).and_return(stack_information)
+      allow(AwsHelpers::Actions::CloudFormation::StackInformation).to receive(:new).and_return(stack_information)
       allow(stack_information).to receive(:execute)
     end
 
     it 'should create StackInformation using output info_field' do
-      expect(StackInformation).to receive(:new).with(config, stack_name, 'outputs')
+      expect(AwsHelpers::Actions::CloudFormation::StackInformation).to receive(:new).with(config, stack_name, 'outputs')
       AwsHelpers::CloudFormation.new.stack_outputs(stack_name)
     end
   end
 
   describe '#stack_modify_parameters' do
-    let(:stack_modify_parameters) { instance_double(StackModifyParameters) }
+    let(:stack_modify_parameters) { instance_double(AwsHelpers::Actions::CloudFormation::StackModifyParameters) }
     let(:parameters) { [{ parameter_key: 'key', parameter_value: 'value' }] }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(StackModifyParameters).to receive(:new).and_return(stack_modify_parameters)
+      allow(AwsHelpers::Actions::CloudFormation::StackModifyParameters).to receive(:new).and_return(stack_modify_parameters)
       allow(stack_modify_parameters).to receive(:execute)
     end
 
@@ -161,7 +161,7 @@ describe AwsHelpers::CloudFormation do
     end
 
     it 'should create StackModifyParameters' do
-      expect(StackModifyParameters).to receive(:new).with(config, stack_name, parameters, {})
+      expect(AwsHelpers::Actions::CloudFormation::StackModifyParameters).to receive(:new).with(config, stack_name, parameters, {})
     end
 
     it 'should call StackModifyParameters execute method' do
@@ -170,12 +170,12 @@ describe AwsHelpers::CloudFormation do
   end
 
   describe '#stack_resources' do
-    let(:stack_resources) { instance_double(StackResources) }
+    let(:stack_resources) { instance_double(AwsHelpers::Actions::CloudFormation::StackResources) }
     let(:stack_name) { 'my_stack_name' }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(StackResources).to receive(:new).and_return(stack_resources)
+      allow(AwsHelpers::Actions::CloudFormation::StackResources).to receive(:new).and_return(stack_resources)
       allow(stack_resources).to receive(:execute)
     end
 
@@ -184,7 +184,7 @@ describe AwsHelpers::CloudFormation do
     end
 
     it 'should create StackModifyParameters' do
-      expect(StackResources).to receive(:new).with(config, stack_name)
+      expect(AwsHelpers::Actions::CloudFormation::StackResources).to receive(:new).with(config, stack_name)
     end
 
     it 'should call StackModifyParameters execute method' do
@@ -193,13 +193,13 @@ describe AwsHelpers::CloudFormation do
   end
 
   describe '#stack_named_resource' do
-    let(:stack_named_resource) { instance_double(StackNamedResource) }
+    let(:stack_named_resource) { instance_double(AwsHelpers::Actions::CloudFormation::StackNamedResource) }
     let(:stack_name) { 'my_stack_name' }
     let(:logical_resource_id) { 'my_resource_id' }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(StackNamedResource).to receive(:new).and_return(stack_named_resource)
+      allow(AwsHelpers::Actions::CloudFormation::StackNamedResource).to receive(:new).and_return(stack_named_resource)
       allow(stack_named_resource).to receive(:execute)
     end
 
@@ -208,7 +208,7 @@ describe AwsHelpers::CloudFormation do
     end
 
     it 'should create StackModifyParameters' do
-      expect(StackNamedResource).to receive(:new).with(config, stack_name, logical_resource_id)
+      expect(AwsHelpers::Actions::CloudFormation::StackNamedResource).to receive(:new).with(config, stack_name, logical_resource_id)
     end
 
     it 'should call StackModifyParameters execute method' do
