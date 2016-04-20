@@ -17,7 +17,7 @@ module AwsHelpers
           @stack_name = stack_name
           @template_json = template_json
           @parameters = options[:parameters]
-          @capabilities = options[:capabilities]
+          @capabilities = options[:capabilities] || %w(CAPABILITY_IAM) #SDK says so
           @s3_bucket_name = options[:s3_bucket_name]
           @bucket_encrypt = options[:bucket_encrypt]
           @stdout = options[:stdout]
