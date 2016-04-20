@@ -1,5 +1,5 @@
-require_relative 'stack_parameter_update_builder'
-require_relative 'stack_progress'
+require 'aws_helpers/actions/cloud_formation/stack_parameter_update_builder'
+require 'aws_helpers/actions/cloud_formation/stack_progress'
 require 'aws_helpers/utilities/polling_options'
 
 module AwsHelpers
@@ -19,7 +19,7 @@ module AwsHelpers
         def execute
           client = @config.aws_cloud_formation_client
           response = client.describe_stacks(stack_name: @stack_name).stacks.first
-          request = AwsHelpers::Actions::CloudFormation::StackParameterUpdateBuilder.new(@stack_name, response, @parameters).execute
+          request = StackParameterUpdateBuilder.new(@stack_name, response, @parameters).execute
 
           if request.nil?
             @stdout.puts 'No matching parameter(s) found'
@@ -27,7 +27,7 @@ module AwsHelpers
             @stdout.puts "Updating #{@stack_name}"
             client = @config.aws_cloud_formation_client
             response = client.update_stack(request)
-            AwsHelpers::Actions::CloudFormation::StackProgress.new(
+            StackProgress.new(
                 @config, response.stack_id, stdout: @options[:stdout], delay: @options[:delay], max_attempts: @options[:max_attempts]).execute
           end
         end

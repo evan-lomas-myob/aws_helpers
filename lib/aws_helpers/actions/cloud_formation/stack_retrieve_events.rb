@@ -18,7 +18,7 @@ module AwsHelpers
             response = client.describe_stack_events(stack_name: @stack_id, next_token: next_token)
             next_token = response.next_token
             events.concat(response.stack_events)
-            break if response.stack_events.detect { |event| AwsHelpers::Actions::CloudFormation::StackInitiationEvent.new(event).execute } || next_token.nil?
+            break if response.stack_events.detect { |event| StackInitiationEvent.new(event).execute } || next_token.nil?
           end
           events
         end

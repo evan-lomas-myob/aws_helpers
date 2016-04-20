@@ -6,14 +6,12 @@ require 'aws_helpers/actions/cloud_formation/stack_update'
 require 'aws_helpers/actions/cloud_formation/stack_create'
 require 'aws_helpers/utilities/polling_options'
 
-include AwsHelpers::Actions::CloudFormation
-include AwsHelpers::Actions::S3
-include AwsHelpers::Utilities::PollingOptions
-
 module AwsHelpers
   module Actions
     module CloudFormation
       class StackProvision
+        include AwsHelpers::Utilities::PollingOptions
+
         def initialize(config, stack_name, template_json, options = {})
           @config = config
           @stack_name = stack_name
