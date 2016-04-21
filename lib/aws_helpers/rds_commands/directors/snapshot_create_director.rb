@@ -1,6 +1,5 @@
 require 'aws_helpers/command_runner'
 
-
 module AwsHelpers
   module RDSCommands
     module Directors
@@ -8,18 +7,16 @@ module AwsHelpers
         include AwsHelpers::CommandRunner
 
         def initialize(config)
-          @request = SnapshotCreateRequest.new
-          @commands = [
-              AwsHelpers::RDS::Commands::PollInstanceAvailableCommand.new(config, @request),
-              AwsHelpers::RDS::Commands::SnapshotConstructNameCommand.new(config, @request),
-              AwsHelpers::RDS::Commands::SnapshotCreateCommand.new(config, @request),
-              AwsHelpers::RDS::Commands::PollSnapshotAvailableCommand.new(config, @request)
-          ]
-
+          @config = config
         end
 
-        def create(db_instance_identifier, options = {})
-          update_request(db_instance_identifier, options)
+        def create(request)
+          @commands = [
+            AwsHelpers::RDSCommands::Commands::PollInstanceAvailableCommand.new(@config, request),
+            AwsHelpers::RDSCommands::Commands::SnapshotConstructNameCommand.new(@config, request),
+            AwsHelpers::RDSCommands::Commands::SnapshotCreateCommand.new(@config, request),
+            AwsHelpers::RDSCommands::Commands::PollSnapshotAvailableCommand.new(@config, request)
+          ]
           execute_commands
         end
 
@@ -32,7 +29,6 @@ module AwsHelpers
           @request.instance_polling = options[:instance_polling]
           @request.snapshot_polling = options[:snapshot_polling]
         end
-
       end
     end
   end
