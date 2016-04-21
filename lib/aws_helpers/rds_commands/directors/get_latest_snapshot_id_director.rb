@@ -17,7 +17,7 @@ module AwsHelpers
             AwsHelpers::RDSCommands::Commands::GetLatestSnapshotIdCommand.new(@config, request)
           ]
           execute_commands
-          return @request.snapshot_id
+          @request.snapshot_id
         end
       end
     end

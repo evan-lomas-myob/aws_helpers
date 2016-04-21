@@ -14,7 +14,7 @@ module AwsHelpers
         def delete(request)
           @request = request
           @commands = [
-            AwsHelpers::RDS::Commands::SnapshotsDeleteCommand.new(@config, request)
+            AwsHelpers::RDSCommands::Commands::SnapshotsDeleteCommand.new(@config, request)
           ]
           execute_commands
         end
