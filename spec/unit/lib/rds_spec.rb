@@ -5,9 +5,9 @@ describe AwsHelpers::RDS do
   let(:snapshot_id) { '123' }
   let(:rds_client) { instance_double(Aws::RDS::Client) }
   let(:create_request) { SnapshotCreateRequest.new(db_instance_id: db_instance_id) }
-  let(:delete_request) { SnapshotDeleteRequest.new(snapshot_id: snapshot_id) }
+  let(:delete_request) { SnapshotsDeleteRequest.new(snapshot_id: snapshot_id) }
   let(:create_director) { instance_double(SnapshotCreateDirector) }
-  let(:delete_director) { instance_double(SnapshotDeleteDirector) }
+  let(:delete_director) { instance_double(SnapshotsDeleteDirector) }
   let(:latest_request) { GetLatestSnapshotIdRequest.new(snapshot_id: snapshot_id) }
   let(:latest_director) { instance_double(GetLatestSnapshotIdDirector) }
   let(:config) { instance_double(AwsHelpers::Config, aws_rds_client: rds_client) }
@@ -55,22 +55,22 @@ describe AwsHelpers::RDS do
   describe '#snapshots_delete' do
     before do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(SnapshotDeleteRequest).to receive(:new).and_return(delete_request)
-      allow(SnapshotDeleteDirector).to receive(:new).and_return(delete_director)
+      allow(SnapshotsDeleteRequest).to receive(:new).and_return(delete_request)
+      allow(SnapshotsDeleteDirector).to receive(:new).and_return(delete_director)
       allow(delete_director).to receive(:delete)
-      # allow(SnapshotDeleteRequest).to receive(:new).and_return(delete_request)
-      # allow(SnapshotDeleteDirector).to receive(:new).and_return(delete_director)
+      # allow(SnapshotsDeleteRequest).to receive(:new).and_return(delete_request)
+      # allow(SnapshotsDeleteDirector).to receive(:new).and_return(delete_director)
     end
 
-    it 'should create a SnapshotDeleteRequest' do
-      expect(SnapshotDeleteRequest)
+    it 'should create a SnapshotsDeleteRequest' do
+      expect(SnapshotsDeleteRequest)
         .to receive(:new)
-        .with(db_instance_id: db_instance_id)
+        .with(db_instance_id: db_instance_id, time_options: {})
       AwsHelpers::RDS.new.snapshots_delete(db_instance_id)
     end
 
-    it 'should create a SnapshotDeleteDirector' do
-      expect(SnapshotDeleteDirector)
+    it 'should create a SnapshotsDeleteDirector' do
+      expect(SnapshotsDeleteDirector)
         .to receive(:new)
         .with(config)
       AwsHelpers::RDS.new.snapshots_delete(db_instance_id)
@@ -172,7 +172,7 @@ describe AwsHelpers::RDS do
   #     subject
   #   end
 
-  #   it 'should call SnapshotDelete execute method' do
+  #   it 'should call SnapshotsDelete execute method' do
   #     expect(latest_snapshot).to receive(:execute)
   #     subject
   #   end

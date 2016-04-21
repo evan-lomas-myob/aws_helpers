@@ -4,9 +4,9 @@ require_relative 'client'
 # require_relative 'actions/rds/latest_snapshot'
 # require_relative 'client'
 require_relative 'rds_commands/requests/snapshot_create_request'
-require_relative 'rds_commands/requests/snapshot_delete_request'
+require_relative 'rds_commands/requests/snapshots_delete_request'
 require_relative 'rds_commands/directors/snapshot_create_director'
-require_relative 'rds_commands/directors/snapshot_delete_director'
+require_relative 'rds_commands/directors/snapshots_delete_director'
 require_relative 'rds_commands/requests/get_latest_snapshot_id_request'
 require_relative 'rds_commands/directors/get_latest_snapshot_id_director'
 
@@ -89,8 +89,8 @@ module AwsHelpers
     # @return [struct Aws::RDS::Types::DBSnapshot]
 
     def snapshots_delete(db_instance_id, options = {})
-      request = SnapshotDeleteRequest.new(db_instance_id: db_instance_id)
-      SnapshotDeleteDirector.new(config).delete(request)
+      request = SnapshotsDeleteRequest.new(db_instance_id: db_instance_id, time_options: options)
+      SnapshotsDeleteDirector.new(config).delete(request)
     end
 
     # Gets the latest snapshot that was made for the RDS instance
