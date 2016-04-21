@@ -9,7 +9,6 @@ module AwsHelpers
           @rds_client = config.aws_rds_client
           @request = request
           @delete_time = AwsHelpers::Utilities::DeleteTimeBuilder.new.build(@request.time_options)
-          puts @delete_time
         end
 
         def execute

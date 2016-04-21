@@ -14,7 +14,7 @@ module AwsHelpers
         def get(request)
           @request = request
           @commands = [
-            AwsHelpers::RDS::Commands::GetLatestSnapshotIdCommand.new(@config, request)
+            AwsHelpers::RDSCommands::Commands::GetLatestSnapshotIdCommand.new(@config, request)
           ]
           execute_commands
           return @request.snapshot_id
