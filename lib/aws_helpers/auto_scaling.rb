@@ -4,6 +4,8 @@ require_relative 'client'
 # require_relative 'actions/auto_scaling/retrieve_current_instances'
 require_relative 'auto_scaling_commands/requests/get_desired_capacity_request'
 require_relative 'auto_scaling_commands/directors/get_desired_capacity_director'
+require_relative 'auto_scaling_commands/requests/update_desired_capacity_request'
+require_relative 'auto_scaling_commands/directors/update_desired_capacity_director'
 
 include AwsHelpers::AutoScalingCommands::Directors
 include AwsHelpers::AutoScalingCommands::Requests
@@ -76,7 +78,8 @@ module AwsHelpers
     # @return [Array] Load Balancers configured for this Auto Scaling Group
     #
     def update_desired_capacity(auto_scaling_group_name, desired_capacity, options = {})
-      UpdateDesiredCapacity.new(config, auto_scaling_group_name, desired_capacity, options).execute
+      request = UpdateDesiredCapacityRequest.new(auto_scaling_group_name: auto_scaling_group_name, desired_capacity: desired_capacity)
+      UpdateDesiredCapacityDirector.new(config).update(request)
     end
 
     # Gets the instances belonging to an auto scaling group.
@@ -89,7 +92,8 @@ module AwsHelpers
     # @return [Array<Aws::EC2::Types::Instance>] Array of {http://docs.aws.amazon.com/sdkforruby/api/Aws/EC2/Instance.html Instance}
     #
     def retrieve_current_instances(auto_scaling_group_name)
-      RetrieveCurrentInstances.new(config, auto_scaling_group_name).execute
+      request = GetCurrentInstancesRequest.new(auto_scaling_group_name: auto_scaling_group_name, desired_capacity: desired_capacity)
+      GetCurrentInstancesDirector.new(config).update(request)
     end
   end
 end

@@ -424,6 +424,7 @@ describe AwsHelpers::EC2 do
     end
   end
 
+
   describe '#get_security_group_id_by_name' do
     let(:get_group_by_name) { instance_double(GetSecurityGroupIdByName) }
     let(:sg_name) { 'Group Name' }
@@ -448,6 +449,44 @@ describe AwsHelpers::EC2 do
       subject
     end
   end
+
+  # describe '#instances_find_by_tags' do
+
+  #   let(:vpcs_find_by_tags) { double(VpcsFindByTags) }
+  #   let(:client) { instance_double(Aws::ElasticLoadBalancing::Client) }
+  #   let(:known_tags) { {'Name' => 'Batman' } }
+  #   let(:unknown_tags) { {'Name' => 'Bruce Wayne' } }
+
+  #   before(:each) do
+  #     allow(AwsHelpers::Config).to receive(:new).and_return(config)
+  #     allow(VpcsFindByTags).to receive(:new).with(anything, anything).and_return(vpcs_find_by_tags)
+  #     allow(vpcs_find_by_tags).to receive(:execute)
+  #   end
+
+  #   subject { AwsHelpers::EC2.new.vpcs_find_by_tags(tags) }
+
+  #   it 'should return the VPC if it exists' do
+  #     vpcs = AwsHelpers::EC2.new.vpcs_find_by_tags(known_tags)
+  #     expect(vpcs).to_not be_empty
+  #     expect(vpcs.first.vpc_id).to eq(13)
+  #   end
+
+  #   it 'should return nil if no VPC is found' do
+  #     vpcs = AwsHelpers::EC2.new.vpcs_find_by_tags(unknown_tags)
+  #     expect(vpcs).to be_empty
+  #   end
+
+
+  #   it 'should create VpcsFindByTags' do
+  #     expect(VpcsFindByTags).to receive(:new).with(config, anything).and_return(vpcs_find_by_tags)
+  #     subject
+  #   end
+
+  #   it 'should call VpcsFindByTags execute method' do
+  #     expect(vpcs_find_by_tags).to receive(:execute)
+  #     subject
+  #   end
+  # end
 
   # describe '#instances_find_by_tags' do
 

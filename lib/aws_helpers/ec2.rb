@@ -379,7 +379,6 @@ module AwsHelpers
       GetWindowsPassword.new(config, instance_id, pem_path, options).password
     end
 
-# <<<<<<< Updated upstream
     # Returns the VPC ID for a given VPC Name.
     #
     # @param vpc_name [String] VPC Unique Name Tag
@@ -389,7 +388,6 @@ module AwsHelpers
     def get_vpc_id_by_name(vpc_name, options = {})
       GetVpcIdByName.new(config, vpc_name, options).id
     end
-# =======
 
     def vpcs_find_by_name(name)
 
@@ -398,8 +396,6 @@ module AwsHelpers
     def security_groups_find_by_name(name)
 
     end
-  # end
-# >>>>>>> Stashed changes
 
     # Returns the Group ID for a given Security Group Name.
     #
