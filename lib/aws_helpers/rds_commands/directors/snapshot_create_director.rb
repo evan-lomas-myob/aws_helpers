@@ -1,15 +1,11 @@
-require 'aws_helpers/rds_commands/requests/snapshot_create_request'
-require 'aws_helpers/rds_commands/commands/poll_instance_available_command'
-require 'aws_helpers/rds_commands/commands/snapshot_construct_name_command'
-require 'aws_helpers/rds_commands/commands/snapshot_create_command'
-require 'aws_helpers/rds_commands/commands/poll_snapshot_available_command'
-require 'aws_helpers/rds_commands/commands/command_runner'
+require 'aws_helpers/command_runner'
+
 
 module AwsHelpers
   module RDSCommands
     module Directors
       class SnapshotCreateDirector
-        include AwsHelpers::RDSCommands::Commands::CommandRunner
+        include AwsHelpers::CommandRunner
 
         def initialize(config)
           @request = SnapshotCreateRequest.new

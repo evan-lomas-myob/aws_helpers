@@ -1,11 +1,11 @@
 require 'aws_helpers/elb_commands/commands/poll_in_service_instances_command'
-require 'aws_helpers/elb_commands/commands/command_runner'
+require 'aws_helpers/command_runner'
 
 module AwsHelpers
   module ELBCommands
     module Directors
       class PollInServiceInstancesDirector
-        include AwsHelpers::ELBCommands::Commands::CommandRunner
+        include AwsHelpers::CommandRunner
 
         def initialize(config)
           @config = config

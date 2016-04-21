@@ -1,10 +1,9 @@
 require 'aws_helpers/utilities/polling'
-require 'aws_helpers/rds_commands/commands/command'
 
 module AwsHelpers
   module RDSCommands
     module Commands
-      class GetLatestSnapshotIdCommand < AwsHelpers::RDSCommands::Commands::Command
+      class GetLatestSnapshotIdCommand < AwsHelpers::Command
         include AwsHelpers::Utilities::Polling
 
         def initialize(config, request)

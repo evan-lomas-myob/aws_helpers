@@ -1,9 +1,11 @@
 
+require 'aws_helpers/command_runner'
+
 module AwsHelpers
   module RDSCommands
     module Directors
       class GetLatestSnapshotIdDirector
-        include AwsHelpers::RDSCommands::Commands::CommandRunner
+        include AwsHelpers::CommandRunner
 
         def initialize(config)
           @config = config

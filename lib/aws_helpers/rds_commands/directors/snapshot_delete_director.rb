@@ -1,9 +1,11 @@
+require 'aws_helpers/rds_commands/commands/snapshot_delete_command'
+require 'aws_helpers/command_runner'
 
 module AwsHelpers
   module RDSCommands
     module Directors
       class SnapshotDeleteDirector
-        include AwsHelpers::RDSCommands::Commands::CommandRunner
+        include AwsHelpers::CommandRunner
 
         def initialize(config)
           @config = config

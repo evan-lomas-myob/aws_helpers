@@ -1,11 +1,10 @@
-# require 'aws_helpers/kms_commands/commands/get_key_arn_command'
-require 'aws_helpers/kms_commands/commands/command_runner'
+require 'aws_helpers/command_runner'
 
 module AwsHelpers
   module KMSCommands
     module Directors
       class GetKeyArnDirector
-        include AwsHelpers::KMSCommands::Commands::CommandRunner
+        include AwsHelpers::CommandRunner
 
         def initialize(config)
           @config = config

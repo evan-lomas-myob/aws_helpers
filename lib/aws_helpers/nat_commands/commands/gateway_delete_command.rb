@@ -1,9 +1,9 @@
-require 'aws_helpers/nat_commands/commands/command'
+require 'aws_helpers/command'
 
 module AwsHelpers
   module NATCommands
     module Commands
-      class GatewayDeleteCommand < AwsHelpers::NATCommands::Commands::Command
+      class GatewayDeleteCommand < AwsHelpers::Command
         def initialize(config, request)
           @client = config.aws_ec2_client
           @request = request

@@ -1,9 +1,9 @@
-require 'aws_helpers/kms_commands/commands/command'
+require 'aws_helpers/command'
 
 module AwsHelpers
   module KMSCommands
     module Commands
-      class GetKeyArnCommand < AwsHelpers::KMSCommands::Commands::Command
+      class GetKeyArnCommand < AwsHelpers::Command
         def initialize(config, request)
           @client = config.aws_kms_client
           @request = request
