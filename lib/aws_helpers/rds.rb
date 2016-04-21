@@ -91,7 +91,6 @@ module AwsHelpers
     def snapshots_delete(db_instance_id, options = {})
       request = SnapshotDeleteRequest.new(db_instance_id: db_instance_id)
       SnapshotDeleteDirector.new(config).delete(request)
-      # SnapshotsDelete.new(config, db_instance_id, options).execute
     end
 
     # Gets the latest snapshot that was made for the RDS instance
@@ -106,7 +105,6 @@ module AwsHelpers
     def latest_snapshot(db_instance_id)
       request = GetLatestSnapshotIdRequest.new(db_instance_id: db_instance_id)
       GetLatestSnapshotIdDirector.new(config).get(request)
-      # LatestSnapshot.new(config, db_instance_id).execute
     end
   end
 end

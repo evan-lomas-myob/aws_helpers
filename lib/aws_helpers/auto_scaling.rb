@@ -1,9 +1,12 @@
 require_relative 'client'
-require_relative 'actions/auto_scaling/retrieve_desired_capacity'
-require_relative 'actions/auto_scaling/update_desired_capacity'
-require_relative 'actions/auto_scaling/retrieve_current_instances'
+# require_relative 'actions/auto_scaling/retrieve_desired_capacity'
+# require_relative 'actions/auto_scaling/update_desired_capacity'
+# require_relative 'actions/auto_scaling/retrieve_current_instances'
+require_relative 'auto_scaling_commands/requests/get_desired_capacity_request'
+require_relative 'auto_scaling_commands/directors/get_desired_capacity_director'
 
-include AwsHelpers::Actions::AutoScaling
+include AwsHelpers::AutoScalingCommands::Directors
+include AwsHelpers::AutoScalingCommands::Requests
 
 module AwsHelpers
   class AutoScaling < AwsHelpers::Client
@@ -32,7 +35,9 @@ module AwsHelpers
     # @return [Integer] The desired capacity of the auto scaling group
     #
     def retrieve_desired_capacity(auto_scaling_group_name)
-      RetrieveDesiredCapacity.new(config, auto_scaling_group_name).execute
+      request = GetDesiredCapacityRequest.new(auto_scaling_group_name: auto_scaling_group_name)
+      GetDesiredCapacityDirector.new(config).get(request)
+      # RetrieveDesiredCapacity.new(config, auto_scaling_group_name).execute
     end
 
     # Changes the desired capacity of an auto scaling group.

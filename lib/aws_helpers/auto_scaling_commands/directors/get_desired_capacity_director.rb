@@ -5,16 +5,16 @@ module AwsHelpers
   module AutoScalingCommands
     module Directors
       class GetDesiredCapacityDirector
-        include AwsHelpers::EC2Commands::Commands::CommandRunner
+        include AwsHelpers::AutoScalingCommands::Commands::CommandRunner
 
         def initialize(config)
           @config = config
         end
 
-        def create(request)
+        def get(request)
           @request = request
           @commands = [
-            AwsHelpers::AutoscalingCommands::Commands::GetDesiredCapacityCommand.new(@config, request)
+            AwsHelpers::AutoScalingCommands::Commands::GetDesiredCapacityCommand.new(@config, request)
           ]
           execute_commands
         end
