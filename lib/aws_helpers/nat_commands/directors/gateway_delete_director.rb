@@ -14,7 +14,7 @@ module AwsHelpers
         def delete(request)
           @request = request
           @commands = [
-            AwsHelpers::EC2Commands::Commands::GatewayCreateCommand.new(@config, request)
+            AwsHelpers::NATCommands::Commands::GatewayDeleteCommand.new(@config, request)
           ]
           execute_commands
         end
