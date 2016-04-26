@@ -36,7 +36,7 @@ describe AwsHelpers::Actions::CloudFormation::StackProvision do
       allow(stack_information).to receive(:execute)
     end
 
-    context 's3_bucket_name option not provided' do
+    context 'bucket_name option not provided' do
 
       after(:each) do
         described_class.new(config, stack_name, template_json, stdout: stdout, stack_polling: polling).execute
@@ -153,9 +153,9 @@ describe AwsHelpers::Actions::CloudFormation::StackProvision do
 
     end
 
-    context 's3_bucket_name option provided' do
+    context 'bucket_name option provided' do
 
-      let(:s3_bucket_name) { 'bucket_name' }
+      let(:bucket_name) { 'bucket_name' }
 
       before(:each) do
         allow(stack_exists).to receive(:execute).and_return(false)
@@ -164,11 +164,11 @@ describe AwsHelpers::Actions::CloudFormation::StackProvision do
       context 'bucket_polling provided' do
 
         after(:each) do
-          described_class.new(config, stack_name, template_json, s3_bucket_name: s3_bucket_name, stdout: stdout, bucket_polling: polling).execute
+          described_class.new(config, stack_name, template_json, bucket_name: bucket_name, stdout: stdout, bucket_polling: polling).execute
         end
 
         it 'should call AwsHelpers::Actions::S3::UploadTemplate #new with correct parameters' do
-          expect(AwsHelpers::Actions::S3::UploadTemplate).to receive(:new).with(config, stack_name, template_json, s3_bucket_name, stdout: stdout, bucket_encrypt: nil, delay: 1, max_attempts: 2)
+          expect(AwsHelpers::Actions::S3::UploadTemplate).to receive(:new).with(config, stack_name, template_json, bucket_name, stdout: stdout, bucket_encrypt: nil, delay: 1, max_attempts: 2)
         end
 
         it 'should call AwsHelpers::Actions::S3::UploadTemplate #execute' do
@@ -180,11 +180,11 @@ describe AwsHelpers::Actions::CloudFormation::StackProvision do
       context 'bucket_encrypt option not provided' do
 
         after(:each) do
-          described_class.new(config, stack_name, template_json, s3_bucket_name: s3_bucket_name, stdout: stdout).execute
+          described_class.new(config, stack_name, template_json, bucket_name: bucket_name, stdout: stdout).execute
         end
 
         it 'should call AwsHelpers::Actions::S3::UploadTemplate #new with correct parameters' do
-          expect(AwsHelpers::Actions::S3::UploadTemplate).to receive(:new).with(config, stack_name, template_json, s3_bucket_name, stdout: stdout, bucket_encrypt: nil)
+          expect(AwsHelpers::Actions::S3::UploadTemplate).to receive(:new).with(config, stack_name, template_json, bucket_name, stdout: stdout, bucket_encrypt: nil)
         end
 
         it 'should call AwsHelpers::Actions::S3::UploadTemplate #execute' do
@@ -198,11 +198,11 @@ describe AwsHelpers::Actions::CloudFormation::StackProvision do
         let(:bucket_encrypt) { true }
 
         after(:each) do
-          described_class.new(config, stack_name, template_json, s3_bucket_name: s3_bucket_name, stdout: stdout, bucket_encrypt: bucket_encrypt).execute
+          described_class.new(config, stack_name, template_json, bucket_name: bucket_name, stdout: stdout, bucket_encrypt: bucket_encrypt).execute
         end
 
         it 'should call AwsHelpers::Actions::S3::UploadTemplate #new with correct parameters' do
-          expect(AwsHelpers::Actions::S3::UploadTemplate).to receive(:new).with(config, stack_name, template_json, s3_bucket_name, stdout: stdout, bucket_encrypt: bucket_encrypt)
+          expect(AwsHelpers::Actions::S3::UploadTemplate).to receive(:new).with(config, stack_name, template_json, bucket_name, stdout: stdout, bucket_encrypt: bucket_encrypt)
         end
 
         it 'should call AwsHelpers::Actions::S3::UploadTemplate #execute' do

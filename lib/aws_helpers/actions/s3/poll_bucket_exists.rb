@@ -8,9 +8,9 @@ module AwsHelpers
       class PollBucketExists
         include AwsHelpers::Utilities::Polling
 
-        def initialize(config, s3_bucket_name, options = {})
+        def initialize(config, bucket_name, options = {})
           @config = config
-          @s3_bucket_name = s3_bucket_name
+          @bucket_name = bucket_name
           @stdout = options[:stdout] || $stdout
           @delay = options[:delay] || 5
           @max_attempts = options[:max_attempts] || 3
@@ -18,8 +18,8 @@ module AwsHelpers
 
         def execute
           poll(@delay, @max_attempts) do
-            @stdout.puts "Waiting for S3 Bucket:#{@s3_bucket_name} to be created"
-            AwsHelpers::Actions::S3::Exists.new(@config, @s3_bucket_name).execute
+            @stdout.puts "Waiting for S3 Bucket:#{@bucket_name} to be created"
+            AwsHelpers::Actions::S3::Exists.new(@config, @bucket_name).execute
           end
         end
       end

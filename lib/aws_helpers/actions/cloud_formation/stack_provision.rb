@@ -18,7 +18,7 @@ module AwsHelpers
           @template_json = template_json
           @parameters = options[:parameters]
           @capabilities = options[:capabilities]
-          @s3_bucket_name = options[:s3_bucket_name]
+          @bucket_name = options[:bucket_name]
           @bucket_encrypt = options[:bucket_encrypt]
           @stdout = options[:stdout]
           @bucket_options = create_options(@stdout, options[:bucket_polling]).tap { |tap| tap[:bucket_encrypt] = @bucket_encrypt }
@@ -26,7 +26,7 @@ module AwsHelpers
         end
 
         def execute
-          template_url = UploadTemplate.new(@config, @stack_name, @template_json, @s3_bucket_name, @bucket_options).execute if @s3_bucket_name
+          template_url = UploadTemplate.new(@config, @stack_name, @template_json, @bucket_name, @bucket_options).execute if @bucket_name
 
           if StackExists.new(@config, @stack_name).execute && StackRollbackComplete.new(@config, @stack_name).execute
             StackDelete.new(@config, @stack_name, @stack_options).execute
