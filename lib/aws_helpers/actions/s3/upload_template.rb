@@ -27,7 +27,7 @@ module AwsHelpers
           AwsHelpers::Actions::S3::Create.new(@config, @bucket_name, @options).execute
           @stdout.puts "Uploading #{@stack_name} to S3 bucket #{@bucket_name}"
           @client.put_object(request)
-          AwsHelpers::Actions::S3::TemplateUrl.new(@config, @bucket_name).execute
+          AwsHelpers::Actions::S3::TemplateUrl.new(@config, @bucket_name, @stack_name).execute
         end
       end
     end

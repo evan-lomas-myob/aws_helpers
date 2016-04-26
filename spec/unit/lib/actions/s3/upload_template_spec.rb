@@ -27,7 +27,7 @@ describe UploadTemplate do
     allow(aws_s3_client).to receive(:put_object)
     allow(Create).to receive(:new).with(config, s3_bucket_name, options).and_return(s3_create)
     allow(s3_create).to receive(:execute)
-    allow(TemplateUrl).to receive(:new).with(config, s3_bucket_name).and_return(s3_template_url)
+    allow(TemplateUrl).to receive(:new).with(config, s3_bucket_name, stack_name).and_return(s3_template_url)
     allow(s3_template_url).to receive(:execute)
     allow(stdout).to receive(:puts)
   end
@@ -45,6 +45,6 @@ describe UploadTemplate do
   end
 
   it 'should return the s3 bucket url' do
-    expect(TemplateUrl).to receive(:new).with(config, s3_bucket_name).and_return(s3_template_url)
+    expect(TemplateUrl).to receive(:new).with(config, s3_bucket_name, stack_name).and_return(s3_template_url)
   end
 end

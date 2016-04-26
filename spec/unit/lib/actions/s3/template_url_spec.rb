@@ -8,6 +8,7 @@ describe TemplateUrl do
   let(:config) { instance_double(AwsHelpers::Config, aws_s3_client: aws_s3_client) }
   let(:s3_exists) { instance_double(AwsHelpers::Actions::S3::Exists) }
 
+  let(:stack_name) { 'stack_name' }
   let(:location) { 'eu-west-1' }
   let(:s3_bucket_name) { 'my-bucket' }
 
@@ -16,13 +17,13 @@ describe TemplateUrl do
     allow(s3_exists).to receive(:execute)
   end
 
-  subject { AwsHelpers::Actions::S3::TemplateUrl.new(config, s3_bucket_name).execute }
+  subject { AwsHelpers::Actions::S3::TemplateUrl.new(config, s3_bucket_name, stack_name).execute }
 
   context 'bucket exists' do
     before(:each) do
       allow(s3_exists).to receive(:execute).and_return(true)
       allow(aws_s3_client).to receive(:get_bucket_location).and_return(
-        Aws::S3::Types::GetBucketLocationOutput.new(location_constraint: location)
+          Aws::S3::Types::GetBucketLocationOutput.new(location_constraint: location)
       )
     end
 
@@ -32,7 +33,7 @@ describe TemplateUrl do
     end
 
     it 'should return the URL of the bucket' do
-      expect(subject).to eq("https://#{s3_bucket_name}.#{location}.amazonaws.com")
+      expect(subject).to eq("https://s3-#{location}.amazonaws.com/#{s3_bucket_name}/#{stack_name}")
     end
   end
 
