@@ -14,19 +14,16 @@ module AwsHelpers
             update_parameter = @updated_parameters.detect do |updated_parameter|
               updated_parameter[:parameter_key] == existing_parameter.parameter_key
             end
+            parameter_hash = existing_parameter.to_hash
 
-            unless update_parameter.nil?
-              parameter_hash = existing_parameter.to_hash
-
-              if update_parameter[:parameter_value] != existing_parameter.parameter_value
-                parameter_hash[:parameter_value] = update_parameter[:parameter_value]
-                parameter_hash.delete(:use_previous_value)
-              else
-                parameter_hash[:use_previous_value] = true
-                parameter_hash.delete(:parameter_value)
-              end
-              parameter_hash
+            if !update_parameter.nil? && update_parameter[:parameter_value] != parameter_hash[:parameter_value]
+              parameter_hash[:parameter_value] = update_parameter[:parameter_value]
+              parameter_hash.delete(:use_previous_value)
+            else
+              parameter_hash[:use_previous_value] = true
+              parameter_hash.delete(:parameter_value)
             end
+            parameter_hash
           end
 
           parameters.all?(&:nil?) ? nil : {
