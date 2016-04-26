@@ -26,6 +26,7 @@ require_relative 'ec2_commands/directors/poll_instance_healthy_director'
 require_relative 'ec2_commands/directors/poll_instance_stopped_director'
 require_relative 'ec2_commands/directors/get_windows_password_director'
 require_relative 'ec2_commands/directors/get_vpc_id_director'
+require_relative 'ec2_commands/directors/get_security_group_id_director'
 
 include AwsHelpers::EC2Commands::Directors
 include AwsHelpers::EC2Commands::Requests
@@ -434,7 +435,9 @@ module AwsHelpers
     # @param security_group_name [String] Security Group Name to Find
     # @option options [IO] :stdout ($stdout) Override $stdout when logging output
     def get_group_id_by_name(security_group_name, options = {})
-      GetSecurityGroupIdByName.new(config, security_group_name, options).id
+      request = GetSecurityGroupIdRequest.new(security_group_name: security_group_name)
+      GetSecurityGroupIdDirector.new(config).get(request)
+      # GetSecurityGroupIdByName.new(config, security_group_name, options).id
     end
   end
 end

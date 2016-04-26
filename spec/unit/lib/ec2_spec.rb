@@ -8,6 +8,7 @@ describe AwsHelpers::EC2 do
   let(:user_id) { '789' }
   let(:vpc_name) { 'Robin' }
   let(:pem_path) { '/files/gotham/bwayne' }
+  let(:security_group_name) { 'Penguin' }
   let(:config) { instance_double(AwsHelpers::Config) }
 
   before do
@@ -494,27 +495,34 @@ describe AwsHelpers::EC2 do
   end
 
   describe '#get_security_group_id_by_name' do
-    let(:get_group_by_name) { instance_double(GetSecurityGroupIdByName) }
-    let(:sg_name) { 'Group Name' }
-    let(:sg_id) { 'Group ID' }
-    let(:options) { {} } # just use defaults
+    let(:request) { GetSecurityGroupIdRequest.new(image_id: image_id) }
+    let(:director) { instance_double(GetSecurityGroupIdDirector) }
 
-    before(:each) do
-      allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(GetSecurityGroupIdByName).to receive(:new).and_return(get_group_by_name)
-      allow(get_group_by_name).to receive(:id)
+    before do
+      allow(GetSecurityGroupIdRequest).to receive(:new).and_return(request)
+      allow(GetSecurityGroupIdDirector).to receive(:new).and_return(director)
+      allow(director).to receive(:get)
     end
 
-    subject { AwsHelpers::EC2.new.get_group_id_by_name(sg_name, options) }
-
-    it 'should create GetSecurityGroupIdByName' do
-      expect(GetSecurityGroupIdByName).to receive(:new).with(config, sg_name, options).and_return(get_group_by_name)
-      subject
+    it 'should delete a GetSecurityGroupIdRequest with the correct parameters' do
+      expect(GetSecurityGroupIdRequest)
+        .to receive(:new)
+        .with(security_group_name: security_group_name)
+      AwsHelpers::EC2.new.get_group_id_by_name(security_group_name)
     end
 
-    it 'should call GetSecurityGroupIdByName id method' do
-      expect(get_group_by_name).to receive(:id)
-      subject
+    it 'should delete a GetSecurityGroupIdDirector with the config' do
+      expect(GetSecurityGroupIdDirector)
+        .to receive(:new)
+        .with(config)
+      AwsHelpers::EC2.new.get_group_id_by_name(security_group_name)
+    end
+
+    it 'should call delete on the GetSecurityGroupIdDirector' do
+      expect(director)
+        .to receive(:get)
+        .with(request)
+      AwsHelpers::EC2.new.get_group_id_by_name(security_group_name)
     end
   end
 
