@@ -420,14 +420,6 @@ module AwsHelpers
       GetVpcIdDirector.new(config).get(request)
     end
 
-    def vpcs_find_by_name(name)
-
-    end
-
-    def security_groups_find_by_name(name)
-
-    end
-
     # Returns the Group ID for a given Security Group Name.
     #
     # @example Get the Security Group ID
