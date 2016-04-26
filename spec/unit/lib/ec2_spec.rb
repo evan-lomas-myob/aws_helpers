@@ -119,28 +119,6 @@ describe AwsHelpers::EC2 do
     end
   end
 
-  # describe '#image_add_user' do
-  #   let(:image_add_user) { instance_double(ImageAddUser) }
-  #   let(:image_id) { 'ami_id' }
-  #   let(:user_id) { 'aws_user' }
-
-  #   before(:each) do
-  #     allow(AwsHelpers::Config).to receive(:new).and_return(config)
-  #     allow(ImageAddUser).to receive(:new).and_return(image_add_user)
-  #     allow(image_add_user).to receive(:execute)
-  #   end
-
-  #   it 'should create ImageDelete with default parameters' do
-  #     expect(ImageAddUser).to receive(:new).with(config, image_id, user_id, {})
-  #     AwsHelpers::EC2.new.image_add_user(image_id, user_id)
-  #   end
-
-  #   it 'should call ImageCreate execute method' do
-  #     expect(image_add_user).to receive(:execute)
-  #     AwsHelpers::EC2.new.image_add_user(image_id, user_id)
-  #   end
-  # end
-
   describe '#images_delete_by_time' do
     let(:images_delete_by_time) { instance_double(ImagesDeleteByTime) }
     let(:time) { Time.parse('01-Jan-2015') }
@@ -187,76 +165,98 @@ describe AwsHelpers::EC2 do
   end
 
   describe '#instance_create' do
-    let(:instance_create) { instance_double(InstanceCreate) }
-    let(:image_id) { 'image_id' }
-    let(:min_count) { 1 }
-    let(:max_count) { 1 }
-    let(:monitoring) { true }
-    let(:options) { { min_count: min_count, max_count: max_count, monitoring: monitoring } }
+    let(:request) { InstanceCreateRequest.new(image_id: image_id) }
+    let(:director) { instance_double(InstanceCreateDirector) }
 
-    before(:each) do
-      allow(instance_create).to receive(:execute)
-      allow(InstanceCreate).to receive(:new).and_return(instance_create)
+    before do
+      allow(InstanceCreateRequest).to receive(:new).and_return(request)
+      allow(InstanceCreateDirector).to receive(:new).and_return(director)
+      allow(director).to receive(:create)
     end
 
-    subject { AwsHelpers::EC2.new.instance_create(image_id, options) }
-
-    it 'should create InstanceCreate' do
-      expect(InstanceCreate).to receive(:new).with(config, image_id, options).and_return(instance_create)
-      subject
+    it 'should delete a InstanceCreateRequest with the correct parameters' do
+      expect(InstanceCreateRequest)
+        .to receive(:new)
+        .with(image_id: image_id)
+      AwsHelpers::EC2.new.instance_create(image_id)
     end
 
-    it 'should call InstanceCreate execute method' do
-      expect(instance_create).to receive(:execute)
-      subject
+    it 'should delete a InstanceCreateDirector with the config' do
+      expect(InstanceCreateDirector)
+        .to receive(:new)
+        .with(config)
+      AwsHelpers::EC2.new.instance_create(image_id)
+    end
+
+    it 'should call delete on the InstanceCreateDirector' do
+      expect(director)
+        .to receive(:create)
+        .with(request)
+      AwsHelpers::EC2.new.instance_create(image_id)
     end
   end
 
   describe '#instance_start' do
-    let(:instance_start) { instance_double(InstanceStart) }
-    let(:image_id) { 'image_id' }
-    let(:options) { {} } # just use defaults
+    let(:request) { InstanceStartRequest.new(image_id: image_id) }
+    let(:director) { instance_double(InstanceStartDirector) }
 
-    before(:each) do
-      allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(instance_start).to receive(:execute)
-      allow(InstanceStart).to receive(:new).and_return(instance_start)
+    before do
+      allow(InstanceStartRequest).to receive(:new).and_return(request)
+      allow(InstanceStartDirector).to receive(:new).and_return(director)
+      allow(director).to receive(:start)
     end
 
-    subject { AwsHelpers::EC2.new.instance_start(image_id, options) }
-
-    it 'should create InstanceStart' do
-      expect(InstanceStart).to receive(:new).and_return(instance_start)
-      subject
+    it 'should delete a InstanceStartRequest with the correct parameters' do
+      expect(InstanceStartRequest)
+        .to receive(:new)
+        .with(instance_id: instance_id)
+      AwsHelpers::EC2.new.instance_start(instance_id)
     end
 
-    it 'should call InstanceStart execute method' do
-      expect(instance_start).to receive(:execute)
-      subject
+    it 'should delete a InstanceStartDirector with the config' do
+      expect(InstanceStartDirector)
+        .to receive(:new)
+        .with(config)
+      AwsHelpers::EC2.new.instance_start(instance_id)
+    end
+
+    it 'should call delete on the InstanceStartDirector' do
+      expect(director)
+        .to receive(:start)
+        .with(request)
+      AwsHelpers::EC2.new.instance_start(instance_id)
     end
   end
 
   describe '#instance_stop' do
-    let(:instance_stop) { instance_double(InstanceStop) }
-    let(:image_id) { 'image_id' }
-    let(:options) { {} } # just use defaults
+    let(:request) { InstanceStopRequest.new(image_id: image_id) }
+    let(:director) { instance_double(InstanceStopDirector) }
 
-    before(:each) do
-      allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(instance_stop).to receive(:execute)
-      allow(InstanceStop).to receive(:new).and_return(instance_stop)
+    before do
+      allow(InstanceStopRequest).to receive(:new).and_return(request)
+      allow(InstanceStopDirector).to receive(:new).and_return(director)
+      allow(director).to receive(:stop)
     end
 
-    subject { AwsHelpers::EC2.new.instance_stop(image_id, options) }
-
-    it 'should create InstanceStop' do
-      expect(InstanceStop).to receive(:new).and_return(instance_stop)
-      subject
+    it 'should delete a InstanceStopRequest with the correct parameters' do
+      expect(InstanceStopRequest)
+        .to receive(:new)
+        .with(instance_id: instance_id)
+      AwsHelpers::EC2.new.instance_stop(instance_id)
     end
 
-    it 'should call InstanceStop execute method' do
-      expect(instance_stop).to receive(:execute)
-      subject
+    it 'should delete a InstanceStopDirector with the config' do
+      expect(InstanceStopDirector)
+        .to receive(:new)
+        .with(config)
+      AwsHelpers::EC2.new.instance_stop(instance_id)
+    end
+
+    it 'should call delete on the InstanceStopDirector' do
+      expect(director)
+        .to receive(:stop)
+        .with(request)
+      AwsHelpers::EC2.new.instance_stop(instance_id)
     end
   end
 
@@ -306,7 +306,7 @@ describe AwsHelpers::EC2 do
     end
   end
 
-  describe '#instance_temrinate' do
+  describe '#instance_terminate' do
     let(:request) { InstanceTerminateRequest.new(image_id: image_id) }
     let(:director) { instance_double(InstanceTerminateDirector) }
 
@@ -338,51 +338,35 @@ describe AwsHelpers::EC2 do
     end
   end
 
-  # describe '#instance_terminate' do
-  #   let(:instance_terminate) { instance_double(InstanceTerminate) }
-  #   let(:image_id) { 'image_id' }
-  #   let(:options) { {} } # just use defaults
-
-  #   before(:each) do
-  #     allow(AwsHelpers::Config).to receive(:new).and_return(config)
-  #     allow(instance_terminate).to receive(:execute)
-  #     allow(InstanceTerminate).to receive(:new).and_return(instance_terminate)
-  #   end
-
-  #   subject { AwsHelpers::EC2.new.instance_terminate(image_id) }
-
-  #   it 'should create InstanceTerminate' do
-  #     expect(InstanceTerminate).to receive(:new).with(config, image_id).and_return(instance_terminate)
-  #     subject
-  #   end
-
-  #   it 'should call InstanceTerminate execute method' do
-  #     expect(instance_terminate).to receive(:execute)
-  #     subject
-  #   end
-  # end
-
   describe '#poll_instance_healthy' do
-    let(:poll_inst_healthy) { instance_double(PollInstanceHealthy) }
-    let(:image_id) { 'image_id' }
-    let(:options) { {} } # just use defaults
+    let(:request) { PollInstanceHealthyRequest.new(image_id: image_id) }
+    let(:director) { instance_double(PollInstanceHealthyDirector) }
 
-    before(:each) do
-      allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(poll_inst_healthy).to receive(:execute)
-      allow(PollInstanceHealthy).to receive(:new).with(config, image_id, options).and_return(poll_inst_healthy)
+    before do
+      allow(PollInstanceHealthyRequest).to receive(:new).and_return(request)
+      allow(PollInstanceHealthyDirector).to receive(:new).and_return(director)
+      allow(director).to receive(:execute)
     end
 
-    subject { AwsHelpers::EC2.new.poll_instance_healthy(image_id, options) }
-
-    it 'should create PollInstanceHealthy' do
-      expect(PollInstanceHealthy).to receive(:new).with(config, image_id, options).and_return(poll_inst_healthy)
-      subject
+    it 'should delete a PollInstanceHealthyRequest with the correct parameters' do
+      expect(PollInstanceHealthyRequest)
+        .to receive(:new)
+        .with(instance_id: instance_id)
+      AwsHelpers::EC2.new.poll_instance_healthy(instance_id)
     end
 
-    it 'should call PollInstanceHealthy execute method' do
-      expect(poll_inst_healthy).to receive(:execute)
-      subject
+    it 'should delete a PollInstanceHealthyDirector with the config' do
+      expect(PollInstanceHealthyDirector)
+        .to receive(:new)
+        .with(config)
+      AwsHelpers::EC2.new.poll_instance_healthy(instance_id)
+    end
+
+    it 'should call delete on the PollInstanceHealthyDirector' do
+      expect(director)
+        .to receive(:execute)
+        .with(request)
+      AwsHelpers::EC2.new.poll_instance_healthy(instance_id)
     end
   end
 

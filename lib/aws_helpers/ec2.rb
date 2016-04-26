@@ -20,6 +20,9 @@ require_relative 'ec2_commands/directors/image_create_director'
 require_relative 'ec2_commands/directors/image_delete_director'
 require_relative 'ec2_commands/directors/image_add_user_director'
 require_relative 'ec2_commands/directors/instance_terminate_director'
+require_relative 'ec2_commands/directors/instance_start_director'
+require_relative 'ec2_commands/directors/instance_stop_director'
+require_relative 'ec2_commands/directors/poll_instance_healthy_director'
 
 include AwsHelpers::EC2Commands::Directors
 include AwsHelpers::EC2Commands::Requests
@@ -72,8 +75,6 @@ module AwsHelpers
     def image_create(instance_id, name, options = {})
       request = ImageCreateRequest.new(instance_id: instance_id, image_name: name)
       ImageCreateDirector.new(config).create(request)
-
-      # ImageCreate.new(config, instance_id, name, options).execute
     end
 
     # De-register an AMI image and its associated snapshots
@@ -90,8 +91,6 @@ module AwsHelpers
     def image_delete(image_id, options = {})
       request = ImageDeleteRequest.new(image_id: image_id)
       ImageDeleteDirector.new(config).delete(request)
-
-      # ImageDelete.new(config, image_id, options).execute
     end
 
     # Share an AMI with a User ID
@@ -109,8 +108,6 @@ module AwsHelpers
     def image_add_user(image_id, user_id, options = {})
       request = ImageAddUserRequest.new(image_id: image_id, user_id: user_id)
       ImageAddUserDirector.new(config).add(request)
-
-      # ImageAddUser.new(config, image_id, user_id, options).execute
     end
 
     # De-register AMI images older than range specified
@@ -207,7 +204,8 @@ module AwsHelpers
     # @return [String] Instance ID
     #
     def instance_create(image_id, options = {})
-      InstanceCreate.new(config, image_id, options).execute
+      request = InstanceCreateRequest.new(image_id: image_id)
+      InstanceCreateDirector.new(config).create(request)
     end
 
     # Start an existing EC2 instance
@@ -231,7 +229,8 @@ module AwsHelpers
     # @return [nil]
     #
     def instance_start(instance_id, options = {})
-      InstanceStart.new(config, instance_id, options).execute
+      request = InstanceStartRequest.new(instance_id: instance_id)
+      InstanceStartDirector.new(config).start(request)
     end
 
     # Stop an EC2 instance
@@ -254,7 +253,8 @@ module AwsHelpers
     # @return [nil]
     #
     def instance_stop(instance_id, options = {})
-      InstanceStop.new(config, instance_id, options).execute
+      request = InstanceStopRequest.new(instance_id: instance_id)
+      InstanceStopDirector.new(config).stop(request)
     end
 
     # Return a list of instances that match a given list of tags
@@ -326,7 +326,9 @@ module AwsHelpers
     #
 
     def poll_instance_healthy(instance_id, options = {})
-      PollInstanceHealthy.new(config, instance_id, options).execute
+      request = PollInstanceHealthyRequest.new(instance_id: instance_id)
+      PollInstanceHealthyDirector.new(config).execute(request)
+      # PollInstanceHealthy.new(config, instance_id, options).execute
     end
 
     # Polls a given instance until it is stopped
