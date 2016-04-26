@@ -2,5 +2,5 @@
 # @since 0.1.0
 
 module AwsHelpers
-  VERSION = '3.0.3'.freeze
+  VERSION = '3.0.7'.freeze
 end

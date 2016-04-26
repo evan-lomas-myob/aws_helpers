@@ -26,9 +26,23 @@ module AwsHelpers
           else
             @stdout.puts "Updating #{@stack_name}"
             client = @config.aws_cloud_formation_client
-            response = client.update_stack(request)
-            StackProgress.new(
-                @config, response.stack_id, stdout: @options[:stdout], delay: @options[:delay], max_attempts: @options[:max_attempts]).execute
+
+            #TODO: write tests around the exception handling
+            begin
+              response = client.update_stack(request)
+              StackProgress.new(
+                  @config,
+                  response.stack_id,
+                  stdout: @options[:stdout],
+                  delay: @options[:delay],
+                  max_attempts: @options[:max_attempts]).execute
+            rescue Aws::CloudFormation::Errors::ValidationError => validation_error
+              if validation_error.message == 'No updates are to be performed.'
+                puts "No updates to perform for #{@stack_name}."
+              else
+                raise validation_error
+              end
+            end
           end
         end
 

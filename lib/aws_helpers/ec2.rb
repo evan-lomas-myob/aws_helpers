@@ -129,6 +129,7 @@ module AwsHelpers
     # @return [Seahorse::Client::Response] An empty response
     #
     def images_delete(name, options = {})
+      #TODO: Pass polling options
       ImagesDelete.new(config, name, options).execute
     end
 
@@ -153,6 +154,7 @@ module AwsHelpers
     # @return [Seahorse::Client::Response] An empty response
     #
     def images_delete_by_time(name, time, options = {})
+      #TODO: Pass polling options
       ImagesDeleteByTime.new(config, name, time, options).execute
     end
 
