@@ -14,7 +14,11 @@ require_relative 'actions/ec2/instances_find_by_ids'
 require_relative 'actions/ec2/poll_instance_state'
 require_relative 'actions/ec2/get_vpc_id_by_name'
 require_relative 'actions/ec2/get_security_group_id_by_name'
+require_relative 'ec2_commands/requests/instance_create_request'
+require_relative 'ec2_commands/directors/instance_create_director'
 
+include AwsHelpers::EC2Commands::Directors
+include AwsHelpers::EC2Commands::Requests
 include AwsHelpers::Actions::EC2
 
 module AwsHelpers
