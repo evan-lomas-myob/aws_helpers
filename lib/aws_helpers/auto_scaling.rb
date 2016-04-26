@@ -6,6 +6,7 @@ require_relative 'auto_scaling_commands/requests/get_desired_capacity_request'
 require_relative 'auto_scaling_commands/directors/get_desired_capacity_director'
 require_relative 'auto_scaling_commands/requests/update_desired_capacity_request'
 require_relative 'auto_scaling_commands/directors/update_desired_capacity_director'
+require_relative 'auto_scaling_commands/directors/get_current_instances_director'
 
 include AwsHelpers::AutoScalingCommands::Directors
 include AwsHelpers::AutoScalingCommands::Requests

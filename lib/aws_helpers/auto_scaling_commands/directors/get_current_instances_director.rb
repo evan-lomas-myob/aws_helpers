@@ -14,7 +14,7 @@ module AwsHelpers
         def create(request)
           @request = request
           @commands = [
-            AwsHelpers::AutoScalingCommands::Commands::GetCurrentInstanceCommand.new(@config, request)
+            AwsHelpers::AutoScalingCommands::Commands::GetCurrentInstancesCommand.new(@config, request)
           ]
           execute_commands
         end

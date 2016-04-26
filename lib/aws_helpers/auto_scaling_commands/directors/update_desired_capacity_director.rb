@@ -14,7 +14,7 @@ module AwsHelpers
         def update(request)
           @request = request
           @commands = [
-            AwsHelpers::AutoscalingCommands::Commands::UpdateDesiredCapacityCommand.new(@config, request)
+            AwsHelpers::AutoScalingCommands::Commands::UpdateDesiredCapacityCommand.new(@config, request)
           ]
           execute_commands
         end
