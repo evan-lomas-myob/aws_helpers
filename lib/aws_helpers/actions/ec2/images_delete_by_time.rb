@@ -19,6 +19,7 @@ module AwsHelpers
             date_tag = image.tags.detect { |tag| tag.key == 'Date' }
             image_creation_time = Time.parse(date_tag.value)
             next if @creation_time <= image_creation_time
+            #TODO: Set delay
             ImageDelete.new(@config, image.image_id, stdout: @stdout, max_attempts: @max_attempts).execute
           end
         end
