@@ -2,8 +2,15 @@ require 'time'
 require 'aws_helpers/ec2'
 
 describe AwsHelpers::EC2 do
+  let(:instance_id) { '123' }
+  let(:image_id) { '456' }
+  let(:image_name) { 'Batman' }
+  let(:user_id) { '789' }
   let(:config) { instance_double(AwsHelpers::Config) }
-  let(:image_name) { 'ec2_name' }
+
+  before do
+    allow(AwsHelpers::Config).to receive(:new).and_return(config)
+  end
 
   describe '#initialize' do
     it 'should call AwsHelpers::Client initialize method' do
@@ -14,100 +21,125 @@ describe AwsHelpers::EC2 do
   end
 
   describe '#image_create' do
-    let(:image_create) { instance_double(ImageCreate) }
+    let(:request) { ImageCreateRequest.new(instance_id: instance_id, image_name: image_name) }
+    let(:director) { instance_double(ImageCreateDirector) }
 
-    let(:image_id) { 'ami_id' }
-    let(:tags) { %w('tag1', 'tag2') }
-
-    before(:each) do
+    before do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(ImageCreate).to receive(:new).and_return(image_create)
-      allow(image_create).to receive(:execute)
+      allow(ImageCreateRequest).to receive(:new).and_return(request)
+      allow(ImageCreateDirector).to receive(:new).and_return(director)
+      allow(director).to receive(:create)
     end
 
-    it 'should create ImageCreate with default parameters' do
-      expect(ImageCreate).to receive(:new).with(config, image_name, image_id, tags)
-      AwsHelpers::EC2.new.image_create(image_name, image_id, tags)
+    it 'should create a ImageAddUserRequest with the correct parameters' do
+      expect(ImageCreateRequest)
+        .to receive(:new)
+        .with(instance_id: instance_id, image_name: image_name)
+      AwsHelpers::EC2.new.image_create(instance_id, image_name)
     end
 
-    it 'should call ImageCreate execute method' do
-      expect(image_create).to receive(:execute)
-      AwsHelpers::EC2.new.image_create(image_name, image_id, tags)
+    it 'should create a ImageCreateDirector with the config' do
+      expect(ImageCreateDirector)
+        .to receive(:new)
+        .with(config)
+      AwsHelpers::EC2.new.image_create(instance_id, image_name)
+    end
+
+    it 'should call create on the ImageCreateDirector' do
+      expect(director)
+        .to receive(:create)
+        .with(request)
+      AwsHelpers::EC2.new.image_create(instance_id, image_name)
     end
   end
 
   describe '#image_delete' do
-    let(:image_delete) { instance_double(ImageDelete) }
-    let(:image_id) { 'ami_id' }
-    let(:options) {}
+    let(:request) { ImageDeleteRequest.new(image_id: image_id) }
+    let(:director) { instance_double(ImageDeleteDirector) }
 
-    before(:each) do
+    before do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(ImageDelete).to receive(:new).and_return(image_delete)
-      allow(image_delete).to receive(:execute)
+      allow(ImageDeleteRequest).to receive(:new).and_return(request)
+      allow(ImageDeleteDirector).to receive(:new).and_return(director)
+      allow(director).to receive(:delete)
     end
 
-    subject { AwsHelpers::EC2.new.image_delete(image_id, options) }
-
-    it 'should create ImageDelete with default parameters' do
-      expect(ImageDelete).to receive(:new).with(config, image_id, options)
-      subject
+    it 'should delete a ImageAddUserRequest with the correct parameters' do
+      expect(ImageDeleteRequest)
+        .to receive(:new)
+        .with(image_id: image_id)
+      AwsHelpers::EC2.new.image_delete(image_id)
     end
 
-    it 'should call ImageDelete execute method' do
-      expect(image_delete).to receive(:execute)
-      subject
-    end
-  end
-
-  describe '#images_delete' do
-    let(:images_delete) { instance_double(ImagesDelete) }
-
-    let(:hours) { 1 }
-    let(:days) { 2 }
-    let(:months) { 3 }
-    let(:years) { 4 }
-
-    before(:each) do
-      allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(ImagesDelete).to receive(:new).and_return(images_delete)
-      allow(images_delete).to receive(:execute)
+    it 'should delete a ImageDeleteDirector with the config' do
+      expect(ImageDeleteDirector)
+        .to receive(:new)
+        .with(config)
+      AwsHelpers::EC2.new.image_delete(image_id)
     end
 
-    subject { AwsHelpers::EC2.new.images_delete(image_name, hours: hours, days: days, months: months, years: years) }
-
-    it 'should create ImagesDelete with parameters' do
-      expect(ImagesDelete).to receive(:new).with(config, image_name, hours: hours, days: days, months: months, years: years)
-      subject
-    end
-
-    it 'should call ImagesDelete execute method' do
-      expect(images_delete).to receive(:execute)
-      subject
+    it 'should call delete on the ImageDeleteDirector' do
+      expect(director)
+        .to receive(:delete)
+        .with(request)
+      AwsHelpers::EC2.new.image_delete(image_id)
     end
   end
 
   describe '#image_add_user' do
-    let(:image_add_user) { instance_double(ImageAddUser) }
-    let(:image_id) { 'ami_id' }
-    let(:user_id) { 'aws_user' }
+    let(:request) { ImageAddUserRequest.new(image_id: image_id) }
+    let(:director) { instance_double(ImageAddUserDirector) }
 
-    before(:each) do
+    before do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(ImageAddUser).to receive(:new).and_return(image_add_user)
-      allow(image_add_user).to receive(:execute)
+      allow(ImageAddUserRequest).to receive(:new).and_return(request)
+      allow(ImageAddUserDirector).to receive(:new).and_return(director)
+      allow(director).to receive(:add)
     end
 
-    it 'should create ImageCreate with default parameters' do
-      expect(ImageAddUser).to receive(:new).with(config, image_id, user_id, {})
+    it 'should delete a ImageAddUserRequest with the correct parameters' do
+      expect(ImageAddUserRequest)
+        .to receive(:new)
+        .with(image_id: image_id, user_id: user_id)
       AwsHelpers::EC2.new.image_add_user(image_id, user_id)
     end
 
-    it 'should call ImageCreate execute method' do
-      expect(image_add_user).to receive(:execute)
+    it 'should delete a ImageAddUserDirector with the config' do
+      expect(ImageAddUserDirector)
+        .to receive(:new)
+        .with(config)
+      AwsHelpers::EC2.new.image_add_user(image_id, user_id)
+    end
+
+    it 'should call delete on the ImageAddUserDirector' do
+      expect(director)
+        .to receive(:add)
+        .with(request)
       AwsHelpers::EC2.new.image_add_user(image_id, user_id)
     end
   end
+
+  # describe '#image_add_user' do
+  #   let(:image_add_user) { instance_double(ImageAddUser) }
+  #   let(:image_id) { 'ami_id' }
+  #   let(:user_id) { 'aws_user' }
+
+  #   before(:each) do
+  #     allow(AwsHelpers::Config).to receive(:new).and_return(config)
+  #     allow(ImageAddUser).to receive(:new).and_return(image_add_user)
+  #     allow(image_add_user).to receive(:execute)
+  #   end
+
+  #   it 'should create ImageDelete with default parameters' do
+  #     expect(ImageAddUser).to receive(:new).with(config, image_id, user_id, {})
+  #     AwsHelpers::EC2.new.image_add_user(image_id, user_id)
+  #   end
+
+  #   it 'should call ImageCreate execute method' do
+  #     expect(image_add_user).to receive(:execute)
+  #     AwsHelpers::EC2.new.image_add_user(image_id, user_id)
+  #   end
+  # end
 
   describe '#images_delete_by_time' do
     let(:images_delete_by_time) { instance_double(ImagesDeleteByTime) }
@@ -137,7 +169,6 @@ describe AwsHelpers::EC2 do
     let(:tags) { %w('tag1', 'tag2') }
 
     before(:each) do
-      allow(AwsHelpers::Config).to receive(:new).and_return(config)
       allow(ImagesFindByTags).to receive(:new).and_return(images_find_by_tags)
       allow(images_find_by_tags).to receive(:execute)
     end
@@ -164,7 +195,6 @@ describe AwsHelpers::EC2 do
     let(:options) { { min_count: min_count, max_count: max_count, monitoring: monitoring } }
 
     before(:each) do
-      allow(AwsHelpers::Config).to receive(:new).and_return(config)
       allow(instance_create).to receive(:execute)
       allow(InstanceCreate).to receive(:new).and_return(instance_create)
     end
@@ -276,29 +306,61 @@ describe AwsHelpers::EC2 do
     end
   end
 
-  describe '#instance_terminate' do
-    let(:instance_terminate) { instance_double(InstanceTerminate) }
-    let(:image_id) { 'image_id' }
-    let(:options) { {} } # just use defaults
+  describe '#instance_temrinate' do
+    let(:request) { InstanceTerminateRequest.new(image_id: image_id) }
+    let(:director) { instance_double(InstanceTerminateDirector) }
 
-    before(:each) do
-      allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(instance_terminate).to receive(:execute)
-      allow(InstanceTerminate).to receive(:new).and_return(instance_terminate)
+    before do
+      allow(InstanceTerminateRequest).to receive(:new).and_return(request)
+      allow(InstanceTerminateDirector).to receive(:new).and_return(director)
+      allow(director).to receive(:terminate)
     end
 
-    subject { AwsHelpers::EC2.new.instance_terminate(image_id) }
-
-    it 'should create InstanceTerminate' do
-      expect(InstanceTerminate).to receive(:new).with(config, image_id).and_return(instance_terminate)
-      subject
+    it 'should delete a InstanceTerminateRequest with the correct parameters' do
+      expect(InstanceTerminateRequest)
+        .to receive(:new)
+        .with(instance_id: instance_id)
+      AwsHelpers::EC2.new.instance_terminate(instance_id)
     end
 
-    it 'should call InstanceTerminate execute method' do
-      expect(instance_terminate).to receive(:execute)
-      subject
+    it 'should delete a InstanceTerminateDirector with the config' do
+      expect(InstanceTerminateDirector)
+        .to receive(:new)
+        .with(config)
+      AwsHelpers::EC2.new.instance_terminate(instance_id)
+    end
+
+    it 'should call delete on the InstanceTerminateDirector' do
+      expect(director)
+        .to receive(:terminate)
+        .with(request)
+      AwsHelpers::EC2.new.instance_terminate(instance_id)
     end
   end
+
+  # describe '#instance_terminate' do
+  #   let(:instance_terminate) { instance_double(InstanceTerminate) }
+  #   let(:image_id) { 'image_id' }
+  #   let(:options) { {} } # just use defaults
+
+  #   before(:each) do
+  #     allow(AwsHelpers::Config).to receive(:new).and_return(config)
+  #     allow(instance_terminate).to receive(:execute)
+  #     allow(InstanceTerminate).to receive(:new).and_return(instance_terminate)
+  #   end
+
+  #   subject { AwsHelpers::EC2.new.instance_terminate(image_id) }
+
+  #   it 'should create InstanceTerminate' do
+  #     expect(InstanceTerminate).to receive(:new).with(config, image_id).and_return(instance_terminate)
+  #     subject
+  #   end
+
+  #   it 'should call InstanceTerminate execute method' do
+  #     expect(instance_terminate).to receive(:execute)
+  #     subject
+  #   end
+  # end
 
   describe '#poll_instance_healthy' do
     let(:poll_inst_healthy) { instance_double(PollInstanceHealthy) }

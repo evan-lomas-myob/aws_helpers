@@ -13,7 +13,7 @@ module AwsHelpers
           @config = config
         end
 
-        def create(request)
+        def delete(request)
           @request = request
           @commands = [
             AwsHelpers::EC2Commands::Commands::ImageDeleteCommand.new(@config, request),

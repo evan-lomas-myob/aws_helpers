@@ -15,12 +15,12 @@ describe AwsHelpers::EC2Commands::Directors::ImageDeleteDirector do
 
     it 'creates the command' do
       expect(klass).to receive(:new).with(config, request)
-      director.create(request)
+      director.delete(request)
     end
 
     it 'calls execute on the command' do
       expect(command).to receive(:execute)
-      director.create(request)
+      director.delete(request)
     end
   end
 end

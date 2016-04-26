@@ -40,7 +40,6 @@ module AwsHelpers
     def retrieve_desired_capacity(auto_scaling_group_name)
       request = GetDesiredCapacityRequest.new(auto_scaling_group_name: auto_scaling_group_name)
       GetDesiredCapacityDirector.new(config).get(request)
-      # RetrieveDesiredCapacity.new(config, auto_scaling_group_name).execute
     end
 
     # Changes the desired capacity of an auto scaling group.

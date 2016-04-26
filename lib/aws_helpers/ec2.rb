@@ -19,6 +19,7 @@ require_relative 'ec2_commands/directors/instance_create_director'
 require_relative 'ec2_commands/directors/image_create_director'
 require_relative 'ec2_commands/directors/image_delete_director'
 require_relative 'ec2_commands/directors/image_add_user_director'
+require_relative 'ec2_commands/directors/instance_terminate_director'
 
 include AwsHelpers::EC2Commands::Directors
 include AwsHelpers::EC2Commands::Requests
@@ -69,7 +70,10 @@ module AwsHelpers
     # @return [String] the image id
     #
     def image_create(instance_id, name, options = {})
-      ImageCreate.new(config, instance_id, name, options).execute
+      request = ImageCreateRequest.new(instance_id: instance_id, image_name: name)
+      ImageCreateDirector.new(config).create(request)
+
+      # ImageCreate.new(config, instance_id, name, options).execute
     end
 
     # De-register an AMI image and its associated snapshots
@@ -84,7 +88,10 @@ module AwsHelpers
     # @return [Seahorse::Client::Response] An empty response
     #
     def image_delete(image_id, options = {})
-      ImageDelete.new(config, image_id, options).execute
+      request = ImageDeleteRequest.new(image_id: image_id)
+      ImageDeleteDirector.new(config).delete(request)
+
+      # ImageDelete.new(config, image_id, options).execute
     end
 
     # Share an AMI with a User ID
@@ -100,7 +107,10 @@ module AwsHelpers
     # @return [Seahorse::Client::Response] An empty response
     #
     def image_add_user(image_id, user_id, options = {})
-      ImageAddUser.new(config, image_id, user_id, options).execute
+      request = ImageAddUserRequest.new(image_id: image_id, user_id: user_id)
+      ImageAddUserDirector.new(config).add(request)
+
+      # ImageAddUser.new(config, image_id, user_id, options).execute
     end
 
     # De-register AMI images older than range specified
@@ -288,7 +298,10 @@ module AwsHelpers
     #
 
     def instance_terminate(instance_id)
-      InstanceTerminate.new(config, instance_id).execute
+      request = InstanceTerminateRequest.new(instance_id: instance_id)
+      InstanceTerminateDirector.new(config).terminate(request)
+
+      # InstanceTerminate.new(config, instance_id).execute
     end
 
     # Polls a given instance until it is running and healthy

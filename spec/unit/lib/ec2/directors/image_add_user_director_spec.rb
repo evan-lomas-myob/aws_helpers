@@ -14,12 +14,12 @@ describe AwsHelpers::EC2Commands::Directors::ImageAddUserDirector do
 
     it 'creates the command' do
       expect(klass).to receive(:new).with(config, request)
-      director.create(request)
+      director.add(request)
     end
 
     it 'calls execute on the command' do
       expect(command).to receive(:execute)
-      director.create(request)
+      director.add(request)
     end
   end
 end
