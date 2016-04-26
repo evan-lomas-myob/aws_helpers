@@ -6,6 +6,7 @@ describe AwsHelpers::EC2 do
   let(:image_id) { '456' }
   let(:image_name) { 'Batman' }
   let(:user_id) { '789' }
+  let(:vpc_name) { 'Robin' }
   let(:pem_path) { '/files/gotham/bwayne' }
   let(:config) { instance_double(AwsHelpers::Config) }
 
@@ -460,29 +461,35 @@ describe AwsHelpers::EC2 do
     end
   end
 
-# <<<<<<< Updated upstream
   describe '#get_vpc_id_by_name' do
-    let(:get_vpc_by_name) { instance_double(GetVpcIdByName) }
-    let(:vpc_name) { 'VPC Name' }
-    let(:vpc_id) { 'VPC ID' }
-    let(:options) { {} } # just use defaults
+    let(:request) { GetVpcIdRequest.new(image_id: image_id) }
+    let(:director) { instance_double(GetVpcIdDirector) }
 
-    before(:each) do
-      allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(GetVpcIdByName).to receive(:new).and_return(get_vpc_by_name)
-      allow(get_vpc_by_name).to receive(:id)
+    before do
+      allow(GetVpcIdRequest).to receive(:new).and_return(request)
+      allow(GetVpcIdDirector).to receive(:new).and_return(director)
+      allow(director).to receive(:get)
     end
 
-    subject { AwsHelpers::EC2.new.get_vpc_id_by_name(vpc_name, options) }
-
-    it 'should create GetVpcIdByName' do
-      expect(GetVpcIdByName).to receive(:new).with(config, vpc_name, options).and_return(get_vpc_by_name)
-      subject
+    it 'should delete a GetVpcIdRequest with the correct parameters' do
+      expect(GetVpcIdRequest)
+        .to receive(:new)
+        .with(vpc_name: vpc_name)
+      AwsHelpers::EC2.new.get_vpc_id_by_name(vpc_name)
     end
 
-    it 'should call GetVpcIdByName id method' do
-      expect(get_vpc_by_name).to receive(:id)
-      subject
+    it 'should delete a GetVpcIdDirector with the config' do
+      expect(GetVpcIdDirector)
+        .to receive(:new)
+        .with(config)
+      AwsHelpers::EC2.new.get_vpc_id_by_name(vpc_name)
+    end
+
+    it 'should call delete on the GetVpcIdDirector' do
+      expect(director)
+        .to receive(:get)
+        .with(request)
+      AwsHelpers::EC2.new.get_vpc_id_by_name(vpc_name)
     end
   end
 

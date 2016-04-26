@@ -25,6 +25,7 @@ require_relative 'ec2_commands/directors/instance_stop_director'
 require_relative 'ec2_commands/directors/poll_instance_healthy_director'
 require_relative 'ec2_commands/directors/poll_instance_stopped_director'
 require_relative 'ec2_commands/directors/get_windows_password_director'
+require_relative 'ec2_commands/directors/get_vpc_id_director'
 
 include AwsHelpers::EC2Commands::Directors
 include AwsHelpers::EC2Commands::Requests
@@ -405,8 +406,6 @@ module AwsHelpers
     def get_windows_password(instance_id, pem_path, options = {})
       request = GetWindowsPasswordRequest.new(instance_id: instance_id, pem_path: pem_path)
       GetWindowsPasswordDirector.new(config).get(request)
-      
-      # GetWindowsPassword.new(config, instance_id, pem_path, options).password
     end
 
     # Returns the VPC ID for a given VPC Name.
@@ -416,7 +415,8 @@ module AwsHelpers
     #   AwsHelpers::EC2.new.get_vpc_id_by_name('MyVPC')
     # @option options [IO] :stdout ($stdout) Override $stdout when logging output
     def get_vpc_id_by_name(vpc_name, options = {})
-      GetVpcIdByName.new(config, vpc_name, options).id
+      request = GetVpcIdRequest.new(vpc_name: vpc_name)
+      GetVpcIdDirector.new(config).get(request)
     end
 
     def vpcs_find_by_name(name)
