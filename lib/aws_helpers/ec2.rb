@@ -23,6 +23,8 @@ require_relative 'ec2_commands/directors/instance_terminate_director'
 require_relative 'ec2_commands/directors/instance_start_director'
 require_relative 'ec2_commands/directors/instance_stop_director'
 require_relative 'ec2_commands/directors/poll_instance_healthy_director'
+require_relative 'ec2_commands/directors/poll_instance_stopped_director'
+require_relative 'ec2_commands/directors/get_windows_password_director'
 
 include AwsHelpers::EC2Commands::Directors
 include AwsHelpers::EC2Commands::Requests
@@ -352,7 +354,10 @@ module AwsHelpers
     # @return [nil]
     #
     def poll_instance_stopped(instance_id, options = {})
-      poll_instance_state(instance_id, 'stopped', options)
+      request = PollInstanceStoppedRequest.new(instance_id: instance_id)
+      PollInstanceStoppedDirector.new(config).execute(request)
+
+      # poll_instance_state(instance_id, 'stopped', options)
     end
 
     # Polls a given instance until it is stopped
@@ -398,7 +403,10 @@ module AwsHelpers
     #   }
     #   ```
     def get_windows_password(instance_id, pem_path, options = {})
-      GetWindowsPassword.new(config, instance_id, pem_path, options).password
+      request = GetWindowsPasswordRequest.new(instance_id: instance_id, pem_path: pem_path)
+      GetWindowsPasswordDirector.new(config).get(request)
+      
+      # GetWindowsPassword.new(config, instance_id, pem_path, options).password
     end
 
     # Returns the VPC ID for a given VPC Name.

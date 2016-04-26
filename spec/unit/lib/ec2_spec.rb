@@ -6,6 +6,7 @@ describe AwsHelpers::EC2 do
   let(:image_id) { '456' }
   let(:image_name) { 'Batman' }
   let(:user_id) { '789' }
+  let(:pem_path) { '/files/gotham/bwayne' }
   let(:config) { instance_double(AwsHelpers::Config) }
 
   before do
@@ -371,26 +372,34 @@ describe AwsHelpers::EC2 do
   end
 
   describe '#poll_instance_stopped' do
-    let(:poll_inst_stopped) { instance_double(PollInstanceState) }
-    let(:image_id) { 'image_id' }
-    let(:options) { {} } # just use defaults
+    let(:request) { PollInstanceStoppedRequest.new(image_id: image_id) }
+    let(:director) { instance_double(PollInstanceStoppedDirector) }
 
-    before(:each) do
-      allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(poll_inst_stopped).to receive(:execute)
-      allow(PollInstanceState).to receive(:new).with(config, image_id, 'stopped', options).and_return(poll_inst_stopped)
+    before do
+      allow(PollInstanceStoppedRequest).to receive(:new).and_return(request)
+      allow(PollInstanceStoppedDirector).to receive(:new).and_return(director)
+      allow(director).to receive(:execute)
     end
 
-    subject { AwsHelpers::EC2.new.poll_instance_stopped(image_id, options) }
-
-    it 'should create PollInstanceStopped' do
-      expect(PollInstanceState).to receive(:new).with(config, image_id, 'stopped', options).and_return(poll_inst_stopped)
-      subject
+    it 'should delete a PollInstanceStoppedRequest with the correct parameters' do
+      expect(PollInstanceStoppedRequest)
+        .to receive(:new)
+        .with(instance_id: instance_id)
+      AwsHelpers::EC2.new.poll_instance_stopped(instance_id)
     end
 
-    it 'should call PollInstanceStopped execute method' do
-      expect(poll_inst_stopped).to receive(:execute)
-      subject
+    it 'should delete a PollInstanceStoppedDirector with the config' do
+      expect(PollInstanceStoppedDirector)
+        .to receive(:new)
+        .with(config)
+      AwsHelpers::EC2.new.poll_instance_stopped(instance_id)
+    end
+
+    it 'should call delete on the PollInstanceHealthyDirector' do
+      expect(director)
+        .to receive(:execute)
+        .with(request)
+      AwsHelpers::EC2.new.poll_instance_stopped(instance_id)
     end
   end
 
@@ -420,27 +429,34 @@ describe AwsHelpers::EC2 do
   end
 
   describe '#get_windows_password' do
-    let(:get_windows_password) { instance_double(GetWindowsPassword) }
-    let(:instance_id) { 'ec2id' }
-    let(:pem_path) { '/path/to/pem/file' }
-    let(:options) { {} }
+    let(:request) { GetWindowsPasswordRequest.new(image_id: image_id) }
+    let(:director) { instance_double(GetWindowsPasswordDirector) }
 
-    before(:each) do
-      allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(GetWindowsPassword).to receive(:new).and_return(get_windows_password)
-      allow(get_windows_password).to receive(:password)
+    before do
+      allow(GetWindowsPasswordRequest).to receive(:new).and_return(request)
+      allow(GetWindowsPasswordDirector).to receive(:new).and_return(director)
+      allow(director).to receive(:get)
     end
 
-    subject { AwsHelpers::EC2.new.get_windows_password(instance_id, pem_path, options) }
-
-    it 'should create GetWindowsPassword' do
-      expect(GetWindowsPassword).to receive(:new).with(config, instance_id, pem_path, options).and_return(get_windows_password)
-      subject
+    it 'should delete a GetWindowsPasswordRequest with the correct parameters' do
+      expect(GetWindowsPasswordRequest)
+        .to receive(:new)
+        .with(instance_id: instance_id, pem_path: pem_path)
+      AwsHelpers::EC2.new.get_windows_password(instance_id, pem_path)
     end
 
-    it 'should call GetWindowsPassword password method' do
-      expect(get_windows_password).to receive(:password)
-      subject
+    it 'should delete a GetWindowsPasswordDirector with the config' do
+      expect(GetWindowsPasswordDirector)
+        .to receive(:new)
+        .with(config)
+      AwsHelpers::EC2.new.get_windows_password(instance_id, pem_path)
+    end
+
+    it 'should call delete on the GetWindowsPasswordDirector' do
+      expect(director)
+        .to receive(:get)
+        .with(request)
+      AwsHelpers::EC2.new.get_windows_password(instance_id, pem_path)
     end
   end
 
@@ -469,7 +485,6 @@ describe AwsHelpers::EC2 do
       subject
     end
   end
-
 
   describe '#get_security_group_id_by_name' do
     let(:get_group_by_name) { instance_double(GetSecurityGroupIdByName) }
