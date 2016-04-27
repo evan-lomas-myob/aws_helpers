@@ -10,7 +10,6 @@ require_relative 'rds_commands/directors/snapshots_delete_director'
 require_relative 'rds_commands/requests/get_latest_snapshot_id_request'
 require_relative 'rds_commands/directors/get_latest_snapshot_id_director'
 
-
 include AwsHelpers::RDSCommands::Directors
 include AwsHelpers::RDSCommands::Requests
 # include AwsHelpers::Actions::RDS
@@ -71,6 +70,7 @@ module AwsHelpers
 
     def snapshot_create(db_instance_id, options = {})
       request = SnapshotCreateRequest.new(db_instance_id: db_instance_id)
+      request.snapshot_polling = options[:snapshot_polling] if options[:snapshot_polling]
       SnapshotCreateDirector.new(config).create(request)
     end
 

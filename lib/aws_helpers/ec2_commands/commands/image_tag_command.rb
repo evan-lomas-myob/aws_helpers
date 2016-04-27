@@ -3,7 +3,7 @@ require 'aws_helpers/command'
 module AwsHelpers
   module EC2Commands
     module Commands
-      class InstanceTagCommand < AwsHelpers::Command
+      class ImageTagCommand < AwsHelpers::Command
         def initialize(config, request)
           @client = config.aws_ec2_client
           @request = request
@@ -11,7 +11,7 @@ module AwsHelpers
 
         def execute
           @client.create_tags(
-            resources: [@request.instance_id],
+            resources: [@request.image_id],
             tags: @request.tags
           )
         end
