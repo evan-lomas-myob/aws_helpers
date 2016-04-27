@@ -3,11 +3,9 @@ module AwsHelpers
     module Requests
       GetVpcIdRequest = Struct.new(
         :vpc_name,
-        :vpc_id,
-        :stdout) do
+        :vpc_id) do
           def initialize(*args)
             super(*args)
-            self.stdout = $stdout
           end
         end
     end

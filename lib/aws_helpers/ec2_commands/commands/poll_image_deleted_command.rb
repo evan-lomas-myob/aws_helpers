@@ -17,7 +17,7 @@ module AwsHelpers
             image = response.images.first
             if image
               status = image.state
-              @request.stdout.puts "EC2 Image #{@request.image_id} #{status}"
+              std_out.puts "EC2 Image #{@request.image_id} #{status}"
             end
             image.nil?
           end

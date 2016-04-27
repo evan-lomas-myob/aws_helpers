@@ -3,11 +3,9 @@ module AwsHelpers
     module Requests
       PollInstanceStoppedRequest = Struct.new(
         :instance_id,
-        :instance_polling,
-        :stdout) do
+        :instance_polling) do
           def initialize(*args)
             super(*args)
-            self.stdout = $stdout
             self.instance_polling = {
               max_attempts: 2,
               delay: 30

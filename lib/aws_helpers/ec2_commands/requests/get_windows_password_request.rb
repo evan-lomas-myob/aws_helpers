@@ -4,11 +4,9 @@ module AwsHelpers
       GetWindowsPasswordRequest = Struct.new(
         :instance_id,
         :pem_path,
-        :windows_password,
-        :stdout) do
+        :windows_password) do
           def initialize(*args)
             super(*args)
-            self.stdout = $stdout
           end
         end
     end

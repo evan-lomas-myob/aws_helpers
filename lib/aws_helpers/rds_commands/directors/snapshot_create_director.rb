@@ -19,16 +19,6 @@ module AwsHelpers
           ]
           execute_commands
         end
-
-        private
-
-        def update_request(db_instance_identifier, options)
-          @request.db_instance_identifier = db_instance_identifier
-          @request.stdout = options[:std_out]
-          @request.use_name = options[:use_name]
-          @request.instance_polling = options[:instance_polling]
-          @request.snapshot_polling = options[:snapshot_polling]
-        end
       end
     end
   end

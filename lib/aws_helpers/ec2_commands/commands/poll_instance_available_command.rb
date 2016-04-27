@@ -15,7 +15,7 @@ module AwsHelpers
           poll(@request.instance_polling[:delay], @request.instance_polling[:max_attempts]) do
             instance = @ec2_client.describe_instances(instance_ids: [@request.instance_id]).reservations.first.instances.first
             status = instance.state
-            @request.stdout.puts "EC2 Instance #{@request.instance_id} #{status}"
+            std_out.puts "EC2 Instance #{@request.instance_id} #{status}"
             status == 'available'
           end
         end

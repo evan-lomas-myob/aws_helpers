@@ -21,7 +21,7 @@ module AwsHelpers
             @request.windows_password = private_key.private_decrypt(decoded)
           rescue OpenSSL::PKey::RSAError => error
             hint = 'Hint: Check you are using the correct pem.file vs aws-access-key-id combination'
-            @request.stdout.puts hint
+            std_out.puts hint
             raise error
           end
         end

@@ -16,7 +16,7 @@ module AwsHelpers
             response = @ec2_client.describe_images(image_ids: [@request.image_id])
             image = response.images.first
             status = image.state
-            @request.stdout.puts "EC2 Image #{@request.image_name} #{status}"
+            std_out.puts "EC2 Image #{@request.image_name} #{status}"
             raise "EC2 Failed to create image #{@request.image_name}" if status == 'failed'
             status == 'available'
           end

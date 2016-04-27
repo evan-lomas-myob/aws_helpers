@@ -10,7 +10,6 @@ describe AwsHelpers::EC2Commands::Requests::ImageCreateRequest do
       :image_name,
       :use_name,
       :instance_polling,
-      :stdout,
       :image_polling
     ]
     expect(request.members).to eq(keys)

@@ -3,11 +3,9 @@ module AwsHelpers
     module Requests
       GetSecurityGroupIdRequest = Struct.new(
         :security_group_name,
-        :security_group_id,
-        :stdout) do
+        :security_group_id) do
           def initialize(*args)
             super(*args)
-            self.stdout = $stdout
           end
         end
     end

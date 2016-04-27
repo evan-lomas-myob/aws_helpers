@@ -11,7 +11,7 @@ module AwsHelpers
 
         def execute
           @request.snapshot_ids.each do |snapshot_id|
-            @request.stdout.puts "Deleting Snapshot:#{snapshot_id}"
+            std_out.puts "Deleting Snapshot:#{snapshot_id}"
             @client.delete_snapshot(snapshot_id: snapshot_id)
           end
         end

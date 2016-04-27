@@ -7,7 +7,6 @@ describe AwsHelpers::EC2Commands::Requests::ImageDeleteRequest do
     keys = [
       :snapshot_ids,
       :image_id,
-      :stdout,
       :image_polling
     ]
     expect(request.members).to match_array(keys)

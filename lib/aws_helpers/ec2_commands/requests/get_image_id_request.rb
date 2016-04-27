@@ -3,11 +3,9 @@ module AwsHelpers
     module Requests
       GetImageIdRequest = Struct.new(
         :image_name,
-        :image_id,
-        :stdout) do
+        :image_id) do
           def initialize(*args)
             super(*args)
-            self.stdout = $stdout
           end
         end
     end
