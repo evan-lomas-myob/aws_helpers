@@ -60,7 +60,6 @@ module AwsHelpers
     #   ]
     #   ```
     # @option options [Time] :now override the current time
-    # @option options [IO] :stdout ($stdout) override $stdout when logging output
     # @option options [Hash] :poll_image_available override image available polling
     #
     #   defaults:
@@ -78,6 +77,8 @@ module AwsHelpers
     #
     def image_create(instance_id, name, options = {})
       request = ImageCreateRequest.new(instance_id: instance_id, image_name: name)
+      request.additional_tags = options[:additional_tags] if options[:additional_tags]
+      request.instance_polling = options[:instance_polling] if options[:instance_polling]
       ImageCreateDirector.new(config).create(request)
     end
 
@@ -92,7 +93,7 @@ module AwsHelpers
     #
     # @return [Seahorse::Client::Response] An empty response
     #
-    def image_delete(image_id, options = {})
+    def image_delete(image_id)
       request = ImageDeleteRequest.new(image_id: image_id)
       ImageDeleteDirector.new(config).delete(request)
     end
@@ -109,7 +110,7 @@ module AwsHelpers
     #
     # @return [Seahorse::Client::Response] An empty response
     #
-    def image_add_user(image_id, user_id, options = {})
+    def image_add_user(image_id, user_id)
       request = ImageAddUserRequest.new(image_id: image_id, user_id: user_id)
       ImageAddUserDirector.new(config).add(request)
     end
@@ -183,7 +184,6 @@ module AwsHelpers
     # @option options [Boolean] :monitoring (false) detailed monitoring enabled
     # @option options [String] :app_name (no-name-supplied) tag Name of the instance
     # @option options [String] :build_number (nil) build number associated with the instance
-    # @option options [IO] :stdout ($stdout) override $stdout when logging output
     # @option options [Hash] :poll_exists override instance exists polling
     #
     #   defaults:
@@ -211,13 +211,13 @@ module AwsHelpers
     #
     def instance_create(image_id, options = {})
       request = InstanceCreateRequest.new(image_id: image_id)
+      request.instance_polling = options[:instance_polling] if options[:instance_polling]
       InstanceCreateDirector.new(config).create(request)
     end
 
     # Start an existing EC2 instance
     #
     # @param instance_id [String] The ID of the EC2 instance
-    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
     # @option options [Hash{Symbol => Integer}] :poll_running Override instance running polling
     #
     #   defaults:
@@ -236,12 +236,12 @@ module AwsHelpers
     #
     def instance_start(instance_id, options = {})
       request = InstanceStartRequest.new(instance_id: instance_id)
+      request.instance_polling = options[:instance_polling] if options[:instance_polling]
       InstanceStartDirector.new(config).start(request)
     end
 
     # Stop an EC2 instance
     # @param instance_id [String] The ID of the EC2 instance
-    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
     # @option options [Hash{Symbol => Integer}] :poll_running Override instance stopped polling
     #
     #   defaults:
@@ -260,6 +260,7 @@ module AwsHelpers
     #
     def instance_stop(instance_id, options = {})
       request = InstanceStopRequest.new(instance_id: instance_id)
+      request.instance_polling = options[:instance_polling] if options[:instance_polling]
       InstanceStopDirector.new(config).stop(request)
     end
 
@@ -306,14 +307,11 @@ module AwsHelpers
     def instance_terminate(instance_id)
       request = InstanceTerminateRequest.new(instance_id: instance_id)
       InstanceTerminateDirector.new(config).terminate(request)
-
-      # InstanceTerminate.new(config, instance_id).execute
     end
 
     # Polls a given instance until it is running and healthy
     #
     # @param instance_id [String] Instance Unique ID
-    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
     # @option options [Hash] Override instance healthy polling
     #
     #   defaults:
@@ -333,15 +331,14 @@ module AwsHelpers
 
     def poll_instance_healthy(instance_id, options = {})
       request = PollInstanceHealthyRequest.new(instance_id: instance_id)
+      request.instance_polling = options[:instance_polling] if options[:instance_polling]
       PollInstanceHealthyDirector.new(config).execute(request)
-      # PollInstanceHealthy.new(config, instance_id, options).execute
     end
 
     # Polls a given instance until it is stopped
     #
     # @param instance_id [String] Instance Unique ID
-    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
-    # @option options [Hash] Override instance healthy polling
+    # @option options[:instance_polling] [Hash] Override instance healthy polling
     #
     #   defaults:
     #
@@ -359,15 +356,13 @@ module AwsHelpers
     #
     def poll_instance_stopped(instance_id, options = {})
       request = PollInstanceStoppedRequest.new(instance_id: instance_id)
+      request.instance_polling = options[:instance_polling] if options[:instance_polling]
       PollInstanceStoppedDirector.new(config).execute(request)
-
-      # poll_instance_state(instance_id, 'stopped', options)
     end
 
     # Polls a given instance until it is stopped
     # @param instance_id [String] Instance Unique ID
     # @param state [String] Instance State to Poll for
-    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
     # @option options [Hash] Override instance healthy polling
     #
     #   defaults:
@@ -395,8 +390,7 @@ module AwsHelpers
     #   AwsHelpers::EC2.new.get_windows_password('i-12345678', '~/.ssh/secret.pem')
     # @param instance_id [String] Instance Unique ID
     # @param pem_path [String] Path to PEM-encoded private key file
-    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
-    # @option options [Hash] Override instance polling
+    # @option options[:instance_polling] [Hash] Override instance polling
     #
     #   defaults:
     #
@@ -408,6 +402,7 @@ module AwsHelpers
     #   ```
     def get_windows_password(instance_id, pem_path, options = {})
       request = GetWindowsPasswordRequest.new(instance_id: instance_id, pem_path: pem_path)
+      request.instance_polling = options[:instance_polling] if options[:instance_polling]
       GetWindowsPasswordDirector.new(config).get(request)
     end
 
@@ -416,8 +411,7 @@ module AwsHelpers
     # @param vpc_name [String] VPC Unique Name Tag
     # @example Get the VPC ID
     #   AwsHelpers::EC2.new.get_vpc_id_by_name('MyVPC')
-    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
-    def get_vpc_id_by_name(vpc_name, options = {})
+    def get_vpc_id_by_name(vpc_name)
       request = GetVpcIdRequest.new(vpc_name: vpc_name)
       GetVpcIdDirector.new(config).get(request)
     end
@@ -427,11 +421,9 @@ module AwsHelpers
     # @example Get the Security Group ID
     #   AwsHelpers::EC2.new.get_group_id_by_name('MySecurityGroup')
     # @param security_group_name [String] Security Group Name to Find
-    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
-    def get_group_id_by_name(security_group_name, options = {})
+    def get_group_id_by_name(security_group_name)
       request = GetSecurityGroupIdRequest.new(security_group_name: security_group_name)
       GetSecurityGroupIdDirector.new(config).get(request)
-      # GetSecurityGroupIdByName.new(config, security_group_name, options).id
     end
   end
 end
