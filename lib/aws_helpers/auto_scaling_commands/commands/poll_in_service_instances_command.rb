@@ -41,7 +41,6 @@ module AwsHelpers
         def create_lifecycle_state_output(lifecycle_state_count)
           lifecycle_state_count.sort.map { |state| ", #{state.join('=')}" }.join
         end
-
       end
     end
   end

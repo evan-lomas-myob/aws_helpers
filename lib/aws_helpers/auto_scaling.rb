@@ -51,17 +51,7 @@ module AwsHelpers
     # @param desired_capacity [Integer] The capacity level of the auto scaling group
     # @param [Hash] options Optional parameters that can be overridden.
     # @option options [IO] :stdout Override $stdout when logging output
-    # @option options [Hash{Symbol => Integer}] :auto_scaling_polling Override auto scaling default polling
-    #
-    #   defaults:
-    #
-    #   ```
-    #   {
-    #     :max_attempts => 20,
-    #     :delay => 15 # seconds
-    #   }
-    #   ```
-    # @option options [Hash{Symbol => Integer}] :load_balancer_polling Override load balancer default polling
+    # @option options[:instance_polling] [Hash] :auto_scaling_polling Override auto scaling default polling
     #
     #   defaults:
     #
@@ -79,6 +69,7 @@ module AwsHelpers
     #
     def update_desired_capacity(auto_scaling_group_name, desired_capacity, options = {})
       request = UpdateDesiredCapacityRequest.new(auto_scaling_group_name: auto_scaling_group_name, desired_capacity: desired_capacity)
+      request.instance_polling = options[:instance_polling] if options[:instance_polling]
       UpdateDesiredCapacityDirector.new(config).update(request)
     end
 
