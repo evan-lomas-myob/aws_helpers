@@ -39,7 +39,6 @@ module AwsHelpers
     # - After the snapshot is created will poll until the snapshot is available
     # @param db_instance_id [String] The RDS instance id
     # @param [Hash] options Optional parameters that can be overridden.
-    # @option options [IO] :stdout Override $stdout when logging output
     # @option options [Boolean] :use_name (false) Set to true to make the snapshot name start with the value of tag who's key is Name on the database instance
     # @option options [Hash{Symbol => Integer}] :instance_polling Override instance default polling
     #
@@ -71,6 +70,7 @@ module AwsHelpers
     def snapshot_create(db_instance_id, options = {})
       request = SnapshotCreateRequest.new(db_instance_id: db_instance_id)
       request.snapshot_polling = options[:snapshot_polling] if options[:snapshot_polling]
+      request.instance_polling = options[:instance_polling] if options[:instance_polling]
       SnapshotCreateDirector.new(config).create(request)
     end
 

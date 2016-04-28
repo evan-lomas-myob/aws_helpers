@@ -29,16 +29,25 @@ module AwsHelpers
     # @param load_balancer_name [String] The load balancer to poll
     # @param [Hash] options Optional parameters that can be overridden.
     # @option options [IO] :stdout Override $stdout when logging polling output
-    # @option options [Integer] :max_attempts (20) Override number of attempts
-    # @option options [Integer] :delay (15) Override the delay between attempts
+    # @option options [Hash] :poll_image_available override image available polling
+    #
+    #   defaults:
+    #
+    #   ```
+    #   {
+    #     :max_attempts => 20,
+    #     :delay => 30 # seconds
+    #   }
+    #   ```
     #
     # @example
     #   AwsHelpers::ElasticLoadBalancing.new.poll_in_service_instances('name-elb1-LoadBala-1ABC111ABCDEF')
     #
     # @return [Array<String>]
     #
-    def poll_in_service_instances(load_balancer_name)
+    def poll_in_service_instances(load_balancer_name, options = {})
       request = PollInServiceInstancesRequest.new(load_balancer_name: load_balancer_name)
+      request.instance_polling = options[:instance_polling] if options[:instance_polling]
       PollInServiceInstancesDirector.new(config).execute(request)
     end
   end

@@ -3,7 +3,6 @@ require_relative 'client'
 require_relative 'kms_commands/requests/get_key_arn_request'
 require_relative 'kms_commands/directors/get_key_arn_director'
 
-
 include AwsHelpers::KMSCommands::Directors
 include AwsHelpers::KMSCommands::Requests
 
