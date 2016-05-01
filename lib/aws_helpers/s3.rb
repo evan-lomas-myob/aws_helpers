@@ -7,6 +7,7 @@ require 'aws_helpers/directors/s3/bucket_create_director'
 
 module AwsHelpers
   class S3 < AwsHelpers::Client
+    extend Gem::Deprecate
     # Utilities for creating, checking and uploading to S3 buckets.
     #
     # @param options [Hash] Optional arguments to include when calling the AWS SDK.
@@ -51,12 +52,15 @@ module AwsHelpers
       AwsHelpers::Directors::S3::BucketCreateDirector.new(config).create(request)
     end
 
+    alias_method :create, :bucket_create
+    deprecate :create, :bucket_create, 2016, 6
+
     # Check if an S3 bucket exists
     #
     # @param name [String] The bucket name to check
     #
     # @example Check if this S3 bucket exists
-    #   AwsHelpers::S3.new.bucket_exists('Test-S3-Bucket')
+    #   AwsHelpers::S3.new.bucket_exists?('Test-S3-Bucket')
     #
     # @return [Boolean]
     #
@@ -66,5 +70,7 @@ module AwsHelpers
       AwsHelpers::Directors::S3::BucketExistsDirector.new(config).exists?(request)
     end
 
+    alias_method :exists?, :bucket_exists?
+    deprecate :exists?, :bucket_exists?, 2016, 6
   end
 end
