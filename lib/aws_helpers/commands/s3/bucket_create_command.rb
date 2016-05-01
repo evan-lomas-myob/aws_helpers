@@ -13,8 +13,9 @@ module AwsHelpers
         end
 
         def execute
-          return if request.bucket_exists
           bucket_name = request.bucket_name
+          return unless bucket_name && !request.bucket_exists
+
           bucket_acl = request.bucket_acl || 'private'
           @client.create_bucket(bucket: bucket_name, acl: bucket_acl)
           stdout.puts "Creating S3 Bucket #{bucket_name}"

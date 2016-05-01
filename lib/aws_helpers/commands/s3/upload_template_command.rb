@@ -12,7 +12,10 @@ module AwsHelpers
         def execute
           stack_name = request.stack_name
           bucket_name = request.bucket_name
-          put_request = {bucket: bucket_name, key: stack_name, body: request.template_json}
+          template_json = request.template_json
+          return unless stack_name && bucket_name
+
+          put_request = {bucket: bucket_name, key: stack_name, body: template_json}
           put_request.merge!({server_side_encryption: 'AES256'}) if request.bucket_encrypt
           stdout.puts "Uploading #{stack_name} to S3 bucket #{bucket_name}"
           @client.put_object(put_request)

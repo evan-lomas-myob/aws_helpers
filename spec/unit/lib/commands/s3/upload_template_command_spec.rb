@@ -13,11 +13,7 @@ describe AwsHelpers::Commands::S3::UploadTemplateCommand do
     let(:stack_name) { 'stack_name' }
     let(:bucket_name) { 'bucket_name' }
     let(:template_json) { '{ "template": "content" }' }
-    let(:request) { UploadTemplateRequest.new(
-        stdout: stdout,
-        stack_name: stack_name,
-        bucket_name: bucket_name,
-        template_json: template_json) }
+    let(:request) { UploadTemplateRequest.new(stdout: stdout, template_json: template_json) }
 
     before(:each) do
       allow(aws_s3_client).to receive(:put_object)
@@ -28,21 +24,48 @@ describe AwsHelpers::Commands::S3::UploadTemplateCommand do
       described_class.new(config, request).execute
     end
 
-    context 'bucket_encrypt set in the request' do
-      it 'should call aws_s3_client #put_object with the correct parameters and server_side_encryption set to AES256' do
-        request.bucket_encrypt = true
-        expect(aws_s3_client).to receive(:put_object).with(bucket: bucket_name, key: stack_name, body: template_json, server_side_encryption: 'AES256')
+    context 'stack_name is undefined' do
+      before(:each)do
+        request.bucket_name = bucket_name
+      end
+
+      it 'should not call aws_s3_client #put_object' do
+        expect(aws_s3_client).to_not receive(:put_object)
       end
     end
 
-    context 'bucket_encrypt undefined' do
-      it 'should call aws_s3_client #put_object with the correct parameters' do
-        expect(aws_s3_client).to receive(:put_object).with(bucket: bucket_name, key: stack_name, body: template_json)
+    context 'bucket_name is undefined' do
+      before(:each)do
+        request.stack_name = stack_name
+      end
+
+      it 'should not call aws_s3_client #put_object' do
+        expect(aws_s3_client).to_not receive(:put_object)
       end
     end
 
-    it 'should call stdout #puts with details of the bucket upload' do
-      expect(stdout).to receive(:puts).with("Uploading #{stack_name} to S3 bucket #{bucket_name}")
+    context 'stack_name and bucket_name is provided' do
+      before(:each)do
+        request.stack_name = stack_name
+        request.bucket_name = bucket_name
+      end
+
+      it 'should call stdout #puts with details of the bucket upload' do
+        expect(stdout).to receive(:puts).with("Uploading #{stack_name} to S3 bucket #{bucket_name}")
+      end
+
+      context 'bucket_encrypt set in the request' do
+        it 'should call aws_s3_client #put_object with the correct parameters and server_side_encryption set to AES256' do
+          request.bucket_encrypt = true
+          expect(aws_s3_client).to receive(:put_object).with(bucket: bucket_name, key: stack_name, body: template_json, server_side_encryption: 'AES256')
+        end
+      end
+
+      context 'bucket_encrypt undefined' do
+        it 'should call aws_s3_client #put_object with the correct parameters' do
+          expect(aws_s3_client).to receive(:put_object).with(bucket: bucket_name, key: stack_name, body: template_json)
+        end
+      end
     end
   end
 end

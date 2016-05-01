@@ -12,7 +12,6 @@ module AwsHelpers
         end
 
         def exists?(request)
-          @request = request
           @commands = [
               AwsHelpers::Commands::S3::BucketExistsCommand.new(@config, request)
           ]

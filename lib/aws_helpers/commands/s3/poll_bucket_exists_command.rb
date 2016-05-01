@@ -15,8 +15,9 @@ module AwsHelpers
        end
 
         def execute
-          return if request.bucket_exists
           bucket_name = request.bucket_name
+          return unless bucket_name && !request.bucket_exists
+
           delay = request.bucket_polling.delay ||= 5
           max_attempts = request.bucket_polling.max_attempts ||= 3
           poll(delay, max_attempts) do

@@ -12,6 +12,8 @@ module AwsHelpers
         def execute
           stack_name = request.stack_name
           bucket_name = request.bucket_name
+          return unless stack_name && bucket_name
+
           bucket_location = @client.get_bucket_location(bucket: bucket_name).location_constraint
           request.template_url = "https://s3-#{bucket_location}.amazonaws.com/#{bucket_name}/#{stack_name}"
         end
