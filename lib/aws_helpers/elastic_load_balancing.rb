@@ -1,6 +1,5 @@
 require_relative 'client'
-require_relative 'elb_commands/requests/poll_in_service_instances_request'
-require_relative 'elb_commands/directors/poll_in_service_instances_director'
+Dir.glob(File.join(File.dirname(__FILE__), 'elb_commands/**/*.rb'), &method(:require))
 
 include AwsHelpers::ELBCommands::Directors
 include AwsHelpers::ELBCommands::Requests

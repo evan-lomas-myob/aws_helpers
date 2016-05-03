@@ -1,8 +1,5 @@
 require_relative 'client'
-require_relative 'nat_commands/requests/gateway_delete_request'
-require_relative 'nat_commands/requests/gateway_create_request'
-require_relative 'nat_commands/directors/gateway_create_director'
-require_relative 'nat_commands/directors/gateway_delete_director'
+Dir.glob(File.join(File.dirname(__FILE__), 'nat_commands/**/*.rb'), &method(:require))
 
 include AwsHelpers::NATCommands::Directors
 include AwsHelpers::NATCommands::Requests

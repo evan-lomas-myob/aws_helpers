@@ -1,7 +1,6 @@
 require_relative 'client'
 
-require_relative 'kms_commands/requests/get_key_arn_request'
-require_relative 'kms_commands/directors/get_key_arn_director'
+Dir.glob(File.join(File.dirname(__FILE__), 'kms_commands/**/*.rb'), &method(:require))
 
 include AwsHelpers::KMSCommands::Directors
 include AwsHelpers::KMSCommands::Requests

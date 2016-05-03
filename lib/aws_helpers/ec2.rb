@@ -14,20 +14,8 @@ require_relative 'actions/ec2/instances_find_by_ids'
 require_relative 'actions/ec2/poll_instance_state'
 require_relative 'actions/ec2/get_vpc_id_by_name'
 require_relative 'actions/ec2/get_security_group_id_by_name'
-require_relative 'ec2_commands/requests/instance_create_request'
-require_relative 'ec2_commands/directors/instance_create_director'
-require_relative 'ec2_commands/directors/image_create_director'
-require_relative 'ec2_commands/directors/image_delete_director'
-require_relative 'ec2_commands/directors/image_add_user_director'
-require_relative 'ec2_commands/requests/instance_terminate_request'
-require_relative 'ec2_commands/directors/instance_terminate_director'
-require_relative 'ec2_commands/directors/instance_start_director'
-require_relative 'ec2_commands/directors/instance_stop_director'
-require_relative 'ec2_commands/directors/poll_instance_healthy_director'
-require_relative 'ec2_commands/directors/poll_instance_stopped_director'
-require_relative 'ec2_commands/directors/get_windows_password_director'
-require_relative 'ec2_commands/directors/get_vpc_id_director'
-require_relative 'ec2_commands/directors/get_security_group_id_director'
+
+Dir.glob(File.join(File.dirname(__FILE__), 'ec2_commands/**/*.rb'), &method(:require))
 
 include AwsHelpers::EC2Commands::Directors
 include AwsHelpers::EC2Commands::Requests

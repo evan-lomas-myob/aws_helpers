@@ -1,5 +1,3 @@
-require 'aws_helpers/ec2_commands/commands/get_image_ids_command'
-require 'aws_helpers/ec2_commands/requests/get_image_ids_request'
 
 describe AwsHelpers::EC2Commands::Commands::GetImageIdsCommand do
   let(:image_name) { 'Gotham' }

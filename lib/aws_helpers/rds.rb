@@ -3,12 +3,8 @@ require_relative 'client'
 # require_relative 'actions/rds/snapshots_delete'
 # require_relative 'actions/rds/latest_snapshot'
 # require_relative 'client'
-require_relative 'rds_commands/requests/snapshot_create_request'
-require_relative 'rds_commands/requests/snapshots_delete_request'
-require_relative 'rds_commands/directors/snapshot_create_director'
-require_relative 'rds_commands/directors/snapshots_delete_director'
-require_relative 'rds_commands/requests/get_latest_snapshot_id_request'
-require_relative 'rds_commands/directors/get_latest_snapshot_id_director'
+
+Dir.glob(File.join(File.dirname(__FILE__), 'rds_commands/**/*.rb'), &method(:require))
 
 include AwsHelpers::RDSCommands::Directors
 include AwsHelpers::RDSCommands::Requests

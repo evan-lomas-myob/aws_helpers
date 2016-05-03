@@ -2,11 +2,8 @@ require_relative 'client'
 # require_relative 'actions/auto_scaling/retrieve_desired_capacity'
 # require_relative 'actions/auto_scaling/update_desired_capacity'
 # require_relative 'actions/auto_scaling/retrieve_current_instances'
-require_relative 'auto_scaling_commands/requests/get_desired_capacity_request'
-require_relative 'auto_scaling_commands/directors/get_desired_capacity_director'
-require_relative 'auto_scaling_commands/requests/update_desired_capacity_request'
-require_relative 'auto_scaling_commands/directors/update_desired_capacity_director'
-require_relative 'auto_scaling_commands/directors/get_current_instances_director'
+
+Dir.glob(File.join(File.dirname(__FILE__), 'auto_scaling_commands/**/*.rb'), &method(:require))
 
 include AwsHelpers::AutoScalingCommands::Directors
 include AwsHelpers::AutoScalingCommands::Requests
