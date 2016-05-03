@@ -10,7 +10,6 @@ module AwsHelpers
         end
 
         def execute
-          puts "Request Command Level:" + @request.to_s
           @request.instance_id = @client.run_instances(
             image_id: @request.image_id,
             min_count: 1,

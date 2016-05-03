@@ -1,3 +1,5 @@
+require_relative 'utilities/polling'
+
 module AwsHelpers
   class Command
     attr_accessor :std_out
