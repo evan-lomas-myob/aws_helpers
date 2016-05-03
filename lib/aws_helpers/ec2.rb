@@ -224,6 +224,7 @@ module AwsHelpers
       request.instance_polling = options[:instance_polling] if options[:instance_polling]
       request.user_data = options[:user_data]
       request.tags = options[:tags] if options[:tags]
+      puts "Request Top Level:" + request
       InstanceCreateDirector.new(config).create(request)
       request.instance_id
     end
