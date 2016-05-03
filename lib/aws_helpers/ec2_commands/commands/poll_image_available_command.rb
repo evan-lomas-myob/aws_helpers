@@ -4,7 +4,7 @@ module AwsHelpers
   module EC2Commands
     module Commands
       class PollImageAvailableCommand < AwsHelpers::Command
-        # include AwsHelpers::Utilities::Polling
+        include AwsHelpers::Utilities::Polling
 
         def initialize(config, request)
           @ec2_client = config.aws_ec2_client
