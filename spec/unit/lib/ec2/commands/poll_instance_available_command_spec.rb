@@ -8,6 +8,8 @@ describe AwsHelpers::EC2Commands::Commands::PollInstanceAvailableCommand do
   let(:ec2_client) { instance_double(Aws::EC2::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: ec2_client) }
   let(:request) { AwsHelpers::EC2Commands::Requests::InstanceCreateRequest.new }
+  let(:available_state) { Aws::EC2::Types::InstanceState.new(name: 'available') }
+  let(:failed_state) { Aws::EC2::Types::InstanceState.new(name: 'failed') }
 
   before do
     request.instance_polling = { delay: 0, max_attempts: 5 }
@@ -18,18 +20,18 @@ describe AwsHelpers::EC2Commands::Commands::PollInstanceAvailableCommand do
   end
 
   it 'polls' do
-    instance.state = 'available'
+    instance.state = available_state
     expect(@command).to receive(:poll)
     @command.execute
   end
 
   it 'returns if the instance status is available' do
-    instance.state = 'available'
+    instance.state = available_state
     expect { @command.execute }.not_to raise_error
   end
 
   it 'time out if the instance is not available' do
-    instance.state = 'failed'
+    instance.state = failed_state
     expect { @command.execute }.to raise_error(Aws::Waiters::Errors::TooManyAttemptsError)
   end
 end
