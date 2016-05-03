@@ -41,6 +41,13 @@ describe AwsHelpers::EC2 do
       AwsHelpers::EC2.new.image_create(instance_id, image_name)
     end
 
+    it 'should add tags to the request if they are provided' do
+      expect(request)
+        .to receive(:tags=)
+        .with('tags')
+      AwsHelpers::EC2.new.image_create(instance_id, image_name, tags: 'tags')
+    end
+
     it 'should create a ImageCreateDirector with the config' do
       expect(ImageCreateDirector)
         .to receive(:new)

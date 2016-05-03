@@ -21,7 +21,23 @@ describe AwsHelpers::EC2Commands::Commands::InstanceCreateCommand do
   it 'calls run_instances on the client with the correct parameters' do
     expect(ec2_client)
       .to receive(:run_instances)
-      .with(image_id: image_id, min_count: 1, max_count: 1)
+      .with(image_id: image_id, min_count: 1, max_count: 1, user_data: '', instance_type: 't2.micro')
+    @command.execute
+  end
+
+  it 'sets the instance type if provided' do
+    request.instance_type = 'm4.10xlarge'
+    expect(ec2_client)
+      .to receive(:run_instances)
+      .with(image_id: image_id, min_count: 1, max_count: 1, user_data: '', instance_type: 'm4.10xlarge')
+    @command.execute
+  end
+
+  it 'sets the user data for the instance if provided' do
+    request.user_data = 'The Caped Crusader'
+    expect(ec2_client)
+      .to receive(:run_instances)
+      .with(image_id: image_id, min_count: 1, max_count: 1, user_data: Base64.encode64('The Caped Crusader'), instance_type: 't2.micro')
     @command.execute
   end
 

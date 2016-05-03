@@ -8,6 +8,7 @@ describe AwsHelpers::EC2Commands::Requests::ImageCreateRequest do
       :instance_id,
       :image_id,
       :image_name,
+      :tags,
       :use_name,
       :instance_polling,
       :image_polling

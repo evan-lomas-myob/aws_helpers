@@ -14,6 +14,8 @@ module AwsHelpers
             image_id: @request.image_id,
             min_count: 1,
             max_count: 1,
+            user_data: Base64.encode64(@request.user_data || ''),
+            instance_type: @request.instance_type || 't2.micro'
           ).instances[0].instance_id
         end
       end

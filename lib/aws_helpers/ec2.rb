@@ -15,9 +15,11 @@ require_relative 'actions/ec2/poll_instance_state'
 require_relative 'actions/ec2/get_vpc_id_by_name'
 require_relative 'actions/ec2/get_security_group_id_by_name'
 require_relative 'ec2_commands/requests/instance_create_request'
+require_relative 'ec2_commands/requests/images_delete_before_time_request'
 require_relative 'ec2_commands/directors/instance_create_director'
 require_relative 'ec2_commands/directors/image_create_director'
 require_relative 'ec2_commands/directors/image_delete_director'
+require_relative 'ec2_commands/directors/images_delete_before_time_director'
 require_relative 'ec2_commands/directors/image_add_user_director'
 require_relative 'ec2_commands/directors/instance_terminate_director'
 require_relative 'ec2_commands/directors/instance_start_director'
@@ -77,7 +79,7 @@ module AwsHelpers
     #
     def image_create(instance_id, name, options = {})
       request = ImageCreateRequest.new(instance_id: instance_id, image_name: name)
-      request.additional_tags = options[:additional_tags] if options[:additional_tags]
+      request.tags = options[:tags] if options[:tags]
       request.instance_polling = options[:instance_polling] if options[:instance_polling]
       ImageCreateDirector.new(config).create(request)
     end
@@ -113,6 +115,12 @@ module AwsHelpers
     def image_add_user(image_id, user_id)
       request = ImageAddUserRequest.new(image_id: image_id, user_id: user_id)
       ImageAddUserDirector.new(config).add(request)
+    end
+
+    def images_delete_before_time(name, options = {})
+      time = AwsHelpers::Utilities::DeleteTimeBuilder.new.build(options)
+      request = ImagesDeleteBeforeTimeRequest.new(image_name: name, time: time)
+      ImagesDeleteBeforeTimeDirector.new(config).add(request)
     end
 
     # De-register AMI images older than range specified
@@ -212,13 +220,16 @@ module AwsHelpers
     def instance_create(image_id, options = {})
       request = InstanceCreateRequest.new(image_id: image_id)
       request.instance_polling = options[:instance_polling] if options[:instance_polling]
+      request.user_data = options[:user_data]
+      request.tags = options[:tags] if options[:tags]
       InstanceCreateDirector.new(config).create(request)
+      request.instance_id
     end
 
     # Start an existing EC2 instance
     #
     # @param instance_id [String] The ID of the EC2 instance
-    # @option options [Hash{Symbol => Integer}] :poll_running Override instance running polling
+    # @option :instance_polling [Hash{Symbol => Integer}] Override instance running polling
     #
     #   defaults:
     #

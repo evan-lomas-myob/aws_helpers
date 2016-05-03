@@ -4,6 +4,9 @@ module AwsHelpers
       InstanceCreateRequest = Struct.new(
         :image_id,
         :instance_id,
+        :user_data,
+        :tags,
+        :instance_type,
         :instance_polling) do
           def initialize(*args)
             super(*args)

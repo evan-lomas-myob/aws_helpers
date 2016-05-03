@@ -5,6 +5,7 @@ module AwsHelpers
         :instance_id,
         :image_id,
         :image_name,
+        :tags,
         :use_name,
         :instance_polling,
         :image_polling) do

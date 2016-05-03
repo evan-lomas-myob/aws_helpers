@@ -7,6 +7,9 @@ describe AwsHelpers::EC2Commands::Requests::InstanceCreateRequest do
     keys = [
       :image_id,
       :instance_id,
+      :user_data,
+      :instance_type,
+      :tags,
       :instance_polling
     ]
     expect(request.members).to match_array(keys)
