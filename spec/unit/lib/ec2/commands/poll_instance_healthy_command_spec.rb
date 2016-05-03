@@ -12,6 +12,8 @@ describe AwsHelpers::EC2Commands::Commands::PollInstanceHealthyCommand do
   let(:ec2_client) { instance_double(Aws::EC2::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_ec2_client: ec2_client) }
   let(:request) { AwsHelpers::EC2Commands::Requests::PollInstanceHealthyRequest.new }
+  let(:running_state) { Aws::EC2::Types::InstanceState.new(name: 'running') }
+  let(:stopped_state) { Aws::EC2::Types::InstanceState.new(name: 'stopped') }
 
   before do
     request.instance_polling = { delay: 0, max_attempts: 5 }
@@ -39,20 +41,20 @@ describe AwsHelpers::EC2Commands::Commands::PollInstanceHealthyCommand do
 
     it 'returns if the instance status is ok' do
       status_summary.status = 'ok'
-      instance.state = 'running'
+      instance.state = running_state
       expect { @command.execute }.not_to raise_error
     end
 
     it 'times out and raises an exception if the instance state is not running' do
       status_summary.status = 'ok'
-      instance.state = 'stopped'
+      instance.state = stopped_state
       expect(ec2_client).to receive(:describe_instances).exactly(5).times
       expect { @command.execute }.to raise_error(Aws::Waiters::Errors::TooManyAttemptsError)
     end
 
     it 'times out and raises an exception if the instance status is anything else' do
       status_summary.status = 'impaired'
-      instance.state = 'running'
+      instance.state = running_state
       expect(ec2_client).to receive(:describe_instance_status).exactly(5).times
       expect { @command.execute }.to raise_error(Aws::Waiters::Errors::TooManyAttemptsError)
     end
@@ -64,12 +66,12 @@ describe AwsHelpers::EC2Commands::Commands::PollInstanceHealthyCommand do
     end
 
     it 'returns if the instance state is running' do
-      instance.state = 'running'
+      instance.state = running_state
       expect { @command.execute }.not_to raise_error
     end
 
     it 'times out and raises an exception if the instance state is anything else' do
-      instance.state = 'stopped'
+      instance.state = stopped_state
       expect(ec2_client).to receive(:describe_instances).exactly(5).times
       expect { @command.execute }.to raise_error(Aws::Waiters::Errors::TooManyAttemptsError)
     end
