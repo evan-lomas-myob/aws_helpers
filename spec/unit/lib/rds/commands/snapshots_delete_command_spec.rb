@@ -43,7 +43,7 @@ describe AwsHelpers::RDSCommands::Commands::SnapshotsDeleteCommand do
   context 'when a :time option is provided' do
     let(:command) { AwsHelpers::RDSCommands::Commands::SnapshotsDeleteCommand.new(config, request) }
     it 'calls delete on older snapshots' do
-      request.time_options = {time: (Date.today - 2).to_time}
+      request.older_than = (Date.today - 2).to_time
       expect(rds_client)
         .to receive(:delete_db_snapshot)
         .with(db_snapshot_identifier: old_db_snapshot_id)
@@ -57,7 +57,7 @@ describe AwsHelpers::RDSCommands::Commands::SnapshotsDeleteCommand do
   context 'when a :days option is provided' do
     let(:command) { AwsHelpers::RDSCommands::Commands::SnapshotsDeleteCommand.new(config, request) }
     it 'calls delete on older snapshots' do
-      request.time_options = { days: 24 }
+      request.older_than = (Date.today - 24).to_time
       expect(rds_client)
         .not_to receive(:delete_db_snapshot)
         .with(db_snapshot_identifier: old_db_snapshot_id)

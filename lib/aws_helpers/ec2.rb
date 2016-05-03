@@ -15,11 +15,9 @@ require_relative 'actions/ec2/poll_instance_state'
 require_relative 'actions/ec2/get_vpc_id_by_name'
 require_relative 'actions/ec2/get_security_group_id_by_name'
 require_relative 'ec2_commands/requests/instance_create_request'
-require_relative 'ec2_commands/requests/images_delete_before_time_request'
 require_relative 'ec2_commands/directors/instance_create_director'
 require_relative 'ec2_commands/directors/image_create_director'
 require_relative 'ec2_commands/directors/image_delete_director'
-require_relative 'ec2_commands/directors/images_delete_before_time_director'
 require_relative 'ec2_commands/directors/image_add_user_director'
 require_relative 'ec2_commands/directors/instance_terminate_director'
 require_relative 'ec2_commands/directors/instance_start_director'
@@ -120,6 +118,21 @@ module AwsHelpers
     def images_delete_before_time(name, options = {})
       time = AwsHelpers::Utilities::DeleteTimeBuilder.new.build(options)
       request = ImagesDeleteBeforeTimeRequest.new(image_name: name, time: time)
+      ImagesDeleteBeforeTimeDirector.new(config).add(request)
+    end
+
+    def get_image_ids(name, options = {})
+      request = GetImageIdsRequest.new(image_name: name)
+      if options[:older_than].is_a? Hash
+        request.older_than = Time.now
+                                 .prev_year(options[:older_than][:years])
+                                 .prev_month(options[:older_than][:months])
+                                 .prev_hour(options[:older_than][:hours])
+                                 .prev_day(options[:older_than][:days])
+      elsif options[:older_than].is_a? Time
+        request.older_than = options[:older_than]
+      end
+      request.with_tags = options[:with_tags] if options[:with_tags]
       ImagesDeleteBeforeTimeDirector.new(config).add(request)
     end
 

@@ -5,7 +5,7 @@ module AwsHelpers
           :std_out,
           :snapshot_id,
           :db_instance_id,
-          :time_options,
+          :older_than,
           :snapshot_name,
           :instance_polling,
           :snapshot_polling)

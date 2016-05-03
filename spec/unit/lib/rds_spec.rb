@@ -61,7 +61,7 @@ describe AwsHelpers::RDS do
     it 'should create a SnapshotsDeleteRequest' do
       expect(SnapshotsDeleteRequest)
         .to receive(:new)
-        .with(db_instance_id: db_instance_id, time_options: {})
+        .with(db_instance_id: db_instance_id)
       AwsHelpers::RDS.new.snapshots_delete(db_instance_id)
     end
 
