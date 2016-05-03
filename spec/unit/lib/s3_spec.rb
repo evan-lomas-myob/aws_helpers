@@ -6,61 +6,101 @@ describe AwsHelpers::S3 do
 
   describe '#initialize' do
     it 'should call AwsHelpers::Client initialize method' do
-      options = { endpoint: 'http://endpoint' }
+      options = {endpoint: 'http://endpoint'}
       expect(AwsHelpers::Client).to receive(:new).with(options)
       AwsHelpers::S3.new(options)
     end
   end
 
   describe '#create' do
-    let(:s3_create) { instance_double(Create) }
+    let(:bucket_create_director) { instance_double(AwsHelpers::Directors::S3::BucketCreateDirector) }
+
+    let(:bucket_name) { 'bucket_name' }
+    let(:acl) { 'acl' }
+    let(:stdout) { instance_double(IO) }
+    let(:delay) { 1 }
+    let(:max_attempts) { 2 }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(Create).to receive(:new).and_return(s3_create)
-      allow(s3_create).to receive(:execute).and_return(nil)
+      allow(AwsHelpers::Directors::S3::BucketCreateDirector).to receive(:new).and_return(bucket_create_director)
+      allow(bucket_create_director).to receive(:create)
     end
 
-    subject { AwsHelpers::S3.new.create(s3_bucket_name) }
-
-    it 'should create S3Create with correct parameters' do
-      expect(Create).to receive(:new).with(config, s3_bucket_name, {})
-      subject
+    it 'should call AwsHelpers::Directors::S3::BucketCreateDirector #new with correct parameters' do
+      expect(AwsHelpers::Directors::S3::BucketCreateDirector).to receive(:new).with(config)
+      AwsHelpers::S3.new.bucket_create(bucket_name)
     end
 
-    it 'should call S3Create execute method' do
-      expect(s3_create).to receive(:execute)
-      subject
+    it 'should AwsHelpers::Directors::S3::BucketCreateDirector #create with required parameters' do
+      request = AwsHelpers::Requests::S3::BucketCreateRequest.new(
+          bucket_name: bucket_name)
+      expect(bucket_create_director).to receive(:create).with(request)
+      AwsHelpers::S3.new.bucket_create(bucket_name)
+    end
+
+    it 'should AwsHelpers::Directors::S3::BucketCreateDirector #create with optional stdout' do
+      request = AwsHelpers::Requests::S3::BucketCreateRequest.new(
+          stdout: stdout,
+          bucket_name: bucket_name)
+      expect(bucket_create_director).to receive(:create).with(request)
+      AwsHelpers::S3.new.bucket_create(bucket_name, stdout: stdout)
+    end
+
+    it 'should AwsHelpers::Directors::S3::BucketCreateDirector #create with optional acl' do
+      request = AwsHelpers::Requests::S3::BucketCreateRequest.new(
+          bucket_acl: acl,
+          bucket_name: bucket_name)
+      expect(bucket_create_director).to receive(:create).with(request)
+      AwsHelpers::S3.new.bucket_create(bucket_name, acl: acl)
+    end
+
+    it 'should AwsHelpers::Directors::S3::BucketCreateDirector #create with optional bucket_polling delay' do
+      request = AwsHelpers::Requests::S3::BucketCreateRequest.new(
+          bucket_polling: AwsHelpers::Requests::PollingRequest.new(delay: delay),
+          bucket_name: bucket_name)
+      expect(bucket_create_director).to receive(:create).with(request)
+      AwsHelpers::S3.new.bucket_create(bucket_name, bucket_polling: {delay: delay})
+    end
+
+    it 'should AwsHelpers::Directors::S3::BucketCreateDirector #create with optional bucket_polling max_attempts' do
+      request = AwsHelpers::Requests::S3::BucketCreateRequest.new(
+          bucket_polling: AwsHelpers::Requests::PollingRequest.new(max_attempts: max_attempts),
+          bucket_name: bucket_name)
+      expect(bucket_create_director).to receive(:create).with(request)
+      AwsHelpers::S3.new.bucket_create(bucket_name, bucket_polling: {max_attempts: max_attempts})
     end
 
     it 'should return nil' do
-      expect(s3_create.execute).to eq(nil)
+      expect(AwsHelpers::S3.new.bucket_create(bucket_name)).to eq(nil)
     end
   end
 
   describe '#exists?' do
-    let(:exists) { instance_double(Exists) }
+    let(:bucket_exists_director) { instance_double(AwsHelpers::Directors::S3::BucketExistsDirector) }
+    let(:bucket_name) { 'bucket_name' }
+    let(:exists) { true }
 
     before(:each) do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
-      allow(Exists).to receive(:new).and_return(exists)
-      allow(exists).to receive(:execute).and_return(false)
+      allow(AwsHelpers::Directors::S3::BucketExistsDirector).to receive(:new).and_return(bucket_exists_director)
+      allow(bucket_exists_director).to receive(:exists?).and_return(exists)
     end
 
-    subject { AwsHelpers::S3.new.exists?(s3_bucket_name) }
-
-    it 'should create S3Exists with correct parameters' do
-      expect(Exists).to receive(:new).with(config, s3_bucket_name)
-      subject
+    it 'should call AwsHelpers::Directors::S3::BucketCreateDirector #new with correct parameters' do
+      expect(AwsHelpers::Directors::S3::BucketExistsDirector).to receive(:new).with(config)
+      AwsHelpers::S3.new.bucket_exists?(bucket_name)
     end
 
-    it 'should call S3Create execute method' do
-      expect(exists).to receive(:execute)
-      subject
+    it 'should AwsHelpers::Directors::S3::BucketExistsDirector #exists? with required parameters' do
+      request = AwsHelpers::Requests::S3::BucketExistsRequest.new(
+          bucket_name: bucket_name)
+      expect(bucket_exists_director).to receive(:exists?).with(request)
+      AwsHelpers::S3.new.bucket_exists?(bucket_name)
     end
 
-    it 'should return nil' do
-      expect(exists.execute).to eq(false)
+    it 'should return a boolean value' do
+      expect(AwsHelpers::S3.new.bucket_exists?(bucket_name)).to eq(exists)
     end
   end
 
