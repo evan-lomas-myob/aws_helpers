@@ -65,7 +65,9 @@ module AwsHelpers
     # @return [String] the image id
     #
     def image_create(instance_id, name, options = {})
-      request = ImageCreateRequest.new(instance_id: instance_id, image_name: name)
+      request = ImageCreateRequest.new
+      request.instance_id = instance_id
+      request.image_name = name
       request.tags = options[:tags] if options[:tags]
       request.instance_polling = options[:instance_polling] if options[:instance_polling]
       ImageCreateDirector.new(config).create(request)
@@ -83,7 +85,8 @@ module AwsHelpers
     # @return [Seahorse::Client::Response] An empty response
     #
     def image_delete(image_id)
-      request = ImageDeleteRequest.new(image_id: image_id)
+      request = ImageDeleteRequest.new
+      request.image_id = image_id
       ImageDeleteDirector.new(config).delete(request)
     end
 
@@ -100,7 +103,9 @@ module AwsHelpers
     # @return [Seahorse::Client::Response] An empty response
     #
     def image_add_user(image_id, user_id)
-      request = ImageAddUserRequest.new(image_id: image_id, user_id: user_id)
+      request = ImageAddUserRequest.new
+      request.image_id = image_id
+      request.user_id = user_id
       ImageAddUserDirector.new(config).add(request)
     end
 
@@ -111,7 +116,8 @@ module AwsHelpers
     end
 
     def get_image_ids(name, options = {})
-      request = GetImageIdsRequest.new(image_name: name)
+      request = GetImageIdsRequest.new
+      request.image_name = name
       if options[:older_than].is_a? Hash
         request.older_than = Time.now
                                  .prev_year(options[:older_than][:years])
@@ -220,11 +226,11 @@ module AwsHelpers
     # @return [String] Instance ID
     #
     def instance_create(image_id, options = {})
-      request = InstanceCreateRequest.new(image_id: image_id)
+      request = InstanceCreateRequest.new
+      request.image_id = image_id
       request.instance_polling = options[:instance_polling] if options[:instance_polling]
       request.user_data = options[:user_data]
       request.tags = options[:tags] if options[:tags]
-      puts "Request Top Level:" + request
       InstanceCreateDirector.new(config).create(request)
       request.instance_id
     end
@@ -249,7 +255,8 @@ module AwsHelpers
     # @return [nil]
     #
     def instance_start(instance_id, options = {})
-      request = InstanceStartRequest.new(instance_id: instance_id)
+      request = InstanceStartRequest.new
+      request.instance_id = instance_id
       request.instance_polling = options[:instance_polling] if options[:instance_polling]
       InstanceStartDirector.new(config).start(request)
     end
@@ -273,7 +280,8 @@ module AwsHelpers
     # @return [nil]
     #
     def instance_stop(instance_id, options = {})
-      request = InstanceStopRequest.new(instance_id: instance_id)
+      request = InstanceStopRequest.new
+      request.instance_id = instance_id
       request.instance_polling = options[:instance_polling] if options[:instance_polling]
       InstanceStopDirector.new(config).stop(request)
     end
@@ -319,7 +327,8 @@ module AwsHelpers
     #
 
     def instance_terminate(instance_id)
-      request = InstanceTerminateRequest.new(instance_id: instance_id)
+      request = InstanceTerminateRequest.new
+      request.instance_id = instance_id
       InstanceTerminateDirector.new(config).terminate(request)
     end
 
@@ -344,7 +353,8 @@ module AwsHelpers
     #
 
     def poll_instance_healthy(instance_id, options = {})
-      request = PollInstanceHealthyRequest.new(instance_id: instance_id)
+      request = PollInstanceHealthyRequest.new
+      request.instance_id = instance_id
       request.instance_polling = options[:instance_polling] if options[:instance_polling]
       PollInstanceHealthyDirector.new(config).execute(request)
     end
@@ -369,7 +379,8 @@ module AwsHelpers
     # @return [nil]
     #
     def poll_instance_stopped(instance_id, options = {})
-      request = PollInstanceStoppedRequest.new(instance_id: instance_id)
+      request = PollInstanceStoppedRequest.new
+      request.instance_id = instance_id
       request.instance_polling = options[:instance_polling] if options[:instance_polling]
       PollInstanceStoppedDirector.new(config).execute(request)
     end
@@ -415,7 +426,9 @@ module AwsHelpers
     #   }
     #   ```
     def get_windows_password(instance_id, pem_path, options = {})
-      request = GetWindowsPasswordRequest.new(instance_id: instance_id, pem_path: pem_path)
+      request = GetWindowsPasswordRequest.new
+      request.instance_id = instance_id
+      request.pem_path = pem_path
       request.instance_polling = options[:instance_polling] if options[:instance_polling]
       GetWindowsPasswordDirector.new(config).get(request)
     end
@@ -426,7 +439,8 @@ module AwsHelpers
     # @example Get the VPC ID
     #   AwsHelpers::EC2.new.get_vpc_id_by_name('MyVPC')
     def get_vpc_id_by_name(vpc_name)
-      request = GetVpcIdRequest.new(vpc_name: vpc_name)
+      request = GetVpcIdRequest.new
+      request.vpc_name = vpc_name
       GetVpcIdDirector.new(config).get(request)
     end
 
@@ -436,7 +450,8 @@ module AwsHelpers
     #   AwsHelpers::EC2.new.get_group_id_by_name('MySecurityGroup')
     # @param security_group_name [String] Security Group Name to Find
     def get_group_id_by_name(security_group_name)
-      request = GetSecurityGroupIdRequest.new(security_group_name: security_group_name)
+      request = GetSecurityGroupIdRequest.new
+      request.security_group_name = security_group_name
       GetSecurityGroupIdDirector.new(config).get(request)
     end
   end

@@ -34,10 +34,9 @@ describe AwsHelpers::EC2 do
       allow(director).to receive(:create)
     end
 
-    it 'should create a ImageAddUserRequest with the correct parameters' do
+    it 'should create a ImageAddUserRequest' do
       expect(ImageCreateRequest)
         .to receive(:new)
-        .with(instance_id: instance_id, image_name: image_name)
       AwsHelpers::EC2.new.image_create(instance_id, image_name)
     end
 
@@ -74,10 +73,9 @@ describe AwsHelpers::EC2 do
       allow(director).to receive(:delete)
     end
 
-    it 'should delete a ImageAddUserRequest with the correct parameters' do
+    it 'should delete a ImageAddUserRequest' do
       expect(ImageDeleteRequest)
         .to receive(:new)
-        .with(image_id: image_id)
       AwsHelpers::EC2.new.image_delete(image_id)
     end
 
@@ -107,10 +105,9 @@ describe AwsHelpers::EC2 do
       allow(director).to receive(:add)
     end
 
-    it 'should delete a ImageAddUserRequest with the correct parameters' do
+    it 'should delete a ImageAddUserRequest' do
       expect(ImageAddUserRequest)
         .to receive(:new)
-        .with(image_id: image_id, user_id: user_id)
       AwsHelpers::EC2.new.image_add_user(image_id, user_id)
     end
 
@@ -175,30 +172,30 @@ describe AwsHelpers::EC2 do
   end
 
   describe '#instance_create' do
-    let(:request) { InstanceCreateRequest.new(image_id: image_id) }
+    let(:request) { InstanceCreateRequest.new }
     let(:director) { instance_double(InstanceCreateDirector) }
 
     before do
+      request.image_id = image_id
       allow(InstanceCreateRequest).to receive(:new).and_return(request)
       allow(InstanceCreateDirector).to receive(:new).and_return(director)
       allow(director).to receive(:create)
     end
 
-    it 'should delete a InstanceCreateRequest with the correct parameters' do
+    it 'should create a InstanceCreateRequest' do
       expect(InstanceCreateRequest)
         .to receive(:new)
-        .with(image_id: image_id)
       AwsHelpers::EC2.new.instance_create(image_id)
     end
 
-    it 'should delete a InstanceCreateDirector with the config' do
+    it 'should create a InstanceCreateDirector with the config' do
       expect(InstanceCreateDirector)
         .to receive(:new)
         .with(config)
       AwsHelpers::EC2.new.instance_create(image_id)
     end
 
-    it 'should call delete on the InstanceCreateDirector' do
+    it 'should call create on the InstanceCreateDirector' do
       expect(director)
         .to receive(:create)
         .with(request)
@@ -216,10 +213,9 @@ describe AwsHelpers::EC2 do
       allow(director).to receive(:start)
     end
 
-    it 'should delete a InstanceStartRequest with the correct parameters' do
+    it 'should delete a InstanceStartRequest' do
       expect(InstanceStartRequest)
         .to receive(:new)
-        .with(instance_id: instance_id)
       AwsHelpers::EC2.new.instance_start(instance_id)
     end
 
@@ -248,10 +244,9 @@ describe AwsHelpers::EC2 do
       allow(director).to receive(:stop)
     end
 
-    it 'should delete a InstanceStopRequest with the correct parameters' do
+    it 'should delete a InstanceStopRequest' do
       expect(InstanceStopRequest)
         .to receive(:new)
-        .with(instance_id: instance_id)
       AwsHelpers::EC2.new.instance_stop(instance_id)
     end
 
@@ -326,10 +321,9 @@ describe AwsHelpers::EC2 do
       allow(director).to receive(:terminate)
     end
 
-    it 'should delete a InstanceTerminateRequest with the correct parameters' do
+    it 'should delete a InstanceTerminateRequest' do
       expect(InstanceTerminateRequest)
         .to receive(:new)
-        .with(instance_id: instance_id)
       AwsHelpers::EC2.new.instance_terminate(instance_id)
     end
 
@@ -358,10 +352,9 @@ describe AwsHelpers::EC2 do
       allow(director).to receive(:execute)
     end
 
-    it 'should delete a PollInstanceHealthyRequest with the correct parameters' do
+    it 'should delete a PollInstanceHealthyRequest' do
       expect(PollInstanceHealthyRequest)
         .to receive(:new)
-        .with(instance_id: instance_id)
       AwsHelpers::EC2.new.poll_instance_healthy(instance_id)
     end
 
@@ -390,10 +383,9 @@ describe AwsHelpers::EC2 do
       allow(director).to receive(:execute)
     end
 
-    it 'should delete a PollInstanceStoppedRequest with the correct parameters' do
+    it 'should delete a PollInstanceStoppedRequest' do
       expect(PollInstanceStoppedRequest)
         .to receive(:new)
-        .with(instance_id: instance_id)
       AwsHelpers::EC2.new.poll_instance_stopped(instance_id)
     end
 
@@ -447,10 +439,9 @@ describe AwsHelpers::EC2 do
       allow(director).to receive(:get)
     end
 
-    it 'should delete a GetWindowsPasswordRequest with the correct parameters' do
+    it 'should delete a GetWindowsPasswordRequest' do
       expect(GetWindowsPasswordRequest)
         .to receive(:new)
-        .with(instance_id: instance_id, pem_path: pem_path)
       AwsHelpers::EC2.new.get_windows_password(instance_id, pem_path)
     end
 
@@ -479,10 +470,9 @@ describe AwsHelpers::EC2 do
       allow(director).to receive(:get)
     end
 
-    it 'should delete a GetVpcIdRequest with the correct parameters' do
+    it 'should delete a GetVpcIdRequest' do
       expect(GetVpcIdRequest)
         .to receive(:new)
-        .with(vpc_name: vpc_name)
       AwsHelpers::EC2.new.get_vpc_id_by_name(vpc_name)
     end
 
@@ -511,10 +501,9 @@ describe AwsHelpers::EC2 do
       allow(director).to receive(:get)
     end
 
-    it 'should delete a GetSecurityGroupIdRequest with the correct parameters' do
+    it 'should delete a GetSecurityGroupIdRequest' do
       expect(GetSecurityGroupIdRequest)
         .to receive(:new)
-        .with(security_group_name: security_group_name)
       AwsHelpers::EC2.new.get_group_id_by_name(security_group_name)
     end
 
