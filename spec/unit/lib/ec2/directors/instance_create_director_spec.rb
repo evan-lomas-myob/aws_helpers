@@ -5,7 +5,7 @@ describe AwsHelpers::EC2Commands::Directors::InstanceCreateDirector do
   let(:request) { InstanceCreateRequest.new }
 
   [AwsHelpers::EC2Commands::Commands::InstanceCreateCommand,
-   AwsHelpers::EC2Commands::Commands::PollInstanceAvailableCommand,
+   AwsHelpers::EC2Commands::Commands::PollInstanceHealthyCommand,
    AwsHelpers::EC2Commands::Commands::InstanceTagCommand,
    AwsHelpers::EC2Commands::Commands::PollInstanceHealthyCommand].each do |klass|
     let(:command) { instance_double(klass) }
