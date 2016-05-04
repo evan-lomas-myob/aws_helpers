@@ -231,7 +231,7 @@ module AwsHelpers
       request.instance_polling = options[:instance_polling] if options[:instance_polling]
       request.user_data = options[:user_data]
       puts 'Options: ' + options.to_s
-      request.tags = options[:tags] || []
+      request.tags = options[:tags] || [{ key: 'Name', value: 'no-name-supplied' }]
       InstanceCreateDirector.new(config).create(request)
       request.instance_id
     end
