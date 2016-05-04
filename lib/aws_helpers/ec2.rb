@@ -414,6 +414,7 @@ module AwsHelpers
       request = GetInstancePublicIpRequest.new
       request.instance_id = instance_id
       GetInstancePublicIpDirector.new(config).get(request)
+      request.instance_public_ip
     end
 
     # Returns the decrypted Windows administrator password for a given instance.
