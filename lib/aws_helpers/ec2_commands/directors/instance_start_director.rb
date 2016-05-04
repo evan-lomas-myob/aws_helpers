@@ -13,7 +13,8 @@ module AwsHelpers
         def start(request)
           @request = request
           @commands = [
-            AwsHelpers::EC2Commands::Commands::InstanceStartCommand.new(@config, request)
+            AwsHelpers::EC2Commands::Commands::InstanceStartCommand.new(@config, request),
+            AwsHelpers::EC2Commands::Commands::PollInstanceHealthyCommand.new(@config, request)
           ]
           execute_commands
         end
