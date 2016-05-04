@@ -10,6 +10,7 @@ module AwsHelpers
         end
 
         def execute
+          puts "Tags: #{@request.tags}"
           @client.create_tags(
             resources: [@request.instance_id],
             tags: @request.tags
