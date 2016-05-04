@@ -7,7 +7,7 @@ module AwsHelpers
           def initialize(*args)
             super(*args)
             self.instance_polling = {
-              max_attempts: 20,
+              max_attempts: 40,
               delay: 30
             }
           end
