@@ -11,6 +11,7 @@ module AwsHelpers
 
         def execute
           response = @client.describe_instances(instance_ids: [@request.instance_id])
+          puts response.reservations.first.instances.first.public_ip_address
           @request.instance_public_ip = response.reservations.first.instances.first.public_ip_address unless response.reservations.empty?
         end
       end
