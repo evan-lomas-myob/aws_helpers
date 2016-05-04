@@ -410,6 +410,12 @@ module AwsHelpers
       PollInstanceState.new(config, instance_id, state, options).execute
     end
 
+    def get_instance_public_ip(instance_id)
+      request = GetInstancePublicIpRequest.new
+      request.instance_id = instance_id
+      GetInstancePublicIpDirector.new(config).get(request)
+    end
+
     # Returns the decrypted Windows administrator password for a given instance.
     #
     # @example Get the decrypted Windows password
