@@ -10,7 +10,7 @@ module AwsHelpers
         end
 
         def execute
-          puts @request.user_data
+          puts "Actual user data: #{@request.user_data}"
           @request.instance_id = @client.run_instances(
             image_id: @request.image_id,
             min_count: 1,
