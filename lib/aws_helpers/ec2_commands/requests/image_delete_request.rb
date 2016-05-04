@@ -8,7 +8,7 @@ module AwsHelpers
           def initialize(*args)
             super(*args)
             self.image_polling = {
-              max_attempts: 2,
+              max_attempts: 8,
               delay: 30
             }
           end

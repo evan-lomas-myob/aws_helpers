@@ -15,7 +15,7 @@ describe AwsHelpers::EC2Commands::Requests::ImageDeleteRequest do
   it 'set correct defaults' do
     attributes = {
       image_polling: {
-        max_attempts: 2,
+        max_attempts: 8,
         delay: 30
       }
     }
