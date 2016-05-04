@@ -11,10 +11,10 @@ module AwsHelpers
         end
 
         def get(request)
-          @request = request
           @commands = [
             AwsHelpers::EC2Commands::Commands::GetInstancePublicIpCommand.new(@config, request)
           ]
+          puts "Director request: #{request.to_s}"
           execute_commands
         end
       end
