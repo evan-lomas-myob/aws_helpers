@@ -10,13 +10,10 @@ module AwsHelpers
         end
 
         def execute
-          puts @request.object_id
-          @instance_id = @request.instance_id
-          @image_name = @request.image_name
           @request.image_id = @client.create_image(
-            instance_id: @instance_id,
-            name: @image_name,
-            description: @image_name
+            instance_id: @request.instance_id,
+            name: @request.image_name,
+            description: @request.image_name
           ).image_id
         end
       end
