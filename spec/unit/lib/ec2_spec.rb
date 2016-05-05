@@ -1,5 +1,5 @@
-require 'time'
-require 'aws_helpers/utilities/time'
+# require 'time'
+# require 'aws_helpers/utilities/time'
 require 'aws_helpers/ec2'
 
 describe AwsHelpers::EC2 do

@@ -14,7 +14,7 @@ require_relative 'actions/ec2/instances_find_by_ids'
 require_relative 'actions/ec2/poll_instance_state'
 require_relative 'actions/ec2/get_vpc_id_by_name'
 require_relative 'actions/ec2/get_security_group_id_by_name'
-require 'aws_helpers/utilities/time'
+require_relative 'utilities/older_than_time_builder'
 
 Dir.glob(File.join(File.dirname(__FILE__), 'ec2_commands/**/*.rb'), &method(:require))
 
@@ -127,6 +127,7 @@ module AwsHelpers
       end
       request.with_tags = options[:with_tags] if options[:with_tags]
       GetImageIdsDirector.new(config).get(request)
+      request.image_ids
     end
 
     # De-register AMI images older than range specified
