@@ -121,10 +121,10 @@ module AwsHelpers
       request.image_name = name
       if options[:older_than].is_a? Hash
         request.older_than = Time.now
-                                 .prev_year(options[:older_than][:years])
-                                 .prev_month(options[:older_than][:months])
-                                 .prev_hour(options[:older_than][:hours])
-                                 .prev_day(options[:older_than][:days])
+                                 .prev_year(options[:older_than][:years].to_i)
+                                 .prev_month(options[:older_than][:months].to_i)
+                                 .prev_hour(options[:older_than][:hours].to_i)
+                                 .prev_day(options[:older_than][:days].to_i)
       elsif options[:older_than].is_a? Time
         request.older_than = options[:older_than]
       end
