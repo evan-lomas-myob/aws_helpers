@@ -14,6 +14,7 @@ require_relative 'actions/ec2/instances_find_by_ids'
 require_relative 'actions/ec2/poll_instance_state'
 require_relative 'actions/ec2/get_vpc_id_by_name'
 require_relative 'actions/ec2/get_security_group_id_by_name'
+require 'aws_helpers/utilities/time'
 
 Dir.glob(File.join(File.dirname(__FILE__), 'ec2_commands/**/*.rb'), &method(:require))
 
@@ -120,16 +121,12 @@ module AwsHelpers
       request = GetImageIdsRequest.new
       request.image_name = name
       if options[:older_than].is_a? Hash
-        request.older_than = Time.now
-                                 .prev_year(options[:older_than][:years].to_i)
-                                 .prev_month(options[:older_than][:months].to_i)
-                                 .prev_hour(options[:older_than][:hours].to_i)
-                                 .prev_day(options[:older_than][:days].to_i)
+        request.older_than = AwsHelpers::Utilities::OlderThanTimeBuilder.new.build(options)
       elsif options[:older_than].is_a? Time
         request.older_than = options[:older_than]
       end
       request.with_tags = options[:with_tags] if options[:with_tags]
-      GetImageIdsDirector.new(config).add(request)
+      GetImageIdsDirector.new(config).get(request)
     end
 
     # De-register AMI images older than range specified

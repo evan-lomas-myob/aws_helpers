@@ -1,4 +1,5 @@
 require 'time'
+require 'aws_helpers/utilities/time'
 require 'aws_helpers/ec2'
 
 describe AwsHelpers::EC2 do
@@ -105,24 +106,59 @@ describe AwsHelpers::EC2 do
       allow(director).to receive(:add)
     end
 
-    it 'should delete a ImageAddUserRequest' do
+    it 'should create a ImageAddUserRequest' do
       expect(ImageAddUserRequest)
         .to receive(:new)
       AwsHelpers::EC2.new.image_add_user(image_id, user_id)
     end
 
-    it 'should delete a ImageAddUserDirector with the config' do
+    it 'should create a ImageAddUserDirector with the config' do
       expect(ImageAddUserDirector)
         .to receive(:new)
         .with(config)
       AwsHelpers::EC2.new.image_add_user(image_id, user_id)
     end
 
-    it 'should call delete on the ImageAddUserDirector' do
+    it 'should call add on the ImageAddUserDirector' do
       expect(director)
         .to receive(:add)
         .with(request)
       AwsHelpers::EC2.new.image_add_user(image_id, user_id)
+    end
+  end
+
+  describe '#get_image_ids' do
+    let(:request) { GetImageIdsRequest.new(image_id: image_id) }
+    let(:director) { instance_double(GetImageIdsDirector) }
+    # let!(:now) { Time.now }
+
+    before do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(GetImageIdsRequest).to receive(:new).and_return(request)
+      allow(GetImageIdsDirector).to receive(:new).and_return(director)
+      allow(director).to receive(:get)
+      # allow(Time).to receive(:now).and_return(now)
+      # allow(now).to receive(:prev_year).and_return(now)
+    end
+
+    it 'should create a new GetImageIdsRequest' do
+      expect(GetImageIdsRequest)
+        .to receive(:new)
+      AwsHelpers::EC2.new.get_image_ids(image_name)
+    end
+
+    it 'should create a GetImageIdsDirector with the config' do
+      expect(GetImageIdsDirector)
+        .to receive(:new)
+        .with(config)
+      AwsHelpers::EC2.new.get_image_ids(image_name)
+    end
+
+    it 'should call get on the GetImageIdsDirector' do
+      expect(director)
+        .to receive(:get)
+        .with(request)
+      AwsHelpers::EC2.new.get_image_ids(image_name)
     end
   end
 
