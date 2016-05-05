@@ -71,6 +71,7 @@ module AwsHelpers
       request.tags = options[:tags] if options[:tags]
       request.instance_polling = options[:instance_polling] if options[:instance_polling]
       ImageCreateDirector.new(config).create(request)
+      request.image_id
     end
 
     # De-register an AMI image and its associated snapshots
