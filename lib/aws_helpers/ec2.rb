@@ -129,7 +129,7 @@ module AwsHelpers
         request.older_than = options[:older_than]
       end
       request.with_tags = options[:with_tags] if options[:with_tags]
-      ImagesDeleteBeforeTimeDirector.new(config).add(request)
+      GetImageIdsDirector.new(config).add(request)
     end
 
     # De-register AMI images older than range specified
