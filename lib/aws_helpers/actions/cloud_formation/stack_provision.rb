@@ -26,7 +26,7 @@ module AwsHelpers
         end
 
         def execute
-          template_url = UploadTemplate.new(@config, @stack_name, @template_json, @bucket_name, @bucket_options).execute if @bucket_name
+          template_url = AwsHelpers::Actions::S3::UploadTemplate.new(@config, @stack_name, @template_json, @bucket_name, @bucket_options).execute if @bucket_name
 
           if StackExists.new(@config, @stack_name).execute && StackRollbackComplete.new(@config, @stack_name).execute
             StackDelete.new(@config, @stack_name, @stack_options).execute
