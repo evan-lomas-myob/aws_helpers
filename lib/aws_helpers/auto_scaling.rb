@@ -35,7 +35,8 @@ module AwsHelpers
     # @return [Integer] The desired capacity of the auto scaling group
     #
     def retrieve_desired_capacity(auto_scaling_group_name)
-      request = GetDesiredCapacityRequest.new(auto_scaling_group_name: auto_scaling_group_name)
+      request = GetDesiredCapacityRequest.new
+      request.auto_scaling_group_name = auto_scaling_group_name
       GetDesiredCapacityDirector.new(config).get(request)
     end
 
@@ -65,7 +66,9 @@ module AwsHelpers
     # @return [Array] Load Balancers configured for this Auto Scaling Group
     #
     def update_desired_capacity(auto_scaling_group_name, desired_capacity, options = {})
-      request = UpdateDesiredCapacityRequest.new(auto_scaling_group_name: auto_scaling_group_name, desired_capacity: desired_capacity)
+      request = UpdateDesiredCapacityRequest.new
+      request.auto_scaling_group_name = auto_scaling_group_name
+      request.desired_capacity = desired_capacity
       request.instance_polling = options[:instance_polling] if options[:instance_polling]
       UpdateDesiredCapacityDirector.new(config).update(request)
     end
@@ -80,7 +83,8 @@ module AwsHelpers
     # @return [Array<Aws::EC2::Types::Instance>] Array of {http://docs.aws.amazon.com/sdkforruby/api/Aws/EC2/Instance.html Instance}
     #
     def retrieve_current_instances(auto_scaling_group_name)
-      request = GetCurrentInstancesRequest.new(auto_scaling_group_name: auto_scaling_group_name, desired_capacity: desired_capacity)
+      request = GetCurrentInstancesRequest.new
+      request.auto_scaling_group_name = auto_scaling_group_name
       GetCurrentInstancesDirector.new(config).update(request)
     end
   end

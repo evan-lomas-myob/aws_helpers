@@ -21,10 +21,11 @@ describe AwsHelpers::AutoScaling do
 
   describe '#retrieve_desired_capacity' do
 
-    let(:request) { GetDesiredCapacityRequest.new(auto_scaling_group_name: auto_scaling_group_name) }
+    let(:request) { GetDesiredCapacityRequest.new }
     let(:director) { instance_double(GetDesiredCapacityDirector) }
 
     before(:each) do
+      request.auto_scaling_group_name = auto_scaling_group_name
       allow(GetDesiredCapacityRequest).to receive(:new).and_return(request)
       allow(GetDesiredCapacityDirector).to receive(:new).and_return(director)
       allow(director).to receive(:get).and_return(desired_capacity)
@@ -33,7 +34,6 @@ describe AwsHelpers::AutoScaling do
     it 'should create a GetDesiredCapacityRequest' do
       expect(GetDesiredCapacityRequest)
         .to receive(:new)
-        .with(auto_scaling_group_name: auto_scaling_group_name)
       AwsHelpers::AutoScaling.new.retrieve_desired_capacity(auto_scaling_group_name)
     end
 
@@ -58,11 +58,13 @@ describe AwsHelpers::AutoScaling do
   end
 
   describe '#update_desired_capacity' do
-    let(:request) { UpdateDesiredCapacityRequest.new(auto_scaling_group_name: auto_scaling_group_name) }
+    let(:request) { UpdateDesiredCapacityRequest.new }
     let(:director) { instance_double(UpdateDesiredCapacityDirector) }
 
     before(:each) do
       # allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      request.auto_scaling_group_name = auto_scaling_group_name
+      request.desired_capacity = desired_capacity
       allow(UpdateDesiredCapacityRequest).to receive(:new).and_return(request)
       allow(UpdateDesiredCapacityDirector).to receive(:new).and_return(director)
       allow(director).to receive(:update).and_return(desired_capacity)
@@ -71,7 +73,6 @@ describe AwsHelpers::AutoScaling do
     it 'should create a UpdateDesiredCapacityRequest' do
       expect(UpdateDesiredCapacityRequest)
         .to receive(:new)
-        .with(auto_scaling_group_name: auto_scaling_group_name, desired_capacity: desired_capacity)
       AwsHelpers::AutoScaling.new.update_desired_capacity(auto_scaling_group_name, desired_capacity)
     end
 
