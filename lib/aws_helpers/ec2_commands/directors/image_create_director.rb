@@ -18,6 +18,8 @@ module AwsHelpers
           @commands = [
             AwsHelpers::EC2Commands::Commands::ImageConstructNameCommand.new(@config, request),
             AwsHelpers::EC2Commands::Commands::ImageCreateCommand.new(@config, request),
+            AwsHelpers::EC2Commands::Commands::PollImageAvailableCommand.new(@config, request),
+            AwsHelpers::EC2Commands::Commands::ImageTagCommand.new(@config, request),
             AwsHelpers::EC2Commands::Commands::PollImageAvailableCommand.new(@config, request)
           ]
           execute_commands

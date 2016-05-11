@@ -6,6 +6,8 @@ describe AwsHelpers::EC2Commands::Directors::ImageCreateDirector do
 
   [AwsHelpers::EC2Commands::Commands::ImageConstructNameCommand,
    AwsHelpers::EC2Commands::Commands::ImageCreateCommand,
+   AwsHelpers::EC2Commands::Commands::PollImageAvailableCommand,
+   AwsHelpers::EC2Commands::Commands::ImageTagCommand,
    AwsHelpers::EC2Commands::Commands::PollImageAvailableCommand].each do |klass|
     let(:command) { instance_double(klass) }
     before do
