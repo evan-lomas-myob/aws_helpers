@@ -69,6 +69,7 @@ module AwsHelpers
       request.snapshot_polling = options[:snapshot_polling] if options[:snapshot_polling]
       request.instance_polling = options[:instance_polling] if options[:instance_polling]
       SnapshotCreateDirector.new(config).create(request)
+      request.snapshot_id
     end
 
     # Deletes manual snapshots that were made for the RDS instance from now. Optionally keep snapshots for hours, days, months and years
@@ -113,6 +114,7 @@ module AwsHelpers
       request = GetLatestSnapshotIdRequest.new
       request.db_instance_id = db_instance_id
       GetLatestSnapshotIdDirector.new(config).get(request)
+      request.snapshot_id
     end
   end
 end

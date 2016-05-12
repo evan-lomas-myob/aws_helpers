@@ -83,7 +83,8 @@ describe AwsHelpers::RDS do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
       allow(GetLatestSnapshotIdRequest).to receive(:new).and_return(latest_request)
       allow(GetLatestSnapshotIdDirector).to receive(:new).and_return(latest_director)
-      allow(latest_director).to receive(:get).and_return(snapshot_id)
+      allow(latest_director).to receive(:get)
+      allow(latest_request).to receive(:snapshot_id).and_return(snapshot_id)
     end
 
     it 'should create a GetLatestSnapshotIdRequest' do

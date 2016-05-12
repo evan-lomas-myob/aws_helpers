@@ -35,6 +35,7 @@ module AwsHelpers
       request = GetKeyArnRequest.new
       request.alias_name = alias_name
       GetKeyArnDirector.new(config).get(request)
+      request.key_arn
     end
   end
 end

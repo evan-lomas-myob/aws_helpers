@@ -38,6 +38,7 @@ module AwsHelpers
       request = GetDesiredCapacityRequest.new
       request.auto_scaling_group_name = auto_scaling_group_name
       GetDesiredCapacityDirector.new(config).get(request)
+      request.desired_capacity
     end
 
     # Changes the desired capacity of an auto scaling group.
@@ -86,6 +87,7 @@ module AwsHelpers
       request = GetCurrentInstancesRequest.new
       request.auto_scaling_group_name = auto_scaling_group_name
       GetCurrentInstancesDirector.new(config).update(request)
+      request.current_instances
     end
   end
 end

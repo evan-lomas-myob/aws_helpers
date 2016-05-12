@@ -38,6 +38,7 @@ module AwsHelpers
       request.subnet_id = subnet_id
       request.allocation_id = allocation_id
       GatewayCreateDirector.new(config).create(request)
+      request.gateway_id
     end
 
     # Delete a NAT gateway

@@ -12,7 +12,8 @@ describe AwsHelpers::KMS do
   before do
     allow(GetKeyArnRequest).to receive(:new).and_return(request)
     allow(GetKeyArnDirector).to receive(:new).and_return(director)
-    allow(director).to receive(:get).and_return(key_arn)
+    allow(director).to receive(:get)
+    allow(request).to receive(:key_arn).and_return(key_arn)
   end
 
   describe '#initialize' do

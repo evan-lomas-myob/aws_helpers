@@ -20,7 +20,6 @@ describe AwsHelpers::AutoScaling do
   end
 
   describe '#retrieve_desired_capacity' do
-
     let(:request) { GetDesiredCapacityRequest.new }
     let(:director) { instance_double(GetDesiredCapacityDirector) }
 
@@ -28,7 +27,8 @@ describe AwsHelpers::AutoScaling do
       request.auto_scaling_group_name = auto_scaling_group_name
       allow(GetDesiredCapacityRequest).to receive(:new).and_return(request)
       allow(GetDesiredCapacityDirector).to receive(:new).and_return(director)
-      allow(director).to receive(:get).and_return(desired_capacity)
+      allow(director).to receive(:get)
+      allow(request).to receive(:desired_capacity).and_return(desired_capacity)
     end
 
     it 'should create a GetDesiredCapacityRequest' do
@@ -67,7 +67,7 @@ describe AwsHelpers::AutoScaling do
       request.desired_capacity = desired_capacity
       allow(UpdateDesiredCapacityRequest).to receive(:new).and_return(request)
       allow(UpdateDesiredCapacityDirector).to receive(:new).and_return(director)
-      allow(director).to receive(:update).and_return(desired_capacity)
+      allow(director).to receive(:update)
     end
 
     it 'should create a UpdateDesiredCapacityRequest' do
