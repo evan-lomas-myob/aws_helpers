@@ -27,12 +27,14 @@ describe AwsHelpers::EC2 do
   describe '#image_create' do
     let(:request) { ImageCreateRequest.new(instance_id: instance_id, image_name: image_name) }
     let(:director) { instance_double(ImageCreateDirector) }
+    let(:time) { Time.now }
 
     before do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
       allow(ImageCreateRequest).to receive(:new).and_return(request)
       allow(ImageCreateDirector).to receive(:new).and_return(director)
       allow(director).to receive(:create)
+      allow(Time).to receive(:now).and_return(time)
     end
 
     it 'should create a ImageAddUserRequest' do
@@ -44,8 +46,8 @@ describe AwsHelpers::EC2 do
     it 'should add tags to the request if they are provided' do
       expect(request)
         .to receive(:tags=)
-        .with('tags')
-      AwsHelpers::EC2.new.image_create(instance_id, image_name, tags: 'tags')
+        .with([{ key: 'Name', value: image_name }, { key: 'Date', value: time.to_s }])
+      AwsHelpers::EC2.new.image_create(instance_id, image_name, options: { tags: [{ key: 'Occupation', value: 'Caped Crusader' }] })
     end
 
     it 'should create a ImageCreateDirector with the config' do
