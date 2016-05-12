@@ -45,7 +45,8 @@ module AwsHelpers
     # @return [Array<String>]
     #
     def poll_in_service_instances(load_balancer_name, options = {})
-      request = PollInServiceInstancesRequest.new(load_balancer_name: load_balancer_name)
+      request = PollInServiceInstancesRequest.new
+      request.load_balancer_name = load_balancer_name
       request.instance_polling = options[:instance_polling] if options[:instance_polling]
       PollInServiceInstancesDirector.new(config).execute(request)
     end

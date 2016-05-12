@@ -12,7 +12,7 @@ module AwsHelpers
 
         def execute
           @request.snapshot_id = @rds_client.create_db_snapshot(
-              db_instance_identifier: @request.db_instance_identifier,
+              db_instance_identifier: @request.db_instance_id,
               db_snapshot_identifier: @request.snapshot_name
           ).db_snapshot.db_snapshot_identifier
         end

@@ -32,7 +32,8 @@ module AwsHelpers
     # @return [String,nil] the kms arn
     #
     def key_arn(alias_name)
-      request = GetKeyArnRequest.new(alias_name: alias_name)
+      request = GetKeyArnRequest.new
+      request.alias_name = alias_name
       GetKeyArnDirector.new(config).get(request)
     end
   end

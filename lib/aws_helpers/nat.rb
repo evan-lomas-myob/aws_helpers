@@ -34,7 +34,9 @@ module AwsHelpers
     # @return [String] the gateway id
     #
     def gateway_create(subnet_id, allocation_id)
-      request = GatewayCreateRequest.new(subnet_id: subnet_id, allocation_id: allocation_id)
+      request = GatewayCreateRequest.new
+      request.subnet_id = subnet_id
+      request.allocation_id = allocation_id
       GatewayCreateDirector.new(config).create(request)
     end
 

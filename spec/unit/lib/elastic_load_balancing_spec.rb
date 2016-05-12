@@ -26,7 +26,6 @@ describe AwsHelpers::ElasticLoadBalancing do
     it 'should create a PollInServiceInstancesRequest' do
       expect(PollInServiceInstancesRequest)
         .to receive(:new)
-        .with(load_balancer_name: load_balancer_name)
       AwsHelpers::ElasticLoadBalancing.new.poll_in_service_instances(load_balancer_name)
     end
 

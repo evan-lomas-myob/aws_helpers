@@ -12,7 +12,7 @@ describe AwsHelpers::RDSCommands::Commands::SnapshotCreateCommand do
   let(:request) { AwsHelpers::RDSCommands::Requests::SnapshotCreateRequest.new }
 
   before do
-    request.db_instance_identifier = db_instance_identifier
+    request.db_instance_id = db_instance_identifier
     request.snapshot_name = snapshot_name
     @command = AwsHelpers::RDSCommands::Commands::SnapshotCreateCommand.new(config, request)
     allow(rds_client)

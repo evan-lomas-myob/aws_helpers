@@ -31,7 +31,6 @@ describe AwsHelpers::RDS do
     it 'should create a SnapshotCreateRequest' do
       expect(SnapshotCreateRequest)
         .to receive(:new)
-        .with(db_instance_id: db_instance_id)
       AwsHelpers::RDS.new.snapshot_create(db_instance_id)
     end
 
@@ -61,7 +60,6 @@ describe AwsHelpers::RDS do
     it 'should create a SnapshotsDeleteRequest' do
       expect(SnapshotsDeleteRequest)
         .to receive(:new)
-        .with(db_instance_id: db_instance_id)
       AwsHelpers::RDS.new.snapshots_delete(db_instance_id)
     end
 
@@ -91,7 +89,7 @@ describe AwsHelpers::RDS do
     it 'should create a GetLatestSnapshotIdRequest' do
       expect(GetLatestSnapshotIdRequest)
         .to receive(:new)
-        .with(db_instance_id: db_instance_id)
+      expect(latest_request).to receive(:db_instance_id=)
       AwsHelpers::RDS.new.latest_snapshot(db_instance_id)
     end
 

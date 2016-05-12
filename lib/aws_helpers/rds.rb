@@ -64,7 +64,8 @@ module AwsHelpers
     #
 
     def snapshot_create(db_instance_id, options = {})
-      request = SnapshotCreateRequest.new(db_instance_id: db_instance_id)
+      request = SnapshotCreateRequest.new
+      request.db_instance_id = db_instance_id
       request.snapshot_polling = options[:snapshot_polling] if options[:snapshot_polling]
       request.instance_polling = options[:instance_polling] if options[:instance_polling]
       SnapshotCreateDirector.new(config).create(request)
@@ -85,7 +86,8 @@ module AwsHelpers
     # @return [struct Aws::RDS::Types::DBSnapshot]
 
     def snapshots_delete(db_instance_id, options = {})
-      request = SnapshotsDeleteRequest.new(db_instance_id: db_instance_id)
+      request = SnapshotsDeleteRequest.new
+      request.db_instance_id = db_instance_id
       if options[:older_than].is_a? Hash
         request.older_than = Time.now
                                  .prev_year(options[:older_than][:years])
@@ -108,7 +110,8 @@ module AwsHelpers
     # @return [String] The latest snapshot id for the instance
     #
     def latest_snapshot(db_instance_id)
-      request = GetLatestSnapshotIdRequest.new(db_instance_id: db_instance_id)
+      request = GetLatestSnapshotIdRequest.new
+      request.db_instance_id = db_instance_id
       GetLatestSnapshotIdDirector.new(config).get(request)
     end
   end

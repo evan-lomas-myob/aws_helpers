@@ -35,7 +35,6 @@ describe AwsHelpers::NAT do
     it 'should create a GatewayCreateRequest with the correct parameters' do
       expect(GatewayCreateRequest)
         .to receive(:new)
-        .with(subnet_id: subnet_id, allocation_id: allocation_id)
       AwsHelpers::NAT.new.gateway_create(subnet_id, allocation_id)
     end
 
@@ -58,7 +57,6 @@ describe AwsHelpers::NAT do
     it 'should create a GatewayDeleteRequest with the correct parameters' do
       expect(GatewayDeleteRequest)
         .to receive(:new)
-        .with(gateway_id: gateway_id)
       AwsHelpers::NAT.new.gateway_delete(gateway_id)
     end
 

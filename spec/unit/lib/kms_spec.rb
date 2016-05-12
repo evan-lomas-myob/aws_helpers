@@ -4,7 +4,7 @@ require 'aws_helpers/actions/kms/arn_retrieve'
 describe AwsHelpers::KMS do
   let(:alias_name) { 'Batman' }
   let(:key_arn) { '123' }
-  let(:request) { GatewayDeleteRequest.new(alias_name: alias_name) }
+  let(:request) { GetKeyArnRequest.new(alias_name: alias_name) }
   let(:director) { instance_double(GetKeyArnDirector) }
   let(:kms_client) { instance_double(Aws::KMS::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_kms_client: kms_client) }
@@ -36,7 +36,6 @@ describe AwsHelpers::KMS do
     it 'should create a GetKeyArnRequest' do
       expect(GetKeyArnRequest)
         .to receive(:new)
-        .with(alias_name: alias_name)
       AwsHelpers::KMS.new.key_arn(alias_name)
     end
 
