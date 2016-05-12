@@ -69,7 +69,11 @@ module AwsHelpers
       request = ImageCreateRequest.new
       request.instance_id = instance_id
       request.image_name = name
-      request.tags = options[:tags] if options[:tags]
+      request.tags = [
+        { key: 'Name', value: name },
+        { key: 'Date', value: Time.now.to_s }
+      ] + options[:tags]
+      # request.tags = options[:tags] if options[:tags]
       request.instance_polling = options[:instance_polling] if options[:instance_polling]
       ImageCreateDirector.new(config).create(request)
       request.image_id
