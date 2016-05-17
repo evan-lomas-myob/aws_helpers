@@ -7,6 +7,7 @@ module AwsHelpers
           :snapshot_name,
           :db_instance_id,
           :instance_polling,
+          :use_name,
           :snapshot_polling) do
             def initialize(*args)
               super(*args)

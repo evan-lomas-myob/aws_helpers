@@ -66,6 +66,7 @@ module AwsHelpers
     def snapshot_create(db_instance_id, options = {})
       request = SnapshotCreateRequest.new
       request.db_instance_id = db_instance_id
+      request.use_name = options[:use_name] if options[:use_name]
       request.snapshot_polling = options[:snapshot_polling] if options[:snapshot_polling]
       request.instance_polling = options[:instance_polling] if options[:instance_polling]
       SnapshotCreateDirector.new(config).create(request)
