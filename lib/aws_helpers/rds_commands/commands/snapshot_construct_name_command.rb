@@ -13,7 +13,7 @@ module AwsHelpers
 
         def execute
           now_formatted = Time.now.strftime('%Y-%m-%d-%H-%M')
-          @request.image_name = "#{@request.use_name ? name_tag_value : @request.db_instance_id}-#{now_formatted}"
+          @request.snapshot_name = "#{@request.use_name ? name_tag_value : @request.db_instance_id}-#{now_formatted}"
         end
 
         private
