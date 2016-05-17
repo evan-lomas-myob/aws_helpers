@@ -3,7 +3,7 @@ module AwsHelpers
     module Requests
       PollInstanceAvailableRequest = Struct.new(
           :std_out,
-          :db_instance_identifier,
+          :db_instance_id,
           :snapshot_name,
           :use_name,
           :instance_polling,

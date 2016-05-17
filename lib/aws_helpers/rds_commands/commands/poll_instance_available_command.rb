@@ -9,7 +9,7 @@ module AwsHelpers
 
         def initialize(config, request)
           @rds_client = config.aws_rds_client
-          @db_instance_identifier = request.db_instance_identifier
+          @db_instance_identifier = request.db_instance_id
           @std_out = request.std_out
           @max_attempts = request.instance_polling[:max_attempts] || 60
           @delay = request.instance_polling[:delay] || 30
