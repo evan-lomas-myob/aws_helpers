@@ -12,7 +12,7 @@ module AwsHelpers
             def initialize(*args)
               super(*args)
               self.snapshot_polling = {
-                max_attempts: 8,
+                max_attempts: 16,
                 delay: 30
               }
               self.instance_polling = {
