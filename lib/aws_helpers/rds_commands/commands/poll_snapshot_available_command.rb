@@ -16,7 +16,7 @@ module AwsHelpers
         def execute
           poll(@request.snapshot_polling[:delay], @request.snapshot_polling[:max_attempts]) do
             response = @rds_client.describe_db_snapshots(db_instance_identifier: @request.db_instance_id)
-            puts reponse.db_snapshots
+            puts response.db_snapshots
             snapshot = response.db_snapshots.find { |s| s.db_snapshot_identifier == @request.snapshot_name }
             status = snapshot.status
             percent_progress = snapshot.percent_progress

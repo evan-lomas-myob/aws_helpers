@@ -2,7 +2,7 @@ require 'aws_helpers/rds_commands/commands/poll_snapshot_available_command'
 require 'aws_helpers/rds_commands/requests/poll_snapshot_available_request'
 
 describe AwsHelpers::RDSCommands::Commands::PollSnapshotAvailableCommand do
-  let(:snapshot) { Aws::RDS::Types::DBSnapshot.new }
+  let(:snapshot) { Aws::RDS::Types::DBSnapshot.new(db_snapshot_identifier: 'Batman') }
   let(:result) { Aws::RDS::Types::DBSnapshotMessage.new(db_snapshots: [snapshot]) }
   let(:rds_client) { instance_double(Aws::RDS::Client) }
   let(:config) { instance_double(AwsHelpers::Config, aws_rds_client: rds_client) }
@@ -10,6 +10,7 @@ describe AwsHelpers::RDSCommands::Commands::PollSnapshotAvailableCommand do
 
   before do
     request.snapshot_polling = { max_attempts: 2, delay: 0 }
+    request.snapshot_name = 'Batman'
     @command = AwsHelpers::RDSCommands::Commands::PollSnapshotAvailableCommand.new(config, request)
     allow(rds_client)
       .to receive(:describe_db_snapshots)
@@ -29,7 +30,6 @@ describe AwsHelpers::RDSCommands::Commands::PollSnapshotAvailableCommand do
 
   it 'raises an exception if the snapshot status is deleting' do
     snapshot.status = 'deleting'
-    request.snapshot_name = 'Batman'
     expect { @command.execute }.to raise_error(RuntimeError)
   end
 
