@@ -9,7 +9,7 @@ module AwsHelpers
           @name_tag_value = name_tag_value
           @creation_time = creation_time
           @stdout = options[:stdout] || $stdout
-          @max_attempts = options[:max_attempts]
+          @max_attempts = options[:max_attempts] || 20
         end
 
         def execute
