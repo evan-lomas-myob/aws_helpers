@@ -1,8 +1,4 @@
 require_relative 'client'
-# require_relative 'actions/rds/snapshot_create'
-# require_relative 'actions/rds/snapshots_delete'
-# require_relative 'actions/rds/latest_snapshot'
-# require_relative 'client'
 
 Dir.glob(File.join(File.dirname(__FILE__), 'rds_commands/**/*.rb'), &method(:require))
 
@@ -90,6 +86,7 @@ module AwsHelpers
     def snapshots_delete(db_instance_id, options = {})
       request = SnapshotsDeleteRequest.new
       request.db_instance_id = db_instance_id
+      options[:older_than] ||= { days: 14 }
       if options[:older_than].is_a? Hash
         request.older_than = Time.now
                                  .prev_year(options[:older_than][:years])

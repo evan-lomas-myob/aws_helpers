@@ -50,11 +50,29 @@ describe AwsHelpers::RDS do
   end
 
   describe '#snapshots_delete' do
+    let(:time) { Time.now }
+
     before do
       allow(AwsHelpers::Config).to receive(:new).and_return(config)
       allow(SnapshotsDeleteRequest).to receive(:new).and_return(delete_request)
       allow(SnapshotsDeleteDirector).to receive(:new).and_return(delete_director)
       allow(delete_director).to receive(:delete)
+      allow(Time).to receive(:now).and_return(time)
+      allow(time).to receive(:prev_hour).and_return(time)
+      allow(time).to receive(:prev_day).and_return(time)
+      allow(time).to receive(:prev_month).and_return(time)
+      allow(time).to receive(:prev_year).and_return(time)
+    end
+
+    it 'should set older_than when provided' do
+      expect(time).to receive(:prev_year).with(1)
+      expect(time).to receive(:prev_hour).with(4)
+      AwsHelpers::RDS.new.snapshots_delete(db_instance_id, older_than: { hours: 4, years: 1 })
+    end
+
+    it 'should default to 14 days when not provided' do
+      expect(time).to receive(:prev_day).with(14)
+      AwsHelpers::RDS.new.snapshots_delete(db_instance_id)
     end
 
     it 'should create a SnapshotsDeleteRequest' do
