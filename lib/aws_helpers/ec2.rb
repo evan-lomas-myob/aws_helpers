@@ -122,6 +122,7 @@ module AwsHelpers
     # @param [Hash] options Optional elements
     # @option options [IO] :stdout ($stdout) override $stdout when logging output
     # @option options [Hash] :poll_deleted override instance deleted polling
+    # @option options [Array] :excluding_image_ids skip the deletion for the specified excluding image ids
     #
     #   defaults:
     #

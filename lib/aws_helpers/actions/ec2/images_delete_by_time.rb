@@ -10,6 +10,7 @@ module AwsHelpers
           @creation_time = creation_time
           @stdout = options[:stdout] || $stdout
           @max_attempts = options[:max_attempts]
+          @excluding_image_ids = options[:excluding_image_ids] || {}
         end
 
         def execute
@@ -18,7 +19,7 @@ module AwsHelpers
           images.each do |image|
             date_tag = image.tags.detect { |tag| tag.key == 'Date' }
             image_creation_time = Time.parse(date_tag.value)
-            next if @creation_time <= image_creation_time
+            next if @creation_time <= image_creation_time || @excluding_image_ids.include?(image.image_id)
             #TODO: Set delay
             ImageDelete.new(@config, image.image_id, stdout: @stdout, max_attempts: @max_attempts).execute
           end
