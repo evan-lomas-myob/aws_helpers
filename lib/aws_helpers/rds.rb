@@ -2,6 +2,7 @@ require_relative 'client'
 require_relative 'actions/rds/snapshot_create'
 require_relative 'actions/rds/snapshots_delete'
 require_relative 'actions/rds/latest_snapshot'
+require_relative 'actions/rds/instance_find_by_name'
 
 include AwsHelpers
 include AwsHelpers::Actions::RDS
@@ -93,6 +94,19 @@ module AwsHelpers
     #
     def latest_snapshot(db_instance_id)
       LatestSnapshot.new(config, db_instance_id).execute
+    end
+
+    # Gets the instance with specified name
+    #
+    # @param db_name [String] The RDS instance name
+    #
+    # @example Get the rds instance by name
+    #   AwsHelpers::RDS.new.InstanceFindByName('DBName')
+    #
+    # @return <Types::DBInstance> The rds instance
+    #
+    def instance_find_by_name(db_name)
+      InstanceFindByName.new(config, db_name).execute
     end
   end
 end
