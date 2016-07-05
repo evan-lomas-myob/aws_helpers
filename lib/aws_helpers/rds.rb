@@ -101,7 +101,7 @@ module AwsHelpers
     # @param db_name [String] The RDS instance name
     #
     # @example Get the rds instance by name
-    #   AwsHelpers::RDS.new.InstanceFindByName('DBName')
+    #   AwsHelpers::RDS.new.instance_find_by_name('DBName')
     #
     # @return <Types::DBInstance> The rds instance
     #
