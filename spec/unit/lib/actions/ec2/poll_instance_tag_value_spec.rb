@@ -11,6 +11,7 @@ describe PollInstanceTagValue do
 
   let(:instance_id) { 'i-de42f500' }
   let(:tag_key) { 'status' }
+  let(:test_tag_key) { 'test' }
   let(:tag_value) { 'COMPLETE' }
 
   let (:describe_instance_result) {
@@ -39,7 +40,7 @@ describe PollInstanceTagValue do
       PollInstanceTagValue.new(config, instance_id, "status", "COMPLETE", options).execute
     end
 
-    it 'should raise an exception is polling reaches max attempts' do
+    it 'should raise an exception if polling reaches max attempts' do
       allow(aws_ec2_client).to receive(:describe_instances).and_return(create_status_result("ERROR"))
       expect { PollInstanceTagValue.new(config, instance_id, tag_key, tag_value, options).execute }.to raise_error("stopped waiting after #{max_attempts} attempts without success")
     end
@@ -48,6 +49,12 @@ describe PollInstanceTagValue do
       expect(stdout).to receive(:puts).with("#{instance_id} #{tag_key}=#{tag_value} (expected #{tag_value})")
       allow(aws_ec2_client).to receive(:describe_instances).and_return(create_status_result(tag_value))
       PollInstanceTagValue.new(config, instance_id, tag_key, tag_value, options).execute
+    end
+
+    it 'should write to stdout when tag key is not found and raise exception for max attempts' do
+      expect(stdout).to receive(:puts).with("#{instance_id} #{test_tag_key} not found (expected #{tag_value})")
+      allow(aws_ec2_client).to receive(:describe_instances).and_return(create_status_result(tag_value))
+      expect { PollInstanceTagValue.new(config, instance_id, test_tag_key, tag_value, options).execute }.to raise_error("stopped waiting after #{max_attempts} attempts without success")
     end
   end
 
