@@ -12,6 +12,7 @@ require_relative 'actions/ec2/instance_start'
 require_relative 'actions/ec2/instances_find_by_tags'
 require_relative 'actions/ec2/instances_find_by_ids'
 require_relative 'actions/ec2/poll_instance_state'
+require_relative 'actions/ec2/poll_instance_tag_value'
 require_relative 'actions/ec2/get_vpc_id_by_name'
 require_relative 'actions/ec2/get_security_group_id_by_name'
 
@@ -359,6 +360,32 @@ module AwsHelpers
 
     def poll_instance_state(instance_id, state, options = {})
       PollInstanceState.new(config, instance_id, state, options).execute
+    end
+
+    # Polls a given instance until the value for the specified tag_key = tag_value
+    # @param instance_id [String] Instance Unique ID
+    # @param tag_key [String] Tag key
+    # @param tag_value [String] Tag value
+    # @option options [IO] :stdout ($stdout) Override $stdout when logging output
+    # @option options [Hash] Override instance healthy polling
+    #
+    #   defaults:
+    #
+    #   ```
+    #   {
+    #     :delay => 15 # seconds
+    #     :max_attempts => 8,
+    #   }
+    #   ```
+    #
+    # @example Poll instance health
+    #   AwsHelpers::EC2.new.poll_instance_tag_value('i-12345678','Status', 'COMPLETE')
+    #
+    # @return [nil]
+    #
+
+    def poll_instance_tag_value(instance_id, tag_key, tag_value, options = {})
+      PollInstanceTagValue.new(config, instance_id, tag_key, tag_value, options).execute
     end
 
     # Returns the decrypted Windows administrator password for a given instance.
