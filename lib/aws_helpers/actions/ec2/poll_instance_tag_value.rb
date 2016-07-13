@@ -22,11 +22,11 @@ module AwsHelpers
           poll(@delay, @max_attempts) do
             instance = @client.describe_instances(instance_ids: [@instance_id]).reservations.map{ |r| r.instances }.flatten.first
             tag = instance.tags.select { |tag| tag.key == @tag_key}
-            if tag.length == 0
+            if tag.empty?
               @stdout.puts "#{@instance_id} #{@tag_key} not found (expected #{@tag_value})"
-              "" == @tag_value
+              false
             else
-              tag = tag[0]
+              tag = tag.first
               @stdout.puts "#{@instance_id} #{@tag_key}=#{tag.value} (expected #{@tag_value})"
               tag.value == @tag_value
             end
