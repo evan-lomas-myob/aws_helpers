@@ -2,6 +2,7 @@ require_relative 'client'
 require_relative 'actions/elastic_load_balancing/poll_in_service_instances'
 require_relative 'actions/elastic_load_balancing/create_tag'
 require_relative 'actions/elastic_load_balancing/read_tag'
+require_relative 'actions/elastic_load_balancing/instance'
 
 include AwsHelpers::Actions::ElasticLoadBalancing
 
@@ -70,6 +71,21 @@ module AwsHelpers
     #
     def read_tag(load_balancer_name, tag_key, options = {})
       ReadTag.new(config, load_balancer_name, tag_key, options).execute
+    end
+
+    # Retrieves the instances associated with a particular load balancer
+    #
+    # @param load_balancer_name String The load balancer to create the tag
+    # @param [Hash] options Optional parameters that can be overridden.
+    # @option options [IO] :stdout Override $stdout when logging polling output
+    #
+    # @example
+    #   AwsHelpers::ElasticLoadBalancing.new.get_instances('name-elb1-LoadBala-1ABC111ABCDEF')
+    #
+    # @return String
+    #
+    def get_instances(load_balancer_name, options = {})
+      Instance.new(config, load_balancer_name, options).execute
     end
   end
 end

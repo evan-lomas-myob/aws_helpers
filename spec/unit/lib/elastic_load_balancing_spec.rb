@@ -83,4 +83,27 @@ describe AwsHelpers::ElasticLoadBalancing do
       subject
     end
   end
+
+  describe '#get_instances' do
+    let(:get_instances) { instance_double(Instance) }
+    let(:load_balancer_name) { 'my_load_balancer' }
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(Instance).to receive(:new).and_return(get_instances)
+      allow(get_instances).to receive(:execute)
+    end
+
+    subject { AwsHelpers::ElasticLoadBalancing.new.get_instances(load_balancer_name) }
+
+    it 'should create Instance with correct parameters' do
+      expect(Instance).to receive(:new).with(config, load_balancer_name, {})
+      subject
+    end
+
+    it 'should call Instance #execute method' do
+      expect(get_instances).to receive(:execute)
+      subject
+    end
+  end
 end
