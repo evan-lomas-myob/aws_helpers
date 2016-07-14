@@ -1,12 +1,12 @@
 require 'aws_helpers/utilities/polling'
+require 'aws_helpers/actions/elastic_load_balancing/instance_state'
 
 module AwsHelpers
   module Actions
     module ElasticLoadBalancing
       class PollInServiceInstances
         include AwsHelpers::Utilities::Polling
-
-        IN_SERVICE = 'InService'.freeze
+        include AwsHelpers::Actions::ElasticLoadBalancing::InstanceState
 
         def initialize(config, load_balancer_names, options)
           @config = config
