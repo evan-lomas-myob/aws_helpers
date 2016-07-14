@@ -34,4 +34,29 @@ describe AwsHelpers::ElasticLoadBalancing do
       subject
     end
   end
+
+  describe '#create_tag' do
+    let(:create_tag) { instance_double(CreateTag) }
+    let(:load_balancer_name) { 'my_load_balancer' }
+    let(:tag_key) { "green-asg" }
+    let(:tag_value) { "hulk" }
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(CreateTag).to receive(:new).and_return(create_tag)
+      allow(create_tag).to receive(:execute)
+    end
+
+    subject { AwsHelpers::ElasticLoadBalancing.new.create_tag(load_balancer_name, tag_key, tag_value) }
+
+    it 'should create CreateTag with correct parameters' do
+      expect(CreateTag).to receive(:new).with(config, load_balancer_name, tag_key, tag_value, {})
+      subject
+    end
+
+    it 'should call CreateTag #execute method' do
+      expect(create_tag).to receive(:execute)
+      subject
+    end
+  end
 end
