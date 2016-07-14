@@ -1,6 +1,7 @@
 require_relative 'client'
 require_relative 'actions/elastic_load_balancing/poll_in_service_instances'
 require_relative 'actions/elastic_load_balancing/create_tag'
+require_relative 'actions/elastic_load_balancing/read_tag'
 
 include AwsHelpers::Actions::ElasticLoadBalancing
 
@@ -53,6 +54,22 @@ module AwsHelpers
     #
     def create_tag(load_balancer_name, tag_key, tag_value, options = {})
       CreateTag.new(config, load_balancer_name, tag_key, tag_value, options).execute
+    end
+
+    # Reads a tag in a load balancer
+    #
+    # @param load_balancer_name String The load balancer to create the tag
+    # @param tag_key String The tag key to be created
+    # @param [Hash] options Optional parameters that can be overridden.
+    # @option options [IO] :stdout Override $stdout when logging polling output
+    #
+    # @example
+    #   AwsHelpers::ElasticLoadBalancing.new.read_tag('name-elb1-LoadBala-1ABC111ABCDEF', 'green-asg')
+    #
+    # @return String
+    #
+    def read_tag(load_balancer_name, tag_key, options = {})
+      ReadTag.new(config, load_balancer_name, tag_key, options).execute
     end
   end
 end

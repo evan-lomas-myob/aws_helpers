@@ -59,4 +59,28 @@ describe AwsHelpers::ElasticLoadBalancing do
       subject
     end
   end
+
+  describe '#read_tag' do
+    let(:read_tag) { instance_double(ReadTag) }
+    let(:load_balancer_name) { 'my_load_balancer' }
+    let(:tag_key) { "green-asg" }
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(ReadTag).to receive(:new).and_return(read_tag)
+      allow(read_tag).to receive(:execute)
+    end
+
+    subject { AwsHelpers::ElasticLoadBalancing.new.read_tag(load_balancer_name, tag_key) }
+
+    it 'should create ReadTag with correct parameters' do
+      expect(ReadTag).to receive(:new).with(config, load_balancer_name, tag_key, {})
+      subject
+    end
+
+    it 'should call ReadTag #execute method' do
+      expect(read_tag).to receive(:execute)
+      subject
+    end
+  end
 end
