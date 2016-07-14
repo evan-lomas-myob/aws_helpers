@@ -23,9 +23,12 @@ module AwsHelpers
       super(options)
     end
 
-    # Polls a load balancer until all instances have a status of InService
+    # Polls a load balancer until all instances have a status of InService or until the required_instances
+    # count criteria is met
     #
     # @param load_balancer_name [String] The load balancer to poll
+    # @param required_instances [String] required_instances criteria (default nil, which means it will poll until
+    # all instances have a status of InService)
     # @param [Hash] options Optional parameters that can be overridden.
     # @option options [IO] :stdout Override $stdout when logging polling output
     # @option options [Integer] :max_attempts (20) Override number of attempts
@@ -33,11 +36,12 @@ module AwsHelpers
     #
     # @example
     #   AwsHelpers::ElasticLoadBalancing.new.poll_in_service_instances('name-elb1-LoadBala-1ABC111ABCDEF')
+    #   AwsHelpers::ElasticLoadBalancing.new.poll_in_service_instances('name-elb1-LoadBala-1ABC111ABCDEF', '2')
     #
     # @return [Array<String>]
     #
-    def poll_in_service_instances(load_balancer_name, options = {})
-      PollInServiceInstances.new(config, [load_balancer_name], options).execute
+    def poll_in_service_instances(load_balancer_name, required_instances = nil, options = {})
+      PollInServiceInstances.new(config, [load_balancer_name], required_instances, options).execute
     end
 
     # Creates a tag in a load balancer

@@ -8,9 +8,10 @@ module AwsHelpers
         include AwsHelpers::Utilities::Polling
         include AwsHelpers::Actions::ElasticLoadBalancing::InstanceState
 
-        def initialize(config, load_balancer_names, options)
+        def initialize(config, load_balancer_names, required_instances=nil, options)
           @config = config
           @load_balancer_names = load_balancer_names
+          @required_instances = required_instances
           @stdout = options[:stdout] ||= $stdout
           @max_attempts = options[:max_attempts] ||= 20
           @delay = options[:delay] || 15
@@ -22,8 +23,13 @@ module AwsHelpers
             poll(@delay, @max_attempts) do
               instance_states = client.describe_instance_health(load_balancer_name: load_balancer_name).instance_states
               state_count = count_states(instance_states)
+              in_service_count = instance_states.select { |s| s.state == IN_SERVICE }.count
               @stdout.puts("Load Balancer Name=#{load_balancer_name}#{create_state_output(state_count)}")
-              instance_states.select { |s| s.state == IN_SERVICE }.count == instance_states.size
+              if @required_instances.nil?
+                in_service_count == instance_states.size
+              else
+                in_service_count >= @required_instances.to_i
+              end
             end
           end
         end

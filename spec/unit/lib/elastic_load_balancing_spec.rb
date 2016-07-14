@@ -25,7 +25,7 @@ describe AwsHelpers::ElasticLoadBalancing do
     subject { AwsHelpers::ElasticLoadBalancing.new.poll_in_service_instances(load_balancer_name) }
 
     it 'should create PollHealthyInstances with correct parameters' do
-      expect(PollInServiceInstances).to receive(:new).with(config, [load_balancer_name], {})
+      expect(PollInServiceInstances).to receive(:new).with(config, [load_balancer_name], nil, {})
       subject
     end
 
