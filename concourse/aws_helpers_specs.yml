@@ -1,0 +1,27 @@
+resources:
+- name: aws_helpers
+  type: git
+  source:
+    uri: https://github.com/MYOB-Technology/aws_helpers.git
+    branch: rewrite
+
+jobs:
+- name: run-tests
+  plan:
+  - get: aws_helpers
+  - task: tests
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: ruby, tag: latest}
+      inputs:
+        - name: aws_helpers
+      run:
+        dir: aws_helpers
+        path: sh
+        args:
+        - -exc
+        - |
+           (bundle check || bundle install --quiet)
+           bundle exec rake spec:unit
