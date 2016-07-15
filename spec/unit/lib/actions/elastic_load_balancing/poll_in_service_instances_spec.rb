@@ -7,7 +7,7 @@ describe AwsHelpers::Actions::ElasticLoadBalancing::PollInServiceInstances do
   let(:config) { instance_double(AwsHelpers::Config, aws_elastic_load_balancing_client: aws_elastic_load_balancing_client) }
   let(:stdout) { instance_double(IO) }
   let(:load_balancer_name) { 'load_balancer' }
-  let(:required_instances) { '2' }
+  let(:required_instances) { 2 }
 
   describe '#execute' do
     before(:each) do
@@ -38,16 +38,37 @@ describe AwsHelpers::Actions::ElasticLoadBalancing::PollInServiceInstances do
     it 'should poll till all instances are in service' do
       first_response = create_response('OutOfService')
       second_response = create_response('InService')
-      allow(aws_elastic_load_balancing_client).to receive(:describe_instance_health).and_return(first_response, second_response)
-      AwsHelpers::Actions::ElasticLoadBalancing::PollInServiceInstances.new(config, [load_balancer_name], stdout: stdout, max_attempts: 2, delay: 0).execute
+      allow(aws_elastic_load_balancing_client).to receive(:describe_instance_health).and_return(first_response,
+                                                                                                second_response)
+      AwsHelpers::Actions::ElasticLoadBalancing::PollInServiceInstances.new(config, [load_balancer_name],
+                                                                            stdout: stdout,
+                                                                            max_attempts: 2, delay: 0).execute
     end
 
-    it 'should poll till all instances in service is equals or greated than required instances' do
+    it 'should poll till all instances in service are equals or greater than required instances' do
       first_response = create_response('OutOfService')
       second_response = create_response('InService')
+      third_response = create_response('InService')
+      fourth_response = create_response('InService', 'InService')
+      allow(aws_elastic_load_balancing_client).to receive(:describe_instance_health).and_return(first_response,
+                                                                                                second_response,
+                                                                                                third_response,
+                                                                                                fourth_response)
+      expect(aws_elastic_load_balancing_client).to receive(:describe_instance_health).with(load_balancer_name: load_balancer_name).exactly(4).times
+      AwsHelpers::Actions::ElasticLoadBalancing::PollInServiceInstances.new(config, [load_balancer_name],
+                                                                            required_instances: required_instances,
+                                                                            poll_operator: '>=',
+                                                                            stdout: stdout, max_attempts: 4,
+                                                                            delay: 0).execute
+    end
+
+    it 'should poll till all instances in service are equals or lesser than required instances' do
+      first_response = create_response('InService', 'InService', 'InService', 'InService')
+      second_response = create_response('InService', 'InService', 'InService')
       third_response = create_response('InService', 'InService')
       allow(aws_elastic_load_balancing_client).to receive(:describe_instance_health).and_return(first_response, second_response, third_response)
-      AwsHelpers::Actions::ElasticLoadBalancing::PollInServiceInstances.new(config, [load_balancer_name], required_instances, stdout: stdout, max_attempts: 4, delay: 0).execute
+      expect(aws_elastic_load_balancing_client).to receive(:describe_instance_health).with(load_balancer_name: load_balancer_name).exactly(3).times
+      AwsHelpers::Actions::ElasticLoadBalancing::PollInServiceInstances.new(config, [load_balancer_name], required_instances: required_instances, poll_operator: '<=', stdout: stdout, max_attempts: 4, delay: 0).execute
     end
 
     it 'should raise an error if all servers are not in service after max_attempts are exceeded' do
@@ -61,7 +82,7 @@ describe AwsHelpers::Actions::ElasticLoadBalancing::PollInServiceInstances do
       second_response = create_response('InService')
       third_response = create_response('InService')
       allow(aws_elastic_load_balancing_client).to receive(:describe_instance_health).and_return(first_response, second_response, third_response)
-      expect { AwsHelpers::Actions::ElasticLoadBalancing::PollInServiceInstances.new(config, [load_balancer_name], required_instances, stdout: stdout, max_attempts: 5, delay: 0).execute }.to raise_error(Aws::Waiters::Errors::TooManyAttemptsError)
+      expect { AwsHelpers::Actions::ElasticLoadBalancing::PollInServiceInstances.new(config, [load_balancer_name], required_instances: required_instances, poll_operator: '>=', stdout: stdout, max_attempts: 5, delay: 0).execute }.to raise_error(Aws::Waiters::Errors::TooManyAttemptsError)
     end
   end
 

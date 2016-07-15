@@ -11,6 +11,29 @@ describe AwsHelpers::ElasticLoadBalancing do
     end
   end
 
+  describe '#poll_in_service_instances' do
+    let(:poll_in_service_instances) { instance_double(PollInServiceInstances) }
+    let(:load_balancer_name) { 'my_load_balancer' }
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(PollInServiceInstances).to receive(:new).and_return(poll_in_service_instances)
+      allow(poll_in_service_instances).to receive(:execute)
+    end
+
+    subject { AwsHelpers::ElasticLoadBalancing.new.poll_in_service_instances(load_balancer_name) }
+
+    it 'should create PollHealthyInstances with correct parameters' do
+      expect(PollInServiceInstances).to receive(:new).with(config, [load_balancer_name], {})
+      subject
+    end
+
+    it 'should call PollHealthyInstances #execute method' do
+      expect(poll_in_service_instances).to receive(:execute)
+      subject
+    end
+  end
+
   describe '#poll_healthy_instances' do
     let(:poll_healthy_instances) { instance_double(PollInServiceInstances) }
     let(:load_balancer_name) { 'my_load_balancer' }
@@ -22,15 +45,41 @@ describe AwsHelpers::ElasticLoadBalancing do
       allow(poll_healthy_instances).to receive(:execute)
     end
 
-    subject { AwsHelpers::ElasticLoadBalancing.new.poll_in_service_instances(load_balancer_name) }
+    subject { AwsHelpers::ElasticLoadBalancing.new.poll_healthy_instances(load_balancer_name, required_instances) }
 
     it 'should create PollHealthyInstances with correct parameters' do
-      expect(PollInServiceInstances).to receive(:new).with(config, [load_balancer_name], nil, {})
+      expect(PollInServiceInstances).to receive(:new).with(config, [load_balancer_name], {required_instances: required_instances,
+                                                                                          poll_operator: ">="})
       subject
     end
 
     it 'should call PollHealthyInstances #execute method' do
       expect(poll_healthy_instances).to receive(:execute)
+      subject
+    end
+  end
+
+  describe '#poll_max_healthy_instances' do
+    let(:poll_max_healthy_instances) { instance_double(PollInServiceInstances) }
+    let(:load_balancer_name) { 'my_load_balancer' }
+    let(:required_instances) { 1 }
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(PollInServiceInstances).to receive(:new).and_return(poll_max_healthy_instances)
+      allow(poll_max_healthy_instances).to receive(:execute)
+    end
+
+    subject { AwsHelpers::ElasticLoadBalancing.new.poll_max_healthy_instances(load_balancer_name, required_instances) }
+
+    it 'should create PollHealthyInstances with correct parameters' do
+      expect(PollInServiceInstances).to receive(:new).with(config, [load_balancer_name], {required_instances: required_instances,
+                                                                                          poll_operator: "<="})
+      subject
+    end
+
+    it 'should call PollHealthyInstances #execute method' do
+      expect(poll_max_healthy_instances).to receive(:execute)
       subject
     end
   end
