@@ -9,7 +9,7 @@ jobs:
 - name: run-tests
   plan:
   - get: aws_helpers
-  - task: tests
+  - task: unit-tests
     config:
       platform: linux
       image_resource:
