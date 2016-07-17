@@ -6,7 +6,7 @@ module AwsHelpers
           @config = config
           @db_instance_id = db_instance_id
           @use_name = options[:use_name]
-          @now = options[:now] || Time.now
+          @now = options[:now] ||= Time.now
         end
 
         def execute # rubocop:disable Metrics/AbcSize

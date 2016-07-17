@@ -15,9 +15,9 @@ module AwsHelpers
           @client = config.aws_ec2_client
           @instance_id = instance_id
           @name = name
-          @now = options[:now] || Time.now
-          @additional_tags = options[:additional_tags] || []
-          @stdout = options[:stdout] || $stdout
+          @now = options[:now] ||= Time.now
+          @additional_tags = options[:additional_tags] ||= []
+          @stdout = options[:stdout] ||= $stdout
           @poll_image_available_options = create_options(@stdout, options[:poll_image_available])
         end
 

@@ -7,7 +7,7 @@ module AwsHelpers
         def initialize(config, vpc_name, options = {})
           @client = config.aws_ec2_client
           @vpc_name = vpc_name
-          @stdout = options[:stdout] || $stdout
+          @stdout = options[:stdout] ||= $stdout
         end
 
         def id

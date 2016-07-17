@@ -11,9 +11,9 @@ module AwsHelpers
         def initialize(config, bucket_name, options = {})
           @config = config
           @bucket_name = bucket_name
-          @stdout = options[:stdout] || $stdout
-          @delay = options[:delay] || 5
-          @max_attempts = options[:max_attempts] || 3
+          @stdout = options[:stdout] ||= $stdout
+          @delay = options[:delay] ||= 5
+          @max_attempts = options[:max_attempts] ||= 3
         end
 
         def execute

@@ -12,9 +12,9 @@ module AwsHelpers
           @config = config
           @client = config.aws_ec2_client
           @image_id = image_id
-          @stdout = options[:stdout] || $stdout
-          @delay = options[:delay] || 30
-          @max_attempts = options[:max_attempts] || 20
+          @stdout = options[:stdout] ||= $stdout
+          @delay = options[:delay] ||= 30
+          @max_attempts = options[:max_attempts] ||= 20
         end
 
         def execute

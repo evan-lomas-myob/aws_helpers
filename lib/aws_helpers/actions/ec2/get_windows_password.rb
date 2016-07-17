@@ -11,9 +11,9 @@ module AwsHelpers
           @client = config.aws_ec2_client
           @instance_id = instance_id
           @pem_path = pem_path
-          @stdout = options[:stdout] || $stdout
-          @delay = options[:delay] || 10
-          @max_attempts = options[:max_attempts] || 6
+          @stdout = options[:stdout] ||= $stdout
+          @delay = options[:delay] ||= 10
+          @max_attempts = options[:max_attempts] ||= 6
         end
 
         def password

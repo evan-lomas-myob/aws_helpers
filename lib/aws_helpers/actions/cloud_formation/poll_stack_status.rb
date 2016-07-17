@@ -9,9 +9,9 @@ module AwsHelpers
         def initialize(config, stack_id, options = {})
           @client = config.aws_cloud_formation_client
           @stack_id = stack_id
-          @stdout = options[:stdout] || $stdout
-          @delay = options[:delay] || 30
-          @max_attempts = options[:max_attempts] || 40
+          @stdout = options[:stdout] ||= $stdout
+          @delay = options[:delay] ||= 30
+          @max_attempts = options[:max_attempts] ||= 40
         end
 
         def execute

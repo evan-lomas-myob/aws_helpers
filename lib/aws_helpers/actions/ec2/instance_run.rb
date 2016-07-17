@@ -7,10 +7,10 @@ module AwsHelpers
           @image_id = image_id
           @min_count = min_count
           @max_count = max_count
-          @instance_type = options[:instance_type] || 't2.micro'
-          @additional_opts = options[:additional_opts] || {}
+          @instance_type = options[:instance_type] ||= 't2.micro'
+          @additional_opts = options[:additional_opts] ||= {}
           @monitoring = { enabled: monitoring }
-          @stdout = options[:stdout] || $stdout
+          @stdout = options[:stdout] ||= $stdout
         end
 
         def execute

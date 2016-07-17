@@ -11,7 +11,7 @@ module AwsHelpers
           @config = config
           @client = config.aws_ec2_client
           @instance_id = instance_id
-          @stdout = options[:stdout] || $stdout
+          @stdout = options[:stdout] ||= $stdout
           @instance_stopped_options = create_options(@stdout, options[:poll_stopped])
         end
 

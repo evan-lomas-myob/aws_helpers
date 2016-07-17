@@ -13,9 +13,9 @@ module AwsHelpers
           @instance_id = instance_id
           @tag_key = tag_key
           @tag_value = tag_value
-          @stdout = options[:stdout] || $stdout
-          @delay = options[:delay] || 15
-          @max_attempts = options[:max_attempts] || 8
+          @stdout = options[:stdout] ||= $stdout
+          @delay = options[:delay] ||= 15
+          @max_attempts = options[:max_attempts] ||= 8
         end
 
         def execute

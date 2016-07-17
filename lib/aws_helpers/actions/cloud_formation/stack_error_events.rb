@@ -9,7 +9,7 @@ module AwsHelpers
         def initialize(config, stack_id, options)
           @config = config
           @stack_id = stack_id
-          @stdout = options[:stdout] || $stdout
+          @stdout = options[:stdout] ||= $stdout
         end
 
         def execute

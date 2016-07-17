@@ -8,8 +8,8 @@ module AwsHelpers
           @config = config
           @bucket_name = bucket_name
           @options = options
-          @acl = options[:acl] || 'private'
-          @stdout = options[:stdout] || $stdout
+          @acl = options[:acl] ||= 'private'
+          @stdout = options[:stdout] ||= $stdout
         end
 
         def execute

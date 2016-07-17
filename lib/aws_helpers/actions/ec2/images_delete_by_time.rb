@@ -8,9 +8,9 @@ module AwsHelpers
           @config = config
           @name_tag_value = name_tag_value
           @creation_time = creation_time
-          @stdout = options[:stdout] || $stdout
+          @stdout = options[:stdout] ||= $stdout
           @max_attempts = options[:max_attempts]
-          @excluding_image_ids = options[:excluding_image_ids] || {}
+          @excluding_image_ids = options[:excluding_image_ids] ||= {}
         end
 
         def execute

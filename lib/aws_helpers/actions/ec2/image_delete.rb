@@ -9,7 +9,7 @@ module AwsHelpers
           @config = config
           @client = config.aws_ec2_client
           @image_id = image_id
-          @stdout = options[:stdout] || $stdout
+          @stdout = options[:stdout] ||= $stdout
           @delay = options[:delay]
           @max_attempts = options[:max_attempts]
         end

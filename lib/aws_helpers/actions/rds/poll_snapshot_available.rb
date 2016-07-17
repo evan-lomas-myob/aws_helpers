@@ -10,9 +10,9 @@ module AwsHelpers
         def initialize(config, snapshot_id, options = {})
           @config = config
           @snapshot_id = snapshot_id
-          @stdout = options[:stdout] || $stdout
-          @max_attempts = options[:max_attempts] || 60
-          @delay = options[:delay] || 30
+          @stdout = options[:stdout] ||= $stdout
+          @max_attempts = options[:max_attempts] ||= 60
+          @delay = options[:delay] ||= 30
         end
 
         def execute

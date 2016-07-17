@@ -13,7 +13,7 @@ module AwsHelpers
           @load_balancer_names = load_balancer_names
           @stdout = options[:stdout] ||= $stdout
           @max_attempts = options[:max_attempts] ||= 20
-          @delay = options[:delay] || 15
+          @delay = options[:delay] ||= 15
         end
 
         def execute

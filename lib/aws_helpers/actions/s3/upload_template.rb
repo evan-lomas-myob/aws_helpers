@@ -13,8 +13,8 @@ module AwsHelpers
           @bucket_name = bucket_name
           @template_json = template_json
           @options = options
-          @bucket_encrypt = options[:bucket_encrypt] || false
-          @stdout = options[:stdout] || $stdout
+          @bucket_encrypt = options[:bucket_encrypt] ||= false
+          @stdout = options[:stdout] ||= $stdout
         end
 
         def execute

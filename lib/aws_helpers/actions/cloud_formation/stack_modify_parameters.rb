@@ -13,7 +13,7 @@ module AwsHelpers
           @stack_name = stack_name
           @parameters = parameters
           @options = options
-          @stdout = options[:stdout] || $stdout
+          @stdout = options[:stdout] ||= $stdout
         end
 
         def execute

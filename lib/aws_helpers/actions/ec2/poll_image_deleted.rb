@@ -9,9 +9,9 @@ module AwsHelpers
         def initialize(config, image_id, options = {})
           @client = config.aws_ec2_client
           @image_id = image_id
-          @stdout = options[:stdout] || $stdout
-          @delay = options[:delay] || 15
-          @max_attempts = options[:max_attempts] || 4
+          @stdout = options[:stdout] ||= $stdout
+          @delay = options[:delay] ||= 15
+          @max_attempts = options[:max_attempts] ||= 4
         end
 
         def execute

@@ -9,7 +9,7 @@ module AwsHelpers
           @stack_name = request[:stack_name]
           @request = request
           @options = options
-          @stdout = options[:stdout] || $stdout
+          @stdout = options[:stdout] ||= $stdout
         end
 
         def execute

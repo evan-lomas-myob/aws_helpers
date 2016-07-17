@@ -9,8 +9,8 @@ module AwsHelpers
           @image_id = image_id
           @name = name
           @time = time
-          @additional_tags = options[:additional_tags] || []
-          @stdout = options[:stdout] || $stdout
+          @additional_tags = options[:additional_tags] ||= []
+          @stdout = options[:stdout] ||= $stdout
         end
 
         def execute

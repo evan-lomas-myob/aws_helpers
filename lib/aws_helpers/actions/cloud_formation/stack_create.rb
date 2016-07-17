@@ -9,7 +9,7 @@ module AwsHelpers
           @cloud_formation_client = @config.aws_cloud_formation_client
           @request = request
           @options = options
-          @stdout = options[:stdout] || $stdout
+          @stdout = options[:stdout] ||= $stdout
         end
 
         def execute

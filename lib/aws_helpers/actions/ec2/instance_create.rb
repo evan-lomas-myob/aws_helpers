@@ -13,9 +13,9 @@ module AwsHelpers
         def initialize(config, image_id, options)
           @config = config
           @image_id = image_id
-          @min_count = options[:min_count] || 1
-          @max_count = options[:max_count] || 1
-          @monitoring = options[:monitoring] || false
+          @min_count = options[:min_count] ||= 1
+          @max_count = options[:max_count] ||= 1
+          @monitoring = options[:monitoring] ||= false
           @app_name = options[:app_name]
           @build_number = options[:build_number]
           stdout = options[:stdout]

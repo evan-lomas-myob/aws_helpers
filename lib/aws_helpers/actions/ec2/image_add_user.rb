@@ -9,7 +9,7 @@ module AwsHelpers
           @client = config.aws_ec2_client
           @image_id = image_id
           @user_id = user_id
-          @stdout = options[:stdout] || $stdout
+          @stdout = options[:stdout] ||= $stdout
         end
 
         def execute

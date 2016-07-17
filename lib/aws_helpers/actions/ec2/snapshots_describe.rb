@@ -5,7 +5,7 @@ module AwsHelpers
         def initialize(config, snapshot_ids, options = {})
           @client = config.aws_ec2_client
           @snapshot_ids = snapshot_ids
-          @stdout = options[:stdout] || $stdout
+          @stdout = options[:stdout] ||= $stdout
         end
 
         def execute
