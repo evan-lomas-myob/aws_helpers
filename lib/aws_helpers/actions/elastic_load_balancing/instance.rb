@@ -12,12 +12,8 @@ module AwsHelpers
 
         def execute
           client = @config.aws_elastic_load_balancing_client
-          response = client.describe_load_balancers({load_balancer_names: [@load_balancer_name]})
-          if response.load_balancer_descriptions.empty?
-            []
-          else
-            response.load_balancer_descriptions.first.instances
-          end
+          response = client.describe_load_balancers(load_balancer_names: [@load_balancer_name])
+          response.load_balancer_descriptions.empty? ? [] : response.load_balancer_descriptions.first.instances
         end
       end
     end

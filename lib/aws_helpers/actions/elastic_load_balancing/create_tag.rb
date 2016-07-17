@@ -14,10 +14,7 @@ module AwsHelpers
 
         def execute
           client = @config.aws_elastic_load_balancing_client
-          response = client.add_tags({load_balancer_names: [@load_balancer_name],
-                                       tags: [{key: @tag_key, value: @tag_value}]
-                                      })
-
+          client.add_tags(load_balancer_names: [@load_balancer_name], tags: [{key: @tag_key, value: @tag_value}])
         end
       end
     end
