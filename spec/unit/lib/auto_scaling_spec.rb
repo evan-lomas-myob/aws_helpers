@@ -118,4 +118,51 @@ describe AwsHelpers::AutoScaling do
       expect(retrieve_current_instances.execute).to eq(nil)
     end
   end
+
+  describe '#resume_alarm_process' do
+    let(:resume_alarm_process) { instance_double(ResumeAlarmProcess) }
+    let(:asg_name) { 'my_asg' }
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(ResumeAlarmProcess).to receive(:new).and_return(resume_alarm_process)
+      allow(resume_alarm_process).to receive(:execute)
+    end
+
+    subject { AwsHelpers::AutoScaling.new.resume_alarm_process(asg_name) }
+
+    it 'should create ResumeAlarmProcess with correct parameters' do
+      expect(ResumeAlarmProcess).to receive(:new).with(config, asg_name, {})
+      subject
+    end
+
+    it 'should call ResumeAlarmProcess #execute method' do
+      expect(resume_alarm_process).to receive(:execute)
+      subject
+    end
+  end
+
+  describe '#suspend_alarm_process' do
+    let(:suspend_alarm_process) { instance_double(SuspendAlarmProcess) }
+    let(:asg_name) { 'my_asg' }
+
+    before(:each) do
+      allow(AwsHelpers::Config).to receive(:new).and_return(config)
+      allow(SuspendAlarmProcess).to receive(:new).and_return(suspend_alarm_process)
+      allow(suspend_alarm_process).to receive(:execute)
+    end
+
+    subject { AwsHelpers::AutoScaling.new.suspend_alarm_process(asg_name) }
+
+    it 'should create SuspendAlarmProcess with correct parameters' do
+      expect(SuspendAlarmProcess).to receive(:new).with(config, asg_name, {})
+      subject
+    end
+
+    it 'should call SuspendAlarmProcess #execute method' do
+      expect(suspend_alarm_process).to receive(:execute)
+      subject
+    end
+  end
+
 end
