@@ -2,6 +2,8 @@ require_relative 'client'
 require_relative 'actions/auto_scaling/retrieve_desired_capacity'
 require_relative 'actions/auto_scaling/update_desired_capacity'
 require_relative 'actions/auto_scaling/retrieve_current_instances'
+require_relative 'actions/auto_scaling/resume_alarm_process'
+require_relative 'actions/auto_scaling/suspend_alarm_process'
 
 include AwsHelpers::Actions::AutoScaling
 
@@ -33,6 +35,32 @@ module AwsHelpers
     #
     def retrieve_desired_capacity(auto_scaling_group_name)
       RetrieveDesiredCapacity.new(config, auto_scaling_group_name).execute
+    end
+
+    # Resume alarm notifications for the specified auto scaling group
+    #
+    # @param auto_scaling_group_name [String] The AutoScaling group name
+    #
+    # @example Retrieve the desired capacity
+    #    AwsHelpers::AutoScaling.new.resume_alarm_process('MyASG')
+    #
+    # @return [] Empty array
+    #
+    def resume_alarm_process(auto_scaling_group_name, options = {})
+      ResumeAlarmProcess.new(config, auto_scaling_group_name, options).execute
+    end
+
+    # Suspends alarm notifications for the specified auto scaling group
+    #
+    # @param auto_scaling_group_name [String] The AutoScaling group name
+    #
+    # @example Retrieve the desired capacity
+    #    AwsHelpers::AutoScaling.new.suspend_alarm_process('MyASG')
+    #
+    # @return [] Empty array
+    #
+    def suspend_alarm_process(auto_scaling_group_name, options = {})
+      SuspendAlarmProcess.new(config, auto_scaling_group_name, options).execute
     end
 
     # Changes the desired capacity of an auto scaling group.

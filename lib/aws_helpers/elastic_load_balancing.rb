@@ -1,5 +1,8 @@
 require_relative 'client'
 require_relative 'actions/elastic_load_balancing/poll_in_service_instances'
+require_relative 'actions/elastic_load_balancing/create_tag'
+require_relative 'actions/elastic_load_balancing/read_tag'
+require_relative 'actions/elastic_load_balancing/instance'
 
 include AwsHelpers::Actions::ElasticLoadBalancing
 
@@ -35,6 +38,92 @@ module AwsHelpers
     #
     def poll_in_service_instances(load_balancer_name, options = {})
       PollInServiceInstances.new(config, [load_balancer_name], options).execute
+    end
+
+    # Polls a load balancer until InService instances is >= required instances
+    #
+    # @param load_balancer_name [String] The load balancer to poll
+    # @param required_instances [Integer] number of required instances
+    # @param [Hash] options Optional parameters that can be overridden.
+    # @option options [IO] :stdout Override $stdout when logging polling output
+    # @option options [Integer] :max_attempts (20) Override number of attempts
+    # @option options [Integer] :delay (15) Override the delay between attempts
+    #
+    # @example
+    #   AwsHelpers::ElasticLoadBalancing.new.poll_healthy_instances('name-elb1-LoadBala-1ABC111ABCDEF', 2)
+    #
+    # @return [Array<String>]
+    #
+    def poll_healthy_instances(load_balancer_name, required_instances, options = {})
+      options.merge!({required_instances: required_instances, poll_operator: '>='})
+      PollInServiceInstances.new(config, [load_balancer_name], options).execute
+    end
+
+    # Polls a load balancer until InService instances is <= required instances
+    #
+    # @param load_balancer_name [String] The load balancer to poll
+    # @param required_instances [Integer] number of required instances
+    # @param [Hash] options Optional parameters that can be overridden.
+    # @option options [IO] :stdout Override $stdout when logging polling output
+    # @option options [Integer] :max_attempts (20) Override number of attempts
+    # @option options [Integer] :delay (15) Override the delay between attempts
+    #
+    # @example
+    #   AwsHelpers::ElasticLoadBalancing.new.poll_max_healthy_instances('name-elb1-LoadBala-1ABC111ABCDEF', 2)
+    #
+    # @return [Array<String>]
+    #
+    def poll_max_healthy_instances(load_balancer_name, required_instances, options = {})
+      options.merge!({required_instances: required_instances, poll_operator: '<='})
+      PollInServiceInstances.new(config, [load_balancer_name], options).execute
+    end
+
+    # Creates a tag in a load balancer
+    #
+    # @param load_balancer_name String The load balancer to create the tag
+    # @param tag_key String The tag key to be created
+    # @param tag_value String The corresponding tag value for the specified tag key
+    # @param [Hash] options Optional parameters that can be overridden.
+    # @option options [IO] :stdout Override $stdout when logging polling output
+    #
+    # @example
+    #   AwsHelpers::ElasticLoadBalancing.new.create_tag('name-elb1-LoadBala-1ABC111ABCDEF', 'green-asg', 'hulk')
+    #
+    # @return []
+    #
+    def create_tag(load_balancer_name, tag_key, tag_value, options = {})
+      CreateTag.new(config, load_balancer_name, tag_key, tag_value, options).execute
+    end
+
+    # Reads a tag in a load balancer
+    #
+    # @param load_balancer_name String The load balancer to create the tag
+    # @param tag_key String The tag key to be created
+    # @param [Hash] options Optional parameters that can be overridden.
+    # @option options [IO] :stdout Override $stdout when logging polling output
+    #
+    # @example
+    #   AwsHelpers::ElasticLoadBalancing.new.read_tag('name-elb1-LoadBala-1ABC111ABCDEF', 'green-asg')
+    #
+    # @return String
+    #
+    def read_tag(load_balancer_name, tag_key, options = {})
+      ReadTag.new(config, load_balancer_name, tag_key, options).execute
+    end
+
+    # Retrieves the instances associated with a particular load balancer
+    #
+    # @param load_balancer_name String The load balancer to create the tag
+    # @param [Hash] options Optional parameters that can be overridden.
+    # @option options [IO] :stdout Override $stdout when logging polling output
+    #
+    # @example
+    #   AwsHelpers::ElasticLoadBalancing.new.get_instances('name-elb1-LoadBala-1ABC111ABCDEF')
+    #
+    # @return String
+    #
+    def get_instances(load_balancer_name, options = {})
+      Instance.new(config, load_balancer_name, options).execute
     end
   end
 end
