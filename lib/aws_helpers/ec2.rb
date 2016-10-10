@@ -233,6 +233,7 @@ module AwsHelpers
     def instance_create(image_id, options = {})
       request = InstanceCreateRequest.new
       request.image_id = image_id
+      request.instance_type = options[:instance_type]
       request.instance_polling = options[:instance_polling] if options[:instance_polling]
       request.user_data = options[:user_data]
       request.tags = options[:tags] || [{ key: 'Name', value: 'no-name-supplied' }]
