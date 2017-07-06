@@ -1,6 +1,6 @@
-require 'aws_helpers/actions/redshift/poll_instance_available'
-require 'aws_helpers/actions/redshift/snapshot_construct_name'
-require 'aws_helpers/actions/redshift/poll_snapshot_available'
+require 'aws_helpers/actions/redshift/poll_instance_exists'
+require 'aws_helpers/actions/redshift/instance_tag'
+require 'aws_helpers/actions/redshift/poll_snapshot_healthy'
 require 'aws_helpers/utilities/polling_options'
 
 module AwsHelpers
