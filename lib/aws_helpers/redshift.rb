@@ -46,11 +46,11 @@ module AwsHelpers
     #
     # @return [String] the image id
     #
-    def cluster_create(cluster_type, db_name, options = {})
+    def cluster_create(cluster_type, cluster_identifier, options = {})
       # master_username
       # master_user_password
       # node_type
-      ClusterCreate.new(config, cluster_type, db_name, options).execute
+      ClusterCreate.new(config, cluster_type, cluster_identifier, options).execute
     end
 
     # De-register an AMI image and its associated snapshots
@@ -64,8 +64,8 @@ module AwsHelpers
     #
     # @return [Seahorse::Client::Response] An empty response
     #
-    def cluster_delete(image_id, options = {})
-      ClusterDelete.new(config, image_id, options).execute
+    def cluster_delete(cluster_identifier, options = {})
+      ClusterDelete.new(config, cluster_identifier, options).execute
     end
   end
 end

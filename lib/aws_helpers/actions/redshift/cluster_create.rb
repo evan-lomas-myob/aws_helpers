@@ -6,7 +6,7 @@ module AwsHelpers
       class ClusterCreate
         include AwsHelpers::Utilities::PollingOptions
 
-        def initialize(cluster_type, cluster_identifier, options)
+        def initialize(config, cluster_type, cluster_identifier, options)
           @config = config
           @cluster_type = cluster_type
           @cluster_identifier = cluster_identifier

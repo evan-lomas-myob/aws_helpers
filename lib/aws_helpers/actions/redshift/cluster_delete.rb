@@ -6,8 +6,9 @@ module AwsHelpers
       class ClusterDelete
         include AwsHelpers::Utilities::PollingOptions
 
-        def initialize(config, stack_name, options = {})
+        def initialize(config, cluster_identifier, options = {})
           @config = config
+          @cluster_identifier = cluster_identifier
         end
 
         def execute
