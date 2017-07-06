@@ -15,9 +15,9 @@ module AwsHelpers
           @cluster_type = cluster_type
           @cluster_identifier = cluster_identifier
           @db_name = options[:db_name] ||= $db_name
-          @master_username = options[:master_username] ||= $master_username
-          @master_user_password = options[:master_user_password] ||= $master_user_password
-          @node_type = options[:node_type] ||= $node_type
+          @master_username = config[:master_username] ||= $master_username
+          @master_user_password = config[:master_user_password] ||= $master_user_password
+          @node_type = config[:node_type] ||= $node_type
         end
 
         def execute
@@ -30,9 +30,9 @@ module AwsHelpers
             node_type: @node_type
           )
 
-          AwsHelpers::Actions::Redshift::PollInstanceExists.new(@config, instance_id, @instance_exists_polling).execute
-          AwsHelpers::Actions::Redshift::RedshiftInstanceTag.new(@config, instance_id, @app_name, @build_number).execute
-          AwsHelpers::Actions::Redshift::PollInstanceHealthy.new(@config, instance_id, @instance_running_polling).execute
+          # AwsHelpers::Actions::Redshift::PollInstanceExists.new(@config, instance_id, @instance_exists_polling).execute
+          # AwsHelpers::Actions::Redshift::RedshiftInstanceTag.new(@config, instance_id, @app_name, @build_number).execute
+          # AwsHelpers::Actions::Redshift::PollInstanceHealthy.new(@config, instance_id, @instance_running_polling).execute
           response
         end
 
