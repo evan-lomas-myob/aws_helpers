@@ -33,9 +33,9 @@ module AwsHelpers
           # if AwsHelpers::Actions::Redshift::Exists.new(@config).execute
 
 
-          # AwsHelpers::Actions::EC2::PollInstanceExists.new(@config, instance_id, @instance_exists_polling).execute
-          # AwsHelpers::Actions::EC2::EC2InstanceTag.new(@config, instance_id, @app_name, @build_number).execute
-          # AwsHelpers::Actions::EC2::PollInstanceHealthy.new(@config, instance_id, @instance_running_polling).execute
+          AwsHelpers::Actions::Redshift::PollInstanceExists.new(@config, instance_id, @instance_exists_polling).execute
+          AwsHelpers::Actions::Redshift::RedshiftInstanceTag.new(@config, instance_id, @app_name, @build_number).execute
+          AwsHelpers::Actions::Redshift::PollInstanceHealthy.new(@config, instance_id, @instance_running_polling).execute
           cluster
         end
 
