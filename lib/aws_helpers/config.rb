@@ -67,7 +67,7 @@ module AwsHelpers
 
     # @return [Aws::Redshift::Client]
     def aws_redshift_client
-      @aws_redshift_client = Aws::Redshift::Client.new(@options)
+      @aws_redshift_client ||= Aws::Redshift::Client.new(@options)
     end
   end
 end

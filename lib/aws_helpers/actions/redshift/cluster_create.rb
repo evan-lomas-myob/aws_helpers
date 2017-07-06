@@ -11,6 +11,7 @@ module AwsHelpers
 
         def initialize(config, cluster_type, cluster_identifier, options)
           @config = config
+          @client = config.aws_redshift_client
           @cluster_type = cluster_type
           @cluster_identifier = cluster_identifier
           @db_name = options[:db_name] ||= $db_name
@@ -20,11 +21,7 @@ module AwsHelpers
         end
 
         def execute
-          # TODO:
-          # AWS::Redshift::Cluster
-          client = @config.aws_redshift_client
-
-          client.create_cluster(
+          @client.create_cluster(
             cluster_type: @cluster_type,
             cluster_identifier: @cluster_identifier,
             db_name: @db_name,
@@ -37,6 +34,8 @@ module AwsHelpers
           AwsHelpers::Actions::Redshift::RedshiftInstanceTag.new(@config, instance_id, @app_name, @build_number).execute
           AwsHelpers::Actions::Redshift::PollInstanceHealthy.new(@config, instance_id, @instance_running_polling).execute
         end
+
+        private
 
       end
     end
