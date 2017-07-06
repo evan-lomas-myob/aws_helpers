@@ -15,13 +15,13 @@ module AwsHelpers
           @cluster_type = cluster_type
           @cluster_identifier = cluster_identifier
           @db_name = options[:db_name] ||= $db_name
-          @master_username = config[:master_username] ||= $master_username
-          @master_user_password = config[:master_user_password] ||= $master_user_password
+          @master_username = options[:master_username] ||= $master_username
+          @master_user_password = options[:master_user_password] ||= $master_user_password
           @node_type = options[:node_type] ||= $node_type
         end
 
         def execute
-          newCluster = @client.create_cluster(
+          response = @client.create_cluster(
             cluster_type: @cluster_type,
             cluster_identifier: @cluster_identifier,
             db_name: @db_name,
@@ -33,7 +33,7 @@ module AwsHelpers
           AwsHelpers::Actions::Redshift::PollInstanceExists.new(@config, instance_id, @instance_exists_polling).execute
           AwsHelpers::Actions::Redshift::RedshiftInstanceTag.new(@config, instance_id, @app_name, @build_number).execute
           AwsHelpers::Actions::Redshift::PollInstanceHealthy.new(@config, instance_id, @instance_running_polling).execute
-          newCluster
+          response
         end
 
         private
