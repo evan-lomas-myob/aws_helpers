@@ -2,6 +2,9 @@ require_relative 'client'
 require_relative 'actions/redshift/cluster_create'
 require_relative 'actions/redshift/cluster_delete'
 
+include AwsHelpers
+include AwsHelpers::Actions::Redshift
+
 module AwsHelpers
   class Redshift < AwsHelpers::Client
     # Utilities for Redshift creation, deletion and search of Redshift images
@@ -19,8 +22,8 @@ module AwsHelpers
 
     # Create an AMI using an existing instance
     #
-    # @param instance_id [String] Id of the Redshift Instance
-    # @param name [String] Name to assign to the AMI
+    # @param cluster_type [String] 
+    # @param cluster_identifier [String] Id of the Redshift Instance
     # @param [Hash] options Optional parameters that can be overridden.
     # @option options [Array] :additional_tags additional tags to put into the image
     #
@@ -55,7 +58,7 @@ module AwsHelpers
 
     # De-register an AMI image and its associated snapshots
     #
-    # @param image_id [String] the id of the AMI
+    # @param cluster_identifier [String] Id of the Redshift Instance
     # @param [Hash] options Optional parameters that can be overridden.
     # @option options [IO] :stdout ($stdout) override $stdout when logging output
     #
