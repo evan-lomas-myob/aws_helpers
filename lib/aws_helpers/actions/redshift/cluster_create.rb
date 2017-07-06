@@ -1,3 +1,6 @@
+require 'aws_helpers/actions/redshift/poll_instance_available'
+require 'aws_helpers/actions/redshift/snapshot_construct_name'
+require 'aws_helpers/actions/redshift/poll_snapshot_available'
 require 'aws_helpers/utilities/polling_options'
 
 module AwsHelpers
@@ -21,7 +24,7 @@ module AwsHelpers
           # AWS::Redshift::Cluster
           client = @config.aws_redshift_client
 
-          cluster = client.create_cluster(
+          client.create_cluster(
             cluster_type: @cluster_type,
             cluster_identifier: @cluster_identifier,
             db_name: @db_name,
@@ -29,14 +32,10 @@ module AwsHelpers
             master_user_password: @master_user_password,
             node_type: @node_type
           )
-          
-          # if AwsHelpers::Actions::Redshift::Exists.new(@config).execute
-
 
           AwsHelpers::Actions::Redshift::PollInstanceExists.new(@config, instance_id, @instance_exists_polling).execute
           AwsHelpers::Actions::Redshift::RedshiftInstanceTag.new(@config, instance_id, @app_name, @build_number).execute
           AwsHelpers::Actions::Redshift::PollInstanceHealthy.new(@config, instance_id, @instance_running_polling).execute
-          cluster
         end
 
       end
