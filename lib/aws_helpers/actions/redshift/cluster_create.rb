@@ -21,7 +21,7 @@ module AwsHelpers
         end
 
         def execute
-          @client.create_cluster(
+          newCluster = @client.create_cluster(
             cluster_type: @cluster_type,
             cluster_identifier: @cluster_identifier,
             db_name: @db_name,
@@ -33,6 +33,7 @@ module AwsHelpers
           AwsHelpers::Actions::Redshift::PollInstanceExists.new(@config, instance_id, @instance_exists_polling).execute
           AwsHelpers::Actions::Redshift::RedshiftInstanceTag.new(@config, instance_id, @app_name, @build_number).execute
           AwsHelpers::Actions::Redshift::PollInstanceHealthy.new(@config, instance_id, @instance_running_polling).execute
+          newCluster
         end
 
         private
