@@ -2,7 +2,6 @@ require_relative 'client'
 require_relative 'actions/redshift/cluster_create'
 require_relative 'actions/redshift/cluster_delete'
 
-include AwsHelpers
 include AwsHelpers::Actions::Redshift
 
 module AwsHelpers

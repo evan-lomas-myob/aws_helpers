@@ -36,8 +36,6 @@ module AwsHelpers
           response
         end
 
-        private
-
       end
     end
   end
