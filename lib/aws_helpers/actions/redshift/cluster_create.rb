@@ -9,14 +9,14 @@ module AwsHelpers
       class ClusterCreate
         include AwsHelpers::Utilities::PollingOptions
 
-        def initialize(config, cluster_type, cluster_identifier, options)
+        def initialize(config, cluster_type, cluster_identifier, master_username, master_user_password, options)
           @config = config
           @client = config.aws_redshift_client
           @cluster_type = cluster_type
           @cluster_identifier = cluster_identifier
+          @master_username = master_username
+          @master_user_password = master_user_password
           @db_name = options[:db_name] ||= $db_name
-          @master_username = config[:master_username] ||= $master_username
-          @master_user_password = config[:master_user_password] ||= $master_user_password
           @node_type = config[:node_type] ||= $node_type
         end
 

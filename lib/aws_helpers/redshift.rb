@@ -49,8 +49,6 @@ module AwsHelpers
     # @return [String] the image id
     #
     def cluster_create(cluster_type, cluster_identifier, options = {})
-      # master_username
-      # master_user_password
       # node_type
       ClusterCreate.new(config, cluster_type, cluster_identifier, options).execute
     end
