@@ -17,7 +17,7 @@ module AwsHelpers
           @master_username = master_username
           @master_user_password = master_user_password
           @db_name = options[:db_name] ||= $db_name
-          @node_type = config[:node_type] ||= $node_type
+          @node_type = options[:node_type] ||= $node_type
         end
 
         def execute
