@@ -18,16 +18,19 @@ module AwsHelpers
           @master_user_password = master_user_password
           @db_name = options[:db_name] ||= $db_name
           @node_type = options[:node_type] ||= $node_type
+          @vpc_security_group_ids = options[:vpc_security_group_ids] ||= $vpc_security_group_ids
         end
 
         def execute
+          # create_cluster_parameter_group
           response = @client.create_cluster(
             cluster_type: @cluster_type,
             cluster_identifier: @cluster_identifier,
             db_name: @db_name,
             master_username: @master_username,
             master_user_password: @master_user_password,
-            node_type: @node_type
+            node_type: @node_type,
+            vpc_security_group_ids: @vpc_security_group_ids
           )
 
           AwsHelpers::Actions::Redshift::PollInstanceExists.new(@config, instance_id, @instance_exists_polling).execute
