@@ -13,7 +13,11 @@ module AwsHelpers
         end
 
         def execute
-          response = @client.delete_cluster(cluster_identifier: @cluster_identifier)
+          response = @client.delete_cluster(
+            cluster_identifier: @cluster_identifier,
+            # final_cluster_snapshot_identifier: 
+            skip_final_cluster_snapshot: true
+          )
           response
         end
       end
