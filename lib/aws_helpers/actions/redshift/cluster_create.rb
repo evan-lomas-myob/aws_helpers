@@ -10,7 +10,6 @@ module AwsHelpers
         include AwsHelpers::Utilities::PollingOptions
 
         def initialize(config, cluster_type, cluster_identifier, master_username, master_user_password, options)
-          puts options
           @config = config
           @client = config.aws_redshift_client
           @cluster_type = cluster_type
@@ -31,9 +30,9 @@ module AwsHelpers
             node_type: @node_type
           )
 
-          # AwsHelpers::Actions::Redshift::PollInstanceExists.new(@config, instance_id, @instance_exists_polling).execute
-          # AwsHelpers::Actions::Redshift::RedshiftInstanceTag.new(@config, instance_id, @app_name, @build_number).execute
-          # AwsHelpers::Actions::Redshift::PollInstanceHealthy.new(@config, instance_id, @instance_running_polling).execute
+          AwsHelpers::Actions::Redshift::PollInstanceExists.new(@config, instance_id, @instance_exists_polling).execute
+          AwsHelpers::Actions::Redshift::RedshiftInstanceTag.new(@config, instance_id, @app_name, @build_number).execute
+          AwsHelpers::Actions::Redshift::PollInstanceHealthy.new(@config, instance_id, @instance_running_polling).execute
           response
         end
 
