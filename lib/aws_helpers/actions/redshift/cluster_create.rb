@@ -20,7 +20,7 @@ module AwsHelpers
           @master_user_password = master_user_password
           @db_name = options[:db_name] ||= $db_name
           @node_type = options[:node_type] ||= $node_type
-          @vpc_id = options[:vpc_id] ||= $vpc_id
+          @vpc_security_group_ids = options[:vpc_security_group_ids] ||= $vpc_security_group_ids
         end
 
         def execute
@@ -32,7 +32,8 @@ module AwsHelpers
             master_username: @master_username,
             master_user_password: @master_user_password,
             node_type: @node_type,
-            vpc_id: @vpc_id
+            enhanced_vpc_routing: true,
+            vpc_security_group_ids: @vpc_security_group_ids
           )
 
           AwsHelpers::Actions::Redshift::PollInstanceExists.new(@config, instance_id, @instance_exists_polling).execute
