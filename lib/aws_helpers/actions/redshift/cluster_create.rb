@@ -10,14 +10,15 @@ module AwsHelpers
         include AwsHelpers::Utilities::PollingOptions
 
         def initialize(config, cluster_type, cluster_identifier, master_username, master_user_password, options)
+          puts options
           @config = config
           @client = config.aws_redshift_client
           @cluster_type = cluster_type
           @cluster_identifier = cluster_identifier
           @master_username = master_username
           @master_user_password = master_user_password
-          @db_name = config.db_name
-          @node_type = config.node_type
+          @db_name = options[:db_name] ||= $db_name
+          @node_type = options[:node_type] ||= $node_type
         end
 
         def execute
