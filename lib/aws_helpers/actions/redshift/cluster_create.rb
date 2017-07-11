@@ -36,7 +36,7 @@ module AwsHelpers
           )
 
           puts ">>> response"
-          puts response
+          puts response.inspect
 
           AwsHelpers::Actions::Redshift::PollInstanceExists.new(@config, instance_id, @instance_exists_polling).execute
           AwsHelpers::Actions::Redshift::RedshiftInstanceTag.new(@config, instance_id, @app_name, @build_number).execute
