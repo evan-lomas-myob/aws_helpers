@@ -25,7 +25,7 @@ module AwsHelpers
 
         def execute
           # create_cluster_parameter_group
-          response = @client.create_cluster(
+          resp = @client.create_cluster(
             cluster_type: @cluster_type,
             cluster_identifier: @cluster_identifier,
             db_name: @db_name,
@@ -37,10 +37,13 @@ module AwsHelpers
             # vpc_security_group_ids: @vpc_security_group_ids
           )
 
-          AwsHelpers::Actions::Redshift::PollInstanceExists.new(@config, instance_id, @instance_exists_polling).execute
-          AwsHelpers::Actions::Redshift::RedshiftInstanceTag.new(@config, instance_id, @app_name, @build_number).execute
-          AwsHelpers::Actions::Redshift::PollInstanceHealthy.new(@config, instance_id, @instance_running_polling).execute
-          response
+          prints '>>> resp'
+          prints resp.inspect
+
+          AwsHelpers::Actions::Redshift::PollInstanceExists.new(@config, resp.clusters[0].cluster_identifier, @instance_exists_polling).execute
+          # AwsHelpers::Actions::Redshift::RedshiftInstanceTag.new(@config, instance_id, @app_name, @build_number).execute
+          # AwsHelpers::Actions::Redshift::PollInstanceHealthy.new(@config, instance_id, @instance_running_polling).execute
+          resp
         end
 
       end
