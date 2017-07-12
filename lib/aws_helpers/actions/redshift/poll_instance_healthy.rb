@@ -20,7 +20,7 @@ module AwsHelpers
 
         def execute
           poll(@delay, @max_attempts) do
-            resp = @client.describe_instance_status(cluster_identifiers: [@cluster_identifier])
+            resp = @client.describe_clusters(cluster_identifiers: [@cluster_identifier])
             resp.cluster_status == 'ok'
           end
         end
