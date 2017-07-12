@@ -13,6 +13,7 @@ module AwsHelpers
           @config = config
           @client = config.aws_redshift_client
           @cluster_type = cluster_type
+          @number_of_nodes = options[:number_of_nodes] ||= 1
           @cluster_identifier = cluster_identifier
           @master_username = master_username
           @master_user_password = master_user_password
@@ -27,6 +28,7 @@ module AwsHelpers
           # create_cluster_parameter_group
           resp = @client.create_cluster(
             cluster_type: @cluster_type,
+            number_of_nodes: @number_of_nodes,
             cluster_identifier: @cluster_identifier,
             db_name: @db_name,
             master_username: @master_username,
