@@ -40,10 +40,8 @@ module AwsHelpers
             # vpc_security_group_ids: @vpc_security_group_ids
           )
 
-          puts resp.inspect
-
           AwsHelpers::Actions::Redshift::PollInstanceExists.new(@config, @cluster_identifier).execute
-          AwsHelpers::Actions::Redshift::RedshiftInstanceTag.new(@config, @cluster_identifier, @db_name, @build_number).execute
+          # AwsHelpers::Actions::Redshift::RedshiftInstanceTag.new(@config, @cluster_identifier, @db_name, @build_number).execute
           AwsHelpers::Actions::Redshift::PollInstanceHealthy.new(@config, @cluster_identifier, @instance_running_polling).execute
           resp
         end
