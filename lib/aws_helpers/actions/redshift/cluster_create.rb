@@ -39,7 +39,7 @@ module AwsHelpers
 
           puts resp.inspect
 
-          AwsHelpers::Actions::Redshift::PollInstanceExists.new(@config, resp.clusters[0].cluster_identifier, @instance_exists_polling).execute
+          AwsHelpers::Actions::Redshift::PollInstanceExists.new(@config, @cluster_identifier).execute
           # AwsHelpers::Actions::Redshift::RedshiftInstanceTag.new(@config, instance_id, @app_name, @build_number).execute
           # AwsHelpers::Actions::Redshift::PollInstanceHealthy.new(@config, instance_id, @instance_running_polling).execute
           resp
