@@ -9,10 +9,10 @@ module AwsHelpers
       class PollInstanceHealthy
         include AwsHelpers::Utilities::Polling
 
-        def initialize(config, instance_id, options = {})
+        def initialize(config, cluster_identifier, options = {})
           @config = config
           @client = config.aws_redshift_client
-          @instance_id = instance_id
+          @cluster_identifier = cluster_identifier
           @stdout = options[:stdout] ||= $stdout
           @delay = options[:delay] ||= 15
           @max_attempts = options[:max_attempts] ||= 8
@@ -20,22 +20,8 @@ module AwsHelpers
 
         def execute
           poll(@delay, @max_attempts) do
-            ready = false
-            response = @client.describe_instance_status(instance_ids: [@instance_id])
-            unless response.instance_statuses[0].nil?
-              state = response.instance_statuses[0].instance_state.name
-              @stdout.print "Instance State is #{state}."
-              ready = true if state == 'running'
-
-              if @client.describe_instances(instance_ids: [@instance_id]).reservations.map{ |r| r.instances }.flatten.first.platform == 'windows'
-                ready = false
-                status = response.instance_statuses[0].instance_status.status
-                @stdout.print " Windows Status is #{status}."
-                ready = true if status == 'ok'
-              end
-              @stdout.print "\n"
-            end
-            ready
+            resp = @client.describe_instance_status(cluster_identifiers: [@cluster_identifier])
+            resp.cluster_status == 'ok'
           end
         end
       end

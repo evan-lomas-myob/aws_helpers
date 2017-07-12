@@ -2,9 +2,9 @@ module AwsHelpers
   module Actions
     module Redshift
       class RedshiftInstanceTag
-        def initialize(config, instance_id, name_tag = nil, build_number = nil, time = Time.now)
+        def initialize(config, cluster_identifier, name_tag = nil, build_number = nil, time = Time.now)
           @config = config
-          @instance_id = instance_id
+          @cluster_identifier = cluster_identifier
           @name_tag = name_tag || 'no-name-supplied'
           @build_number = build_number
           @time = time
@@ -14,7 +14,7 @@ module AwsHelpers
           tags = build_tag(@name_tag, @build_number, @time)
           client = @config.aws_redshift_client
           client.create_tags(
-            resources: [@instance_id],
+            resources: [@cluster_identifier],
             tags: tags
           )
         end

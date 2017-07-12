@@ -17,6 +17,7 @@ module AwsHelpers
           @cluster_identifier = cluster_identifier
           @master_username = master_username
           @master_user_password = master_user_password
+          @build_number = options[:build_number]
           @db_name = options[:db_name] ||= $db_name
           @node_type = options[:node_type] ||= $node_type
           @cluster_subnet_group_name = options[:cluster_subnet_group_name] ||= $cluster_subnet_group_name
@@ -39,9 +40,11 @@ module AwsHelpers
             # vpc_security_group_ids: @vpc_security_group_ids
           )
 
+          puts resp.inspect
+
           AwsHelpers::Actions::Redshift::PollInstanceExists.new(@config, @cluster_identifier).execute
-          # AwsHelpers::Actions::Redshift::RedshiftInstanceTag.new(@config, instance_id, @app_name, @build_number).execute
-          # AwsHelpers::Actions::Redshift::PollInstanceHealthy.new(@config, instance_id, @instance_running_polling).execute
+          AwsHelpers::Actions::Redshift::RedshiftInstanceTag.new(@config, @cluster_identifier, @db_name, @build_number).execute
+          AwsHelpers::Actions::Redshift::PollInstanceHealthy.new(@config, @cluster_identifier, @instance_running_polling).execute
           resp
         end
 
