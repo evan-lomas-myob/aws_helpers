@@ -14,8 +14,8 @@ module AwsHelpers
           @client = config.aws_redshift_client
           @cluster_identifier = cluster_identifier
           @stdout = options[:stdout] ||= $stdout
-          @delay = options[:delay] ||= 15
-          @max_attempts = options[:max_attempts] ||= 8
+          @delay = options[:delay] ||= 60
+          @max_attempts = options[:max_attempts] ||= 60
         end
 
         def execute
