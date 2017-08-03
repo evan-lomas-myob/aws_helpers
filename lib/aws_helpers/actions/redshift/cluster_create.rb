@@ -21,6 +21,7 @@ module AwsHelpers
           @db_name = options[:db_name] ||= $db_name
           @node_type = options[:node_type] ||= $node_type
           @cluster_subnet_group_name = options[:cluster_subnet_group_name] ||= $cluster_subnet_group_name
+          @port = options[:port] ||= 5439
           # @enhanced_vpc_routing = options[:enhanced_vpc_routing] ||= $enhanced_vpc_routing
           # @vpc_security_group_ids = options[:vpc_security_group_ids] ||= $vpc_security_group_ids
         end
@@ -35,7 +36,8 @@ module AwsHelpers
             master_username: @master_username,
             master_user_password: @master_user_password,
             node_type: @node_type,
-            cluster_subnet_group_name: @cluster_subnet_group_name
+            cluster_subnet_group_name: @cluster_subnet_group_name,
+            port: @port
             # enhanced_vpc_routing: @enhanced_vpc_routing,
             # vpc_security_group_ids: @vpc_security_group_ids
           )
